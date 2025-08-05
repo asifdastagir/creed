@@ -1,0 +1,36 @@
+{%- if settings.enable_language_selector and localization.available_languages.size > 1 -%}
+  {%- liquid
+    assign language_name_truncate_yes = settings.language_name_truncate_yes
+  -%}
+  <localization-form>
+    {%- form 'localization', class: 'localization-form', id: id -%}
+      <input type="hidden" name="locale_code" value="{{ localization.language.iso_code }}">
+      <input type="hidden" name="return_to" value="{{ request.path }}" />
+      <div class="dropdn_settings_title {{ class }}">{{ 'localization.language_label' | t }}</div>
+      <settings-collapse>
+        <ul{% unless language_name_truncate_yes %} class="truncate-name-off"{% endunless %}>
+          <li class="active">
+            <a hreflang="{{ localization.language.iso_code }}" lang="{{ localization.language.iso_code }}" aria-current="true" data-value="{{ localization.language.iso_code }}" {% if language_name_truncate_yes %}data-tippy-content="{{ localization.language.endonym_name | capitalize }}"{% endif %}>{% if localization.language.iso_code == 'zh-TW' %}{% if language_name_truncate_yes %}{{ localization.language.endonym_name | capitalize | slice: 0, 2 }}{% else %}{{ localization.language.endonym_name }}{% endif %}{% else %}{% if language_name_truncate_yes %}{{ localization.language.endonym_name | capitalize | slice: 0, 3 }}{% else %}{{ localization.language.endonym_name }}{% endif %}{% endif %}</a>
+          </li>
+          {%- liquid
+            assign count = 0
+          -%}
+          {%- for language in localization.available_languages -%}
+            {%- if language.iso_code == localization.language.iso_code -%}
+              {%- continue -%}
+            {%- endif -%}
+            {%- liquid
+              assign count = count | plus: 1
+            -%}
+            <li {%- if language.iso_code == localization.language.iso_code %} class="active"{% endif %}>
+              <a href="#" hreflang="{{ language.iso_code }}" lang="{{ language.iso_code }}"{% if language.iso_code == localization.language.iso_code %} aria-current="true"{% endif %} data-value="{{ language.iso_code }}" {% if language_name_truncate_yes %}data-tippy-content="{{ language.endonym_name | capitalize }}"{% endif %}>{% if language.iso_code == 'zh-TW' %}{% if language_name_truncate_yes %}{{ language.endonym_name | capitalize | slice: 0, 2 }}{% else %}{{ language.endonym_name }}{% endif %}{% else %}{% if language_name_truncate_yes %}{{ language.endonym_name | capitalize | slice: 0, 3 }}{% else %}{{ language.endonym_name }}{% endif %}{% endif %}</a>
+            </li>
+            {%- if count == 11 and forloop.last != true -%}
+              <li data-other><a href="#">&#183;&#183;&#183</a></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+      </settings-collapse>
+    {% endform %}
+  </localization-form>
+{%- endif -%}

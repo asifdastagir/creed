@@ -1,0 +1,14 @@
+{
+{%- for variant in product.variants -%}
+  {%- liquid
+    if variant.available == false
+      continue
+    endif
+  -%}
+"{{ forloop.index0 }}": {
+  "id": {{ variant.id }},
+  "inventory_quantity": {{ variant.inventory_quantity | json }},
+  "inventory_policy": {{ variant.inventory_policy | json }}
+},
+{%- endfor -%}
+}

@@ -1,0 +1,76 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+<div class="modal-wrap-scroll js-dropdn-content-scroll">
+  <div class="title-wrap text-center">
+    <h2 class="h1-style">{{ 'theme.general.search_products' | t }}</h2>
+    <div class="h-sub w-800 d-none d-md-block">{{ 'theme.general.subheading_search' | t }}</div>
+  </div>
+  {%- if settings.predictive_search_enabled -%}
+    <predictive-search class="search-modal__form d-block">
+  {%- endif -%}
+    <form action="{{ routes.search_url }}" method="get" role="search" class="search">
+      <input type="hidden" name="options[prefix]" value="last">
+      <div class="field d-block">
+        <div class="row g-4 mx-0">
+          <div class="col-md-3 d-none d-md-block">
+            <div class="form-control-wrap form-control-wrap--select {% if settings.predictive_search_only_product %}visibility-hidden{% endif %} hidden">
+              {%- if settings.predictive_search_only_product -%}
+                <input type="hidden" name="type" value="product,query" />
+              {%- else -%}
+                <select class="form-select" name="type">
+                    <option value="article,page,product,query" selected>{{ 'theme.general.search_everywhere' | t }}</option>
+                    <option value="article,page">{{ 'theme.general.blogs' | t }}</option>
+                    <option value="product">{{ 'theme.general.products' | t }}</option>
+                </select>
+              {%- endif -%}
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="input-group">
+              <input class="form-control"
+                     id="Search-In-Modal-1"
+                     type="search"
+                     name="q"
+                     value=""
+                     placeholder="{{ 'theme.general.search_by' | t }}"
+                {%- if settings.predictive_search_enabled -%}
+                  role="combobox"
+                  aria-expanded="false"
+                  aria-owns="predictive-search-results-list"
+                  aria-controls="predictive-search-results-list"
+                  aria-haspopup="listbox"
+                  aria-autocomplete="list"
+                  autocorrect="off"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                {%- endif -%}
+              >
+              <button class="icon-btn" type="submit" aria-label="{{ 'general.search.search' | t }}">
+                <div class="loading-overlay hidden">
+                  <div data-load="loading"></div>
+                </div>
+                <span data-tippy-content="{{ 'theme.general.advanced_search' | t | escape }}">{% render 'icon-search' %}</span>
+              </button>
+            </div>
+            {% render 'predictive-search-quick-tags' %}
+          </div>
+          <div class="col-md-3 d-none d-md-block">
+            <div class="form-control-wrap form-control-wrap--select hidden">
+              <select class="form-select" name="unavailable_products">
+                <option value="show" selected>{{ 'theme.general.all_products' | t }}</option>
+                <option value="hide">{{ 'theme.general.in_stock_only' | t }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        {%- if settings.predictive_search_enabled -%}
+          {% render 'predictive-search-results' preview: true %}
+        {%- endif -%}
+      </div>
+    </form>
+  {%- if settings.predictive_search_enabled -%}
+    </predictive-search>
+  {%- endif -%}
+</div>
+<div class="predictive-search-info d-none d-md-none keyboard-control">* {{ 'theme.general.keys_description' | t }}</div>
+<button type="button" data-fancybox-close="" class="fancybox-button fancybox-close-small" title="{{ 'theme.general.close_cap' | t }}"><svg xmlns="http://www.w3.org/2000/svg" version="1" viewBox="0 0 24 24"><path d="M13 12l5-5-1-1-5 5-5-5-1 1 5 5-5 5 1 1 5-5 5 5 1-1z"></path></svg></button>

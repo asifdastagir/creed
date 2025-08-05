@@ -1,0 +1,28 @@
+{%- liquid
+	assign blocks = section.blocks | where: 'type', 'buy_buttons'
+
+	unless template.suffix == blank
+		assign view = '&view=' | append: template.suffix
+	endunless
+
+	assign compact_mode = true
+
+    if product.has_only_default_variant
+      for i in (1..3)
+        assign setting_enable = 'product_sticky_icon_show_' | append: i
+
+        if settings[setting_enable]
+          assign compact_mode = false
+
+          break
+        endif
+      endfor
+    else
+      assign compact_mode = false
+    endif
+-%}
+{%- if blocks.size > 0 and settings.product_sticky -%}
+	<sticky-addtocart data-ajax="{{ product.selected_or_first_available_variant.url }}&section_id=async-product-sticky{{ view }}">
+		<div class="sticky-add-to-cart {% if compact_mode %}sticky-add-to-cart--compact{% endif %}"></div>
+	</sticky-addtocart>
+{%- endif -%}

@@ -1,0 +1,114 @@
+.circle-chart-container {
+  position: relative;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 215px
+}
+@media (max-width:1024px) {
+  .circle-chart-container {
+    width: 195px;
+    max-width: calc(50vw - 40px)
+  }
+}
+.circle-chart {
+  overflow: visible;
+  width: 215px;
+  max-width: 100%
+}
+@media (max-width:1024px) {
+  .circle-chart {
+    width: 195px
+  }
+}
+.circle-chart circle {
+  stroke: var(--circle-chart-border-color)
+}
+.circle-chart circle.circle-chart-circle {
+  stroke: var(--custom-color)
+}
+.circle-chart.circle-chart--color1 circle.circle-chart-circle {
+  stroke: var(--label-1-bg)
+}
+.circle-chart.circle-chart--color2 circle.circle-chart-circle {
+  stroke: var(--label-2-bg)
+}
+.circle-chart.circle-chart--color3 circle.circle-chart-circle {
+  stroke: var(--label-3-bg)
+}
+.circle-chart.circle-chart--color4 circle.circle-chart-circle {
+  stroke: var(--label-4-bg)
+}
+.circle-chart.circle-chart--color5 circle.circle-chart-circle {
+  stroke: var(--label-5-bg)
+}
+.circle-chart.circle-chart--color6 circle.circle-chart-circle {
+  stroke: var(--label-6-bg)
+}
+.holder > [class*=container].show-on-scroll.is-visible .circle-chart-circle,
+.holder > [class*=container]:not(.show-on-scroll) .circle-chart-circle,
+.shopify-design-mode .circle-chart-circle {
+  animation: circle-chart-fill 2s forwards 1s
+}
+.circle-chart-two {
+  right: 6%;
+  max-width: 88%;
+  position: absolute;
+  top: 6%
+}
+.circle-chart-percentage {
+  position: absolute;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  max-width: 70%;
+  text-align: center
+}
+.circle-chart-percentage-number {
+  font-size: 43px;
+  line-height: 1.3em;
+  font-weight: var(--font-weight-700);
+  font-family: var(--heading-font-family);
+  color: var(--circle-chart-text-color)
+}
+@media (max-width:575px) {
+  .circle-chart-percentage-number {
+    font-size: 35px
+  }
+}
+@media (max-width:374px) {
+  .circle-chart-percentage-number {
+    font-size: 30px
+  }
+}
+.circle-chart-percentage-text {
+  font-size: 15px;
+  line-height: 21px;
+  font-weight: var(--font-weight-700);
+  color: var(--circle-chart-text-color);
+  overflow: hidden
+}
+@media (max-width:575px) {
+  .circle-chart-percentage-text {
+    max-height: 36px;
+    font-size: 13px;
+    line-height: 18px;
+    font-weight: var(--font-weight-500)
+  }
+}
+@media (max-width:374px) {
+  .circle-chart-percentage-text {
+    max-height: 34px;
+    font-size: 12px;
+    line-height: 17px
+  }
+}
+@keyframes circle-chart-fill {
+  to {
+    stroke-dashoffset: 0
+  }
+}

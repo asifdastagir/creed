@@ -1,0 +1,196 @@
+{% # theme-check-disable DeprecatedFilter %}
+{%- liquid
+  if width_times == blank
+    assign width_times = 3
+  endif
+
+  assign image_k = image_k | default: 1
+
+  assign classList = 'lazyload fade-up'
+
+  if class_img_only != blank
+    assign class_img = class_img_only
+  else
+    if class_img == blank
+      assign class_img = classList
+    else
+      assign class_img = classList | append: ' ' | append: class_img
+    endif
+  endif
+
+
+  if image != blank and padding == blank
+    if product_aspect_ratio == true
+      assign padding = settings.product_image_aspect_ratio
+
+      if padding == 'custom'
+        assign padding = settings.product_height_ratio | times: 100 | divided_by: settings.product_width_ratio
+      endif
+    else
+      assign padding = 1 | divided_by: image.aspect_ratio | times: 100
+    endif
+  elsif product_aspect_ratio != blank and product_aspect_ratio == true
+    assign padding = settings.product_image_aspect_ratio
+
+    if padding == 'custom'
+      assign padding = settings.product_height_ratio | times: 100 | divided_by: settings.product_width_ratio
+    endif
+  else
+    assign padding = padding_no_bg | default: 100
+  endif
+
+  if hover_scale != false
+    assign hover_scale = true
+  endif
+
+  if hover_product_image != false and product_object != blank and product_object.media.size > 1
+    assign hover_scale = false
+  endif
+
+  if cover != false
+    assign cover = true
+  endif
+
+  assign bg_class = ''
+  if bg != false
+    if bg_alt_secondary == 1
+      assign bg_class = 'bg'
+    else
+      if image == blank and image_default == blank or image_default == true
+        assign bg_class = 'ic--bg'
+      elsif image == blank and image_default != blank and image_default == 'none'
+        assign bg_class = 'ic--bg'
+      elsif bg_required == 1 or image != blank
+        assign bg_class = 'ic--bg'
+      endif
+    endif
+    if bg_alt == true
+      assign bg_class = bg_class | append: '-alt'
+    endif
+  endif
+
+  assign tag_name = 'div'
+  if is_link == true
+    assign tag_name = 'a'
+  elsif tag != blank and tag != true
+    assign tag_name = tag
+  endif
+
+  assign link_second_level = false
+
+  if product_object != blank and product_object != true and is_link == true and after_img != blank
+    assign link_second_level = true
+    assign tag_name = 'div'
+    assign link_second_html = '<a href="' | append: href | append: '" class="prd-image">'
+  endif
+-%}
+<{{ tag_name }}
+                                    {%- if href != blank and link_second_level == false %}href="{{ href }}" {% if target_blank == 1 and href != '#' %}target="_blank"{% endif %}{% endif %} class="{{ class_ic }} image-container {% unless round != 0 %}ic--ignore-global-round{% endunless %} {% if hover_scale == true %}image-hover-scale{% endif %} {% if cover == true %}ic--cover{% endif %} {{ bg_class }} {% if image == blank %}{% if bg_border == true %}ic--border{% endif %}{% endif %} {% if product_aspect_ratio == true and settings.product_card_image_rounded == "1" and product_round != false %}ic--rd{% endif %}" style="--padding-bottom: {{ padding }}%;{% if style != blank %}{{ style }}{% endif %} {% if padding_mobile != blank and padding_mobile != true %}--padding-bottom-mobile: {{ padding_mobile }}%;{% endif %}" {% if dataset != blank %}{{ dataset }}{% endif %}>
+  {%- liquid
+    if image == blank
+      if image_default != blank
+        echo image_default | asset_img_url: 'master' | img_tag
+      endif
+    else
+      if widths == blank
+        assign widths = ''
+
+        if image_ratio == "landscape"
+          assign breakpoints = sizes | split: ','
+          for breakpoint in breakpoints
+            if breakpoints.size == 1 or breakpoints.size > 1 and forloop.last != true
+              assign breakpoint_old = breakpoint | split: 'px) ' | last | split: 'px' | first | plus: 0
+              assign breakpoint_new = breakpoint_old | times: 2.5
+              assign sizes = sizes | replace: breakpoint_old, breakpoint_new
+            endif
+          endfor
+        endif
+
+        assign breakpoints = sizes | split: ','
+        for i in (1..width_times)
+          assign k = i
+
+          if i == 1
+            assign k = 1.4
+          endif
+
+          assign k = k | times: image_k
+
+          for breakpoint in breakpoints
+            if breakpoints.size == 1 or breakpoints.size > 1 and forloop.last != true
+              assign breakpoint_ = breakpoint | split: 'px) ' | last | split: 'px' | first | plus: 0
+              assign width_ = breakpoint_ | times: k
+              assign widths = widths | append: width_ | append: ','
+            endif
+          endfor
+        endfor
+
+        if image.media_type != blank
+          assign width_ = image.preview_image.width
+        else
+          assign width_ = image.width
+        endif
+
+        assign widths = widths | append: width_
+      endif
+
+      if image.media_type != blank
+        assign width = image.preview_image.width
+      else
+        assign width = image.width
+      endif
+
+      if before_img != blank and before_img != true
+        echo before_img
+      endif
+
+      if link_second_level == true
+        echo link_second_html
+      endif
+
+      assign alt = image.alt | default: '' | escape
+
+      assign attributes = '<img '
+      if data_tippy_content != blank
+        assign attributes = '<img data-tippy-content="' | append: data_tippy_content | append: '" data-tippy-placement="' | append: data_tippy_placement | append: '" '
+      endif
+
+      if lazyload != false
+        echo image | image_url: width: width | image_tag: class: class_img, widths: widths, sizes: sizes, alt: alt | replace: 'src', 'data-src' | replace: '<img ', attributes
+      else
+        if fetchpriority
+          echo image | image_url: width: width | image_tag: class: class_img, widths: widths, sizes: sizes, alt: alt, fetchpriority: 'high' | replace: '<img ', attributes
+        else
+          echo image | image_url: width: width | image_tag: class: class_img, widths: widths, sizes: sizes, alt: alt | replace: '<img ', attributes
+        endif
+      endif
+
+      assign alt = product_object.media[1].alt | default: '' | escape
+
+      if hover_product_image != false and product_object != blank
+        if product_object.media[1] != nil
+          assign class_img = 'js-prd-img ' | append: class_img
+
+          if lazyload != false
+            echo product_object.media[1] | image_url: width: width | image_tag: class: class_img, widths: widths, sizes: sizes, alt: alt | replace: 'src', 'data-src'
+          else
+            echo product_object.media[1] | image_url: width: width | image_tag: class: class_img, widths: widths, sizes: sizes, alt: alt
+          endif
+        endif
+      endif
+
+      if link_second_level == true
+        echo '</a>'
+      endif
+    endif
+
+
+    if after_img != blank and after_img != true
+      echo after_img
+    endif
+
+    if img_title_alt != blank and image == blank
+      echo img_title_alt
+    endif
+  -%}
+</{{ tag_name }}>

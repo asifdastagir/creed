@@ -1,0 +1,192 @@
+{%- liquid
+  assign layout = 'header-cart-line-item'
+  assign section_id = 'header-cart-line-item-edit'
+  assign product_form_id = 'product-form-' | append: section_id | append: '-' | append: item.variant.id | append: item.index
+
+  assign in_collection = item.product.collections | where: 'handle', collection.handle | first
+  if collection == null or collection.handle == 'all' or in_collection == nil
+    assign all_products_count = 0
+    for c in item.product.collections
+      if c.handle != 'all' and c.handle != 'frontpage' and all_products_count < c.all_products_count
+        assign collection = c
+        assign all_products_count = c.all_products_count
+      endif
+    endfor
+  endif
+
+  assign product_url_collection = item.url
+
+  if settings.product_card_url_within_collection
+    assign product_url_collection = item.url | within: collection
+  endif
+
+  assign hide_quantity = 1
+
+  if settings.product_inventory_quantity and settings.product_inventory_quantity_on_header_cart
+    assign hide_quantity = 0
+  endif
+-%}
+<div class="minicart-prd" id="CartItem-{{ item.index | plus: 1 }}" data-section-render>
+  <product-form data-form data-edit data-line="{{ item.index | plus: 1 }}" >
+    <div class="minicart-prd-inside row">
+      {%- if item.discounts.size > 0 -%}
+        <div class="minicart-prd-discount">
+          <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
+            {%- for discount in item.discounts -%}
+              <li class="discounts__discount">
+                {%- render 'icon-discount' -%}
+                {{ discount.title }}
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+      {%- if item.image -%}
+        <div class="minicart-prd-image col">
+          <a href="{{ product_url_collection }}" title="{{ item.title | escape }}">
+            {% render 'image-container',
+              image: item.image,
+              product_aspect_ratio: true,
+              padding_no_bg: 120,
+              sizes: '115px',
+              width_times: 3,
+              dataset: 'data-line-item-preview',
+              bg: settings.product_card_image_placeholder,
+              cover: settings.product_card_cover
+            %}
+            <minicart-prd-img class="hidden" data-line-item-preview-edit>
+              {% render 'image-container',
+                image: item.image,
+                product_aspect_ratio: true,
+                padding_no_bg: 120,
+                sizes: '115px',
+                width_times: 3,
+                class_img_only: '',
+                bg: settings.product_card_image_placeholder,
+                cover: settings.product_card_cover
+              %}
+            </minicart-prd-img>
+          </a>
+          {%- if item.selling_plan_allocation != nil -%}
+            <div class="subscription-label">{{ 'theme.general.badge_cart_subscription' | t }}</div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+      <div class="minicart-prd-info col">
+        <toggle-minicart-actions class="minicart-prd-toggle-actions">{% render 'icon-three-dots' %}</toggle-minicart-actions>
+        <div class="hidden" data-remove-interrupt="form">
+          <div>{{ 'theme.general.add_to_wishlist_before_remove' | t }}</div>
+          <div class="mt-15">
+            <minicart-line-item>
+              <a class="btn btn--animated-shakeY  position-relative" data-index="{{ item.index | plus: 1 }}" data-action="addToWishlistAndRemove" data-handle="{{ item.product.handle }}" data-variant-id="{{ item.variant.id }}">
+                <span class="loading-overlay__spinner hidden">
+                  <span data-load="loading"></span>
+                </span>
+                <span>{{ 'theme.general.yes' | t }}</span>
+              </a>
+              <a class="btn btn--grey position-relative" data-index="{{ item.index | plus: 1 }}" data-action="remove">
+                <span class="loading-overlay__spinner hidden">
+                  <span data-load="loading"></span>
+                </span>
+                <span>{{ 'theme.general.no' | t }}</span>
+              </a>
+            </minicart-line-item>
+          </div>
+        </div>
+        <div  data-remove-interrupt="form-closure">
+          <h3 class="minicart-prd-name "><a href="{{ product_url_collection }}">{{ item.product.title }}</a></h3>
+          {% render 'header-cart-line-item-edit'
+            section_id: section_id
+            layout: layout,
+            product_form_id: product_form_id,
+            item: item
+          %}
+          <div class="header-cart-line-item-body">
+            {%- if item.product.has_only_default_variant == false or item.properties.size != 0 -%}
+              <dl>
+                {%- if item.product.has_only_default_variant == false -%}
+                  {%- for option in item.options_with_values -%}
+                    <div class="cart-table-product-option">
+                      <dt>{{ option.name }}:</dt>
+                      <dd>{{ option.value }}</dd>
+                    </div>
+                  {%- endfor -%}
+                {%- endif -%}
+                {%- for property in item.properties -%}
+                  {%- assign property_first_char = property.first | slice: 0 -%}
+                  {%- if property.last != blank and property_first_char != '_' -%}
+                    <div class="cart-table-product-option">
+                      <dt>{{ property.first }}:</dt>
+                      <dd>
+                        {%- if property.last contains '/uploads/' -%}
+                          <a href="{{ property.last }}" class="link" target="_blank">
+                            {{ property.last | split: '/' | last }}
+                          </a>
+                        {%- else -%}
+                          {{ property.last }}
+                        {%- endif -%}
+                      </dd>
+                    </div>
+                  {%- endif -%}
+                {%- endfor -%}
+              </dl>
+            {%- endif -%}
+            {%- if item.selling_plan_allocation.selling_plan.name != blank -%}
+              <p class="prd-prepay-text" data-tippy-placement="left" data-tippy-content="{{ item.selling_plan_allocation.selling_plan.description | escape }}">{{ item.selling_plan_allocation.selling_plan.name }}</p>
+            {%- endif -%}
+            <div class="minicart-prd-info-bottom row" data-node-desktop>
+              <div class="col-auto minicart-prd-qty">
+                {% render 'quantity',
+                  item: item,
+                  name: 'updates[]',
+                  value: item.quantity,
+                  min: 0,
+                  in_cart: true,
+                  in_header: true,
+                  product_title: item.product.title,
+                  current_variant: item.variant,
+                  layout: layout,
+                  hide_quantity: hide_quantity
+                %}
+              </div>
+              <div class="col minicart-prd-price">
+                {% render 'header-cart-line-item-component-price', item: item %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="minicart-prd-info-bottom row" data-node-mobile></div>
+      <div class="cart-item__success hidden" role="alert" id="Variant-item-success-{{ item.index | plus: 1 }}">
+        <button-animated data-ones-animate data-style="headShake">
+          <small class="cart-item__success-text"></small>
+          {% render 'icon-check' %}
+        </button-animated>
+      </div>
+      <div class="cart-item__error hidden" id="Line-item-error-{{ item.index | plus: 1 }}" role="alert">
+        <small class="cart-item__error-text"></small>
+        {% render 'icon-alert' %}
+      </div>
+      <div class="minicart-prd-action">
+        <minicart-line-item data-has-edit-action>
+          <toggle-minicart-actions><a class="icon-wrap" href="{{ product_url_collection }}"  data-tippy-content="{{ 'theme.general.close_cap' | t | escape }}" data-tippy-placement="left">{% render 'icon-arrow-right' %}</a></toggle-minicart-actions>
+          <a class="icon-wrap hidden" href="{{ product_url_collection }}" data-action="close" data-tippy-content="{{ 'theme.general.close_cap' | t | escape }}" data-tippy-placement="left">{% render 'icon-close3' %}</a>
+          <a class="icon-wrap position-relative" href="{{ item.url_to_remove }}"  aria-label="{{ 'theme-sections.sections.cart.remove_title' | t: title: item.title }}" data-action="remove"  data-remove-interrupt data-handle="{{ item.product.handle }}" data-variant-id="{{ item.variant.id }}" data-index="{{ item.index | plus: 1 }}"  data-tippy-content="{{ 'theme-sections.sections.cart.remove_title' | t: title: item.title | escape }}"  data-tippy-placement="left">{% render 'icon-remove2' %}
+            <div class="loading-overlay__spinner hidden">
+              <div data-load="loading"></div>
+            </div>
+          </a>
+          {% if item.product.variants.size > 1 or item.product.selling_plan_groups.size > 0 %}
+            <a class="icon-wrap" href="{{ product_url_collection }}" data-action="edit"  data-tippy-content="{{ 'theme.general.edit' | t | escape }}" data-tippy-placement="left">{% render 'icon-edit' %}</a>
+            <a class="icon-wrap icon-edit iw--alt position-relative hidden" href="#" data-action="add" data-form="{{ product_form_id }}" data-tippy-content="{{ 'theme.general.save_cap' | t | escape }}"  data-tippy-placement="left">
+              {% render 'icon-return2' %}
+              <div class="loading-overlay__spinner hidden">
+                <div data-load="loading"></div>
+              </div>
+            </a>
+          {%- endif -%}
+        </minicart-line-item>
+    </div>
+  </div>
+</product-form>
+</div>

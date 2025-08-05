@@ -1,0 +1,26 @@
+{% comment %}theme-check-disable  NestedSnippet{% endcomment %}
+<footer class="page-footer footer--style7 mt-global">
+  {% render 'footer-decoration', section: section %}
+  {% render 'footer-top-small', section: section %}
+  {% render 'footer-columns', section: section, class: 'py-4 py-md-4 py-lg-6', layout: 'style-7' %}
+
+  <div class="footer-bottom py-2 py-lg-15">
+    <div class="container">
+      <div class="row gy-3">
+        <div class="col footer-logo-wrap">
+          <div class="footer-logo d-flex d-lg-inline-flex justify-content-center justify-content-lg-start">
+            {% render 'footer-logo', block: block, section: section %}
+          </div>
+        </div>
+        <div class="col footer-copyright-wrap">
+          {% render 'copyright', section: section %}
+        </div>
+        {%- if section.settings.payment_enable -%}
+          <div class="col footer-payment-wrap">
+            {% render 'footer-payments' %}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,216 @@
+price-slider {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: end;
+  align-items: flex-end;
+  width: 100%;
+  position: relative;
+  height: 68px;
+  margin: 0 0 10px
+}
+price-slider > div {
+  position: absolute;
+  right: 31px;
+  left: 11px;
+  height: 5px
+}
+price-slider > div:after {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  right: -32px;
+  left: -10px;
+  height: 2px;
+  border-radius: 10px;
+  background-color: var(--scroll-color)
+}
+price-slider > div > .inverse-left {
+  position: absolute;
+  left: 0;
+  height: 2px;
+  border-radius: 10px;
+  background-color: var(--scroll-color);
+  margin: 0 7px
+}
+price-slider > div > .inverse-right {
+  position: absolute;
+  right: 0;
+  height: 2px;
+  border-radius: 10px;
+  background-color: var(--scroll-color);
+  margin: 0 7px
+}
+price-slider > div > .price-slider-range {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  height: 2px;
+  margin-left: 10px;
+  margin-right: -10px;
+  border-radius: 9999px;
+  background-color: var(--scroll-drag-color)
+}
+price-slider > div > .price-slider-thumb {
+  position: absolute;
+  top: -8.5px;
+  z-index: 2;
+  height: 20px;
+  width: 20px;
+  text-align: left;
+  margin-left: -10px;
+  cursor: pointer;
+  background-color: var(--body-bg-secondary);
+  box-shadow: 0 0 0 1px var(--tag-border-color);
+  border-radius: 50%;
+  outline: 0
+}
+price-slider > div > .price-slider-thumb.hovered {
+  box-shadow: 0 0 0 1px var(--custom-color)
+}
+price-slider > div > .price-slider-thumb + .price-slider-thumb {
+  margin-left: 11px
+}
+price-slider > input[type=range] {
+  position: absolute;
+  pointer-events: none;
+  -webkit-appearance: none;
+  z-index: 3;
+  height: 14px;
+  bottom: -4px;
+  left: 0;
+  width: calc(100% - 20px);
+  opacity: 0;
+  cursor: pointer
+}
+price-slider > input[type=range] + input[type=range] {
+  left: 20px
+}
+price-slider > input[type=range]:focus::-webkit-slider-runnable-track {
+  background: 0 0;
+  border: transparent
+}
+price-slider > input[type=range]:focus {
+  outline: 0
+}
+price-slider > input[type=range]::-webkit-slider-thumb {
+  pointer-events: all;
+  width: 28px;
+  height: 28px;
+  border-radius: 0;
+  border: 0 none;
+  background: red;
+  -webkit-appearance: none
+}
+price-slider > input[type=range]::-ms-fill-lower {
+  background: 0 0;
+  border: 0 none
+}
+price-slider > input[type=range]::-ms-fill-upper {
+  background: 0 0;
+  border: 0 none
+}
+price-slider > input[type=range]::-ms-tooltip {
+  display: none
+}
+price-slider > div > .price-slider-sign {
+  position: absolute;
+  z-index: 3;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-align: center;
+  align-items: center;
+  top: -45px;
+  padding: 0 4px;
+  min-width: 34px;
+  height: 28px;
+  color: var(--tag-text-color);
+  border: 1px solid var(--tag-border-color);
+  border-radius: var(--radius-4);
+  background-color: var(--body-bg-secondary);
+  transform: translateX(-50%)
+}
+price-slider > div > .price-slider-sign + .price-slider-sign {
+  margin-left: 21px
+}
+price-slider > div > .price-slider-sign:after {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: calc(50% - 4px);
+  width: 8px;
+  height: 8px;
+  content: '';
+  transform: translatey(-9px) rotate(-135deg);
+  border: 1px solid var(--tag-border-color);
+  border-right: none;
+  border-bottom: none;
+  background-color: var(--body-bg-secondary)
+}
+price-slider > div > .price-slider-sign > span {
+  font-size: 12px;
+  font-weight: var(--font-weight-500);
+  line-height: 1em
+}
+price-slider .price-slider-inputs {
+  position: relative;
+  width: 100%;
+  top: -29px;
+  left: 0;
+  right: 0;
+  display: -ms-flexbox;
+  display: flex
+}
+price-slider .price-slider-inputs > span {
+  position: relative;
+  width: 100%
+}
+price-slider .price-slider-inputs > :nth-child(2) {
+  position: relative;
+  width: auto;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 0 15px;
+  padding-top: 23px;
+  -ms-flex-item-align: center;
+  align-self: center;
+  -ms-flex-pack: center;
+  justify-content: center
+}
+price-slider .price-slider-inputs > :nth-child(2) i {
+  display: block;
+  height: 1px;
+  width: 12px;
+  background-color: var(--scroll-drag-color)
+}
+price-slider .price-slider-inputs label {
+  font-size: 13px;
+  font-weight: var(--font-weight-600)
+}
+price-slider .price-slider-inputs .form-control {
+  font-size: 13px;
+  height: 35px;
+  padding: 10px 12px;
+  border: var(--form-border-width) solid var(--form-border-color);
+  border-radius: var(--radius-3);
+  background-color: transparent!important
+}
+price-slider .price-slider-inputs .form-control:focus {
+  border-color: var(--form-border-color-focus)
+}
+price-slider .price-slider-inputs svg {
+  display: none;
+  position: absolute;
+  bottom: -11px;
+  width: 20px;
+  height: 20px
+}
+price-slider.price-slider--inputs {
+  height: 103px
+}
+price-slider.price-slider--error .price-slider-inputs svg {
+  display: block
+}
+price-slider.price-slider--error .price-slider-inputs i {
+  opacity: 0
+}

@@ -1,0 +1,275 @@
+{%- liquid
+  assign breadcrumbs_show = true
+  if breadcrumbs_show
+    if settings.breadcrumbs_on and request.page_type != 'index'
+      assign show = true
+      if settings.breadcrumbs_off_pages and request.page_type == 'page'
+        assign show = false
+      endif
+      if settings.breadcrumbs_off_blog and request.page_type == 'blog'
+        assign show = false
+      endif
+      if settings.breadcrumbs_off_post and request.page_type == 'article'
+        assign show = false
+      endif
+      if settings.breadcrumbs_off_collection and request.page_type == 'collection'
+        assign show = false
+      endif
+      if settings.breadcrumbs_off_product and request.page_type == 'product'
+        assign show = false
+      endif
+      if settings.breadcrumbs_off_search and request.page_type == 'search'
+        assign show = false
+      endif
+      if settings.breadcrumbs_off_cart and request.page_type == 'cart'
+        assign show = false
+      endif
+      if settings.breadcrumbs_off_404 and request.page_type == '404'
+        assign show = false
+      endif
+      if settings.breadcrumbs_off_customers and request.page_type == 'customers'
+        assign show = false
+      endif
+    endif
+  endif
+
+  for i in (1..10)
+    assign catalog_handle = 'catalog_' | append: i
+    assign catalog_handle = settings[catalog_handle]
+    assign catalog_links = catalog_links | concat: linklists[catalog_handle].links
+  endfor
+
+  assign store_width = settings.container_max_width
+
+  if template.suffix contains 'store-width-'
+    assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+-%}
+
+{%- if show -%}
+  {%- capture home_link -%}
+    <div class="swiper-slide breadcrumb-item">
+      <a href="{{ routes.root_url }}" title="{{ 'theme.general.home' | t }}">{{ 'theme.general.home' | t }}</a>
+    </div>
+  {%- endcapture -%}
+  <div class="container" data-async-reload="breadcrumbs" style="--container-max-width: {{ store_width }}px;">
+    <div class="row align-items-center">
+      <div class="col">
+        <div class="breadcrumbs-wrap">
+          <swiper-carousel>
+            <div class="swiper-container breadcrumb swiper-no-scroll">
+              <div class="swiper-wrapper">
+              {{ home_link }}
+              {%- case request.page_type -%}
+                {%- when 'page' -%}
+                  <div class="swiper-slide breadcrumb-item active">{{ page.title }}</div>
+                {%- when 'product' -%}
+                  {%- liquid
+                    assign in_collection = product.collections | where: 'handle', collection.handle | first
+                    if collection == null or collection.handle == 'all' or in_collection == nil
+                      assign all_products_count = 0
+                      for c in product.collections
+                        if c.handle != 'all' and c.handle != 'frontpage' and all_products_count < c.all_products_count
+                          assign collection = c
+                          assign all_products_count = c.all_products_count
+                        endif
+                      endfor
+                    endif
+
+                    if product.collections.size > 0
+                      for link in catalog_links
+                        assign lvl_2 = link.links | where: 'url', collection.url | first
+                        unless lvl_2 == nil
+                          assign lvl_1 = link
+                          break
+                        endunless
+                      endfor
+                      if lvl_1 == nil
+                        assign lvl_1 = catalog_links | where: 'url', collection.url | first
+                      endif
+                    endif
+                  -%}
+
+                  {%- if lvl_1 -%}
+                    <div class="swiper-slide breadcrumb-item">{% liquid assign title = lvl_1.title | split: '|' | first %} {{ title | link_to: lvl_1.url }}</div>
+                  {%- endif -%}
+                  {%- if lvl_2 -%}
+                    <div class="swiper-slide breadcrumb-item">{% liquid assign title = lvl_2.title | split: '|' | first %} {{ title | link_to: lvl_2.url }}</div>
+                  {%- endif -%}
+
+                  <div class="swiper-slide breadcrumb-item active" title="{{ product.title | escape }}">{{ product.title | escape | truncate: 60 }}</div>
+                {%- when 'collection' -%}
+                  {%- liquid
+                    assign first_level = catalog_links | where: 'url', collection.url | first
+                    unless first_level
+                      for link in catalog_links
+                        assign active = link.links | where: 'url', collection.url | first
+                        if active
+                          assign match = link
+                          break
+                        endif
+                      endfor
+                    endunless
+                  -%}
+                  {%- if match -%}
+                    <div class="swiper-slide breadcrumb-item">{{ match.title | split: '|' | first | link_to: match.url }}</div>
+                    <div class="swiper-slide breadcrumb-item active">{{ active.title | split: '|' | first }}</div>
+                  {%- else -%}
+                    {%- liquid
+                      assign title = collection.title
+
+                      if collection.handle == 'all'
+                        assign title =  'theme.general.all_products_title' | t
+
+                        if current_tags.size == 1 and current_tags contains 'sale'
+                          assign title =  'theme.general.our_sales' | t
+                        endif
+                      endif
+                    -%}
+                    <div class="swiper-slide breadcrumb-item active">{{ title }}</div>
+                  {%- endif -%}
+                {%- when 'blog' -%}
+                  {% if current_tags %}
+                    <div class="swiper-slide breadcrumb-item">{{ blog.title | link_to: blog.url }}</div>
+                    <div class="swiper-slide breadcrumb-item">{{ current_tags | join: " + " }}</div>
+                  {% else %}
+                    <div class="swiper-slide breadcrumb-item active">{{ blog.title }}</div>
+                  {% endif %}
+                {%- when 'article' -%}
+                  <div class="swiper-slide breadcrumb-item">{{ blog.title | link_to: blog.url }}</div>
+                  <div class="swiper-slide breadcrumb-item active">{{ article.title }}</div>
+                {%- else -%}
+                  <div class="swiper-slide breadcrumb-item active">{{ page_title }}</div>
+              {%- endcase -%}
+              </div>
+            </div>
+            <div class="swiper-pagination d-none"></div>
+            <div class="breadcrumbs-wrap-arrows">
+              <div class="swiper-button-prev-sm"></div>
+              <div class="swiper-button-next-sm"></div>
+            </div>
+            <script type="application/json">
+              {
+                "freeMode": true,
+                "loop": false,
+                "slidesPerView": "auto",
+                "mousewheel": true,
+                "resistance": true,
+                "resistanceRatio": 0,
+                "touchRatio": 6,
+                "navigation": {
+                  "nextEl": ".breadcrumbs-wrap .swiper-button-next-sm",
+                  "prevEl": ".breadcrumbs-wrap .swiper-button-prev-sm"
+                },
+                "pagination": {
+                  "el": ".swiper-pagination"
+                }
+              }
+            </script>
+          </swiper-carousel>
+      </div>
+    </div>
+    {%- liquid
+      if request.page_type == 'article'
+        assign show_prev_next = true
+        assign prev = blog.previous_article
+        assign next = blog.next_article
+        assign prev_image = prev.image
+        assign next_image = next.image
+        assign prev_url = prev.url
+        assign next_url = next.url
+        assign sizes = '112px'
+
+      elsif request.page_type == 'product'
+        if settings.product_prev_next and collection and collection.products.size > 1
+          assign show_prev_next = true
+        else
+          assign show_prev_next = false
+        endif
+        assign prev = collection.previous_product
+        assign next = collection.next_product
+        assign prev_url = prev.url
+        assign next_url = next.url
+        assign sizes = '56px'
+
+        if next == nil
+          assign next = collection.products.first
+          assign next_url = next.url | within: collection
+        endif
+
+        if prev == nil
+          assign prev = collection.products.last
+          assign prev_url = prev.url | within: collection
+        endif
+
+        assign prev_image = prev.featured_media
+        assign next_image = next.featured_media
+      else
+        assign show_prev_next = false
+      endif
+
+      if show_prev_next and request.page_type == 'product' and next_image.handle == prev_image.handle and collection.products.size < 3
+        assign prev_image = false
+      endif
+
+      assign product_aspect_ratio = false
+      assign padding = 100
+      assign class = ''
+      assign prev_next_layout = settings.prev_next_layout
+
+      if prev_next_layout == 'rectangle'
+        assign class = 'off-circle'
+      elsif prev_next_layout == 'aspect'
+        assign product_aspect_ratio = true
+        assign padding = false
+        assign class = 'off-circle'
+      endif
+
+      assign cover = settings.product_card_cover
+    -%}
+    {%- if show_prev_next -%}
+      <div class="{% if settings.product_prev_next_mobile %}col col-12 col-md-auto d-flex d-md-block justify-content-center ms-auto{% else %}col-auto ms-auto d-none d-md-block{% endif %} ">
+        <div class="prd-prev-next {{ class }}">
+          {%- if prev -%}
+            <a href="{{ prev_url }}" class="row gx-2 {% if next_image == blank and prev_image == blank %}image-off{% endif %}" >
+              <span class="col-auto"><span>{% render 'icon-arrow-left' %}</span><span>{{ 'theme.general.prev' | t }}</span></span>
+              {%- if prev_image -%}
+                <span class="prd-prev-next-image col" {% if prev.title != blank %}data-tippy-content="{{ prev.title | escape }}" data-tippy-placement="bottom"{% endif %}>
+                  {% render 'image-container',
+                    image: prev_image,
+                    padding: padding,
+                    sizes: sizes,
+                    product_object: prev,
+                    product_aspect_ratio: product_aspect_ratio,
+                    bg: settings.product_card_image_placeholder,
+                    cover: cover
+                  %}
+                </span>
+              {%- endif -%}
+            </a>
+          {%- endif -%}
+
+          {%- if next -%}
+            <a href="{{ next_url }}" class="row gx-2 {% if next_image == blank and prev_image == blank %}image-off{% endif %}">
+              {%- if next_image -%}
+                <span class="prd-prev-next-image col" {% if next.title != blank %}data-tippy-content="{{ next.title | escape }}" data-tippy-placement="bottom"{% endif %}>
+                  {% render 'image-container',
+                    image: next_image,
+                    padding: padding,
+                    sizes: sizes,
+                    product_object: next,
+                    product_aspect_ratio: product_aspect_ratio,
+                    bg: settings.product_card_image_placeholder,
+                    cover: cover
+                  %}
+                </span>
+              {%- endif -%}
+              <span class="col-auto"><span>{{ 'theme.general.next' | t }}</span><span>{% render 'icon-arrow-right' %}</span></span>
+            </a>
+          {%- endif -%}
+        </div>
+      </div>
+    {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}

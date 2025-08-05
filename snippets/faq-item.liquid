@@ -1,0 +1,43 @@
+{% # theme-check-disable UnclosedHTMLElement %}
+
+{%- if section.settings.categories and categories.size > 0 -%}
+  {%- for category in categories -%}
+    <div class="faq-tab-content {% if forloop.first %}opened{% endif %}" id="tab-{{ category | handle }}">
+      {%- if section.settings.collapsible_tabs -%}
+        {% render 'faq-item-accordeon'
+          , section: section
+          , category: category %}
+      {%- else -%}
+        {%- for block in section.blocks -%}
+          {%- if block.settings.category == category -%}
+            <div class="faq-item" {{ block.shopify_attributes }}>
+              <h3 class="heading-font">{{ block.settings.title }}</h3>
+              <ul class="tags-list faq-tags-list">
+                <li>{{ 'theme.general.category' | t }}:</li>
+                <li>
+                  <span class="tags-list-inside">{{ category }}</span>
+                </li>
+              </ul>
+              {{ block.settings.answer }}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  {%- endfor -%}
+
+{%- else -%}
+  {%- if section.settings.collapsible_tabs -%}
+    {% render 'faq-item-accordeon'
+      , section: section
+      , disable_category: true %}
+  {%- else -%}
+    <div class="faq-tab-content opened"></div>
+    {%- for block in section.blocks -%}
+      <div class="faq-item" {{ block.shopify_attributes }}>
+        <h3 class="heading-font">{{ block.settings.title }}</h3>
+        {{ block.settings.answer }}
+      </div>
+    {%- endfor -%}
+  </div>
+{%- endif -%}{%- endif -%}

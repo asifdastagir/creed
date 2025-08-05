@@ -1,0 +1,20 @@
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    if (!document.querySelector('body').classList.contains('subscribed')) {
+      jq_lumia.fancybox.open({
+        src: '#popupSubscribeSuccess',
+        type: 'inline',
+        afterClose: () => {
+          if (window.location.toString().indexOf("?customer_posted=true") > 0) {
+            history.replaceState && history.replaceState(
+              null, '', location.pathname + location.search.replace(/[\?&]customer_posted=[^&]+/, '').replace(/^&/, '?')
+            );
+          }
+        }
+      });
+    }
+    document.querySelector('body').classList.add('subscribed');
+    newsletterPopup.setCookieSuccess(2);
+  });
+  document.querySelector('body').classList.add('newslettermodal-off');
+</script>

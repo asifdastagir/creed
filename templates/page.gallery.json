@@ -1,0 +1,177 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page",
+      "disabled": true,
+      "settings": {
+        "spacing_sections": 100,
+        "use_global_desktop_space": true,
+        "spacing_sections_mobile": 70,
+        "use_global_mobile_space": true,
+        "spacing_padding_sections": 100,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "background": false
+      }
+    },
+    "16374181039849be86": {
+      "type": "index-gallery",
+      "blocks": {
+        "16374181037707a8b5-0": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/gallery-09.png",
+            "color_placeholder": "#dadee1",
+            "title": "#image1",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed",
+            "link": "shopify://products/blue-surf"
+          }
+        },
+        "16374181037707a8b5-1": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/gallery-03.png",
+            "color_placeholder": "#8b7db9",
+            "title": "#image2",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed",
+            "link": ""
+          }
+        },
+        "16374181037707a8b5-2": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/gallery-06.png",
+            "color_placeholder": "#384f60",
+            "title": "#image3",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed",
+            "link": ""
+          }
+        },
+        "16374181037707a8b5-3": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/gallery-07.png",
+            "color_placeholder": "#eea0b0",
+            "title": "#image4",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed",
+            "link": ""
+          }
+        },
+        "16374181037707a8b5-4": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/gallery-05.png",
+            "color_placeholder": "#d0bba9",
+            "title": "#image5",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed",
+            "link": ""
+          }
+        },
+        "16374181037707a8b5-5": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/gallery-04.png",
+            "color_placeholder": "#f6ad39",
+            "title": "#image6",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed",
+            "link": ""
+          }
+        },
+        "16374181037707a8b5-6": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/gallery-01.png",
+            "color_placeholder": "#e4e4e4",
+            "title": "#image7",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed",
+            "link": ""
+          }
+        },
+        "16374181037707a8b5-7": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/gallery-08.png",
+            "color_placeholder": "#feacb3",
+            "title": "#image8",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed",
+            "link": ""
+          }
+        },
+        "16374181037707a8b5-8": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/gallery-02.png",
+            "color_placeholder": "#e9b470",
+            "title": "#image9",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed",
+            "link": ""
+          }
+        },
+        "16374181037707a8b5-9": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/gallery-12.png",
+            "color_placeholder": "#a0ded9",
+            "title": "#image10",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed",
+            "link": ""
+          }
+        },
+        "16374181037707a8b5-10": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/gallery-10.png",
+            "color_placeholder": "#b8b1b7",
+            "title": "#image11",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed",
+            "link": ""
+          }
+        },
+        "16374181037707a8b5-11": {
+          "type": "image",
+          "settings": {
+            "image": "shopify://shop_images/gallery-11.png",
+            "color_placeholder": "#ff3440",
+            "title": "#image12",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "16374181037707a8b5-0",
+        "16374181037707a8b5-1",
+        "16374181037707a8b5-2",
+        "16374181037707a8b5-3",
+        "16374181037707a8b5-4",
+        "16374181037707a8b5-5",
+        "16374181037707a8b5-6",
+        "16374181037707a8b5-7",
+        "16374181037707a8b5-8",
+        "16374181037707a8b5-9",
+        "16374181037707a8b5-10",
+        "16374181037707a8b5-11"
+      ],
+      "settings": {
+        "spacing_sections": 70,
+        "use_global_desktop_space": false,
+        "spacing_sections_mobile": 40,
+        "use_global_mobile_space": false,
+        "spacing_padding_sections": 100,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "background": false,
+        "columns": "4",
+        "heading_alignment": "center",
+        "heading": "Gallery",
+        "subtitle": "Сan be used as a standalone page or as a section on other pages"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "16374181039849be86"
+  ]
+}

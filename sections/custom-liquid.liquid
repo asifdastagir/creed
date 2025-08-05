@@ -1,0 +1,230 @@
+{%- liquid
+  assign layout = 'custom-liquid'
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+      assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+-%}
+
+<div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+  {{ section.settings.custom_liquid }}
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.custom-liquid.name",
+  "tag": "section",
+  "class": "spaced-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "t:sections.custom-liquid.settings.content.section_margin"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "t:sections.custom-liquid.settings.spacing_sections.label",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "t:sections.custom-liquid.settings.use_global_desktop_space.label",
+      "default": true,
+      "info": "t:sections.custom-liquid.settings.use_global_desktop_space.info"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.custom-liquid.settings.spacing_sections_mobile.label",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "t:sections.custom-liquid.settings.use_global_mobile_space.label",
+      "default": true,
+      "info": "t:sections.custom-liquid.settings.use_global_mobile_space.info"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "t:sections.custom-liquid.settings.spacing_padding_sections.label",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "t:sections.custom-liquid.settings.use_global_desktop_space_padding.label",
+      "default": true,
+      "info": "t:sections.custom-liquid.settings.use_global_desktop_space_padding.info"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "t:sections.custom-liquid.settings.spacing_padding_sections_mobile.label",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "t:sections.custom-liquid.settings.use_global_mobile_space_padding.label",
+      "default": true,
+      "info": "t:sections.custom-liquid.settings.use_global_mobile_space_padding.info"
+    },
+{
+      "type": "header",
+      "content": "t:sections.index-chart.settings.content.section_background"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable background",
+      "default": false,
+      "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+    },
+    {
+      "type": "select",
+      "id": "background_preset",
+      "label": "Background image - preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "product-cosmetics-bg.png",
+          "label": "Leaves 1"
+        },
+        {
+          "value": "bottom-cosmetics-bg.png",
+          "label": "Leaves 2"
+        },
+        {
+          "value": "bg-makeup1.png,bg-makeup1-m.png",
+          "label": "Pink and Waves 1"
+        },
+        {
+          "value": "bg-makeup2.png,bg-makeup2-m.png",
+          "label": "Pink and Waves 2"
+        },
+        {
+          "value": "bg-makeup4.png,bg-makeup4-m.png",
+          "label": "Pink and Waves 3"
+        },
+        {
+          "value": "bg-makeup3.png,bg-makeup3-m.png",
+          "label": "Purple Splash"
+        },
+        {
+          "value": "bg-sweets1.png",
+          "label": "Blue Sun Rays"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image - custom on Desktop"
+    },
+    {
+      "type": "select",
+      "id": "background_behavior",
+      "label": "Background image behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image - custom on Mobile",
+      "info": "only if Background image - custom on Desktop selected"
+    },
+    {
+      "type": "select",
+      "id": "background_image_placeholder_type",
+      "label": "Placeholder background color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_secondary_bg"
+    },
+    {
+      "type": "color",
+      "id": "background_image_placeholder",
+      "label": "Custom - Placeholder background color"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.custom-liquid.settings.content.general"
+    },
+    {
+      "type": "liquid",
+      "id": "custom_liquid",
+      "label": "t:sections.custom-liquid.settings.custom_liquid.label",
+      "info": "t:sections.custom-liquid.settings.custom_liquid.info"
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.custom-liquid.presets.custom_liquid.name"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,334 @@
+.shop-info--horizontal {
+  -ms-flex-pack: center;
+  justify-content: center
+}
+.shop-info--horizontal .shop-info {
+  margin-right: -14px;
+  margin-left: -14px
+}
+.shop-info--horizontal .shop-info > * {
+  padding: 0 14px
+}
+@media (max-width:575px) {
+  .shop-info--horizontal .shop-info {
+    margin-right: -8px;
+    margin-left: -8px
+  }
+  .shop-info--horizontal .shop-info > * {
+    padding: 0 8px
+  }
+}
+.shop-info--horizontal .shop-info-icon.has-image {
+  width: 45px
+}
+@media (max-width:374px) {
+  .shop-info--horizontal .shop-info-icon.has-image {
+    width: 40px
+  }
+}
+.shop-info--horizontal .shop-info-icon svg {
+  min-height: 37px;
+  max-height: 41px;
+  width: auto
+}
+@media (max-width:575px) {
+  .shop-info--horizontal .shop-info-icon svg {
+    max-height: 37px
+  }
+}
+@media (max-width:374px) {
+  .shop-info--horizontal .shop-info-icon svg {
+    min-height: 32px;
+    max-height: 32px
+  }
+}
+.shop-info--horizontal .shop-info-text {
+  font-size: 13px;
+  font-weight: var(--font-weight-400);
+  line-height: 18px
+}
+.shop-info--horizontal .shop-info-title {
+  margin-bottom: 2px;
+  font-size: 15px;
+  font-weight: var(--heading-sm-weight);
+  line-height: 20px
+}
+@media (max-width:575px) {
+  .shop-info--horizontal .shop-info-title {
+    font-size: 14px;
+    line-height: 18px
+  }
+}
+@media (max-width:575px) {
+  .shop-info--horizontal {
+    --bs-gutter-y: 30px
+  }
+  .shop-info--horizontal .shop-info {
+    -ms-flex-direction: column;
+    flex-direction: column;
+    text-align: center
+  }
+  .shop-info--horizontal .shop-info-text:not(:first-child) {
+    margin-top: 15px
+  }
+}
+.shop-info-icon {
+  color: var(--shop-info-icon-color)
+}
+.shop-info-icon svg > circle,
+.shop-info-icon svg > polygon,
+.shop-info-icon svg > rect:only-child,
+.shop-info-icon svg path:not(.path--nofill),
+.shop-info-icon svg path:not([stroke]) {
+  fill: currentColor
+}
+.shop-info-icon svg g > rect,
+.shop-info-icon svg path[stroke-width="2"],
+.shop-info-icon svg path[stroke="#4970F8"],
+.shop-info-icon svg path[stroke="#DFE2ED"],
+.shop-info-icon svg path[stroke=white],
+.shop-info-icon svg polygon[stroke] {
+  stroke: currentColor
+}
+.shop-info-icon svg polygon[stroke="#010101"] {
+  fill: none
+}
+.shop-info-icon svg path[stroke='#22292F']:not([stroke-linecap]),
+.shop-info-icon svg path[stroke='#414C55'] {
+  stroke: currentColor;
+  fill: currentColor
+}
+.shop-info-icon.has-image {
+  margin-right: 14px;
+  margin-left: 14px;
+  padding-right: 0;
+  padding-left: 0
+}
+.shop-info-icon.has-image .image-container {
+  width: 100%
+}
+.shop-info-icon .image-container:not(.ic--ignore-global-round) {
+  border-radius: var(--radius-sm)
+}
+.shop-info--vertical {
+  --bs-gutter-y: 30px;
+  -ms-flex-pack: center;
+  justify-content: center
+}
+.shop-info--vertical .shop-info {
+  -ms-flex-direction: column;
+  flex-direction: column;
+  text-align: center
+}
+.shop-info--vertical .shop-info-icon.has-image {
+  width: 55px;
+  margin-right: auto;
+  margin-left: auto
+}
+@media (max-width:575px) {
+  .shop-info--vertical .shop-info-icon.has-image {
+    width: 37px
+  }
+}
+.shop-info--vertical .shop-info-icon.has-image .image-container {
+  width: 100%
+}
+.shop-info--vertical .shop-info-icon svg {
+  height: 55px;
+  width: auto
+}
+@media (max-width:575px) {
+  .shop-info--vertical .shop-info-icon svg {
+    height: 37px
+  }
+}
+.shop-info--vertical .shop-info-text {
+  font-size: 13px;
+  font-weight: var(--font-weight-400);
+  line-height: 18px;
+  color: currentColor
+}
+.shop-info--vertical .shop-info-text:not(:first-child) {
+  margin-top: 15px
+}
+.shop-info--vertical .shop-info-title {
+  margin-bottom: 2px;
+  font-size: 15px;
+  font-weight: var(--heading-sm-weight);
+  line-height: 20px
+}
+@media (max-width:575px) {
+  .shop-info--vertical .shop-info-title {
+    font-size: 14px;
+    line-height: 18px
+  }
+}
+.shop-info-row.shop-info--bordered .shop-info-wrap {
+  height: auto
+}
+.shop-info-row.shop-info--bordered .shop-info {
+  position: relative;
+  border-radius: calc(var(--radius-xl) * .5);
+  padding: 20px 15px
+}
+.shop-info-row.shop-info--bordered.shop-info--horizontal .shop-info {
+  height: 100%;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 0;
+  -ms-flex-align: center;
+  align-items: center
+}
+.shop-info--vertical[class*=shop-info--icon] {
+  margin: 0
+}
+.shop-info--vertical[class*=shop-info--icon] .shop-info {
+  height: 100%;
+  padding: 30px 12px;
+  background: var(--body-bg-secondary);
+  border-radius: var(--radius-md);
+  box-shadow: 0 0 14px rgba(0,0,0,var(--global-box-shadow,0));
+  transition: box-shadow .2s
+}
+@media (hover:hover),
+(hover:none) and (min-width:1025px) {
+  .shop-info--vertical[class*=shop-info--icon] .shop-info:hover {
+    box-shadow: 0 0 12px rgba(0,0,0,var(--global-box-shadow,.12))
+  }
+}
+.shop-info--vertical.shop-info--icon-xs .shop-info-icon.has-image {
+  width: 21px
+}
+.shop-info--vertical.shop-info--icon-xs .shop-info-icon svg {
+  height: 21px
+}
+.shop-info--vertical.shop-info--icon-sm .shop-info-icon.has-image {
+  width: 28px
+}
+.shop-info--vertical.shop-info--icon-sm .shop-info-icon svg {
+  height: 28px
+}
+.shop-info--vertical.shop-info--icon-md .shop-info-icon.has-image {
+  width: 35px
+}
+.shop-info--vertical.shop-info--icon-md .shop-info-icon svg {
+  height: 35px
+}
+.shop-info--vertical.shop-info--icon-lg .shop-info-icon.has-image {
+  width: 55px
+}
+.shop-info--vertical.shop-info--icon-lg .shop-info-icon svg {
+  height: 55px
+}
+.shop-info--vertical .shop-info-title-sm {
+  font-size: 14px;
+  line-height: 18px;
+  font-weight: var(--font-weight-500);
+  color: var(--text-color-light)
+}
+.holder.bg-alt .shop-info--bg-secondary .shop-info {
+  --body-bg-secondary: var(--body-bg)
+}
+@media only screen and (min-width:768px) and (max-width:1024px) {
+  .hide-insufficient-row.row-cols-md-3 .shop-info-wrap:last-child:nth-child(3n+4),
+  .hide-insufficient-row.row-cols-md-3 .shop-info-wrap:last-child:nth-child(3n+5),
+  .hide-insufficient-row.row-cols-md-3 .shop-info-wrap:nth-last-child(2):nth-child(3n+4) {
+    display: none
+  }
+}
+@media (max-width:767px) {
+  .hide-insufficient-row.row-cols-2 .shop-info-wrap:last-child:nth-child(odd) {
+    display: none
+  }
+}
+.shop-info--horizontal.shop-info-style2 .shop-info-icon {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  margin: 0!important;
+  border-radius: var(--radius-sm);
+  color: var(--shop-info-icon-filled-color)
+}
+.shop-info--horizontal.shop-info-style2 .shop-info-icon:not(.has-image) {
+  padding: 10px!important;
+  background: var(--shop-info-icon-filled-bg)
+}
+.shop-info--horizontal.shop-info-style2 .shop-info-icon.has-image {
+  padding: 0!important
+}
+.shop-info--horizontal.shop-info-style2 .shop-info {
+  -ms-flex-align: center;
+  align-items: center;
+  height: 100%;
+  margin: 0
+}
+.shop-info--horizontal.shop-info-style2 .shop-info-title {
+  margin-bottom: 4px!important
+}
+@media (max-width:575px) {
+  .shop-info--horizontal.shop-info-style2 {
+    --bs-gutter-y: 20px!important
+  }
+  .shop-info--horizontal.shop-info-style2 .shop-info-text:not(:first-child) {
+    margin-top: 25px!important
+  }
+  .shop-info--horizontal.shop-info-style2 .shop-info-title {
+    font-size: 15px!important;
+    line-height: 20px!important
+  }
+}
+.shop-info-row.shop-info--bg-primary .shop-info-wrap,
+.shop-info-row.shop-info--bg-secondary .shop-info-wrap {
+  height: auto
+}
+.shop-info-row.shop-info--bg-primary .shop-info,
+.shop-info-row.shop-info--bg-secondary .shop-info {
+  border-radius: calc(var(--radius-xl) * .5);
+  padding: 20px 15px
+}
+.shop-info-row.shop-info--bg-primary.shop-info--horizontal .shop-info,
+.shop-info-row.shop-info--bg-secondary.shop-info--horizontal .shop-info {
+  height: 100%;
+  display: -ms-flexbox;
+  display: flex;
+  margin: 0;
+  -ms-flex-align: center;
+  align-items: center
+}
+@media (max-width:575px) {
+  .shop-info-row.shop-info--bg-primary,
+  .shop-info-row.shop-info--bg-secondary {
+    --bs-gutter-y: 20px
+  }
+}
+.shop-info-row.shop-info--bg-primary .shop-info {
+  background: var(--body-bg)
+}
+.shop-info-row.shop-info--bg-secondary .shop-info {
+  background: var(--body-bg-secondary)
+}
+.shop-info-row.shop-info--lg .shop-info-title {
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: var(--font-weight-700);
+  font-family: var(--heading-font-family)
+}
+.shop-info-row.shop-info--lg .shop-info-title:not(:last-child) {
+  margin-bottom: 4px
+}
+.shop-info-row.shop-info--lg .shop-info-text {
+  font-size: 15px;
+  line-height: 20px
+}
+.shop-info-row.shop-info--lg .shop-info-icon .image-container {
+  width: 50px
+}
+.shop-info-row.shop-info--lg .shop-info-icon svg {
+  min-height: 48px;
+  max-height: 48px
+}

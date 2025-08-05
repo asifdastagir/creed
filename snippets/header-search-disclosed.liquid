@@ -1,0 +1,44 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- if section.settings.header_search -%}
+  <div class="col hdr-open-search {% if section.settings.header_mobile_search_open %}is-open{% endif %}" {% if section.settings.header_mobile_search_open %}data-search-open{% endif %}>
+    {%- if settings.predictive_search_enabled -%}
+      <search-page data-section-id="{{ section.id }}" data-header>
+    {%- endif -%}
+      <form action="{{ routes.search_url }}" method="get" role="search" class="search {{ class }}">
+        <div class="input-group">
+          <input
+            class="form-control"
+            type="search"
+            name="q"
+            value="{{ search.terms | escape }}"
+            placeholder="{{ 'theme.general.search_by' | t }}"
+            {%- if settings.predictive_search_enabled -%}
+              role="combobox"
+              aria-expanded="false"
+              aria-owns="predictive-search-results-list"
+              aria-controls="predictive-search-results-list"
+              aria-haspopup="listbox"
+              aria-autocomplete="list"
+              autocorrect="off"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+            {%- endif -%}
+          >
+          <input name="options[prefix]" type="hidden" value="last">
+          <button type="submit" class="icon-btn" aria-label="{{ 'general.search.search' | t }}">
+            <div class="loading-overlay__spinner hidden">
+              <div data-load="loading"></div>
+            </div>
+            <span>{% render 'icon-search' %}</span>
+          </button>
+        </div>
+        {%- if settings.predictive_search_enabled -%}
+          {% render 'predictive-search-results' %}
+        {%- endif -%}
+      </form>
+    {%- if settings.predictive_search_enabled -%}
+      </search-page>
+    {%- endif -%}
+  </div>
+{%- endif -%}

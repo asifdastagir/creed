@@ -1,0 +1,73 @@
+{%- liquid
+  assign show_tooltip = false
+  assign show_language = false
+  assign show_country = false
+
+  if settings.enable_language_selector and localization.available_languages.size > 1
+    assign show_language = true
+  endif
+
+  if settings.enable_country_selector and localization.available_countries.size > 1
+    assign show_country = true
+  endif
+
+  if show_language or show_country
+    assign show_tooltip = true
+  endif
+
+
+  assign icon = settings.header_settings_icon
+
+  if icon == 'auto'
+    assign icon = 'icon-settings2'
+
+    unless show_tooltip
+      if settings.mail_yes and settings.phone != blank
+        assign icon = 'icon-support4'
+      endif
+
+      unless settings.mail_yes
+        assign icon = 'icon-phone'
+      endunless
+
+      if settings.phone == blank
+        assign icon = 'icon-mail3'
+      endif
+    endunless
+  endif
+-%}
+<menu-popup data-ajax="{{ request.path }}?section_id=async-header-navigation-mobile" data-selector="#dropdnMenuTabPopup">
+  <a href="#" class="dropdn-link" title="{{ 'theme.general.menu' | t }}">
+    <span class="icon-wrap">{% render 'icon-menu' %}</span>
+  </a>
+</menu-popup>
+<div class="dropdn-modal-slide secondary-color dropdn-modal-slide--tab js-push-mbmenu" id="dropdnMenuTabPopup">
+  <div class="dropdn-content-block d-flex flex-column h-100">
+    <div class="tab-wrap">
+      <div class="dropdn-modal-slide-title-wrap d-flex align-items-center">
+        <div class="dropdn-modal-slide-title js-dropdn-modal-slide-title is-current" data-tab="tabMenu">{{ 'theme.general.menu' | t }}</div>
+        {%- if show_tooltip -%}
+          <div class="dropdn-modal-slide-title js-dropdn-modal-slide-title" data-tab="tabSettings">
+            {%- if settings.header_settings_icon_on_mobile -%}
+              <span class="icon-wrap">{% render 'icon', icon: icon %}</span>
+            {%- else -%}
+              {% if show_language %} {% if settings.language_name_truncate_yes %}{{ localization.language.endonym_name | capitalize | slice: 0, 3 }}{% else %}{{ localization.language.endonym_name | capitalize }}{% endif %} {% endif %}
+              {% if show_language and show_country %}, {% endif %}
+              {% if show_country %}{{ localization.country.currency.iso_code }} {{ localization.country.currency.symbol }}{% endif %}
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+        <div class="dark-light-mode">
+					{% render 'dark-light-switcher', show_wrapper: true, demo: false, suffix: '-mobile' %}
+				</div>
+      </div>
+      <div data-ajax-container class="h-100"></div>
+      <div class="loading-overlay"><div data-load="loading"></div></div>
+    </div>
+    {%- if settings.social_enable -%}
+      <div class="mobilemenu-social d-flex align-items-center justify-content-center">
+        {% render 'social-media', class: 'd-flex list-unstyled' %}
+      </div>
+    {%- endif -%}
+  </div>
+</div>

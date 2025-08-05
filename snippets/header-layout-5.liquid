@@ -1,0 +1,66 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- liquid
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+-%}
+{{ 'header5' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  if settings.mobile_bottom_navigation_account == 'header' and settings.mobile_bottom_navigation_wishlist == 'header' and settings.mobile_bottom_navigation_cart == 'header'
+    assign class = class | append: ' icons-compact-mobile'
+  endif
+
+  render 'header-sticky', section: section
+-%}
+<div class="hdr hdr--style5 border-0 {{ class }}">
+  <div class="hdr-topline">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-12 col-md-auto">
+          <div class="hdr-nav hide-mobile nav-holder text-center" role="navigation">
+            {% render 'header-navigation', show_dropdowns: false, section: section %}
+          </div>
+        </div>
+        <div class="col-auto ms-auto hide-mobile">
+          <div class="row align-items-center gx-5">
+            <div class="col-auto">
+              {%- if settings.phone != blank -%}
+                <a href="tel:{{ settings.phone }}" title="tel:{{ settings.phone }}" class="dropdn-link">
+                  <span class="icon-wrap">{% render 'icon-phone' %}</span><span class="dropdn-link-txt">{{ settings.phone }}</span>
+                </a>
+              {%- endif -%}
+            </div>
+            <div class="col-auto">
+              <div class="hdr-inline-link">
+                {% render 'header-settings-separated', section: section %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hdr-content">
+    <div class="container">
+      <div class="row justify-content-between">
+        <div class="col-auto hdr-logo">
+          {% render 'logo',
+            header_transparent: header_transparent,
+            logo: logo,
+            svg_logo: svg_logo,
+            svg_logo_name: svg_logo_name,
+            logo_transparent: logo_transparent,
+            svg_logo_transparent: svg_logo_transparent,
+            svg_logo_name_transparent: svg_logo_name_transparent,
+            logo_width: section.settings.logo_width,
+            logo_width_mobile: section.settings.logo_width_mobile,
+            prefix: 'Header-logo-',
+            id: section.id,
+            class: 'logo'
+          %}
+        </div>
+        {% render 'header-layout-5-body' %}
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,80 @@
+@media (max-width:1465px) {
+  .hdr.hdr--style3 .mmenu:not(.mmenu--single) {
+    margin: 0 -26px
+  }
+  .hdr.hdr--style3 .mmenu > li > a,
+  .hdr.hdr--style3 .mmenu > li > category-popup > a {
+    padding-right: 26px;
+    padding-left: 26px
+  }
+}
+@media (min-width:1025px) {
+  .hdr.hdr--style3 .dropdn .dropdn-content:not(.dropdn-content--info) {
+    transform: translate3d(-10px,37px,0)
+  }
+  .hdr.hdr--style3 .dropdn.is-hovered .dropdn-content:not(.dropdn-content--info) {
+    transform: translate3d(-10px,17px,0)
+  }
+}
+@media (max-width:1024px) {
+  .hdr.hdr--style3 .hdr-logo .image-container {
+    position: relative;
+    transform: translateX(-50%);
+    left: 50%
+  }
+  .hdr.hdr--style3 .hdr-content .dropdn-link[href^="tel:"] [class*=icon] svg {
+    top: 2px
+  }
+}
+@media (max-width:1024px) {
+  .hdr.hdr--style3 .hdr-logo {
+    min-width: 33%
+  }
+}
+@media (max-width:575px) {
+  .hdr.hdr--style3 .hdr-logo {
+    min-width: calc(2 * var(--logo-max-width-m))
+  }
+}
+@media (max-width:479px) {
+  .hdr.hdr--style3 .hdr-logo {
+    min-width: calc(2 * var(--logo-max-width-m))
+  }
+}
+@media (max-width:1024px) {
+  .hdr.hdr--style3 .hdr-links-wrap {
+    max-width: calc(50% - var(--logo-max-width))
+  }
+}
+@media (max-width:575px) {
+  .hdr.hdr--style3 .hdr-links-wrap {
+    max-width: calc(50% - var(--logo-max-width-mobile))
+  }
+}
+@media (max-width:479px) {
+  .hdr.hdr--style3 .hdr-links-wrap {
+    max-width: calc(50% - var(--logo-max-width-mobile))
+  }
+}
+@media (max-width:1024px) {
+  .hdr.hdr--style3.hdr--reversed-menu-icon .hdr-links-wrap:first-child {
+    -ms-flex-order: 3;
+    order: 3
+  }
+  .hdr.hdr--style3.hdr--reversed-menu-icon .hdr-links-wrap:first-child .hdr-inline-link {
+    -ms-flex-direction: row-reverse!important;
+    flex-direction: row-reverse!important
+  }
+  .hdr.hdr--style3.hdr--reversed-menu-icon .hdr-links-wrap:last-child {
+    -ms-flex-order: 1;
+    order: 1
+  }
+  .hdr.hdr--style3.hdr--reversed-menu-icon .hdr-links-wrap:last-child .hdr-inline-link {
+    -ms-flex-direction: row-reverse!important;
+    flex-direction: row-reverse!important
+  }
+  .hdr.hdr--style3.hdr--reversed-menu-icon .hdr-logo {
+    -ms-flex-order: 2;
+    order: 2
+  }
+}

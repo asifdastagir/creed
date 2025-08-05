@@ -1,0 +1,966 @@
+{% comment %}theme-check-disable DeprecateLazysizes,ImgWidthAndHeight, ImgLazyLoading, RemoteAsset, UnusedAssign{% endcomment %}
+{%- liquid
+  assign layout = 'index-instagram'
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+      assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+-%}
+{%- if section.settings.layout == 'square_grid' or section.settings.layout == 'square_grid_2' or section.settings.layout == 'square_grid_3' -%}
+  {{ 'instafeed2' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{%- elsif section.settings.layout == 'carousel' -%}
+  {{ 'instafeed3' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{%- else -%}
+  {{ 'instafeed' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+{% render 'section-wrapper', placement: 'top' %}
+
+<div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+  <div class="{% render 'section-container-class', layout: layout %}">
+    {%- unless section.settings.layout == 'square_grid_2' or section.settings.layout == 'square_grid_3' -%}
+      <div class="title-wrap text-center">
+        <h2 class="h-xl-style">{{ section.settings.heading }}</h2>
+      </div>
+    {%- endunless -%}
+      <instagram-feed>
+        {%- if section.settings.layout == 'carousel' -%}
+          <div class="swiper-container instagram-carousel">
+            <div  class="swiper-wrapper js-instagram-feed"
+                  {% if section.settings.manual %}
+                    data-static
+                  {% else %}
+                    data-limit="{{ section.settings.insta_max }}" data-tag="{{ section.settings.insta_tag }}" data-token="{{ section.settings.insta_token }}"
+                  {% endif %}
+            >
+              {%- if section.settings.manual -%}
+                {%- for block in section.blocks -%}
+                  {%- liquid assign href = block.settings.url | default: '#' -%}
+                    <div class="swiper-slide">
+                      {% render 'image-container',
+                        image: block.settings.image,
+                        padding: 100,
+                        sizes: '136px',
+                        width_times: 3,
+                        is_link: true,
+                        href: href,
+                        target_blank: 1,
+                        before_img: '<span class="image-wrap">',
+                        after_img: '<i></i></span>',
+                      %}
+                    </div>
+                {%- endfor -%}
+              {%- endif -%}
+            </div>
+            <div class="swiper-arrows-carousel container">
+              <div class="swiper-button-next"></div>
+              <div class="swiper-button-prev"></div>
+            </div>
+          </div>
+          <template><div class="swiper-slide"><a href={#link#} target="_blank" class="image-container image-hover-scale ic--bg ic--cover" data-tippy-placement="top" data-tippy-appendTo="parent" {% unless section.settings.layout == 'square_grid_2' %}data-tippy-content={#caption#}{% endunless %} style="padding-bottom: 100%"><span class="image-wrap"><img class="lazyload fade-up" data-src={#image#} /><i></i></span></a></div></template>
+        {%- elsif section.settings.layout == 'square_grid_3' -%}
+          <div class="instagram-grid-complex ig--style-squared-no-gutter">
+            <a {% if section.settings.url != blank %}href="{{ section.settings.url }}"{% endif %} target="_blank" class="instagram-grid-center-title">
+              <span>{% render 'icon-instagram' %}</span>
+              <span>{{ section.settings.heading }}</span>
+            </a>
+            {%- if section.settings.manual -%}
+              <div class="js-instagram-feed">
+                {%- for block in section.blocks -%}
+                  {%- liquid assign href = block.settings.url | default: '#' -%}
+                  <div class="instagram-item">
+                    {% render 'image-container',
+                            image: block.settings.image,
+                            padding: 100,
+                            sizes: '270px',
+                            width_times: 3,
+                            is_link: true,
+                            href: href,
+                            target_blank: 1,
+                            before_img: '<span class="image-wrap">',
+                            after_img: '<i></i></span>',
+                    %}
+                  </div>
+                {%- endfor -%}
+              </div>
+              {%- else -%}
+                <div  class="js-instagram-feed" data-limit="{{ section.settings.insta_max }}" data-tag="{{ section.settings.insta_tag }}" data-token="{{ section.settings.insta_token }}"></div>
+              {%- endif -%}
+            </div>
+          <template><div class="instagram-item"><a href={#link#} target="_blank" class="image-container image-hover-scale ic--bg ic--cover" data-tippy-placement="top" data-tippy-appendTo="parent" {% unless section.settings.layout == 'square_grid_2' %}data-tippy-content={#caption#}{% endunless %} style="padding-bottom: 100%"><span class="image-wrap"><img class="lazyload fade-up" data-src={#image#} alt="{#caption#}" /><i></i></span></a></div></template>
+        {%- else -%}
+          <smart-row>
+            <div class="instagram-grid ig--style{%- if section.settings.layout == 'square_grid' or section.settings.layout == 'square_grid_2' -%}-squared {% if section.settings.layout == 'square_grid_2' %}ig--style-squared-no-gutter{% endif %}{%- else -%}-circle{%- endif %} {% if store_width > 1465 %}instagram-grid-xxl-10 instagram-grid-xxxl-12{%- endif %}">
+              {% if section.settings.layout == 'square_grid' %}<a {% if section.settings.url != blank %}href="{{ section.settings.url }}"{% endif %} target="_blank" class="instagram-grid-center-icon"></a>{% endif %}
+              {% if section.settings.layout == 'square_grid_2' %}<a {% if section.settings.url != blank %}href="{{ section.settings.url }}"{% endif %} target="_blank" class="instagram-grid-center-title">
+                <span>{% render 'icon-instagram' %}</span>
+                <span>{{ section.settings.heading }}</span>
+              </a>{% endif %}
+              {%- if section.settings.manual -%}
+                <div class="smart-row js-instagram-feed">
+                  {%- for block in section.blocks -%}
+                    {%- liquid assign href = block.settings.url | default: '#' -%}
+                    <div class="instagram-item">
+                      {% render 'image-container',
+                        image: block.settings.image,
+                        padding: 100,
+                        sizes: '136px',
+                        width_times: 3,
+                        is_link: true,
+                        href: href,
+                        target_blank: 1,
+                        before_img: '<span class="image-wrap">',
+                        after_img: '<i></i></span>',
+                      %}
+                    </div>
+                    <div class="line-break"></div>
+                  {%- endfor -%}
+                </div>
+              {%- else -%}
+                <div  class="smart-row js-instagram-feed" data-limit="{{ section.settings.insta_max }}" data-tag="{{ section.settings.insta_tag }}" data-token="{{ section.settings.insta_token }}"></div>
+              {%- endif -%}
+            </div>
+          </smart-row>
+          <template><div class="instagram-item"><a href={#link#} target="_blank" class="image-container image-hover-scale ic--bg ic--cover" data-tippy-placement="top" data-tippy-appendTo="parent" {% unless section.settings.layout == 'square_grid_2' %}data-tippy-content={#caption#}{% endunless %} style="padding-bottom: 100%"><span class="image-wrap"><img class="lazyload fade-up" data-src={#image#} alt="{#caption#}" /><i></i></span></a></div><div class="line-break"></div></template>
+        {%- endif -%}
+
+      </instagram-feed>
+  </div>
+</div>
+{% render 'section-wrapper' %}
+{% schema %}
+{
+  "name": "Instagram",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_animation",
+      "label": "Enable soft appearing of section",
+      "default": true,
+      "info": "Global sections animation disabling in Theme Settings / General / Sections. AUTODISABLED if section has top or bottom separator."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "fluid",
+      "label": "Fluid layout",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Select design variant",
+      "options": [
+        {
+          "value": "circle_grid",
+          "label": "Grid of circles"
+        },
+        {
+          "value": "square_grid",
+          "label": "Grid of squares"
+        },
+        {
+          "value": "square_grid_2",
+          "label": "Grid of squares 2"
+        },
+        {
+          "value": "square_grid_3",
+          "label": "Grid of squares 3"
+        },
+        {
+          "value": "carousel",
+          "label": "Carousel of squares"
+        }
+      ],
+      "default": "circle_grid"
+    },
+    {
+      "type": "range",
+      "id": "insta_max",
+      "min": 1,
+      "max": 48,
+      "step": 1,
+      "unit": "max",
+      "label": "Download posts ",
+      "default": 9
+    },
+    {
+      "type": "checkbox",
+      "id": "manual",
+      "label": "Manual adding photos",
+      "default": false,
+      "info": "Disables automatic loading. Add / edit section blocks."
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "url",
+      "id": "url",
+      "label": "Link for Grid of squares"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "#@Shop By Instagram"
+    },
+    {
+      "type": "text",
+      "id": "insta_token",
+      "label": "accessToken",
+      "info": "[generate here](https://developers.facebook.com/), [how to get access Token](https://big-skins.com/lumia/documentation/online/sections-everywhere/instagram/#how-to-get-instagram-access-token)",
+      "default": "IGQVJWWjJoZAmc4dTg4V3V6YWtwZAmk0TlQzRmpaZA1lTTjh6Q1lpcDBXV0xTazF4TXhrYUo3cFRUcHh6YzQxc0pwTVdPalI4X1lBZA2N0MHd3WWlfYllwUFE5OV92Rm40ZAzBmZA0VySkVKV0gtUDdzNkE2VgZDZD"
+    },
+    {
+      "type": "text",
+      "id": "insta_tag",
+      "label": "Show all posts with tag",
+      "default": "fashionDefault"
+    },
+    {
+      "type": "header",
+      "content": "SECTION WIDTH"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Select width source",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use store width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom width"
+        }
+      ],
+      "default": "global",
+      "info": "Store width you can set in Theme Settings / General"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 1178,
+      "max": 1978,
+      "step": 8,
+      "unit": "px",
+      "label": "Custom width",
+      "default": 1178,
+      "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable background",
+      "default": false,
+      "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+    },
+    {
+      "type": "select",
+      "id": "background_preset",
+      "label": "Background image - preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "product-cosmetics-bg.png",
+          "label": "Leaves 1"
+        },
+        {
+          "value": "bottom-cosmetics-bg.png",
+          "label": "Leaves 2"
+        },
+        {
+          "value": "bg-makeup1.png,bg-makeup1-m.png",
+          "label": "Pink and Waves 1"
+        },
+        {
+          "value": "bg-makeup2.png,bg-makeup2-m.png",
+          "label": "Pink and Waves 2"
+        },
+        {
+          "value": "bg-makeup4.png,bg-makeup4-m.png",
+          "label": "Pink and Waves 3"
+        },
+        {
+          "value": "bg-makeup3.png,bg-makeup3-m.png",
+          "label": "Purple Splash"
+        },
+        {
+          "value": "bg-sweets1.png",
+          "label": "Blue Sun Rays"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image - custom on Desktop"
+    },
+    {
+      "type": "select",
+      "id": "background_behavior",
+      "label": "Background image behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image - custom on Mobile",
+      "info": "only if Background image - custom on Desktop selected"
+    },
+    {
+      "type": "select",
+      "id": "background_image_placeholder_type",
+      "label": "Placeholder background color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_secondary_bg"
+    },
+    {
+      "type": "color",
+      "id": "background_image_placeholder",
+      "label": "Custom - Placeholder background color"
+    },
+    {
+      "type": "header",
+      "content": "SECTION SEPARATOR"
+    },
+    {
+      "type": "header",
+      "content": "Top separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_header_main_bg",
+          "label": "Header - Middle(main) part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_top_color",
+      "label": "Custom - top separator color"
+    },
+    {
+      "type": "header",
+      "content": "Bottom separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "paragraph",
+      "content": "'Global separator' is set in Theme Settings / Separators / Global separator style"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_footer_top_bg",
+          "label": "Footer - Top part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_bottom_color",
+      "label": "Custom - bottom separator color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "photo",
+      "name": "photo",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Title",
+          "label": "Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Photo"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Instagram / constructor",
+      "blocks": [
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        }
+      ]
+    },
+    {
+      "name": "Instagram / preset 1 Grid of circles",
+      "blocks": [
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        }
+      ]
+    },
+    {
+      "name": "Instagram / preset 2 Grid of squares",
+      "settings": {
+        "fluid": true,
+        "layout": "square_grid",
+        "insta_max": 8
+      },
+      "blocks": [
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        }
+      ]
+    },
+    {
+      "name": "Instagram / preset 3 Grid of squares",
+      "settings": {
+        "fluid": true,
+        "layout": "square_grid_2",
+        "insta_max": 16
+      },
+      "blocks": [
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        }
+      ]
+    },
+    {
+      "name": "Instagram / preset 4 Carousel of squares",
+      "settings": {
+        "layout": "carousel",
+        "fluid": true,
+        "insta_max": 12
+      },
+      "blocks": [
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        }
+      ]
+    },
+    {
+      "name": "Instagram / preset 5 Grid of squares Mixed",
+      "settings": {
+        "layout": "square_grid_3",
+        "fluid": true,
+        "insta_max": 7
+      },
+      "blocks": [
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        },
+        {
+          "type": "photo"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

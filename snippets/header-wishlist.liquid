@@ -1,0 +1,46 @@
+{%- unless settings.catalog_mode -%}
+  {%- if settings.wishlist -%}
+    <div class="dropdn minicart">
+      {% render 'header-wishlist-icon', icon: icon %}
+        <div class="dropdn-modal-slide border-divided secondary-color dropdn-modal-wishlist dropdn-content minicart-drop p-0" id="dropdnWishlistPopup">
+          <wishlist-items>
+            <product-form data-multiple-forms>
+              <div class="dropdn-content-block pb-0">
+                <h3 class="minicart-drop-title">{{ 'theme.general.wishlist' | t }}</h3>
+                <div class="minicart-drop-text hidden" data-wishlist-subtext>{{ 'theme.general.wishlist_subtext' | t }}</div>
+                <div class="mt-2"></div>
+                <div class="wishlist-items-wrap">
+                  <div class="loading-overlay hidden"><div data-load="loading"></div></div>
+                  <div class="minicart-drop-content js-dropdn-content-scroll">
+                    <div class="js-contents-wishlist-items" data-render></div>
+                    <div class="minicart-empty js-wishlist-empty" data-empty>
+                      <div class="minicart-empty-icon">
+                        {% render 'icon-empty-wishlist' %}
+                      </div>
+                      <div class="minicart-empty-title h2-style">{{ 'theme.general.wishlist_empty' | t }}</div>
+                      <div class="minicart-empty-text">{{ 'theme.general.wishlist_subtext' | t }}</div>
+                    </div>
+                  </div>
+                  <div class="minicart-drop-fixed hidden">
+                    <div class="product-form__error-message-wrapper" role="alert" hidden data-product-form-error-message-wrapper>
+                      {% render 'icon-error' %}
+                      <span class="product-form__error-message"></span>
+                    </div>
+                    <button class="btn btn--md btn--wrap w-100" data-submit-multiple-forms>
+                      <div class="loading-overlay__spinner hidden"><div data-load="loading"></div></div>
+                      <span>{{ 'theme.general.add_full_wishlist' | t }}</span>
+                    </button>
+                    <div class="row align-items-center mt-1">
+                      <div class="col text-start">
+                        <a href="#" onclick="event.preventDefault();wishlist.clear();wishlist.renderComponents()" class="link-clear-cart btn-link btn-link--sm"><span>{{ 'theme.general.clear_wishlist' | t }}</span></a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </product-form>
+          </wishlist-items>
+        </div>
+    </div>
+  {%- endif -%}
+{%- endunless -%}

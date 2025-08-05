@@ -1,0 +1,60 @@
+.page-not-found-icon svg {
+  max-height: 272px;
+  max-width: 100%
+}
+.page-not-found-icon img {
+  max-height: 272px;
+  max-width: 100%
+}
+.page-not-found-title {
+  font-size: 93px;
+  font-weight: var(--heading-xl-weight);
+  font-family: var(--heading-font-family);
+  line-height: 1.37em;
+  color: var(--page-not-found-title-color)
+}
+@media (max-width:767px) {
+  .page-not-found-title {
+    font-size: 73px
+  }
+}
+@media (max-width:575px) {
+  .page-not-found-title {
+    font-size: 53px
+  }
+}
+.page-not-found-title2 {
+  max-width: 500px;
+  margin-right: auto;
+  margin-left: auto;
+  font-size: 24px;
+  font-weight: var(--font-weight-400);
+  font-family: var(--heading-font-family);
+  line-height: 34px;
+  color: var(--page-not-found-title2-color)
+}
+.page-not-found-title2:not(:first-child) {
+  margin-top: 20px
+}
+.page-not-found-title3 {
+  max-width: 500px;
+  margin-right: auto;
+  margin-left: auto;
+  font-size: 18px;
+  font-weight: var(--font-weight-600);
+  line-height: 24px;
+  color: var(--page-not-found-title2-color)
+}
+.page-not-found-text {
+  max-width: 500px;
+  margin-right: auto;
+  margin-left: auto;
+  font-size: 15px;
+  font-weight: var(--font-weight-400);
+  line-height: 24px;
+  color: var(--page-not-found-text-color)
+}
+.page-not-found .btn {
+  min-width: 232px;
+  max-width: 100%
+}

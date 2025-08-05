@@ -1,0 +1,85 @@
+{%- liquid
+  assign show_badge_sale = settings.badge_sale
+  assign show_badge_new = settings.badge_new
+  assign show_badge_sold_out = settings.badge_sold_out
+  assign show_badge_subscription = settings.badge_subscription
+  assign badge_sale_style = settings.badge_sale_style
+  assign current_variant = product.selected_or_first_available_variant
+
+  if show_badge_sale and settings.badge_sale_show_method == 'individually'
+    assign show_badge_sale = product.metafields.custom.badge_sale
+  endif
+
+  assign badge_custom_list = ''
+  for tag in product.tags
+    if tag contains 'badge:'
+      assign badge_custom_text = tag | escape | split: 'badge:'
+
+      if badge_custom_text.size > 1
+        assign badge_custom_text = badge_custom_text | last | split: '|' | first
+      endif
+
+      assign badge_custom_color = tag | escape | split: 'badge-color:' | last | split: '|' | first | default: ''
+
+      assign badge_custom_list = badge_custom_list | append: badge_custom_text | append: '||' | append: badge_custom_color | append: '&&'
+    endif
+  endfor
+-%}
+
+<div class="prd-labels{{ class }}" {% if render %}data-render="badges-{{ product_form_id }}"{% endif %}>
+  {%- if show_badge_subscription -%}
+    {%- if layout != 'product-card-compact' and current_variant.selling_plan_allocations.size > 0 and layout != 'product-card-lookbook' -%}
+      {%- if product.requires_selling_plan -%}
+        <div class="prd-label prd-label--subscription">{{ 'theme.general.subscribe_only' | t }}</div>
+      {%- else -%}
+        <div class="prd-label prd-label--subscription-icon" data-toggle="tooltip" data-tippy-content="{{ 'theme.general.has_subscription' | t | escape }}" data-tippy-placement="right">{% render 'icon-return3' %}</div>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endif -%}
+
+  {%- liquid
+    assign on_sale = false
+    if current_variant.compare_at_price > current_variant.price
+      assign on_sale = true
+    endif
+    assign new = 0
+    for tag in product.tags
+      if tag == 'new' or tag == 'NEW' or tag == 'New' or tag contains '_new'
+        assign new = 1
+      endif
+    endfor
+  -%}
+
+  {%- if new == 1 and show_badge_new -%}
+    <div class="prd-label prd-label--new">{{ 'theme.general.new' | t | upcase }}</div>
+  {%- endif -%}
+
+  {%- if on_sale and show_badge_sale -%}
+    <div class="prd-label prd-label--sale">
+      {%- assign percent = current_variant.compare_at_price | minus: current_variant.price | times: 100.0 | divided_by: current_variant.compare_at_price | times: 100 | divided_by: 100 | floor -%}
+      {%- if badge_sale_style == 'all' -%}
+        <span>-{{ percent }}% <span class="sale-text">{{ 'products.product.on_sale' | t | upcase }}</span></span>
+      {%- elsif badge_sale_style == 'text' -%}
+        <span><span class="sale-text">{{ 'products.product.on_sale' | t | upcase }}</span></span>
+      {%- else -%}
+        <span>-{{ percent }}%</span>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+
+  {%- if show_badge_sold_out and current_variant.available == false -%}
+    <div class="prd-label prd-label--soldout">{{ 'products.product.sold_out' | t | upcase }}</div>
+  {%- endif -%}
+
+  {%- if badge_custom_list != blank -%}
+    {%- assign badge_items = badge_custom_list | split: '&&' -%}
+    {%- for badge in badge_items -%}
+      {%- assign badge_parts = badge | split: '||' -%}
+      {%- assign badge_text = badge_parts[0] -%}
+      {%- assign badge_color = badge_parts[1] -%}
+      {%- if badge_text != blank -%}
+        <div class="prd-label prd-label--custom label-{{ badge_color }}-color">{{ badge_text }}</div>
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endif -%}
+</div>

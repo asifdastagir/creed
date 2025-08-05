@@ -1,0 +1,257 @@
+{% comment %}theme-check-disable UnusedAssign{% endcomment %}
+{%- liquid
+  assign layout = 'customers-login'
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+    assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+
+-%}
+{%- unless settings.catalog_mode -%}
+  <div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+    <div class="{% render 'section-container-class', layout: layout %}">
+          <div class="row align-items-center">
+          {%- if section.settings.image_login_page != blank -%}
+            <div class="col-12 col-sm-6 col-md-7 pe-lg-5 pe-xl-10 mt-5 mt-sm-0 mt-2 mt-sm-0 order-2 order-sm-1">
+              {% render 'image-container',
+                  image: section.settings.image_login_page,
+                  padding_no_bg: 145,
+                  sizes: '(min-width: 445px) 1200px, (min-width: 495px) 992px, (min-width: 390px) 768px, (min-width: 240px) 576px, calc(100vw - 30px)',
+                  class_img: 'w-100',
+                  bg: false,
+                  hover_scale: false
+              %}
+            </div>
+          {%- endif -%}
+
+          <div class="{% if section.settings.image_login_page != blank %}col-12 col-sm-6 col-md-5 ms-auto order-1 order-sm-2{% else %}col-12 mx-auto{% endif %}">
+            <div id="recover" tabindex="-1">
+              <div class="title-wrap text-center">
+                <h1 class="h1-style">{{ 'customer.recover_password.title' | t }}</h1>
+                <div class="h-sub">{{ 'customer.recover_password.subtext' | t }}</div>
+              </div>
+              {%- form 'recover_customer_password', class: "mt-5 login-form login-form--max" -%}
+                {% assign recover_success = form.posted_successfully? %}
+                {%- if form.errors -%}
+                  {% render 'error', message: form.errors.messages['form'] %}
+                {%- endif -%}
+                <div class="form-group">
+                  <label for="RecoverEmail">
+                    {{ 'customer.login_page.email' | t }}
+                  </label>
+                  <div class="form-control-wrap">
+                    <input type="email"
+                        value=""
+                        name="email"
+                        id="RecoverEmail"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        autocomplete="email"
+                        {% if form.errors %}
+                          aria-invalid="true"
+                          aria-describedby="RecoverEmail-email-error"
+                          autofocus
+                        {% endif %}
+                        required class="form-control" placeholder="{{ 'theme.general.enter_your_email_here' | t }}"
+                    >
+                    {% render 'input-check', status: 'verify' %}
+                  </div>
+                </div>
+                <div class="mt-5"></div>
+                <button type="submit" class="btn w-100">{{ 'theme.general.send_reset_link' | t }}</button>
+                <div class="text-center mt-15 form-info"><a href="#login" class="btn-link"><span class="icon-wrap">{% render 'icon-arrow-left' %}</span><span>{{ 'theme.general.return_back' | t }}</span></a></div>
+              {%- endform -%}
+            </div>
+
+            <div id="login" tabindex="-1">
+              <div class="title-wrap text-center">
+                <h1 class="h1-style">{{ 'theme.general.login_page_title' | t }}</h1>
+                <div class="h-sub">{{ 'theme.general.login_page_subtext' | t }}</div>
+              </div>
+              {%- form 'customer_login', class: 'mt-5 login-form login-form--max' -%}
+                {%- liquid
+                  if recover_success == true
+                    assign message = 'customer.recover_password.success' | t
+                    render 'success', message: message
+                  endif
+                -%}
+                {%- if form.errors -%}
+                  <div tabindex="-1" autofocus>
+                    {%- liquid
+                      for field in form.errors
+                        render 'error', message: form.errors.messages[field]
+                      endfor
+                    -%}
+                  </div>
+                {%- endif -%}
+                <div class="form-group">
+                  <label for="CustomerEmail">
+                    {{ 'customer.login_page.email' | t }}
+                  </label>
+                  <div class="form-control-wrap">
+                    <input
+                        type="email"
+                        name="customer[email]"
+                        id="CustomerEmail"
+                        autocomplete="email"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        {% if form.errors contains 'form' %}
+                          aria-invalid="true"
+                        {% endif %}
+                        placeholder="{{ 'theme.general.enter_your_email_here' | t }}"
+                        required
+                        class="form-control"
+                    >
+                    {% render 'input-check', status: 'verify' %}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="CustomerPassword">
+                    {{ 'customer.login_page.password' | t }}
+                  </label>
+                  <div class="form-control-wrap">
+                    <input
+                        type="password"
+                        value=""
+                        name="customer[password]"
+                        minlength="5"
+                        id="CustomerPassword"
+                        autocomplete="current-password"
+                        {% if form.errors contains 'form' %}
+                          aria-invalid="true"
+                        {% endif %}
+                        placeholder="******"
+                        required
+                        class="form-control"
+                    >
+                    {% render 'input-check', status: 'verify' %}
+                  </div>
+                </div>
+                <div class="mt-5"></div>
+                <button type="submit" class="btn w-100">{{ 'customer.login_page.sign_in' | t }}</button>
+                <div class="text-center mt-15 form-info">
+                  <a href="#recover">
+                    {{ 'customer.login_page.forgot_password' | t }}
+                  </a>
+                </div>
+                <div class="text-center mt-1 form-info">
+                  {{ 'theme.general.dont_have_an_account' | t }}
+                  <a href="{{ routes.account_register_url }}" class="d-block d-md-inline " data-form="registerForm">{{ 'theme.general.register_here' | t }}</a>
+                </div>
+              {%- endform -%}
+            </div>
+
+            {%- if shop.checkout.guest_login -%}
+              <div class="title-wrap text-center mt-10">
+                <h1 class="h1-style">{{ 'customer.login_page.guest_title' | t }}</h1>
+              </div>
+              {%- form 'guest_login', class: 'login-form--max' -%}
+                <button class="btn w-100 btn--invert">
+                  {{ 'customer.login_page.guest_continue' | t }}
+                </button>
+              {%- endform -%}
+            {%- endif -%}
+          </div>
+        </div>
+    </div>
+  </div>
+{%- endunless -%}
+
+{% schema %}
+{
+  "name": "Main login",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_login_page",
+      "label": "Image",
+      "info": "recommended width is min 495px (for retina is better to use 495x2 size)"
+    },
+    {
+      "type": "header",
+      "content": "SECTION WIDTH"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Select width source",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use store width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom width"
+        }
+      ],
+      "default": "custom",
+      "info": "Store width you can set in Theme Settings / General"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 920,
+      "max": 1720,
+      "step": 8,
+      "unit": "px",
+      "label": "Custom width",
+      "default": 920,
+      "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 46
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": false,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 20
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": false,
+      "info": "from Theme Settings / General / Layout"
+    }
+  ]
+}
+{% endschema %}

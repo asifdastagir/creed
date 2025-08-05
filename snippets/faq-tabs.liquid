@@ -1,0 +1,3 @@
+{%- for category in categories -%}
+  <li {% if forloop.first %}class="is-current"{% endif %}><a href="#" data-tab="tab-{{ category | handle }}">{{ category }}</a></li>
+{%- endfor -%}

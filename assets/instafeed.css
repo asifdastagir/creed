@@ -1,0 +1,128 @@
+@media (max-width:767px) {
+  instagram-feed {
+    display: block;
+    max-width: calc(100vw - 30px);
+    overflow: hidden
+  }
+}
+.instagram-grid.ig--style-circle {
+  position: relative
+}
+.instagram-grid.ig--style-circle .instagram_gallery,
+.instagram-grid.ig--style-circle > * {
+  margin-top: -20px;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  width: calc(100% + 20px);
+  margin-left: -10px;
+  margin-right: -10px;
+  padding-bottom: 1px
+}
+.instagram-grid.ig--style-circle .instagram-item {
+  margin-top: 20px;
+  opacity: 1;
+  width: calc(11.1% - 20px);
+  margin-left: 10px;
+  margin-right: 10px;
+  will-change: transform
+}
+.instagram-grid.ig--style-circle .instagram-item .image-container,
+.instagram-grid.ig--style-circle .instagram-item.image-container {
+  border-radius: var(--radius-50)!important;
+  overflow: hidden
+}
+@media (hover:hover),
+(hover:none) and (min-width:1025px) {
+  .instagram-grid.ig--style-circle .instagram-item:hover {
+    position: relative;
+    z-index: 1
+  }
+  .instagram-grid.ig--style-circle .instagram-item:hover span i,
+  .instagram-grid.ig--style-circle .instagram-item:hover span:after {
+    opacity: .8
+  }
+}
+.instagram-grid.ig--style-circle .instagram-item span i {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  display: -ms-flexbox;
+  display: flex;
+  max-width: 42px;
+  -ms-flex-pack: center;
+  justify-content: center;
+  content: url("data:image/svg+xml,<svg version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 56.7 56.7' enable-background='new 0 0 56.7 56.7' xml:space='preserve'><g><path fill='white' d='M28.2,16.7c-7,0-12.8,5.7-12.8,12.8s5.7,12.8,12.8,12.8S41,36.5,41,29.5S35.2,16.7,28.2,16.7z M28.2,37.7 c-4.5,0-8.2-3.7-8.2-8.2s3.7-8.2,8.2-8.2s8.2,3.7,8.2,8.2S32.7,37.7,28.2,37.7z'/><circle fill='white' cx='41.5' cy='16.4' r='2.9'/><path fill='white' d='M49,8.9c-2.6-2.7-6.3-4.1-10.5-4.1H17.9c-8.7,0-14.5,5.8-14.5,14.5v20.5c0,4.3,1.4,8,4.2,10.7c2.7,2.6,6.3,3.9,10.4,3.9 h20.4c4.3,0,7.9-1.4,10.5-3.9c2.7-2.6,4.1-6.3,4.1-10.6V19.3C53,15.1,51.6,11.5,49,8.9z M48.6,39.9c0,3.1-1.1,5.6-2.9,7.3 s-4.3,2.6-7.3,2.6H18c-3,0-5.5-0.9-7.3-2.6C8.9,45.4,8,42.9,8,39.8V19.3c0-3,0.9-5.5,2.7-7.3c1.7-1.7,4.3-2.6,7.3-2.6h20.6 c3,0,5.5,0.9,7.3,2.7c1.7,1.8,2.7,4.3,2.7,7.2V39.9L48.6,39.9z'/></g></svg>");
+  opacity: 0;
+  transition: .2s;
+  transform: translateY(-50%)
+}
+.instagram-grid.ig--style-circle .instagram-item span:after {
+  content: '';
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  opacity: 0;
+  background-color: var(--custom-color);
+  border-radius: var(--radius-50);
+  transition: .2s
+}
+.instagram-grid.ig--style-circle .instagram-item img {
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  object-fit: cover
+}
+@media (min-width:768px) and (max-width:1024px) {
+  .instagram-grid.ig--style-circle .instagram-item {
+    width: calc(16.666% - 20px);
+    display: none
+  }
+  .instagram-grid.ig--style-circle .instagram-item:nth-child(-n+12) {
+    display: block
+  }
+}
+@media (min-width:576px) and (max-width:767px) {
+  .instagram-grid.ig--style-circle .instagram-item {
+    width: calc(25% - 20px);
+    display: none
+  }
+  .instagram-grid.ig--style-circle .instagram-item:nth-child(-n+16) {
+    display: block
+  }
+}
+@media (max-width:575px) {
+  .instagram-grid.ig--style-circle .instagram-item {
+    width: calc(33.333% - 20px);
+    display: none
+  }
+  .instagram-grid.ig--style-circle .instagram-item:nth-child(-n+12) {
+    display: block
+  }
+}
+@media (min-width:1466px) {
+  .instagram-grid.ig--style-circle.instagram-grid-xxl-10 .instagram-item {
+    width: calc(10% - 20px)
+  }
+}
+@media (min-width:1700px) {
+  .instagram-grid.ig--style-circle.instagram-grid-xxxl-12 .instagram-item {
+    width: calc(8.333% - 20px)
+  }
+}
+.instagram-item [data-tippy-root] {
+  max-width: none;
+  width: max-content
+}
+.instagram-item [data-tippy-root] .tippy-content {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis
+}

@@ -1,0 +1,45 @@
+{%- liquid
+    assign default_rgba = 'rgba(0,0,0,0)'
+    assign pairs = colors_map | split: '|'
+
+    for pair in pairs
+        assign pair_entry = pair | split: ':'
+
+        if pair_entry.size > 1
+            assign settings_schema_id = pair_entry | first
+            assign color_value = settings[settings_schema_id]
+
+            if template == 'product'
+                assign target = product
+            elsif template == 'collection'
+                assign target = collection
+            endif
+
+            assign color_value = target.metafields.custom[settings_schema_id] | default: color_value
+            assign css_vars = pair_entry | last | split: ','
+
+            for css_var_rule in css_vars
+                assign css_var_array = css_var_rule | split: '!'
+                assign css_var = css_var_array | first
+
+                if css_var_array.size > 1
+                    assign rule = css_var_array | last
+
+                    if rule contains 'alpha'
+                        assign alpha = rule | split: 'alpha' | last | plus: 0
+                        assign color_value = color_value | color_modify: 'alpha', alpha
+                    elsif rule contains 'var'
+                        assign color_value = rule
+                    endif
+                endif
+
+                assign color_value_handelize = color_value | handleize 
+                assign default_rgba_handelize = default_rgba | handleize
+
+                if color_value_handelize != default_rgba_handelize and color_value != blank
+                    echo css_var | append: ':' | append: color_value | append: ';'
+                endif
+            endfor
+        endif
+    endfor
+-%}

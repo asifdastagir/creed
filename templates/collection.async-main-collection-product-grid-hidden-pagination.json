@@ -1,0 +1,13 @@
+{
+  "layout": false,
+  "sections": {
+    "async-collection-product-related": {
+      "type": "async-collection-product-related",
+      "settings": {
+      }
+    }
+  },
+  "order": [
+    "async-collection-product-related"
+  ]
+}

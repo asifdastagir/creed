@@ -1,0 +1,61 @@
+<div class="modal-wrap-scroll js-dropdn-content-scroll">
+  <div class="title-wrap text-center">
+    <h2 class="h1-style">{{ 'theme.general.have_a_question' | t }}</h2>
+    <div class="h-sub w-800 d-none d-sm-block">{{ 'theme.general.have_a_question_subtitle' | t }}</div>
+  </div>
+  <div class="form-wrap">
+    {%- form 'contact', class: 'mt-2' -%}
+      <div class="form-group">
+        <label>{{ 'templates.contact.form.name' | t }}</label>
+        <div class="form-control-wrap">
+          <input
+            class="form-control"
+            autocomplete="name"
+            type="text"
+            id="ContactForm-name"
+            name="contact[{{ 'templates.contact.form.name' | t }}]"
+            value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+            placeholder="{{ 'theme.general.enter_your_first_name' | t }}">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>{{ 'templates.contact.form.email' | t }}</label>
+        <div class="form-control-wrap">
+          <input
+            autocomplete="email"
+            type="email"
+            class="form-control"
+            name="contact[email]"
+            spellcheck="false"
+            autocapitalize="off"
+            value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+            aria-required="true"
+            {% if form.errors contains 'email' %}
+            aria-invalid="true"
+            aria-describedby="ContactForm-email-error"
+            {% endif %}
+            placeholder="{{ 'theme.general.enter_your_email_here' | t }}"
+            required>
+          {% render 'input-check' %}
+        </div>
+      </div>
+      <div class="form-group">
+        <label>{{ 'templates.contact.form.comment' | t }}</label>
+        <div class="form-control-wrap" data-render="ask-about-the-product-{{ product_form_id }}">
+          <textarea-autosize>
+            <textarea
+              name="contact[{{ 'templates.contact.form.comment' | t }}]"
+              required
+              class="form-control"
+              placeholder="{{ 'templates.contact.form.comment' | t }}">{{ 'theme.general.i_need_information_about_the_product' | t }} {% if current_variant.sku != blank %} SKU: {{ current_variant.sku }},{% endif %} "{{ current_variant.product.title }}{% unless current_variant.product.has_only_default_variant %}: {{ current_variant.title }}{% endunless %}"...</textarea>
+          </textarea-autosize>
+        </div>
+      </div>
+      <div class="mt-3"></div>
+      <button type="submit" class="btn w-100">{{ 'theme.general.ask_our_consultant' | t }}</button>
+      <div class="modal-form-info text-center mt-1">
+        {{ 'theme.general.ask_our_consultant_sub' | t }}
+      </div>
+    {%- endform -%}
+  </div>
+</div>

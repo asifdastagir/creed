@@ -1,0 +1,1039 @@
+{% comment %}theme-check-disable UnusedAssign, HtmlParsingError, DeprecateBgsizes, UndefinedObject{% endcomment %}
+{%- liquid
+  assign layout = 'index-chart-grid'
+  assign default_rgba = 'rgba(0,0,0,0)'
+
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+    assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+
+  if store_width > 1178
+    assign image_k = store_width | divided_by: 1178.00 | round: 2
+  endif
+
+  if block.settings.bg_alt
+    assign bg_class = 'bg-alt'
+  else
+    assign bg_class = 'bg-body'
+  endif
+
+  assign count = section.blocks.size | minus: 1 | divided_by: 2 | plus: 1
+
+  if count > 3
+    assign count = 3
+  endif
+
+-%}
+
+{{ 'about-benefits' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{%- unless layout == 'grid' -%}
+  {{ 'info-circles' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{%- endunless -%}
+
+{% render 'section-wrapper'
+  , placement: 'top' %}
+
+<div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+  <div class="{% render 'section-container-class', layout: layout %}">
+    {% render 'section-heading'
+      , section: section %}
+    {%- if section.settings.layout == 'grid' -%}
+      <div class="benefits-wrap row gy-4">
+        <div class="col-12 {% if section.settings.show_image %}col-md-6 col-lg-5{% endif %}">
+          <div class="row {% if section.settings.show_image %}row-cols-2{% else %}row-cols-2 row-cols-md-4 justify-content-center{% endif %} g-3 g-lg-4">
+            {%- for block in section.blocks -%}
+              {%- liquid
+                capture color
+                  cycle '4', '6', '3', '1', '2', '5'
+                endcapture
+              -%}
+              <div class="col" {{ block.shopify_attributes }}>
+                <div
+                  class="benefits-item {% if block.settings.auto_colorization %}label-{{ color }}-color{% endif %}"
+                  {% if block.settings.auto_colorization == false %}
+                  style="background: {{ block.settings.bg }}; color: {{ block.settings.color }};"
+                  {% endif %}>
+                  {% assign number_parts = block.settings.number | split: ',' %}
+                  <div class="benefits-item-number">
+                    <number-counter
+                      class="lazyload"
+                      data-count="{{ number_parts[0] }}"
+                      data-expand="-100">0</number-counter>{{ number_parts[1] }}
+                  </div>
+                  <div class="benefits-item-title">{{ block.settings.title }}</div>
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+        </div>
+        {%- if section.settings.show_image -%}
+          <div class="col-12 col-md-6 col-lg-7">
+            <a {% if section.settings.url != blank %}href="{{ section.settings.url }}"{% endif %}>
+              {% render 'image-container',
+                  image: section.settings.image,
+                  padding_no_bg: 51.79,
+                  sizes: '885px',
+                  class_img: 'w-100',
+                  width_times: 2,
+                  class_ic: 'ic--fit-height-desktop'
+              %}
+            </a>
+          </div>
+        {%- endif -%}
+      </div>
+    {%- elsif section.settings.layout == 'circle' -%}
+      <div class="row row-cols-3 justify-content-center g-0 has-animation lazyload ">
+        <div class="col info-circles-wrap info-circles-{{ count }}">
+          {%- for block in section.blocks limit: count -%}
+            <div class="info-circle {{ bg_class }}" {{ block.shopify_attributes }}>
+              {%- if block.settings.icon_custom_svg != blank -%}
+                <div class="info-circle-icon">
+                  {{ block.settings.icon_custom_svg }}
+                </div>
+              {%- endif -%}
+              <div class="info-circle-title text-uppercase">{{ block.settings.title }}<br>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+        <div class="col info-center-image">
+          <a {% if section.settings.url != blank %}href="{{ section.settings.url }}"{% endif %}>
+            {% render 'image-container',
+                image: section.settings.image,
+                padding_no_bg: 100,
+                sizes: '470px',
+                bg: false
+            %}
+          </a>
+        </div>
+        <div class="col info-circles-wrap info-circles-{{ count }}">
+          {%- for block in section.blocks limit: count offset: continue -%}
+            <div class="info-circle {{ bg_class }}" {{ block.shopify_attributes }}>
+              {%- if block.settings.icon_custom_svg != blank -%}
+                <div class="info-circle-icon">
+                  {{ block.settings.icon_custom_svg }}
+                </div>
+              {%- endif -%}
+              <div class="info-circle-title text-uppercase">{{ block.settings.title }}<br>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- else -%}
+      <div class="row row-cols-3 justify-content-center g-0 has-animation lazyload info-rectangulars-row">
+        <div class="col info-rectangulars-wrap">
+          {%- for block in section.blocks limit: count -%}
+            <div class="info-rectangular {{ bg_class }}" {{ block.shopify_attributes }}>
+              <div class="info-rectangular-top">
+                {%- if block.settings.icon_custom_svg != blank -%}
+                  <div class="info-circle-icon mb-0">
+                    {{ block.settings.icon_custom_svg }}
+                  </div>
+                {%- else -%}
+                  <div class="info-rectangular-num">{{ block.settings.number }}</div>
+                {%- endif -%}
+                <div class="info-rectangular-title">{{ block.settings.title }}</div>
+              </div>
+              {%- if block.settings.description != blank -%}
+                <div class="info-rectangular-text">{{ block.settings.description }}</div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+        <div class="col info-center-image">
+          <a {% if section.settings.url != blank %}href="{{ section.settings.url }}"{% endif %}>
+            {% render 'image-container',
+                image: section.settings.image,
+                padding_no_bg: 100,
+                sizes: '470px',
+                bg: false
+            %}
+          </a>
+        </div>
+        <div class="col info-rectangulars-wrap">
+          {%- for block in section.blocks limit: count offset: continue -%}
+            <div class="info-rectangular {{ bg_class }}" {{ block.shopify_attributes }}>
+              <div class="info-rectangular-top">
+                {%- if block.settings.icon_custom_svg != blank -%}
+                  <div class="info-circle-icon mb-0">
+                    {{ block.settings.icon_custom_svg }}
+                  </div>
+                {%- else -%}
+                  <div class="info-rectangular-num">{{ block.settings.number }}</div>
+                {%- endif -%}
+                <div class="info-rectangular-title">{{ block.settings.title }}</div>
+              </div>
+              {%- if block.settings.description != blank -%}
+                <div class="info-rectangular-text">{{ block.settings.description }}</div>
+              {%- endif -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    {%- endif -%}
+
+  </div>
+</div>
+{% render 'section-wrapper' %}
+
+{% schema %}
+  {
+    "name": "Features list",
+    "tag": "section",
+    "settings": [
+      {
+        "type": "header",
+        "content": "SECTION GENERAL"
+      },
+      {
+        "type": "checkbox",
+        "id": "section_animation",
+        "label": "Enable soft appearing of section",
+        "default": true,
+        "info": "Global sections animation disabling in Theme Settings / General / Sections. AUTODISABLED if section has top or bottom separator."
+      },
+      {
+        "type": "header",
+        "content": "Layout"
+      },
+      {
+        "type": "select",
+        "id": "layout",
+        "label": "Layout",
+        "options": [
+          {
+            "value": "grid",
+            "label": "Grid"
+          },
+          {
+            "value": "circle",
+            "label": "Circle"
+          },
+          {
+          "value": "cards",
+          "label": "Cards"
+          }
+        ],
+        "default": "grid"
+      },
+      {
+        "type": "radio",
+        "id": "heading_alignment",
+        "label": "Heading aligment",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          }
+        ],
+        "default": "center"
+      },
+      {
+        "type": "header",
+        "content": "Content"
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading",
+        "default": "Heading"
+      },
+      {
+        "type": "text",
+        "id": "subtitle",
+        "default": "Subtitle",
+        "label": "Subtitle"
+      },
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image"
+      },
+      {
+        "type": "url",
+        "id": "url",
+        "label": "Link image"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_image",
+        "label": "Show image",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "SECTION WIDTH"
+      },
+      {
+        "type": "select",
+        "id": "section_width",
+        "label": "Select width source",
+        "options": [
+          {
+            "value": "global",
+            "label": "Use store width"
+          },
+          {
+            "value": "custom",
+            "label": "Custom width"
+          }
+        ],
+        "default": "global",
+        "info": "Store width you can set in Theme Settings / General"
+      },
+      {
+        "type": "range",
+        "id": "container_max_width",
+        "min": 1178,
+        "max": 1978,
+        "step": 8,
+        "unit": "px",
+        "label": "Custom width",
+        "default": 1178,
+        "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
+      },
+      {
+        "type": "header",
+        "content": "SECTION MARGIN"
+      },
+      {
+        "type": "range",
+        "id": "spacing_sections",
+        "min": 0,
+        "max": 200,
+        "step": 2,
+        "unit": "px",
+        "label": "Vertical space above the section on Desktop",
+        "default": 100
+      },
+      {
+        "type": "checkbox",
+        "id": "use_global_desktop_space",
+        "label": "Use global space on desktop",
+        "default": true,
+        "info": "from Theme Settings / General / Layout"
+      },
+      {
+        "type": "range",
+        "id": "spacing_sections_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Vertical space above the section on Mobile",
+        "default": 70
+      },
+      {
+        "type": "checkbox",
+        "id": "use_global_mobile_space",
+        "label": "Use global space on mobile",
+        "default": true,
+        "info": "from Theme Settings / General / Layout"
+      },
+      {
+        "type": "header",
+        "content": "SECTION PADDING",
+        "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+      },
+      {
+        "type": "range",
+        "id": "spacing_padding_sections",
+        "min": 0,
+        "max": 200,
+        "step": 2,
+        "unit": "px",
+        "label": "Vertical inner padding on Desktop",
+        "default": 100
+      },
+      {
+        "type": "checkbox",
+        "id": "use_global_desktop_space_padding",
+        "label": "Use global inner padding on desktop",
+        "default": true,
+        "info": "from Theme Settings / General / Layout"
+      },
+      {
+        "type": "range",
+        "id": "spacing_padding_sections_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Vertical inner padding on Mobile",
+        "default": 70
+      },
+      {
+        "type": "checkbox",
+        "id": "use_global_mobile_space_padding",
+        "label": "Use global inner padding on Mobile",
+        "default": true,
+        "info": "from Theme Settings / General / Layout"
+      },
+      {
+        "type": "header",
+        "content": "SECTION BACKGROUND"
+      },
+      {
+        "type": "checkbox",
+        "id": "background",
+        "label": "Enable background",
+        "default": false,
+        "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+      },
+      {
+        "type": "select",
+        "id": "background_preset",
+        "label": "Background image - preset",
+        "options": [
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "product-cosmetics-bg.png",
+            "label": "Leaves 1"
+          },
+          {
+            "value": "bottom-cosmetics-bg.png",
+            "label": "Leaves 2"
+          },
+          {
+            "value": "bg-makeup1.png,bg-makeup1-m.png",
+            "label": "Pink and Waves 1"
+          },
+          {
+            "value": "bg-makeup2.png,bg-makeup2-m.png",
+            "label": "Pink and Waves 2"
+          },
+          {
+            "value": "bg-makeup4.png,bg-makeup4-m.png",
+            "label": "Pink and Waves 3"
+          },
+          {
+            "value": "bg-makeup3.png,bg-makeup3-m.png",
+            "label": "Purple Splash"
+          },
+          {
+            "value": "bg-sweets1.png",
+            "label": "Blue Sun Rays"
+          }
+        ],
+        "default": "none",
+        "info": "default from theme"
+      },
+     {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image - custom on Desktop"
+      },
+      {
+        "type": "select",
+        "id": "background_behavior",
+        "label": "Background image behavior",
+        "options": [
+          {
+            "value": "bg-cover",
+            "label": "Cover"
+          },
+          {
+            "value": "bg-contain",
+            "label": "Contain"
+          },
+          {
+            "value": "bg-repeat",
+            "label": "Repeat"
+          }
+        ],
+        "default": "bg-cover"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image_mobile",
+        "label": "Background image - custom on Mobile",
+        "info": "only if Background image - custom on Desktop selected"
+      },
+      {
+        "type": "select",
+        "id": "background_image_placeholder_type",
+        "label": "Placeholder background color",
+        "options": [
+          {
+            "value": "color_global_primary_bg",
+            "label": "Primary background color"
+          },
+          {
+            "value": "color_global_secondary_bg",
+            "label": "Secondary background color"
+          },
+          {
+            "value": "custom",
+            "label": "Custom color"
+          }
+        ],
+        "default": "color_global_secondary_bg"
+      },
+      {
+        "type": "color",
+        "id": "background_image_placeholder",
+        "label": "Custom - Placeholder background color"
+      },
+      {
+        "type": "header",
+        "content": "SECTION SEPARATOR"
+      },
+      {
+        "type": "header",
+        "content": "Top separator"
+      },
+      {
+        "type": "select",
+        "id": "section_decoration_top",
+        "label": "Shape",
+        "options": [
+          {
+            "value": "global",
+            "label": "Use global separator"
+          },
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "grunge1",
+            "label": "Grunge 1"
+          },
+          {
+            "value": "grunge2",
+            "label": "Grunge 2"
+          },
+          {
+            "value": "grunge3",
+            "label": "Grunge 3"
+          },
+          {
+            "value": "paper",
+            "label": "Paper"
+          },
+          {
+            "value": "mountains",
+            "label": "Mountains"
+          },
+          {
+            "value": "ellipse1",
+            "label": "Ellipse 1"
+          },
+          {
+            "value": "ellipse2",
+            "label": "Ellipse 2"
+          },
+          {
+            "value": "wave1",
+            "label": "Wave 1"
+          },
+          {
+            "value": "wave2",
+            "label": "Wave 2"
+          },
+          {
+            "value": "wave3",
+            "label": "Wave 3"
+          },
+          {
+            "value": "wave4",
+            "label": "Wave 4"
+          },
+          {
+            "value": "wave5",
+            "label": "Wave 5"
+          },
+          {
+            "value": "triangle1",
+            "label": "Triangle 1"
+          },
+          {
+            "value": "triangle2",
+            "label": "Triangle 2"
+          },
+          {
+            "value": "triangle_assymetrical1",
+            "label": "Triangle assymetrical 1"
+          },
+          {
+            "value": "triangle_assymetrical1_flip",
+            "label": "Triangle assymetrical 1 flip"
+          },
+          {
+            "value": "triangle_assymetrical2",
+            "label": "Triangle assymetrical 2"
+          },
+          {
+            "value": "triangle_assymetrical2_flip",
+            "label": "Triangle assymetrical 2 flip"
+          },
+          {
+            "value": "tilt",
+            "label": "Tilt"
+          },
+          {
+            "value": "tilt_flip",
+            "label": "Tilt flip"
+          },
+          {
+            "value": "glaze",
+            "label": "Glaze"
+          }
+        ],
+        "default": "none"
+      },
+      {
+        "type": "select",
+        "id": "section_decoration_top_color_type",
+        "label": "Color",
+        "options": [
+          {
+            "value": "color_global_primary_bg",
+            "label": "Primary background color"
+          },
+          {
+            "value": "color_global_secondary_bg",
+            "label": "Secondary background color"
+          },
+          {
+            "value": "color_header_main_bg",
+            "label": "Header - Middle(main) part color"
+          },
+          {
+            "value": "custom",
+            "label": "Custom color"
+          }
+        ],
+        "default": "color_global_primary_bg"
+      },
+      {
+        "type": "color",
+        "id": "section_decoration_top_color",
+        "label": "Custom - top separator color"
+      },
+      {
+        "type": "header",
+        "content": "Bottom separator"
+      },
+      {
+        "type": "select",
+        "id": "section_decoration_bottom",
+        "label": "Shape",
+        "options": [
+          {
+            "value": "global",
+            "label": "Use global separator"
+          },
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "grunge1",
+            "label": "Grunge 1"
+          },
+          {
+            "value": "grunge2",
+            "label": "Grunge 2"
+          },
+          {
+            "value": "grunge3",
+            "label": "Grunge 3"
+          },
+          {
+            "value": "paper",
+            "label": "Paper"
+          },
+          {
+            "value": "mountains",
+            "label": "Mountains"
+          },
+          {
+            "value": "ellipse1",
+            "label": "Ellipse 1"
+          },
+          {
+            "value": "ellipse2",
+            "label": "Ellipse 2"
+          },
+          {
+            "value": "wave1",
+            "label": "Wave 1"
+          },
+          {
+            "value": "wave2",
+            "label": "Wave 2"
+          },
+          {
+            "value": "wave3",
+            "label": "Wave 3"
+          },
+          {
+            "value": "wave4",
+            "label": "Wave 4"
+          },
+          {
+            "value": "wave5",
+            "label": "Wave 5"
+          },
+          {
+            "value": "triangle1",
+            "label": "Triangle 1"
+          },
+          {
+            "value": "triangle2",
+            "label": "Triangle 2"
+          },
+          {
+            "value": "triangle_assymetrical1",
+            "label": "Triangle assymetrical 1"
+          },
+          {
+            "value": "triangle_assymetrical1_flip",
+            "label": "Triangle assymetrical 1 flip"
+          },
+          {
+            "value": "triangle_assymetrical2",
+            "label": "Triangle assymetrical 2"
+          },
+          {
+            "value": "triangle_assymetrical2_flip",
+            "label": "Triangle assymetrical 2 flip"
+          },
+          {
+            "value": "tilt",
+            "label": "Tilt"
+          },
+          {
+            "value": "tilt_flip",
+            "label": "Tilt flip"
+          },
+          {
+            "value": "glaze",
+            "label": "Glaze"
+          }
+        ],
+        "default": "none"
+      },
+      {
+        "type": "paragraph",
+        "content": "'Global separator' is set in Theme Settings / Separators / Global separator style"
+      },
+      {
+        "type": "select",
+        "id": "section_decoration_bottom_color_type",
+        "label": "Color",
+        "options": [
+          {
+            "value": "color_global_primary_bg",
+            "label": "Primary background color"
+          },
+          {
+            "value": "color_global_secondary_bg",
+            "label": "Secondary background color"
+          },
+          {
+            "value": "color_footer_top_bg",
+            "label": "Footer - Top part color"
+          },
+          {
+            "value": "custom",
+            "label": "Custom color"
+          }
+        ],
+        "default": "color_global_primary_bg"
+      },
+      {
+        "type": "color",
+        "id": "section_decoration_bottom_color",
+        "label": "Custom - bottom separator color"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "feature",
+        "name": "Feature",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "TSHIRTS<br>EVERYDAY"
+          },
+          {
+            "type": "text",
+            "id": "number",
+            "label": "Number",
+            "default": "200"
+          },
+          {
+            "type": "header",
+            "content": "Only if Grid layout"
+          },
+          {
+            "type": "checkbox",
+            "id": "auto_colorization",
+            "label": "Auto colorization",
+            "info": "check it to have colorization the same as color - badges, or set manualy color",
+            "default": true
+          },
+          {
+            "type": "color",
+            "id": "bg",
+            "label": "Background color"
+          },
+          {
+            "type": "color",
+            "id": "color",
+            "label": "Text color"
+          },
+          {
+            "type": "header",
+            "content": "Only if Circle or Cards layout"
+          },
+          {
+            "type": "textarea",
+            "id": "icon_custom_svg",
+            "label": "Svg icon code",
+            "info": "fill it to use instead of preset icon"
+          },
+          {
+            "type": "checkbox",
+            "id": "bg_alt",
+            "label": "Fill background color",
+            "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary",
+            "default": false
+          },
+          {
+            "type": "header",
+            "content": "Only if Cards layout"
+          },
+          {
+            "type": "textarea",
+            "id": "description",
+            "label": "Description"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Features list - Grid with image",
+        "blocks": [
+          {
+            "type": "feature",
+            "settings": {
+              "number": "200",
+              "title": "TSHIRTS<br>EVERYDAY"
+            }
+          },
+          {
+            "type": "feature",
+            "settings": {
+              "number": "3000",
+              "title": "REGULAR<br>CUSTOMERS"
+            }
+          },
+          {
+            "type": "feature",
+            "settings": {
+              "number": "150",
+              "title": "DESIGN<br>FASHION"
+            }
+          },
+          {
+            "type": "feature",
+            "settings": {
+              "number": "365",
+              "title": "DAYS<br>IN THE YEAR"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Features list - Grid 4x1",
+        "settings": {
+          "show_image": false
+        },
+        "blocks": [
+          {
+            "type": "feature",
+            "settings": {
+              "auto_colorization": false,
+              "number": "5000,+",
+              "title": "Happy Customers"
+            }
+          },
+          {
+            "type": "feature",
+            "settings": {
+              "auto_colorization": false,
+              "number": "15",
+              "title": "Years in Business"
+            }
+          },
+          {
+            "type": "feature",
+            "settings": {
+              "auto_colorization": false,
+              "number": "99,%",
+              "title": "Customer Satisfaction Rate"
+            }
+          },
+          {
+            "type": "feature",
+            "settings": {
+              "auto_colorization": false,
+              "number": "100,+",
+              "title": "Exclusive Products"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Features list - Circle",
+        "settings": {
+          "background": true,
+          "background_preset": "product-cosmetics-bg.png",
+          "layout": "circle"
+        },
+        "blocks": [
+          {
+            "type": "feature",
+            "settings": {
+              "title": "MICELLAR TECHNOLOGY",
+              "number": "200",
+              "auto_colorization": true,
+              "icon_custom_svg": "<svg class=\"lumia-icon\" width=\"72\" height=\"72\" viewbox=\"0 0 72 72\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M66.9759 46.2326C66.4781 46.2398 65.9841 46.3218 65.5107 46.4757L61.4683 39.477C61.9668 39.012 62.3642 38.4494 62.636 37.8243C62.9078 37.1991 63.048 36.5248 63.048 35.8431C63.048 35.1614 62.9078 34.487 62.636 33.8619C62.3642 33.2367 61.9668 32.6742 61.4683 32.2092L65.5107 25.2072C66.2512 25.4405 67.0363 25.4962 67.8023 25.3696C68.5683 25.243 69.2938 24.9378 69.9199 24.4786C70.546 24.0195 71.0551 23.4193 71.4061 22.7267C71.757 22.0341 71.9399 21.2686 71.9399 20.4922C71.9399 19.7158 71.757 18.9503 71.4061 18.2577C71.0551 17.5651 70.546 16.9649 69.9199 16.5058C69.2938 16.0466 68.5683 15.7414 67.8023 15.6148C67.0363 15.4882 66.2512 15.5439 65.5107 15.7772L61.4618 8.76875C62.0225 8.24123 62.4519 7.58983 62.7158 6.86665C62.9796 6.14348 63.0706 5.36859 62.9814 4.60396C62.8923 3.83933 62.6254 3.10618 62.2022 2.46313C61.779 1.82009 61.2112 1.28499 60.5442 0.900646C59.8772 0.516297 59.1295 0.293358 58.3609 0.249656C57.5924 0.205955 56.8242 0.342705 56.118 0.64897C55.4117 0.955234 54.7869 1.42252 54.2935 2.01344C53.8002 2.60437 53.4519 3.30255 53.2766 4.05214H45.2244C45.0491 3.30255 44.7008 2.60437 44.2075 2.01344C43.7141 1.42252 43.0893 0.955234 42.383 0.64897C41.6768 0.342705 40.9086 0.205955 40.1401 0.249656C39.3715 0.293358 38.6238 0.516297 37.9568 0.900646C37.2898 1.28499 36.722 1.82009 36.2988 2.46313C35.8756 3.10618 35.6087 3.83933 35.5196 4.60396C35.4304 5.36859 35.5214 6.14348 35.7852 6.86665C36.0491 7.58983 36.4785 8.24123 37.0392 8.76875L33.0033 15.7578C32.3539 15.5633 31.6715 15.5045 30.9985 15.585C30.3254 15.6654 29.6761 15.8834 29.0909 16.2254C28.5056 16.5675 27.997 17.0262 27.5966 17.5731C27.1961 18.12 26.9124 18.7434 26.7631 19.4046H18.7757C18.6004 18.6573 18.2533 17.9611 17.7619 17.3714C17.2705 16.7817 16.6484 16.3147 15.9449 16.0075C15.2415 15.7002 14.476 15.5613 13.7095 15.6017C12.9429 15.642 12.1964 15.8605 11.529 16.2399C10.8617 16.6193 10.2921 17.149 9.8653 17.7871C9.43854 18.4251 9.16644 19.1539 9.07061 19.9155C8.97478 20.6771 9.05786 21.4506 9.31326 22.1745C9.56865 22.8984 9.98932 23.5527 10.5419 24.0856L6.47682 31.1265C5.73647 30.8941 4.95181 30.8392 4.18634 30.9664C3.42086 31.0935 2.69605 31.399 2.07057 31.8583C1.44509 32.3175 0.936502 32.9175 0.585951 33.6098C0.2354 34.3021 0.0527344 35.0671 0.0527344 35.8431C0.0527344 36.619 0.2354 37.3841 0.585951 38.0764C0.936502 38.7686 1.44509 39.3687 2.07057 39.8279C2.69605 40.2871 3.42086 40.5927 4.18634 40.7198C4.95181 40.8469 5.73647 40.7921 6.47682 40.5597L10.4965 47.5195C9.95759 48.0535 9.54909 48.7045 9.30271 49.422C9.05634 50.1395 8.97874 50.9041 9.07593 51.6564C9.17313 52.4088 9.44251 53.1286 9.86313 53.7599C10.2837 54.3912 10.8443 54.9171 11.5012 55.2965C12.1581 55.676 12.8936 55.8989 13.6506 55.9478C14.4076 55.9968 15.1658 55.8705 15.8661 55.5789C16.5663 55.2872 17.19 54.8379 17.6884 54.2661C18.1868 53.6942 18.5467 53.0151 18.74 52.2815H26.7988C26.9596 52.925 27.2484 53.5296 27.6482 54.0589C28.0479 54.5882 28.5503 55.0315 29.1252 55.3623C29.7002 55.693 30.3359 55.9044 30.9945 55.9839C31.653 56.0633 32.3208 56.0092 32.9579 55.8247L37.0554 62.9271C36.4935 63.4547 36.063 64.1066 35.7984 64.8305C35.5339 65.5544 35.4426 66.3303 35.5319 67.0958C35.6213 67.8614 35.8887 68.5954 36.3129 69.2389C36.737 69.8825 37.306 70.4178 37.9743 70.8018C38.6425 71.1858 39.3915 71.4079 40.1611 71.4503C40.9306 71.4927 41.6995 71.3542 42.4059 71.046C43.1123 70.7377 43.7367 70.2682 44.2289 69.6751C44.7212 69.082 45.0677 68.3819 45.2406 67.6308H53.2864C53.4585 68.3832 53.8048 69.0849 54.2973 69.6793C54.7897 70.2737 55.4147 70.7444 56.1221 71.0535C56.8294 71.3626 57.5994 71.5015 58.3701 71.4591C59.1409 71.4167 59.891 71.1942 60.5601 70.8094C61.2293 70.4246 61.7989 69.8882 62.2232 69.2434C62.6476 68.5985 62.9148 67.8632 63.0034 67.0964C63.092 66.3295 62.9996 65.5526 62.7336 64.828C62.4675 64.1033 62.0353 63.4512 61.4715 62.9239L65.5236 55.9089C66.2012 56.1099 66.914 56.1632 67.614 56.0652C68.3139 55.9671 68.9846 55.72 69.5809 55.3406C70.1772 54.9611 70.6851 54.4582 71.0704 53.8657C71.4556 53.2731 71.7093 52.6048 71.8142 51.9059C71.9191 51.207 71.8728 50.4936 71.6784 49.8141C71.4841 49.1346 71.1462 48.5047 70.6876 47.9669C70.229 47.4292 69.6603 46.9961 69.02 46.6969C68.3797 46.3977 67.6826 46.2394 66.9759 46.2326ZM60.8978 35.8593C60.8978 36.5978 60.6044 37.3061 60.0822 37.8283C59.56 38.3505 58.8517 38.6439 58.1132 38.6439C57.3747 38.6439 56.6664 38.3505 56.1442 37.8283C55.622 37.3061 55.3286 36.5978 55.3286 35.8593C55.3275 35.4936 55.3985 35.1313 55.5375 34.7931C55.6764 34.4548 55.8806 34.1472 56.1385 33.8879C56.6592 33.3642 57.3666 33.0688 58.1051 33.0666C58.8436 33.0645 59.5527 33.3558 60.0765 33.8765C60.6002 34.3971 60.8956 35.1046 60.8978 35.8431V35.8593ZM69.7475 20.4938C69.7229 21.2155 69.4189 21.8993 68.8997 22.4011C68.3804 22.9029 67.6866 23.1834 66.9645 23.1834C66.2425 23.1834 65.5486 22.9029 65.0294 22.4011C64.5102 21.8993 64.2062 21.2155 64.1816 20.4938C64.2062 19.7722 64.5102 19.0883 65.0294 18.5865C65.5486 18.0847 66.2425 17.8042 66.9645 17.8042C67.6866 17.8042 68.3804 18.0847 68.8997 18.5865C69.4189 19.0883 69.7229 19.7722 69.7475 20.4938ZM58.1132 2.34703C58.8348 2.37166 59.5187 2.67565 60.0205 3.19487C60.5223 3.71409 60.8028 4.40792 60.8028 5.12999C60.8028 5.85206 60.5223 6.5459 60.0205 7.06511C59.5187 7.58433 58.8348 7.88832 58.1132 7.91295C57.3915 7.88832 56.7077 7.58433 56.2059 7.06511C55.7041 6.5459 55.4236 5.85206 55.4236 5.12999C55.4236 4.40792 55.7041 3.71409 56.2059 3.19487C56.7077 2.67565 57.3915 2.37166 58.1132 2.34703ZM40.3878 2.34703C41.1094 2.37166 41.7933 2.67565 42.2951 3.19487C42.7969 3.71409 43.0774 4.40792 43.0774 5.12999C43.0774 5.85206 42.7969 6.5459 42.2951 7.06511C41.7933 7.58433 41.1094 7.88832 40.3878 7.91295C39.6662 7.88832 38.9823 7.58433 38.4805 7.06511C37.9787 6.5459 37.6982 5.85206 37.6982 5.12999C37.6982 4.40792 37.9787 3.71409 38.4805 3.19487C38.9823 2.67565 39.6662 2.37166 40.3878 2.34703ZM38.9323 9.84822C39.5823 10.0503 40.267 10.1159 40.9436 10.041C41.6202 9.96614 42.274 9.75233 42.864 9.41301C43.4541 9.07369 43.9678 8.61616 44.3728 8.06909C44.7779 7.52203 45.0655 6.8972 45.2179 6.23378H53.2831C53.4358 6.89733 53.7239 7.52221 54.1292 8.06929C54.5346 8.61638 55.0485 9.07389 55.6389 9.41318C56.2292 9.75247 56.8832 9.96624 57.56 10.0411C58.2368 10.116 58.9217 10.0503 59.5719 9.84822L63.6208 16.8599C63.1228 17.3249 62.7258 17.8872 62.4543 18.5121C62.1829 19.1369 62.0428 19.8109 62.0428 20.4922C62.0428 21.1735 62.1829 21.8475 62.4543 22.4723C62.7258 23.0972 63.1228 23.6595 63.6208 24.1245L59.5784 31.1265C58.9269 30.9229 58.2404 30.8564 57.5619 30.9311C56.8835 31.0059 56.2278 31.2201 55.6362 31.5606C55.0446 31.901 54.5299 32.3601 54.1244 32.9091C53.7188 33.4581 53.4313 34.0851 53.2799 34.7506H45.2211C45.0697 34.0851 44.7822 33.4581 44.3766 32.9091C43.9711 32.3601 43.4563 31.901 42.8647 31.5606C42.2731 31.2201 41.6175 31.0059 40.9391 30.9311C40.2606 30.8564 39.5741 30.9229 38.9226 31.1265L34.9029 24.1504C35.4146 23.6858 35.8234 23.1194 36.1032 22.4874C36.383 21.8555 36.5276 21.172 36.5276 20.4809C36.5276 19.7897 36.383 19.1063 36.1032 18.4743C35.8234 17.8423 35.4146 17.2759 34.9029 16.8113L38.9323 9.84822ZM37.6065 35.8431C37.6311 35.1214 37.9351 34.4376 38.4543 33.9358C38.9735 33.434 39.6674 33.1535 40.3894 33.1535C41.1115 33.1535 41.8053 33.434 42.3245 33.9358C42.8438 34.4376 43.1478 35.1214 43.1724 35.8431C43.1478 36.5647 42.8438 37.2486 42.3245 37.7504C41.8053 38.2522 41.1115 38.5327 40.3894 38.5327C39.6674 38.5327 38.9735 38.2522 38.4543 37.7504C37.9351 37.2486 37.6311 36.5647 37.6065 35.8431ZM31.5964 17.7092C32.3181 17.7339 33.0019 18.0379 33.5037 18.5571C34.0055 19.0763 34.286 19.7701 34.286 20.4922C34.286 21.2143 34.0055 21.9081 33.5037 22.4273C33.0019 22.9465 32.3181 23.2505 31.5964 23.2752C30.8748 23.2505 30.1909 22.9465 29.6891 22.4273C29.1873 21.9081 28.9068 21.2143 28.9068 20.4922C28.9068 19.7701 29.1873 19.0763 29.6891 18.5571C30.1909 18.0379 30.8748 17.7339 31.5964 17.7092ZM13.9456 17.7092C14.6672 17.7339 15.3511 18.0379 15.8529 18.5571C16.3547 19.0763 16.6352 19.7701 16.6352 20.4922C16.6352 21.2143 16.3547 21.9081 15.8529 22.4273C15.3511 22.9465 14.6672 23.2505 13.9456 23.2752C13.2239 23.2505 12.5401 22.9465 12.0383 22.4273C11.5365 21.9081 11.256 21.2143 11.256 20.4922C11.256 19.7701 11.5365 19.0763 12.0383 18.5571C12.5401 18.0379 13.2239 17.7339 13.9456 17.7092ZM2.23025 35.8431C2.25488 35.1214 2.55887 34.4376 3.07809 33.9358C3.5973 33.434 4.29114 33.1535 5.01321 33.1535C5.73528 33.1535 6.42911 33.434 6.94833 33.9358C7.46755 34.4376 7.77154 35.1214 7.79617 35.8431C7.77154 36.5647 7.46755 37.2486 6.94833 37.7504C6.42911 38.2522 5.73528 38.5327 5.01321 38.5327C4.29114 38.5327 3.5973 38.2522 3.07809 37.7504C2.55887 37.2486 2.25488 36.5647 2.23025 35.8431ZM13.9456 53.857C13.2239 53.8323 12.5401 53.5283 12.0383 53.0091C11.5365 52.4899 11.256 51.7961 11.256 51.074C11.256 50.3519 11.5365 49.6581 12.0383 49.1389C12.5401 48.6197 13.2239 48.3157 13.9456 48.291C14.6672 48.3157 15.3511 48.6197 15.8529 49.1389C16.3547 49.6581 16.6352 50.3519 16.6352 51.074C16.6352 51.7961 16.3547 52.4899 15.8529 53.0091C15.3511 53.5283 14.6672 53.8323 13.9456 53.857ZM26.7307 50.0999H18.8081C18.668 49.4115 18.383 48.7608 17.9722 48.1909C17.5613 47.6211 17.034 47.1452 16.4251 46.7947C15.8162 46.4443 15.1398 46.2274 14.4407 46.1584C13.7416 46.0895 13.0358 46.17 12.3702 46.3947L8.36995 39.4737C8.86781 39.0091 9.26479 38.447 9.53622 37.8224C9.80764 37.1978 9.9477 36.5241 9.9477 35.8431C9.9477 35.1621 9.80764 34.4883 9.53622 33.8638C9.26479 33.2392 8.86781 32.6771 8.36995 32.2124L12.422 25.1877C13.0756 25.4014 13.7665 25.4763 14.4507 25.4077C15.1348 25.339 15.7971 25.1283 16.3952 24.789C16.9932 24.4497 17.5139 23.9893 17.9238 23.4372C18.3337 22.8852 18.6238 22.2536 18.7757 21.583H26.7631C26.9128 22.2439 27.1968 22.867 27.5974 23.4136C27.998 23.9601 28.5067 24.4185 29.0918 24.7602C29.677 25.1018 30.3262 25.3196 30.9991 25.3998C31.672 25.4801 32.3542 25.4211 33.0033 25.2266L37.0327 32.2124C36.5348 32.6771 36.1378 33.2392 35.8664 33.8638C35.595 34.4883 35.4549 35.1621 35.4549 35.8431C35.4549 36.5241 35.595 37.1978 35.8664 37.8224C36.1378 38.447 36.5348 39.0091 37.0327 39.4737L33.0617 46.359C32.4001 46.1518 31.7024 46.0859 31.0138 46.1655C30.3251 46.2451 29.6608 46.4685 29.064 46.8211C28.4672 47.1738 27.9511 47.6479 27.5491 48.2127C27.1472 48.7775 26.8683 49.4205 26.7307 50.0999ZM31.5932 53.857C30.8715 53.8323 30.1877 53.5283 29.6859 53.0091C29.1841 52.4899 28.9036 51.7961 28.9036 51.074C28.9036 50.3519 29.1841 49.6581 29.6859 49.1389C30.1877 48.6197 30.8715 48.3157 31.5932 48.291C32.3148 48.3153 32.9989 48.6189 33.501 49.1378C34.0031 49.6567 34.284 50.3504 34.2844 51.0724C34.2848 51.7945 34.0047 52.4885 33.5032 53.008C33.0018 53.5275 32.3181 53.8319 31.5964 53.857H31.5932ZM40.3846 69.3489C39.6629 69.3242 38.979 69.0202 38.4773 68.501C37.9755 67.9818 37.695 67.288 37.695 66.5659C37.695 65.8438 37.9755 65.15 38.4773 64.6308C38.979 64.1116 39.6629 63.8076 40.3846 63.7829C41.1062 63.8071 41.7903 64.1107 42.2924 64.6297C42.7945 65.1486 43.0754 65.8423 43.0758 66.5643C43.0762 67.2864 42.7961 67.9804 42.2946 68.4999C41.7931 69.0194 41.1062 69.3238 40.3846 69.3489ZM58.1099 69.3489C57.3883 69.3242 56.7044 69.0202 56.2026 68.501C55.7008 67.9818 55.4204 67.288 55.4204 66.5659C55.4204 65.8438 55.7008 65.15 56.2026 64.6308C56.7044 64.1116 57.3883 63.8076 58.1099 63.7829C58.8316 63.8071 59.5157 64.1107 60.0178 64.6297C60.5199 65.1486 60.8007 65.8423 60.8012 66.5643C60.8016 67.2864 60.5215 67.9804 60.02 68.4999C59.5185 69.0194 58.8316 69.3238 58.1099 69.3489ZM63.6208 54.8262L59.5654 61.8444C58.9163 61.6438 58.2327 61.5791 57.5575 61.6543C56.8822 61.7295 56.2297 61.9431 55.6405 62.2816C55.0514 62.6201 54.5383 63.0763 54.1333 63.6219C53.7283 64.1674 53.44 64.7905 53.2864 65.4524H45.2146C45.0613 64.7922 44.7737 64.1706 44.3698 63.6262C43.9659 63.0819 43.4543 62.6265 42.8669 62.2884C42.2794 61.9503 41.6287 61.7367 40.9552 61.6609C40.2816 61.585 39.5997 61.6486 38.9517 61.8477L34.8737 54.7808C35.3912 54.3226 35.8071 53.7612 36.0948 53.1327C36.3824 52.5042 36.5354 51.8225 36.544 51.1314C36.5525 50.4402 36.4164 49.755 36.1444 49.1195C35.8724 48.4841 35.4705 47.9126 34.9645 47.4417L38.9388 40.5597C39.5905 40.7627 40.2772 40.8287 40.9556 40.7535C41.6341 40.6784 42.2896 40.4638 42.8812 40.1231C43.4727 39.7825 43.9873 39.3231 44.3928 38.774C44.7983 38.2249 45.0858 37.5979 45.2373 36.9323H53.2799C53.4314 37.5979 53.7189 38.2249 54.1244 38.774C54.5299 39.3231 55.0445 39.7825 55.636 40.1231C56.2276 40.4638 56.8831 40.6784 57.5616 40.7535C58.24 40.8287 58.9267 40.7627 59.5784 40.5597L63.6208 47.5617C63.1228 48.0266 62.7258 48.589 62.4543 49.2138C62.1829 49.8387 62.0428 50.5127 62.0428 51.194C62.0428 51.8752 62.1829 52.5492 62.4543 53.1741C62.7258 53.7989 63.1228 54.3613 63.6208 54.8262ZM66.9759 53.9769C66.2542 53.9523 65.5704 53.6483 65.0686 53.1291C64.5668 52.6099 64.2863 51.916 64.2863 51.194C64.2863 50.4719 64.5668 49.778 65.0686 49.2588C65.5704 48.7396 66.2542 48.4356 66.9759 48.411C67.6903 48.4455 68.3641 48.7536 68.8575 49.2714C69.3509 49.7892 69.6261 50.4771 69.6261 51.1923C69.6261 51.9076 69.3509 52.5954 68.8575 53.1133C68.3641 53.6311 67.6903 53.9424 66.9759 53.9769Z\" fill=\"black\"></path>\n</svg>"
+            }
+          },
+          {
+            "type": "feature",
+            "settings": {
+              "title": "GENTLE FORMULA FOR SENSITIVE SKIN TYPES",
+              "number": "3000",
+              "auto_colorization": true
+            }
+          },
+          {
+            "type": "feature",
+            "settings": {
+              "title": "ECO-FRIENDLY PACKAGING",
+              "number": "150",
+              "auto_colorization": true,
+              "icon_custom_svg": "<svg class=\"lumia-icon\" width=\"72\" height=\"68\" viewbox=\"0 0 72 68\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M42.5432 27.5124L36.2464 16.4871L29.9496 27.5124L17.0957 20.0004L26.2073 4.03837C26.7988 3.01222 27.6453 2.16029 28.6628 1.5671C29.6803 0.973913 30.8334 0.660081 32.0079 0.656738H40.4849C41.6593 0.660081 42.8125 0.973913 43.83 1.5671C44.8475 2.16029 45.694 3.01222 46.2854 4.03837L55.4052 20.0004L42.5432 27.5124ZM36.2464 13.2042L43.137 25.2579L53.168 19.3997L44.8699 4.86116C44.4243 4.08389 43.7848 3.43849 43.0153 2.98946C42.2458 2.54043 41.3733 2.30349 40.4849 2.3023H32.0079C31.1183 2.30287 30.2444 2.53949 29.4735 2.98851C28.7026 3.43753 28.0617 4.08324 27.6147 4.86116L19.3248 19.3997L29.372 25.2579L36.2464 13.2042Z\" fill=\"black\"></path>\n<path d=\"M36.2457 15.6641H36.1644C36.0573 15.6538 35.9534 15.6222 35.8585 15.571C35.7636 15.5199 35.6797 15.4502 35.6116 15.366C35.5435 15.2819 35.4926 15.1849 35.4618 15.0807C35.431 14.9765 35.421 14.8672 35.4322 14.7591C35.4322 14.4382 36.3515 6.77807 45.3085 3.67618C45.4106 3.63639 45.5195 3.61782 45.6288 3.62157C45.7381 3.62531 45.8455 3.65131 45.9446 3.69799C46.0437 3.74467 46.1326 3.81109 46.2057 3.89327C46.2789 3.97545 46.3349 4.07171 46.3705 4.17629C46.4061 4.28087 46.4204 4.39163 46.4127 4.50195C46.405 4.61227 46.3754 4.71988 46.3256 4.81836C46.2758 4.91683 46.2069 5.00415 46.123 5.07509C46.0391 5.14603 45.942 5.19914 45.8373 5.23124C37.8484 8.00401 37.0593 14.8578 37.0511 14.9318C37.0292 15.1326 36.9349 15.3182 36.7864 15.4532C36.6379 15.5883 36.4454 15.6633 36.2457 15.6641Z\" fill=\"black\"></path>\n<path d=\"M53.4935 30.2768L38.5977 27.5616L42.4782 25.6446L53.8678 18.9965L57.9354 16.2319L53.4935 30.2768ZM43.7311 26.8541L52.379 28.4091L54.966 20.2636L54.6894 20.4528L43.7311 26.8541Z\" fill=\"black\"></path>\n<path d=\"M60.3759 63.8874L42.1445 63.838V48.8222H54.73L48.4657 37.7805L61.344 30.3179L70.4475 46.3292C71.0328 47.3594 71.3408 48.5268 71.3408 49.715C71.3408 50.9031 71.0328 52.0705 70.4475 53.1007L66.1927 60.5058C65.6017 61.536 64.7531 62.3908 63.7321 62.9844C62.7111 63.578 61.5536 63.8894 60.3759 63.8874ZM43.7716 62.1925L60.3678 62.2418C61.2552 62.2407 62.1269 62.0046 62.8961 61.5571C63.6654 61.1097 64.3055 60.4664 64.7527 59.6912L69.0075 52.2862C69.4509 51.5079 69.6842 50.6255 69.6842 49.7273C69.6842 48.8291 69.4509 47.9467 69.0075 47.1685L60.7745 32.597L50.7192 38.4223L57.5692 50.5089H43.796L43.7716 62.1925Z\" fill=\"black\"></path>\n<path d=\"M60.3594 63.8876H60.2048C60.0994 63.8669 59.9991 63.8253 59.9096 63.7653C59.8201 63.7052 59.7433 63.6278 59.6835 63.5375C59.6238 63.4473 59.5823 63.3459 59.5615 63.2394C59.5406 63.1328 59.5409 63.0231 59.5622 62.9167C61.1892 54.5407 55.7385 50.4022 55.6897 50.361C55.5917 50.303 55.5067 50.2248 55.4404 50.1315C55.374 50.0383 55.3277 49.932 55.3044 49.8195C55.2811 49.7071 55.2814 49.5909 55.3052 49.4786C55.3289 49.3662 55.3757 49.2602 55.4425 49.1672C55.5093 49.0743 55.5946 48.9965 55.6929 48.9389C55.7912 48.8813 55.9004 48.8452 56.0133 48.8329C56.1263 48.8205 56.2405 48.8323 56.3487 48.8673C56.4569 48.9024 56.5567 48.9599 56.6415 49.0363C56.9019 49.2256 63.0034 53.8414 61.1567 63.2376C61.1175 63.4219 61.017 63.587 60.8719 63.7053C60.7267 63.8237 60.5458 63.888 60.3594 63.8876Z\" fill=\"black\"></path>\n<path d=\"M44.0808 67.9602L34.3184 57.0336L44.0808 45.3501L43.7635 49.7108V62.9906L44.0808 67.9602ZM36.4986 57.0007L42.1934 63.3526V63.0152V50.221L36.4986 57.0007Z\" fill=\"black\"></path>\n<path d=\"M29.5187 64.0681L11.3036 64.0105C10.1282 64.0034 8.97534 63.6843 7.96024 63.0851C6.94514 62.4858 6.10343 61.6275 5.51933 60.596L1.31334 53.1909C0.727995 52.1622 0.419922 50.9962 0.419922 49.8093C0.419922 48.6224 0.727995 47.4563 1.31334 46.4277L10.5144 30.4492L23.3439 38.0024L17.0065 49.003L29.5919 49.0606L29.5187 64.0681ZM11.1002 32.7448L2.74516 47.2011C2.30183 47.9793 2.06848 48.8617 2.06848 49.7599C2.06848 50.6581 2.30183 51.5405 2.74516 52.3188L6.95929 59.7238C7.3918 60.5116 8.02169 61.1704 8.78569 61.634C9.54969 62.0976 10.4209 62.3497 11.3117 62.365L27.8998 62.4308L27.9567 50.7143L14.1835 50.6485L21.1148 38.6112L11.1002 32.7448Z\" fill=\"black\"></path>\n<path d=\"M11.3599 51.4057C7.69666 51.3597 4.18272 49.9305 1.50794 47.3987C1.3463 47.2546 1.2478 47.0515 1.23408 46.834C1.22035 46.6165 1.29251 46.4024 1.43472 46.2386C1.57723 46.0751 1.77806 45.9755 1.99312 45.9616C2.20818 45.9478 2.41989 46.0207 2.58181 46.1646C8.88672 51.7759 15.0127 49.1759 15.2649 49.0608C15.4634 48.9724 15.6884 48.9674 15.8906 49.0468C16.0928 49.1263 16.2554 49.2837 16.3428 49.4845C16.4302 49.6852 16.4351 49.9129 16.3566 50.1173C16.278 50.3218 16.1223 50.4863 15.9238 50.5747C14.468 51.1407 12.9194 51.4226 11.3599 51.4057Z\" fill=\"black\"></path>\n<path d=\"M25.3453 41.4421L21.7739 38.9737L10.425 32.301L6.01562 30.0794L20.2525 27.0352L25.3453 41.4421ZM10.9213 30.7459L11.2223 30.894L22.1481 37.3364L19.1949 28.944L10.9213 30.7459Z\" fill=\"black\"></path>\n</svg>"
+            }
+          },
+          {
+            "type": "feature",
+            "settings": {
+              "title": "DERMATOLOGY TESTED",
+              "number": "365",
+              "auto_colorization": true,
+              "icon_custom_svg": "<svg class=\"lumia-icon\" width=\"60\" height=\"60\" viewbox=\"0 0 60 60\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M18.11 40.1485C18.11 39.9097 18.2049 39.6806 18.3739 39.5118C18.5428 39.3429 18.7719 39.2481 19.0108 39.2481C19.2497 39.2481 19.4788 39.3429 19.6478 39.5118C19.8167 39.6806 19.9116 39.9097 19.9116 40.1485C19.9116 40.3873 19.8167 40.6163 19.6478 40.7851C19.4788 40.954 19.2497 41.0489 19.0108 41.0489C18.7719 41.0489 18.5428 40.954 18.3739 40.7851C18.2049 40.6163 18.11 40.3873 18.11 40.1485ZM22.6139 29.0407C22.8528 29.0407 23.0819 28.9459 23.2509 28.777C23.4198 28.6081 23.5147 28.3791 23.5147 28.1403C23.5147 27.9015 23.4198 27.6725 23.2509 27.5036C23.0819 27.3348 22.8528 27.2399 22.6139 27.2399C22.375 27.2399 22.1459 27.3348 21.977 27.5036C21.808 27.6725 21.7131 27.9015 21.7131 28.1403C21.7131 28.3791 21.808 28.6081 21.977 28.777C22.1459 28.9459 22.375 29.0407 22.6139 29.0407ZM17.8098 25.4391C18.0398 25.4265 18.2563 25.3263 18.4147 25.1591C18.5732 24.9919 18.6614 24.7703 18.6614 24.54C18.6614 24.3097 18.5732 24.0882 18.4147 23.9209C18.2563 23.7537 18.0398 23.6535 17.8098 23.6409C17.5797 23.6535 17.3632 23.7537 17.2048 23.9209C17.0464 24.0882 16.9581 24.3097 16.9581 24.54C16.9581 24.7703 17.0464 24.9919 17.2048 25.1591C17.3632 25.3263 17.5797 25.4265 17.8098 25.4391ZM20.2226 18.2358C20.4615 18.2358 20.6906 18.1409 20.8595 17.9721C21.0284 17.8032 21.1233 17.5742 21.1233 17.3354C21.1233 17.0966 21.0284 16.8676 20.8595 16.6987C20.6906 16.5299 20.4615 16.435 20.2226 16.435C20.1043 16.4343 19.987 16.4569 19.8775 16.5015C19.7679 16.5461 19.6682 16.6118 19.5841 16.6949C19.4999 16.778 19.433 16.8769 19.3871 16.9859C19.3411 17.0948 19.3171 17.2118 19.3164 17.33C19.3157 17.4483 19.3383 17.5655 19.383 17.675C19.4276 17.7845 19.4933 17.8842 19.5765 17.9683C19.6596 18.0524 19.7585 18.1193 19.8675 18.1652C19.9766 18.2111 20.0936 18.2351 20.2119 18.2358H20.2226ZM23.8257 42.8497C23.5868 42.8497 23.3577 42.9446 23.1887 43.1134C23.0198 43.2823 22.9249 43.5113 22.9249 43.7501C22.9249 43.9889 23.0198 44.2179 23.1887 44.3868C23.3577 44.5556 23.5868 44.6505 23.8257 44.6505C24.0646 44.6491 24.2931 44.5529 24.461 44.383C24.629 44.2131 24.7225 43.9835 24.7211 43.7447C24.7197 43.5059 24.6234 43.2775 24.4535 43.1096C24.2835 42.9418 24.0539 42.8483 23.815 42.8497H23.8257ZM31.0319 40.4379C30.793 40.4379 30.5639 40.5327 30.3949 40.7016C30.226 40.8705 30.1311 41.0995 30.1311 41.3383C30.1311 41.5771 30.226 41.8061 30.3949 41.975C30.5639 42.1438 30.793 42.2387 31.0319 42.2387C31.2523 42.2132 31.4557 42.1073 31.6028 41.9413C31.75 41.7752 31.8306 41.5607 31.8293 41.3388C31.828 41.117 31.7447 40.9035 31.5956 40.7392C31.4465 40.5749 31.2419 40.4714 31.0212 40.4486L31.0319 40.4379ZM28.6191 48.8417C28.3802 48.8417 28.1511 48.9366 27.9821 49.1054C27.8132 49.2743 27.7183 49.5033 27.7183 49.7421C27.7183 49.9809 27.8132 50.2099 27.9821 50.3788C28.1511 50.5477 28.3802 50.6425 28.6191 50.6425C28.8397 50.6184 29.0436 50.5137 29.1917 50.3485C29.3398 50.1833 29.4217 49.9693 29.4217 49.7475C29.4217 49.5257 29.3398 49.3116 29.1917 49.1465C29.0436 48.9813 28.8397 48.8766 28.6191 48.8524V48.8417ZM11.8019 51.2535C11.563 51.2535 11.3339 51.3484 11.165 51.5172C10.9961 51.6861 10.9012 51.9151 10.9012 52.1539C10.9012 52.3927 10.9961 52.6218 11.165 52.7906C11.3339 52.9595 11.563 53.0543 11.8019 53.0543C12.0408 53.0543 12.2699 52.9595 12.4389 52.7906C12.6078 52.6218 12.7027 52.3927 12.7027 52.1539C12.7027 51.9151 12.6078 51.6861 12.4389 51.5172C12.2699 51.3484 12.0408 51.2535 11.8019 51.2535ZM8.20151 42.8497C7.96261 42.8497 7.7335 42.9446 7.56457 43.1134C7.39564 43.2823 7.30074 43.5113 7.30074 43.7501C7.30074 43.9889 7.39564 44.2179 7.56457 44.3868C7.7335 44.5556 7.96261 44.6505 8.20151 44.6505C8.44041 44.6505 8.66953 44.5556 8.83846 44.3868C9.00738 44.2179 9.10229 43.9889 9.10229 43.7501C9.10229 43.5113 9.00738 43.2823 8.83846 43.1134C8.66953 42.9446 8.44041 42.8497 8.20151 42.8497ZM20.2119 47.6519C19.9729 47.6519 19.7438 47.7467 19.5749 47.9156C19.406 48.0845 19.3111 48.3135 19.3111 48.5523C19.3111 48.7911 19.406 49.0201 19.5749 49.189C19.7438 49.3578 19.9729 49.4527 20.2119 49.4527C20.4508 49.4527 20.6799 49.3578 20.8488 49.189C21.0177 49.0201 21.1126 48.7911 21.1126 48.5523C21.1126 48.3135 21.0177 48.0845 20.8488 47.9156C20.6799 47.7467 20.4508 47.6519 20.2119 47.6519ZM15.4077 45.2401C15.1688 45.2401 14.9397 45.3349 14.7708 45.5038C14.6018 45.6727 14.5069 45.9017 14.5069 46.1405C14.5069 46.3793 14.6018 46.6083 14.7708 46.7772C14.9397 46.946 15.1688 47.0409 15.4077 47.0409C15.6283 47.0167 15.8322 46.912 15.9803 46.7468C16.1284 46.5817 16.2104 46.3677 16.2104 46.1458C16.2104 45.924 16.1284 45.71 15.9803 45.5448C15.8322 45.3797 15.6283 45.2749 15.4077 45.2508V45.2401ZM49.1868 51.216H52.7979C53.028 51.2034 53.2445 51.1032 53.4029 50.936C53.5613 50.7688 53.6496 50.5472 53.6496 50.3169C53.6496 50.0866 53.5613 49.8651 53.4029 49.6979C53.2445 49.5306 53.028 49.4304 52.7979 49.4179H49.1948C48.9559 49.4179 48.7268 49.5127 48.5579 49.6816C48.389 49.8504 48.2941 50.0795 48.2941 50.3183C48.2941 50.5571 48.389 50.7861 48.5579 50.955C48.7268 51.1238 48.9559 51.2187 49.1948 51.2187L49.1868 51.216ZM49.1868 42.9864H52.7979C53.0368 42.9864 53.266 42.8915 53.4349 42.7226C53.6038 42.5538 53.6987 42.3248 53.6987 42.086C53.6987 41.8471 53.6038 41.6181 53.4349 41.4493C53.266 41.2804 53.0368 41.1855 52.7979 41.1855H49.1948C48.9545 41.1855 48.724 41.281 48.5541 41.4508C48.3842 41.6207 48.2887 41.8511 48.2887 42.0913C48.2887 42.3315 48.3842 42.5619 48.5541 42.7318C48.724 42.9017 48.9545 42.9971 49.1948 42.9971L49.1868 42.9864ZM49.1868 34.754H52.7979C53.0368 34.754 53.266 34.6592 53.4349 34.4903C53.6038 34.3215 53.6987 34.0924 53.6987 33.8536C53.6987 33.6148 53.6038 33.3858 53.4349 33.2169C53.266 33.0481 53.0368 32.9532 52.7979 32.9532H49.1948C48.9545 32.9532 48.724 33.0487 48.5541 33.2185C48.3842 33.3884 48.2887 33.6188 48.2887 33.859C48.2887 34.0992 48.3842 34.3296 48.5541 34.4995C48.724 34.6693 48.9545 34.7648 49.1948 34.7648L49.1868 34.754ZM49.1868 18.2894H52.7979C53.0368 18.2894 53.266 18.1945 53.4349 18.0257C53.6038 17.8568 53.6987 17.6278 53.6987 17.389C53.6987 17.1502 53.6038 16.9212 53.4349 16.7523C53.266 16.5834 53.0368 16.4886 52.7979 16.4886H49.1948C48.9545 16.4886 48.724 16.584 48.5541 16.7539C48.3842 16.9237 48.2887 17.1541 48.2887 17.3944C48.2887 17.6346 48.3842 17.865 48.5541 18.0348C48.724 18.2047 48.9545 18.3001 49.1948 18.3001L49.1868 18.2894ZM49.1868 10.0571H52.7979C53.0368 10.0571 53.266 9.96222 53.4349 9.79336C53.6038 9.6245 53.6987 9.39548 53.6987 9.15668C53.6987 8.91787 53.6038 8.68885 53.4349 8.51999C53.266 8.35113 53.0368 8.25627 52.7979 8.25627H49.1948C48.9545 8.25627 48.724 8.3517 48.5541 8.52156C48.3842 8.69143 48.2887 8.92181 48.2887 9.16204C48.2887 9.40226 48.3842 9.63265 48.5541 9.80251C48.724 9.97238 48.9545 10.0678 49.1948 10.0678L49.1868 10.0571ZM58.8031 1.83549H57.3018V53.7591C57.2997 55.2709 56.698 56.7201 55.6285 57.7891C54.5591 58.8581 53.1093 59.4596 51.5969 59.4617H39.5866C38.7245 59.4392 37.8776 59.2299 37.1044 58.8484C36.3311 58.4668 35.6499 57.9221 35.1078 57.2518C34.5656 56.5815 34.1755 55.8015 33.9643 54.9658C33.753 54.1301 33.7258 53.2585 33.8843 52.4112C22.9785 66.2255 0.472537 58.1861 0.252705 40.7675C0.222986 37.4317 1.07502 34.1473 2.72264 31.2463C4.37026 28.3453 6.75503 25.9307 9.63578 24.2466C10.4282 23.8 11.0886 23.1522 11.5504 22.3688C12.0122 21.5854 12.2589 20.694 12.2657 19.7847V9.03609H10.7618C10.5229 9.03609 10.2937 8.94122 10.1248 8.77236C9.95588 8.6035 9.86098 8.37448 9.86098 8.13568C9.86098 7.89687 9.95588 7.66785 10.1248 7.49899C10.2937 7.33013 10.5229 7.23527 10.7618 7.23527H27.5762C27.8151 7.23527 28.0442 7.33013 28.2132 7.49899C28.3821 7.66785 28.477 7.89687 28.477 8.13568C28.477 8.37448 28.3821 8.6035 28.2132 8.77236C28.0442 8.94122 27.8151 9.03609 27.5762 9.03609H26.0749V19.9536C26.1393 24.3565 31.9005 25.3131 33.8843 28.7138V1.83549H32.3804C32.1415 1.83549 31.9123 1.74062 31.7434 1.57176C31.5745 1.4029 31.4796 1.17388 31.4796 0.935078C31.4796 0.696274 31.5745 0.467252 31.7434 0.298392C31.9123 0.129532 32.1415 0.034668 32.3804 0.034668L58.8031 0.034668C59.042 0.034668 59.2711 0.129532 59.44 0.298392C59.609 0.467252 59.7039 0.696274 59.7039 0.935078C59.7039 1.17388 59.609 1.4029 59.44 1.57176C59.2711 1.74062 59.042 1.83549 58.8031 1.83549ZM35.4795 35.4508H6.98707C6.75632 35.4382 6.53916 35.3377 6.38027 35.17C6.22137 35.0023 6.13281 34.78 6.13281 34.549C6.13281 34.318 6.22137 34.0958 6.38027 33.9281C6.53916 33.7604 6.75632 33.6599 6.98707 33.6473H34.8039C33.3365 30.3377 30.8591 27.577 27.7264 25.7607C26.6878 25.1853 25.8207 24.3444 25.214 23.324C24.6073 22.3037 24.2827 21.1405 24.2734 19.9536V9.03609H14.0646V19.7847C14.0593 21.0097 13.7299 22.2115 13.1098 23.2681C12.4897 24.3247 11.601 25.1985 10.5339 25.8009C7.93046 27.3243 5.77557 29.5078 4.28709 32.1306C2.79861 34.7535 2.0293 37.7227 2.05694 40.738C2.11323 55.375 20.5014 63.2777 30.9836 52.9311C33.2952 50.7303 34.9427 47.9255 35.7389 44.8354C36.535 41.7453 36.4479 38.4939 35.4875 35.4508H35.4795ZM55.5003 1.83549H35.6832V31.3882C37.2485 34.203 38.0699 37.3702 38.0699 40.5906C38.0699 43.811 37.2485 46.9783 35.6832 49.793V53.7645C35.6889 54.7961 36.1024 55.7836 36.8337 56.5115C37.565 57.2395 38.5545 57.6488 39.5866 57.6502H51.5969C52.6317 57.6488 53.6237 57.2372 54.3554 56.5058C55.0871 55.7744 55.4988 54.7828 55.5003 53.7484V26.5324H38.3855C38.1466 26.5324 37.9175 26.4376 37.7486 26.2687C37.5797 26.0999 37.4848 25.8708 37.4848 25.632C37.4848 25.3932 37.5797 25.1642 37.7486 24.9953C37.9175 24.8265 38.1466 24.7316 38.3855 24.7316H55.5003V1.83549Z\" fill=\"black\"></path>\n</svg>"
+            }
+          },
+          {
+            "type": "feature",
+            "settings": {
+              "title": "MULTI CLEANSING AND MAKEUP REMOVAL",
+              "number": "200",
+              "auto_colorization": true
+            }
+          },
+          {
+            "type": "feature",
+            "settings": {
+              "title": "HYDRATION BOOST",
+              "number": "200",
+              "auto_colorization": true,
+              "icon_custom_svg": "<svg class=\"lumia-icon\" width=\"67\" height=\"55\" viewbox=\"0 0 67 55\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n<path d=\"M66.9457 28.7563C67.3438 17.8971 52.5247 1.77071 51.8947 1.08886C51.7854 0.977249 51.6548 0.888577 51.5108 0.828043C51.3667 0.767509 51.212 0.736328 51.0558 0.736328C50.8995 0.736328 50.7448 0.767509 50.6007 0.828043C50.4567 0.888577 50.3261 0.977249 50.2168 1.08886C47.4897 4.12407 44.9566 7.32814 42.6326 10.682C38.6407 5.3157 35.117 1.46106 34.7738 1.08886C34.6643 0.977436 34.5338 0.88893 34.3897 0.828514C34.2457 0.768098 34.091 0.736981 33.9348 0.736981C33.7786 0.736981 33.624 0.768098 33.48 0.828514C33.3359 0.88893 33.2054 0.977436 33.0959 1.08886C32.7588 1.46106 29.2351 5.3157 25.2432 10.682C22.9152 7.32778 20.3781 4.12371 17.6468 1.08886C17.5376 0.978407 17.4075 0.890716 17.2642 0.830867C17.1208 0.771019 16.967 0.740202 16.8117 0.740202C16.6563 0.740202 16.5025 0.771019 16.3592 0.830867C16.2158 0.890716 16.0857 0.978407 15.9765 1.08886C15.3465 1.77071 0.535057 17.8971 0.925555 28.7563C1.23063 37.0254 7.24217 40.7092 13.6595 41.5817C15.9475 51.1916 25.2524 54.7366 33.9333 54.7366C42.6143 54.7366 51.9237 51.187 54.2072 41.5817C60.6321 40.7046 66.6482 37.0254 66.9457 28.7563ZM3.20448 28.6739C2.8994 20.1424 13.6915 7.14921 16.817 3.57524C19.3261 6.45797 21.6659 9.48382 23.8246 12.6375C18.4736 20.1607 12.8556 29.9537 13.1347 37.7011C13.153 38.2243 13.2156 38.714 13.269 39.2097C9.10314 38.4897 3.47295 36.1284 3.20448 28.6739ZM33.9379 52.4592C29.7172 52.4592 15.9048 51.3914 15.4106 37.6233C14.9865 25.8367 30.1702 7.84631 33.9379 3.56914C37.7056 7.84021 52.8893 25.8397 52.4652 37.6233C51.971 51.3899 38.1586 52.4592 33.9379 52.4592ZM54.6068 39.2143C54.6602 38.7185 54.7228 38.2289 54.7411 37.7057C55.0202 29.9598 49.4022 20.1638 44.0527 12.6436C46.21 9.48739 48.5494 6.45946 51.0588 3.57524C54.1843 7.14921 64.9779 20.1363 64.6713 28.6739C64.4029 36.1284 58.7727 38.4897 54.6068 39.2143Z\" fill=\"black\"></path>\n<path d=\"M32.8814 45.1998C32.4696 45.18 22.7743 44.6263 22.7743 36.7568C22.7799 36.6038 22.7545 36.4512 22.6998 36.3081C22.6451 36.1651 22.5622 36.0346 22.4559 35.9243C22.3496 35.814 22.2222 35.7264 22.0812 35.6665C21.9403 35.6066 21.7887 35.5757 21.6356 35.5757C21.4824 35.5757 21.3308 35.6066 21.1899 35.6665C21.0489 35.7264 20.9215 35.814 20.8152 35.9243C20.7089 36.0346 20.626 36.1651 20.5713 36.3081C20.5166 36.4512 20.4913 36.6038 20.4969 36.7568C20.4969 44.7986 28.5295 47.282 32.7792 47.4757H32.8311C33.1275 47.4736 33.4115 47.3561 33.6227 47.148C33.8339 46.94 33.9557 46.6578 33.9622 46.3614C33.9688 46.0651 33.8596 45.7778 33.6578 45.5606C33.456 45.3435 33.1775 45.2135 32.8814 45.1983V45.1998Z\" fill=\"black\"></path>\n</svg>"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Features list - Cards",
+        "settings": {
+          "background": true,
+          "background_preset": "none",
+          "layout": "cards"
+        },
+        "blocks": [
+          {
+            "type": "feature",
+            "settings": {
+              "title": "Vibrant Pigments",
+              "number": "01",
+              "bg_alt": true,
+              "description": "Experience a burst of color with highly pigmented shades that deliver intense and vivid eye-catching results. Create eye looks that pop and stand out."
+            }
+          },
+          {
+            "type": "feature",
+            "settings": {
+              "title": "Blendable Formula",
+              "number": "02",
+              "bg_alt": true,
+              "description": "Our eyeshadow palette features a smooth and blendable formula, making it effortless to create seamless transitions between colors."
+            }
+          },
+          {
+            "type": "feature",
+            "settings": {
+              "title": "Long-Lasting Wear",
+              "number": "03",
+              "bg_alt": true,
+              "description": "Formulated for longevity, our eyeshadows stay put all day, ensuring your eye makeup looks vibrant and fresh from morning to night."
+            }
+          },
+          {
+            "type": "feature",
+            "settings": {
+              "title": "High-Quality Ingredients",
+              "number": "04",
+              "bg_alt": true,
+              "description": "Crafted with premium ingredients, our eyeshadows offer a luxurious and comfortable application. Experience the difference with high-quality pigments for stunning results."
+            }
+          },
+          {
+            "type": "feature",
+            "settings": {
+              "title": "Compact and Portable",
+              "number": "05",
+              "bg_alt": true,
+              "description": "Designed for convenience, our eyeshadow palette features a compact and portable design. Take your favorite shades wherever you go for on-the-go touch-ups and transformations."
+            }
+          },
+          {
+            "type": "feature",
+            "settings": {
+              "title": "Buildable Coverage",
+              "number": "06",
+              "bg_alt": true,
+              "description": "Customize your eye look with buildable coverage. Whether you prefer a subtle hint of color or a bold statement, our eyeshadows allow you to control the intensity with ease."
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

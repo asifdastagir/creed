@@ -1,0 +1,78 @@
+<footer class="page-footer footer--style6 mt-global">
+  {% render 'footer-decoration', section: section %}
+  <div class="footer-top subscribe-footer text-center py-4 py-md-4 py-lg-5">
+    <div class="container">
+      {%- if section.settings.newsletter_enable -%}
+        {%- form 'customer', class: 'newsletter-form', name: 'newsletter' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          {%- if form.posted_successfully? -%}
+            {% render 'newsletters-subscription-success' %}
+          {%- endif -%}
+          {%- if form.errors -%}
+            <script>
+              document.querySelector('body').classList.remove('newslettermodal-error');
+            </script>
+          {%- endif -%}
+            <h4 class="subscribe-footer-title-sm mb-1">{{ 'theme.general.subscribe_subheading_3' | t }}</h4>
+            <div class="subscribe-footer-title-sub heading-font fw-300-strict">{{ 'theme.general.subscribe_first_html' | t }}</div>
+            <div class="row mt-2 mt-xl-4">
+              <div class="col col-lg-6 mx-auto">
+                <div class="subscribe-footer-input-group w-100">
+                 {% render 'footer-subscribe-core' %}
+                </div>
+              </div>
+            </div>
+        {%- endform -%}
+      {%- endif -%}
+
+      <div class="row flex-column gy-3 mt-2">
+        {%- if section.settings.payment_enable -%}
+          <div class="col footer-payment-wrap">
+            {% render 'footer-payments' %}
+          </div>
+        {%- endif -%}
+        {%- if section.settings.bottom_socials_media -%}
+          <div class="col footer-social-wrap">
+            {% render 'social-media', class: 'footer-social list-unstyled' %}
+          </div>
+        {%- endif -%}
+        <div class="col footer-copyright-wrap">
+          {% render 'copyright', section: section %}
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+  <div class="footer-bottom py-2 py-lg-15">
+    <div class="container">
+      <div class="row gy-3">
+        <div class="col footer-logo-wrap">
+          <div class="d-flex d-lg-inline-flex footer-logo justify-content-center">
+            {% render 'footer-logo', block: block, section: section %}
+          </div>
+        </div>
+        {%- liquid
+          assign size = section.blocks | where: 'type', 'link_list' | size
+        -%}
+        {%- if size > 0 -%}
+          <div class="col footer-nav-wrap" role="navigation">
+            {%- for block in section.blocks -%}
+              {%- case block.type -%}
+              {%- when 'link_list' -%}
+                {%- if block.settings.menu != blank -%}
+                  <ul class="footer-hor-nav-list justify-content-center">
+                    {%- for link in block.settings.menu.links -%}
+                      <li><a href="{{ link.url }}" {% if link.active %}class="active"{% endif %}>{{ link.title }}</a></li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+              {% break %}
+              {%- endcase -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</footer>

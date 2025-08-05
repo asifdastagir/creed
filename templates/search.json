@@ -1,0 +1,47 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-search",
+      "settings": {
+        "section_width": "global",
+        "container_max_width": 1178,
+        "spacing_sections": 100,
+        "use_global_desktop_space": true,
+        "spacing_sections_mobile": 40,
+        "use_global_mobile_space": false,
+        "spacing_padding_sections": 100,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "background": false,
+        "enable_sorting": true,
+        "infinite_scroll": true,
+        "product_reviews": true
+      }
+    },
+    "16452143071d3d004f": {
+      "type": "index-recently-viewed-items",
+      "settings": {
+        "section_width": "global",
+        "container_max_width": 1178,
+        "spacing_sections": 100,
+        "use_global_desktop_space": true,
+        "spacing_sections_mobile": 70,
+        "use_global_mobile_space": true,
+        "spacing_padding_sections": 100,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "background": false,
+        "limit": 8,
+        "heading_alignment": "center",
+        "heading": "Recently Viewed Products",
+        "subtitle": ""
+      }
+    }
+  },
+  "order": [
+    "main",
+    "16452143071d3d004f"
+  ]
+}

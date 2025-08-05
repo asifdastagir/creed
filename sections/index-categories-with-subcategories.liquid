@@ -1,0 +1,854 @@
+{% comment %}theme-check-disable NestedSnippet, UnusedAssign{% endcomment %}
+{%- liquid
+  assign layout = 'index-categories-with-subcategories'
+  assign padding = section.settings.images_auto_height_padding
+  assign class = 'column-caption-style-' | append: settings.collections_column_title_style
+
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+      assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+
+  assign button_show_more = false
+  if section.settings.button
+    if section.settings.heading_alignment == 'left'
+      assign button_show_more = true
+    elsif section.settings.layout != 'mini_horizontal_banner'
+      assign button_show_more = true
+    endif
+  endif
+
+  assign show_button = false
+  assign button_center = false
+  assign button_left = false
+
+  if button_show_more and section.settings.layout != 'mini_horizontal_banner'
+    assign show_button = true
+  endif
+
+  if show_button and section.settings.heading_alignment == 'center'
+    assign button_center = true
+  endif
+
+  if show_button and section.settings.heading_alignment == 'left' and section.settings.button_bottom_on_mobile
+    assign button_left = true
+  endif
+-%}
+{{ 'categories-list' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{% render 'section-wrapper', placement: 'top' %}
+
+<div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+  <div class="{% render 'section-container-class', layout: layout %}">
+    {% render 'section-heading', section: section %}
+    {%- liquid assign catalog = section.settings.catalog -%}
+    <div class="categories-list row row-cols-1 row-cols-xs-2 row-cols-md-3 row-cols-lg-4 gx-3 gx-md-4 gy-5 gy-md-8 {% if section.settings.alignment == 'center' %}justify-content-center{% endif %}{% if store_width > 1465 %}row-cols-xxl-5{% endif %} {% if store_width > 1700 %}row-cols-xxxl-6{% endif %}">
+      {%- if section.settings.manual == false -%}
+        {%- if catalog != blank and catalog.links.size > 0 -%}
+          {%- for link in catalog.links -%}
+            <div class="col">
+              {%- comment -%} <category-change-img> {%- endcomment -%}
+                <div class="categories-list {% if section.settings.alignment == 'left' %}text-start{% endif %}">
+                  {%- liquid
+                    assign collectionHandle = link.object.handle
+                    assign collectionImage = link.object.image
+
+                    assign lazyload = false
+                    assign class_img_only = 'fade-up-none'
+                    assign lazyload_pass = 1
+
+                    if forloop.index > lazyload_pass
+                      assign lazyload = true
+                      assign class_img_only = 'lazyload fade-up'
+                    endif
+                  -%}
+                  {%- if collectionImage != blank and section.settings.show_images -%}
+                    <a href="{{ link.url | default: '#' }}" class="image-container-aspect-ratio" style="padding-bottom: {{ padding }}%">
+                      {% render 'image-container',
+                        image: collectionImage,
+                        padding_no_bg: padding,
+                        padding: padding,
+                        sizes: '(min-width: 1200px) 264px, (min-width: 992px) 210px, (min-width: 768px) 162px, (min-width: 568px) 255px, (min-width: 390px) 170px, (min-width: 360px) 330px,   calc(100vw - 50px)/2',
+                        width_times: 3,
+                        hover_scale: section.settings.hover_scale,
+                        cover: false,
+                        bg: false,
+                        lazyload: lazyload,
+                        class_img_only: class_img_only
+                      %}
+                    </a>
+                    {%- if section.settings.large_space -%}
+                      <div class="mt-1">&nbsp;</div>
+                    {%- endif -%}
+                  {%- endif -%}
+                  <h4 class="categories-list-name {{ class }}">{% render 'header-navigation-component-link', link: link, span: false, data_image: collectionImage.image.src, data_attributes: 'data-image-start', show_image_icons: false, level: 2, show_children: false %}</h4>
+                  <ul>
+                    {%- for childlink in link.links limit: section.settings.limit -%}
+                      <li>
+                        {%- liquid
+                          assign collectionHandle = childlink.title | escape | split: '|' | first | handle
+                          assign collectionImage = collections[collectionHandle]
+                        -%}
+                        {% render 'header-navigation-component-link', link: childlink, span: false, data_image: collectionImage.image.src, fw: true, level: 3, show_children: false %}
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                </div>
+              {%- comment -%} </category-change-img> {%- endcomment -%}
+            </div>
+          {%- endfor -%}
+        {%- else -%}
+          <div class="col mx-auto">
+            <div class="text-center"><br><br>{{ 'theme.general.catalog_output_empty' | t }}</div>
+          </div>
+        {%- endif -%}
+      {%- else -%}
+        {%- for block in section.blocks -%}
+          <div class="col">
+            <category-change-img>
+              <div class="categories-list {% if section.settings.alignment == 'left' %}text-start{% endif %}">
+                {%- if block.settings.image != blank and section.settings.show_images -%}
+                  {%- liquid-%}
+                  <a href="{{ block.settings.collection.url }}" class="image-container-aspect-ratio" style="padding-bottom: {{ padding }}%">
+                    {% render 'image-container',
+                      image: block.settings.image,
+                      padding_no_bg: padding,
+                      padding: padding,
+                      sizes: '(min-width: 1200px) 264px, (min-width: 992px) 210px, (min-width: 768px) 162px, (min-width: 568px) 255px, (min-width: 390px) 170px, (min-width: 360px) 330px,   calc(100vw - 50px)/2',
+                      width_times: 2,
+                    %}
+                  </a>
+                {%- endif -%}
+                {%- if block.settings.title != blank -%}
+                  <h4 class="categories-list-name {{ class }}"><a href="{{ block.settings.collection.url }}">{{ block.settings.title }}</a></h4>
+                {%- endif -%}
+                {%- if block.settings.sublinks != blank and block.settings.sublinks.links.size > 0 -%}
+                  <ul>
+                    {%- for link in block.settings.sublinks.links limit: section.settings.limit -%}
+                      <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+              </div>
+            </category-change-img>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+    {%- if button_center or button_left -%}
+      <div class="btn-showmore-wrap text-center mt-3 mt-lg-6  {% if button_left %}show-mobile-sm{% endif %}">
+        <a href="{{ section.settings.button_url }}" class="btn btn--invert btn--showmore">{{ section.settings.button_text }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+{% render 'section-wrapper' %}
+{% schema %}
+{
+  "name": "Categories expanded",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_animation",
+      "label": "Enable soft appearing of section",
+      "default": true,
+      "info": "Global sections animation disabling in Theme Settings / General / Sections. AUTODISABLED if section has top or bottom separator."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_images",
+      "label": "Show collection images",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "images_auto_height_padding",
+      "min": 20,
+      "max": 200,
+      "step": 2,
+      "unit": "%",
+      "label": "Aspect ratio for auto height on desktop",
+      "default": 100,
+      "info": "for images"
+    },
+    {
+      "type": "checkbox",
+      "id": "large_space",
+      "label": "Space under the image",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 3,
+      "max": 50,
+      "step": 1,
+      "label": "Limit sub links in the column",
+      "default": 4
+    },
+    {
+      "type": "link_list",
+      "id": "catalog",
+      "label": "Select navigation of collections"
+    },
+    {
+      "type": "paragraph",
+      "content": "Widget outputs by default outputs all subcategories from selected navigation, but you can manually output only specified categories by adding section blocks"
+    },
+    {
+      "type": "checkbox",
+      "id": "manual",
+      "label": "Manual output of the catalog",
+      "default": false
+    },
+    {
+      "type": "radio",
+      "id": "alignment",
+      "label": "Links alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "radio",
+      "id": "heading_alignment",
+      "label": "Heading aligment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "hover_scale",
+      "label": "Image hover scale",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "paragraph",
+      "content": "Be sure that you created Navigation->Catalog with all 1st level and 2nd level collections"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Catalog subcategories"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "default": "Subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "button",
+      "label": "Button",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "button_bottom_on_mobile",
+      "label": "Show at bottom on mobile in case when Heading layout is 'Left'",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Go to catalog"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button url"
+    },
+    {
+      "type": "header",
+      "content": "SECTION WIDTH"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Select width source",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use store width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom width"
+        }
+      ],
+      "default": "global",
+      "info": "Store width you can set in Theme Settings / General"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 1178,
+      "max": 1978,
+      "step": 8,
+      "unit": "px",
+      "label": "Custom width",
+      "default": 1178,
+      "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable background",
+      "default": false,
+      "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+    },
+    {
+      "type": "select",
+      "id": "background_preset",
+      "label": "Background image - preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "product-cosmetics-bg.png",
+          "label": "Leaves 1"
+        },
+        {
+          "value": "bottom-cosmetics-bg.png",
+          "label": "Leaves 2"
+        },
+        {
+          "value": "bg-makeup1.png,bg-makeup1-m.png",
+          "label": "Pink and Waves 1"
+        },
+        {
+          "value": "bg-makeup2.png,bg-makeup2-m.png",
+          "label": "Pink and Waves 2"
+        },
+        {
+          "value": "bg-makeup4.png,bg-makeup4-m.png",
+          "label": "Pink and Waves 3"
+        },
+        {
+          "value": "bg-makeup3.png,bg-makeup3-m.png",
+          "label": "Purple Splash"
+        },
+        {
+          "value": "bg-sweets1.png",
+          "label": "Blue Sun Rays"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image - custom on Desktop"
+    },
+    {
+      "type": "select",
+      "id": "background_behavior",
+      "label": "Background image behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image - custom on Mobile",
+      "info": "only if Background image - custom on Desktop selected"
+    },
+    {
+      "type": "select",
+      "id": "background_image_placeholder_type",
+      "label": "Placeholder background color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_secondary_bg"
+    },
+    {
+      "type": "color",
+      "id": "background_image_placeholder",
+      "label": "Custom - Placeholder background color"
+    },
+    {
+      "type": "header",
+      "content": "SECTION SEPARATOR"
+    },
+    {
+      "type": "header",
+      "content": "Top separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_header_main_bg",
+          "label": "Header - Middle(main) part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_top_color",
+      "label": "Custom - top separator color"
+    },
+    {
+      "type": "header",
+      "content": "Bottom separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "paragraph",
+      "content": "'Global separator' is set in Theme Settings / Separators / Global separator style"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_footer_top_bg",
+          "label": "Footer - Top part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_bottom_color",
+      "label": "Custom - bottom separator color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Preview",
+          "info": "recommended size for retina displays is 528x406px"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Title",
+          "label": "Title"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "link_list",
+          "id": "sublinks",
+          "label": "Sublinks"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Categories expanded",
+      "blocks": [
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

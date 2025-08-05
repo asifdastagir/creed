@@ -1,0 +1,270 @@
+{%- liquid
+  assign layout = layout | default: section.settings.layout
+  assign fluid = section.settings.fluid
+  assign inner_space = section.settings.inner_space
+  assign heading = heading | default: section.settings.heading
+  assign use_global_desktop_space = use_global_desktop_space | default: section.settings.use_global_desktop_space, allow_false: true
+  assign use_global_mobile_space = use_global_mobile_space | default: section.settings.use_global_mobile_space, allow_false: true
+  assign use_global_desktop_space_padding = use_global_desktop_space_padding | default: section.settings.use_global_desktop_space_padding, allow_false: true
+  assign use_global_mobile_space_padding = use_global_mobile_space_padding | default: section.settings.use_global_mobile_space_padding, allow_false: true
+
+  assign spacing_padding_sections_original = section.settings.spacing_padding_sections
+  assign spacing_padding_sections_mobile_original = section.settings.spacing_padding_sections_mobile
+
+  if use_global_desktop_space_padding
+    assign spacing_padding_sections_original = settings.spacing_padding_sections
+  endif
+
+  if use_global_mobile_space_padding
+    assign spacing_padding_sections_mobile_original = settings.spacing_padding_sections_mobile
+  endif
+
+  assign spacing_padding_sections = spacing_padding_sections_original
+  assign spacing_padding_sections_mobile = spacing_padding_sections_mobile_original
+
+  case settings.section_decoration
+    when "1"
+      assign section_decoration_global = "none"
+    when "2"
+      assign section_decoration_global = "grunge1"
+    when "3"
+      assign section_decoration_global = "grunge2"
+    when "4"
+      assign section_decoration_global = "grunge3"
+    when "5"
+      assign section_decoration_global = "paper"
+    when "6"
+      assign section_decoration_global = "mountains"
+    when "7"
+      assign section_decoration_global = "ellipse1"
+    when "8"
+      assign section_decoration_global = "ellipse2"
+    when "9"
+      assign section_decoration_global = "wave1"
+    when "10"
+      assign section_decoration_global = "wave2"
+    when "11"
+      assign section_decoration_global = "wave3"
+    when "21"
+      assign section_decoration_global = "wave4"
+    when "22"
+      assign section_decoration_global = "wave5"
+    when "12"
+      assign section_decoration_global = "triangle1"
+    when "13"
+      assign section_decoration_global = "triangle2"
+    when "14"
+      assign section_decoration_global = "triangle_assymetrical1"
+    when "15"
+      assign section_decoration_global = "triangle_assymetrical1_flip"
+    when "16"
+      assign section_decoration_global = "triangle_assymetrical2"
+    when "17"
+      assign section_decoration_global = "triangle_assymetrical2_flip"
+    when "18"
+      assign section_decoration_global = "tilt"
+    when "19"
+      assign section_decoration_global = "tilt_flip"
+    when "20"
+      assign section_decoration_global = "glaze"
+  endcase
+  assign section_decoration_top = section.settings.section_decoration_top
+  assign section_decoration_bottom = section.settings.section_decoration_bottom
+  assign section_decoration = 'none'
+
+  assign padding_bottom_desktop_zero = false
+
+  if section_decoration_top != 'none'
+    assign section_decoration = section_decoration_top
+  endif
+
+  if section_decoration_bottom != 'none'
+    assign section_decoration = section_decoration_bottom
+  endif
+
+  if section_decoration == 'global' and section_decoration_global != 'none'
+    assign section_decoration = section_decoration_global
+  endif
+
+  assign template_separators = false
+
+  if template.suffix contains 'separators.' and section_decoration == 'global'
+    assign template_separators = true
+
+    assign section_decoration = template.suffix | replace: 'separators.', ''
+
+    if section_decoration contains '.bottom'
+      assign section_decoration = section_decoration | replace: '.bottom', ''
+    endif
+
+    if section_decoration contains '.top'
+      assign section_decoration = section_decoration | replace: '.top', ''
+    endif
+  endif
+
+
+  if template_separators or section_decoration != 'none' and section_decoration != 'global' and placement != 'top' and placement != 'bottom'
+    assign use_global_desktop_space_padding = false
+    assign delta = true
+    assign delta_plus = 30
+
+    if section_decoration contains 'triangle' or section_decoration contains 'tilt'
+      assign delta_plus = delta_plus | plus: 50
+    endif
+
+    if section_decoration contains 'glaze'
+      assign delta_plus = 50
+    endif
+
+    if layout == 'index-welcome' and section.settings.layout == 'layout_2'
+      assign delta_plus = 50
+    endif
+
+    if layout contains 'slideshow' and section.settings.fluid == true
+      assign padding_bottom_desktop_zero = true
+
+    if heading == blank
+      assign delta = false
+    endif
+
+    elsif layout == 'grid' and fluid and inner_space == false
+      assign padding_bottom_desktop_zero = true
+
+      if heading == blank
+        assign delta = false
+      endif
+
+    elsif layout == 'index-lookbook' and fluid and inner_space == false
+      assign padding_bottom_desktop_zero = true
+
+      if heading == blank
+        assign delta = false
+      endif
+
+    elsif layout == 'index-image-bg-text'
+      assign padding_bottom_desktop_zero = true
+      assign delta = false
+
+      elsif layout == 'index-ticker'
+        assign delta_plus = 0
+
+      elsif layout == 'product-carousel' and section.settings.layout == 'wide'
+        assign padding_bottom_desktop_zero = true
+
+      if heading == blank
+        assign delta = false
+      endif
+
+    endif
+
+      if delta
+
+        if section_decoration_top != 'none'
+          assign spacing_padding_sections = spacing_padding_sections | plus: delta_plus
+        endif
+
+        if section_decoration_bottom == 'none'
+          assign style = style | append: '--padding-bottom-desktop:' | append: spacing_padding_sections_original | append: 'px;'
+        else
+          assign spacing_padding_sections_bottom = spacing_padding_sections_original | plus: delta_plus
+          assign style = style | append: '--padding-bottom-desktop:' | append: spacing_padding_sections_bottom | append: 'px;'
+        endif
+
+        assign style = style | append: '--padding-bottom-mobile-section:' | append: spacing_padding_sections_mobile_original | append: 'px;'
+
+      else
+        assign spacing_padding_sections = 0
+        assign spacing_padding_sections_mobile = 0
+        assign use_global_mobile_space_padding = false
+      endif
+  endif
+
+  if padding_bottom_desktop_zero
+    assign style = style | append: '--padding-bottom-desktop:0px;'
+  endif
+
+  unless use_global_desktop_space
+    assign style = style | append: '--margin-top-desktop:' | append: section.settings.spacing_sections | append: 'px;'
+  endunless
+
+  unless use_global_mobile_space
+    assign style = style | append: '--margin-top-mobile:' | append: section.settings.spacing_sections_mobile | append: 'px;'
+  endunless
+
+
+  unless use_global_desktop_space_padding
+    assign style = style | append: '--padding-top-desktop:' | append: spacing_padding_sections | append: 'px;'
+  endunless
+
+  unless use_global_mobile_space_padding
+    assign style = style | append: '--padding-top-mobile:' | append: spacing_padding_sections_mobile | append: 'px;'
+  endunless
+
+  if section.settings.section_width == 'custom'
+    assign style = style | append: '--container-max-width:' | append: section.settings.container_max_width | append: 'px;'
+  endif
+
+  assign background_color_enable = false
+  assign background_image_placeholder = section.settings.background_image_placeholder
+
+  if background_image_placeholder != 'rgba(0,0,0,0)' and background_image_placeholder != blank
+    assign background_color_enable = true
+  endif
+
+  if section.settings.background
+    assign background_image_placeholder_type = section.settings.background_image_placeholder_type
+    assign background_color = 'var(--body-bg-secondary)'
+
+    if background_image_placeholder_type == 'color_global_primary_bg'
+      assign background_color = 'var(--body-bg)'
+    elsif background_image_placeholder_type == 'custom'
+      if background_color_enable
+        assign background_color = background_image_placeholder
+      endif
+    endif
+
+    assign style = style | append: 'background-color: ' | append: background_color | append: ';'
+  endif
+
+  if style != blank
+    assign style = 'style="' | append: style | append: '"'
+  endif
+
+  echo style
+
+  assign background_image = section.settings.background_image
+  assign background_image_mobile = section.settings.background_image_mobile
+
+  if section.settings.background
+    if background_image != blank
+      assign data_bgset_value = background_image | image_url: width: background_image.width
+
+      if background_image_mobile != blank
+        assign background_mobile_image_url = background_image_mobile | image_url: width: background_image_mobile.width
+
+        assign data_bgset_value = background_mobile_image_url | append: " [(max-width: 768px)] | " | append: data_bgset_value
+      endif
+
+      assign data_bgset_html = ' data-bgset="' | append: data_bgset_value | append: '" '
+
+      echo data_bgset_html
+
+    elsif section.settings.background_preset != blank and section.settings.background_preset != 'none'
+
+      if section.settings.background_preset contains ','
+          assign background_presets = section.settings.background_preset | split: ','
+
+          assign data_bgset_value = background_presets[0] | asset_img_url: 'master'
+          assign data_bgset_value_mobile = background_presets[1] | asset_img_url: 'master'
+
+          assign data_bgset_value = data_bgset_value_mobile | append: " [(max-width: 768px)] | " | append: data_bgset_value
+      else
+        assign data_bgset_value = section.settings.background_preset | asset_img_url: 'master'
+      endif
+
+      assign data_bgset_html = ' data-bgset="' | append: data_bgset_value | append: '" '
+
+      echo data_bgset_html
+    endif
+  endif
+-%}

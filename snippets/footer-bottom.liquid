@@ -1,0 +1,19 @@
+<div class="footer-bottom py-2 py-lg-15 p-glue-prev">
+  <div class="container">
+    <div class="row gy-3">
+      <div class="col footer-copyright-wrap">
+        {% render 'copyright', section: section %}
+      </div>
+      {%- if section.settings.bottom_socials_media -%}
+        <div class="col footer-social-wrap">
+          {% render 'social-media', class: 'footer-social list-unstyled' %}
+        </div>
+      {%- endif -%}
+      {%- if section.settings.payment_enable -%}
+        <div class="col footer-payment-wrap">
+          {% render 'footer-payments' %}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>

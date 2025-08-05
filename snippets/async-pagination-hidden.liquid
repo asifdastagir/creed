@@ -1,0 +1,17 @@
+<pagination-infinite data-container="{{ container }}" data-item=".col" data-margin="0px 0px 200px 0px">
+  {%- if paginate.next -%}
+    {%- liquid
+      assign url = paginate.next.url | append: '&view=async-main-collection-product-grid-hidden-pagination'
+    -%}
+    <a href="{{ url }}" class="page-link-next hidden">{{ 'general.pagination.next' | t }}</a>
+    <div class="filter-row mt-4 mb-0 p-0 order-4">
+        <div class="row flex-nowrap align-items-center">
+          <div class="col-12 col-md-auto ms-auto" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+          <div class="filter-row-info text-end hide-filter-mobile ProductCountDesktop" data-loading-text>
+            {%- if paginate.pages != paginate.current_page -%}
+              <span class="hidden loading-text">{{ 'theme.general.loading' | t }}</span>
+            {%- endif -%}
+          </div>
+    </div></div></div>
+  {%- endif -%}
+</pagination-infinite>

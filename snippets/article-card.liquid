@@ -1,0 +1,95 @@
+{%- liquid
+  assign sizes = sizes | default: '(min-width: 1200px) 478px, (min-width: 992px) 387px, (min-width: 768px) 270px, calc(100vw - 30px)'
+  assign product_aspect_ratio = product_aspect_ratio | default: true, allow_false: true
+  assign month = article.published_at | date: "%b"
+
+  case month
+    when 'Jan'
+      assign month_translated = 'theme.general.january' | t
+    when 'Feb'
+      assign month_translated = 'theme.general.february' | t
+    when 'Mar'
+      assign month_translated = 'theme.general.march' | t
+    when 'Apr'
+      assign month_translated = 'theme.general.april' | t
+    when 'May'
+      assign month_translated = 'theme.general.may' | t
+    when 'Jun'
+      assign month_translated = 'theme.general.june' | t
+    when 'Jul'
+      assign month_translated = 'theme.general.july' | t
+    when 'Aug'
+      assign month_translated = 'theme.general.august' | t
+    when 'Sep'
+      assign month_translated = 'theme.general.september' | t
+    when 'Oct'
+      assign month_translated = 'theme.general.october' | t
+    when 'Nov'
+      assign month_translated = 'theme.general.november' | t
+    when 'Dec'
+      assign month_translated = 'theme.general.december' | t
+  endcase
+-%}
+<div class="post-prw {{ class }} {% if article.image == blank or show_image == false %} post-prw--image-off{% endif %}" aria-labelledby="Article-{{ article.id }}">
+  <div class="row">
+    {%- if article.image != blank and show_image -%}
+      <a href="{{ article.url }}" class="post-prw-img" title="{{ article.title | escape }}">
+        {% render 'image-container',
+          image: article.image,
+          sizes: sizes,
+          lazyload: lazyload,
+          class_img_only: class_img_only,
+          padding_no_bg: padding
+          padding: padding,
+          product_aspect_ratio: product_aspect_ratio,
+          image_ratio: "landscape"
+        %}
+        {%- if show_date -%}
+          <span class="post-prw-img-date">
+            <span>{{ article.published_at | date: "%d" }}</span>
+            <span>{{ month_translated | slice: 0, 3 }}</span>
+          </span>
+        {%- endif -%}
+      </a>
+    {%- endif -%}
+    <div class="post-prw-text">
+      <h4 class="post-prw-title heading-font"><a href="{{ article.url }}" title="{{ article.title | escape }}">{{ article.title | escape }}</a></h4>
+      <div class="post-prw-meta row">
+        {%- if show_date -%}
+          <div class="col-auto"><b>{{ 'theme.general.date' | t }}:</b> {{ article.published_at | time_tag: format: 'abbreviated_date' }}</div>
+        {%- endif -%}
+        {%- if show_author -%}
+          <div class="col-auto post-prw-author"><b>{{ 'theme.general.posted_by' | t }}</b>: {{ article.author }}</div>
+        {%- endif -%}
+        <div class="col btn-link-wrap">
+          <a href="#" class="btn-link btn-link--md"><span class="icon-wrap">{% render 'icon-message2' %}</span><span>{{ 'blogs.article.comments' | t: count: article.comments_count }}</span></a>
+        </div>
+      </div>
+      {%- if article.excerpt_or_content.size > 0 and class != 'post-prw--compact' -%}
+        <div class="post-prw-teaser">
+          <p class="article-card__excerpt rte-width">
+            {%- liquid
+              assign truncate = 100
+              if request.page_type == 'blog'
+                assign truncate = 120
+              endif
+            -%}
+            {{ article.excerpt_or_content | strip_html | truncate: truncate }}
+          </p>
+        </div>
+      {%- endif -%}
+      {%- if class == 'post-prw--full' -%}
+        <div class="post-prw-bot row align-items-center g-2">
+          <div class="col">
+            <a href="{{ article.url }}" class="btn" title="{{ 'theme.general.read_more' | t }} {{ article.title | escape }}">{{ 'theme.general.read_article' | t }}</a>
+          </div>
+          {%- if article.comments_count > 0 -%}
+            <div class="col-auto btn-link-wrap">
+              <a href="{{ article.url }}" class="btn-link btn-link--md"><span class="icon-wrap">{% render 'icon-message2' %}</span><span>{{ 'blogs.article.comments' | t: count: article.comments_count }}</span></a>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>

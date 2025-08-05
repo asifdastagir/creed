@@ -1,0 +1,53 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- liquid
+  if settings.catalog_mode and product.has_only_default_variant == true
+  endif
+  assign image = product.selected_or_first_available_variant.featured_media | default: product.featured_media
+
+  assign in_collection = product.collections | where: 'handle', collection.handle | first
+  if collection == null or collection.handle == 'all' or in_collection == nil
+  assign all_products_count = 0
+  for c in product.collections
+  if c.handle != 'all' and c.handle != 'frontpage' and all_products_count < c.all_products_count
+  assign collection = c
+  assign all_products_count = c.all_products_count
+  endif
+  endfor
+  endif
+
+  assign title_truncate = 39
+  assign title = product.title | escape | truncate: title_truncate, '..'
+
+  assign product_url_collection = product.url
+
+  if settings.product_card_url_within_collection
+    assign product_url_collection = product.url | within: collection
+  endif
+-%}
+<div class="prd-prw-sm">
+  <div class="row gx-3">
+    {%- if product.featured_media != blank -%}
+      <div class="col-auto">
+        <a href="{{ product_url_collection }}" class="prd-prw-img">
+          {%- assign assign image = product.featured_media | default: product.selected_or_first_available_variant.featured_media -%}
+          {% render 'image-container',
+            image: image,
+            padding: 100,
+            sizes: '85px',
+            product_object: product,
+            bg: settings.product_card_image_placeholder
+          %}
+        </a>
+      </div>
+    {%- endif -%}
+    <div class="col d-flex flex-column align-self-center">
+      <h4 class="prd-prw-title"><a href="{{ product_url_collection }}">{{ title }}</a></h4>
+      {% render 'price', product: product, class: 'prd-prw-price' %}
+      {%- if settings.product_card_rating -%}
+        <div class="prd-prw-rating prd-rating">
+          {% render 'rating', product: product %}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>

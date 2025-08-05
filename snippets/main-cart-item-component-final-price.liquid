@@ -1,0 +1,13 @@
+<div class="prd-price">
+  <div class="loading-overlay hidden">
+    <div data-load="loading"></div>
+  </div>
+  {%- if item.original_line_price != item.final_line_price -%}
+    <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
+    <span class="prd-price-old">{{ item.original_line_price | money }}</span>
+    <span class="visually-hidden">{{ 'products.product.price.sale_price' | t }}</span>
+    <span class="prd-price-regular ">{{ item.final_line_price | money }}</span>
+  {%- else -%}
+    <span class="prd-price-regular ">{{ item.original_line_price | money }}</span>
+  {%- endif -%}
+</div>

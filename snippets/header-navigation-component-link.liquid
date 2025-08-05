@@ -1,0 +1,281 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- liquid
+  if settings.hide_empty_collections and link.object.url contains '/collections/' and link.object.products.size == 0
+    continue
+  endif
+
+  assign data_tippy_placement = 'left'
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign data_tippy_placement = 'right'
+  endif
+
+  assign layout = layout | default: 'default'
+  assign show_children = show_children | default: true, allow_false: true
+
+  assign title = link.title | escape | split: '|' | first
+  assign badge = link.title | escape | split: 'badge:'
+  if badge.size > 1
+  assign badge = badge | last | split: '|' | first
+  else
+  assign badge = ''
+  endif
+  assign badge_color = link.title | escape | split: 'badge-color:' | last | split: '|' | first | default: '4'
+  assign tooltip_title = ''
+  assign tooltip_title = link.title | escape | split: 'tooltip:' | last | split: '|' | first
+  assign icon = link.title | escape | split: 'icon:'
+  if icon.size > 1
+  assign icon = icon | last | split: '|' | first
+  else
+  assign icon = ''
+  endif
+
+  assign target = link.title | escape | split: 'target:'
+  if target.size > 1
+    assign target = target | last | split: '|' | first
+  else
+    assign target = ''
+  endif
+
+  if page.handle == 'intro'
+    assign target = '_blank'
+  endif
+
+  assign preview = link.title | escape | split: 'preview:'
+  assign preview_padding = link.title | escape | split: 'padding:'
+  if preview.size > 1 and is_mobile != 1
+    assign preview = preview | last | split: '|' | first | replace: '؟v', '?v'
+    assign preview_padding = preview_padding | last | split: '|' | first | default: 100
+  else
+    assign preview = ''
+  endif
+
+  assign image = link.object.image
+  if preview == '' and show_collection_preview == true and image != blank
+    assign preview = image | image_url: width: 440
+    assign preview_padding = image.height | times: 100 | divided_by: image.width
+  endif
+
+
+  assign has_image_icon = false
+
+  if link.object.image != blank and show_image_icons != false and link.object.url contains '/collections/'
+    if layout == 'header-subcollections'
+      assign has_image_icon = settings.collection_previews_header
+
+    elsif layout == 'header-subcollections-collections-all'
+      assign has_image_icon = settings.collection_previews_header_collections_all
+
+    elsif layout == 'catalog-popup'
+      assign has_image_icon = settings.collection_previews_header_catalog_popup
+
+    elsif layout == 'header-layout-2'
+      assign has_image_icon = settings.collection_previews_header_categories
+
+    endif
+  endif
+
+  assign show = true
+-%}
+
+{%- if popup -%}
+  <category-popup data-event="{{ settings.header_navigation_popup_event }}" {% if settings.header_navigation_popup_load_on_click %}data-ajax="{{ collection_url }}"{% else %}data-selector="#menuPopup01"{% endif %}>
+{%- endif -%}
+
+{%- liquid
+    assign data_tippy_content = ''
+
+    if hide_title
+      assign data_tippy_content = title
+    endif
+
+    if has_image_icon == false and link.object.image == blank and hide_title == true
+      assign show = false
+    endif
+
+    assign link_url = link.url
+
+    if link_url contains 'view='
+      assign host = request.host
+      assign host_with_locale = host
+
+      unless localization.language.iso_code == 'en'
+        assign host_with_locale = request.host | append: '/' | append: localization.language.iso_code
+      endunless
+
+      assign link_url = link_url | replace: host, host_with_locale
+    endif
+
+    if section.id == 'async-header-navigation-mobile'
+      assign tooltip_title = ''
+      assign data_tippy_content = ''
+    endif
+
+    assign query_symbol = '?'
+
+    if link_url contains query_symbol
+      assign query_symbol = '&'
+    endif
+
+    assign show_quick_view_collection = settings.quick_view_collection
+
+    unless link.object.url contains '/collections/'
+      assign show_quick_view_collection = false
+    endunless
+
+
+    if link.object.url contains '/collections/' and link.object.all_products_count == 0
+      assign show_quick_view_collection = false
+    endif
+
+    assign show_children_arrow = false
+
+    if link.links != blank and show_children
+      assign show_children_arrow = true
+    endif
+
+    assign show_link_actions = false
+
+    if layout == 'megamenu' or layout == 'header-subcollections' or layout == 'header-subcollections-collections-all'
+      assign show_quick_view_collection = false
+      assign show_children_arrow = false
+    endif
+
+    assign show_level_4 = false
+
+    if layout == 'megamenu-dropdown' and level == 3
+      assign handle_children = title | handleize
+
+      if linklists[handle_children].links.size > 0
+        assign show_children_arrow = true
+        assign show_level_4 = true
+      endif
+    endif
+
+    assign disable_actions_wrap = disable_actions_wrap | default: false, allow_false
+
+    if disable_actions_wrap == false and show_quick_view_collection or show_children_arrow
+      assign show_link_actions = true
+    endif
+
+    assign link_url_qv = link_url
+
+    if template.suffix contains 'store-width-'
+      unless link_url contains '?'
+        assign link_url = link_url | append: '?'
+      endunless
+
+      assign link_url = link_url | append: '&view=' | append: template.suffix
+    endif
+-%}
+
+{%- if show -%}
+    {%- if preview != blank -%}<image-on-hover>{%- endif -%}
+
+      {%- if show_link_actions -%}
+        <span class="menu-item-wrap">
+          <span class="menu-item-actions {% if link.current %}active{% endif %}">
+            {%- if show_quick_view_collection -%}
+              <collection-quickview-popup data-toggle="tooltip" data-tippy-content="{{ 'theme.general.quick_view_collection' | t }}" data-selector="#collectionModal" data-ajax="{{ link_url_qv }}{{ query_symbol }}section_id=async-quick-view-collection"><span class="icon-wrap">{% render 'icon-eye' %}</span></collection-quickview-popup>
+            {%- endif -%}
+            {%- if show_children_arrow -%}
+              <span class="icon-arrow-next"></span>
+            {%- endif -%}
+          </span>
+        {%- endif -%}
+      {%- liquid
+      if level == 1 and link_url == '#'
+        assign tag_name = 'span'
+      else
+        assign tag_name = 'a'
+      endif
+      -%}
+      <{{ tag_name }} {% unless link_url == '#' %}href="{{ link_url }}"{% endunless %}
+          {% if target != blank %}target="{{ target }}" {% endif %}
+          {% if preview != blank %}data-preview="{{ preview }}"{% endif %}
+          class="{{ class }} {% if has_image_icon %}link-with-image{% endif %} {% if link.current %}active{% endif %} {% if level == 1 or popup %}top-level-link{% endif %}
+          {% if show_class_has_badge == 1 and badge != blank and badge_show != false %}has-label{% endif %}"
+          {% if link.current %} aria-current="page"{% endif %}
+          {% if index %}data-number="{{ index }}"{% endif %}
+          {% if data_attributes != blank and data_attributes != true %}{{ data_attributes }}{% endif %}
+          {% if data_image != blank and data_image != true %}data-image={{ data_image | image_url: width: data_image.width }}{% endif %}
+          {% if tooltip_title != blank and tooltip_title != title and demo_mode != true %}data-tippy-content="{{ tooltip_title | escape }}" data-tippy-placement="{{ data_tippy_placement }}"{% endif %}
+        >
+          {%- if has_image_icon -%}
+            {%- liquid
+              assign lazyload = false
+              assign class_img_only = 'fade-up-none'
+
+              assign class_ic = ''
+              if hide_title
+                assign class_ic = 'ic--round-50'
+              endif
+
+            -%}
+            <span class="image-wrap">
+              {% render 'image-container',
+                image: link.object.image,
+                class_ic: class_ic,
+                sizes: '80px',
+                padding_no_bg: 100,
+                padding: 100,
+                widths: '79,159,239,319',
+                bg: false,
+                tag: 'span',
+                data_tippy_content: data_tippy_content
+                data_tippy_placement: "bottom",
+                class_img_only: class_img_only,
+                lazyload: lazyload
+              %}
+            </span>
+          {%- endif -%}
+          {%- unless hide_title -%}
+            {%- if icon != blank -%}
+              <span class="icon-wrap">{% render 'icon', icon: icon %}</span>
+            {%- endif -%}
+              <span {% if level == 3 or fw == true %}class=""{% endif %}>{{ title }}</span>
+              {% if settings.header_navigation_parent_arrows and link.links != blank and level == 1 and layout == 'megamenu' %}<span class="mmenu-item-arrow"></span>{% endif %}
+            {%- if badge != blank and badge_show != false -%}
+              <span class="menu-label menu-label--color{{ badge_color }}">{{ badge }}</span>
+            {%- endif -%}
+          {%- endunless -%}
+      </{{ tag_name }}>
+
+      {%- if show_link_actions -%}
+        </span>
+      {%- endif -%}
+
+      {%- if show_level_4 -%}
+        {%- liquid
+          assign handle_children = title | handleize
+          assign level_4_links = linklists[handle_children].links
+        -%}
+        {%- if level_4_links.size > 0 -%}
+          {%- if mobile != true -%}
+            <div class="submenu-list-wrap">
+            {% render 'header-navigation-component-subtitle', link: link %}
+          {%- endif -%}
+            <ul>
+              {% for childlink in level_4_links %}
+                <li>
+                  {% render 'header-navigation-component-link', link: childlink, level: 4, layout: 'megamenu-dropdown', disable_actions_wrap: disable_actions_wrap %}
+                </li>
+              {% endfor %}
+            </ul>
+          {%- if mobile != true -%}
+            </div>
+          {%- endif -%}
+        {%- endif -%}
+      {%- endif -%}
+
+    {%- if preview != blank -%}
+      <div class="submenu-list-wrap submenu-list-wrap--image">
+        <div data-load="loading"></div>
+        <a href="{{ link_url }}" class="image-container image-hover-scale" style="padding-bottom: {{ preview_padding }}%" {% if tooltip_title != blank and tooltip_title != title and demo_mode == true %}data-tippy-content="{{ tooltip_title | escape }}" data-tippy-placement="right"{% endif %}></a>
+      </div>
+    {%- endif -%}
+  {%- if preview != blank -%}</image-on-hover>{%- endif -%}
+{%- endif -%}
+
+{%- if popup -%}
+  </category-popup>
+{%- endif -%}

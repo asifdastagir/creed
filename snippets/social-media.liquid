@@ -1,0 +1,72 @@
+{%- if settings.social_enable -%}
+  <ul class="{{ class }}" role="list">
+    {%- if password -%}
+      <li class="login-icon"  data-tippy-content="{{ 'theme.general.coming_soon_login' | t }}">
+        <a href="#login" data-toggle-form><span class="icon-wrap">{% render 'icon-user2' %}</span></a>
+      </li>
+      <li class="logout-icon"  data-tippy-content="{{ 'theme.general.coming_soon_subscribe' | t }}">
+        <a href="#subscribe" data-toggle-form><span class="icon-wrap">{% render 'icon-logout' %}</span></a>
+      </li>
+    {%- endif -%}
+    {%- if settings.social_instagram_link != blank -%}
+      <li>
+        <a href="{{ settings.social_instagram_link }}" {% if settings.social_target_blank %}target="_blank"{% endif %} {% if settings.social_instagram_title != blank %} data-tippy-content="{{ settings.social_instagram_title | escape }}"{% endif %}><span class="icon-wrap">{% render 'icon-instagram' %}<span class="visually-hidden">{{ 'general.social.links.instagram' | t }}</span></span></a>
+      </li>
+    {%- endif -%}
+    {%- if settings.social_facebook_link != blank -%}
+      <li>
+        <a href="{{ settings.social_facebook_link }}" {% if settings.social_target_blank %}target="_blank"{% endif %} {% if settings.social_facebook_title != blank %} data-tippy-content="{{ settings.social_facebook_title | escape }}"{% endif %}><span class="icon-wrap">{% render 'icon-facebook' %}<span class="visually-hidden">{{ 'general.social.links.facebook' | t }}</span></span></a>
+      </li>
+    {%- endif -%}
+    {%- if settings.social_tiktok_link != blank -%}
+      <li>
+        <a href="{{ settings.social_tiktok_link }}" {% if settings.social_target_blank %}target="_blank"{% endif %} {% if settings.social_tiktok_title != blank %} data-tippy-content="{{ settings.social_tiktok_title | escape }}"{% endif %}><span class="icon-wrap">{% render 'icon-tiktok' %}<span class="visually-hidden">{{ 'general.social.links.tiktok' | t }}</span></span></a>
+      </li>
+    {%- endif -%}
+    {%- if settings.social_pinterest_link != blank -%}
+      <li>
+        <a href="{{ settings.social_pinterest_link }}" {% if settings.social_target_blank %}target="_blank"{% endif %} {% if settings.social_pinterest_title != blank %} data-tippy-content="{{ settings.social_pinterest_title | escape }}"{% endif %}><span class="icon-wrap">{% render 'icon-pinterest' %}<span class="visually-hidden">{{ 'general.social.links.pinterest' | t }}</span></span></a>
+      </li>
+    {%- endif -%}
+    {%- if settings.social_twitter_link != blank -%}
+      <li>
+        <a href="{{ settings.social_twitter_link }}" {% if settings.social_target_blank %}target="_blank"{% endif %} {% if settings.social_twitter_title != blank %} data-tippy-content="{{ settings.social_twitter_title | escape }}"{% endif %}><span class="icon-wrap">{% render 'icon-twitter' %}<span class="visually-hidden">{{ 'general.social.links.twitter' | t }}</span></span></a>
+      </li>
+    {%- endif -%}
+    {%- if settings.social_youtube_link != blank -%}
+      <li>
+        <a href="{{ settings.social_youtube_link }}" {% if settings.social_target_blank %}target="_blank"{% endif %} {% if settings.social_youtube_title != blank %} data-tippy-content="{{ settings.social_youtube_title | escape }}"{% endif %}><span class="icon-wrap">{% render 'icon-youtube' %}<span class="visually-hidden">{{ 'general.social.links.youtube' | t }}</span></span></a>
+      </li>
+    {%- endif -%}
+    {%- if settings.social_vimeo_link != blank -%}
+      <li>
+        <a href="{{ settings.social_vimeo_link }}" {% if settings.social_target_blank %}target="_blank"{% endif %} {% if settings.social_vimeo_title != blank %} data-tippy-content="{{ settings.social_vimeo_title | escape }}"{% endif %}><span class="icon-wrap">{% render 'icon-vimeo' %}<span class="visually-hidden">{{ 'theme.general.vimeo' | t }}</span></span></a>
+      </li>
+    {%- endif -%}
+    {%- if settings.social_discord_link != blank -%}
+      <li>
+        <a href="{{ settings.social_discord_link }}" {% if settings.social_target_blank %}target="_blank"{% endif %} {% if settings.social_discord_title != blank %} data-tippy-content="{{ settings.social_discord_title | escape }}"{% endif %}><span class="icon-wrap">{% render 'icon-discord' %}<span class="visually-hidden">{{ 'theme.general.discord' | t }}</span></span></a>
+      </li>
+    {%- endif -%}
+    {%- if settings.social_wechat_link != blank -%}
+    <li>
+      <a href="{{ settings.social_wechat_link }}" {% if settings.social_target_blank %}target="_blank"{% endif %} {% if settings.social_wechat_title != blank %} data-tippy-content="{{ settings.social_wechat_title | escape }}"{% endif %}><span class="icon-wrap">{% render 'icon-wechat' %}<span class="visually-hidden">{{ 'theme.general.wechat' | t }}</span></span></a>
+    </li>
+    {%- endif -%}
+    {%- if settings.social_whatsapp_link != blank -%}
+    <li>
+      <a href="{{ settings.social_whatsapp_link }}" {% if settings.social_target_blank %}target="_blank"{% endif %} {% if settings.social_whatsapp_title != blank %} data-tippy-content="{{ settings.social_whatsapp_title | escape }}"{% endif %}><span class="icon-wrap">{% render 'icon-whatsup' %}<span class="visually-hidden">{{ 'theme.general.whatsapp' | t }}</span></span></a>
+    </li>
+    {%- endif -%}
+    {%- if settings.social_gmap_link != blank -%}
+    <li>
+      <a href="{{ settings.social_gmap_link }}" {% if settings.social_target_blank %}target="_blank"{% endif %} {% if settings.social_gmap_title != blank %} data-tippy-content="{{ settings.social_gmap_title | escape }}"{% endif %}><span class="icon-wrap">{% render 'icon-googlemap' %}<span class="visually-hidden">{{ 'theme.general.gmap' | t }}</span></span></a>
+    </li>
+    {%- endif -%}
+    {%- if settings.social_linkedin_link != blank -%}
+      <li>
+        <a href="{{ settings.social_linkedin_link }}" {% if settings.social_target_blank %}target="_blank"{% endif %} {% if settings.social_linkedin_title != blank %} data-tippy-content="{{ settings.social_linkedin_title | escape }}"{% endif %}><span class="icon-wrap">{% render 'icon-linkedin' %}<span class="visually-hidden">LinkedIn</span></span></a>
+      </li>
+    {%- endif -%}
+  </ul>
+{%- endif -%}

@@ -1,0 +1,83 @@
+{%- liquid
+    assign show = false
+    assign show_wrapper = show_wrapper | default: true, allow_false: true
+    assign demo = demo | default: settings.demo, allow_false: true
+    assign theme_light_id = settings.theme_light_id
+    assign theme_dark_id = settings.theme_dark_id
+    assign href = request.origin | append: request.path
+    assign theme_id = theme.id | append: ''
+
+    if settings.dark_light_mode and demo == false and theme_light_id != blank and theme_dark_id != blank
+        assign show = true
+
+        if theme_light_id contains theme_id
+            assign href = href | append: '?_ab=0&_fd=0&_sc=1&' | append: 'preview_theme_id=' | append: theme_dark_id
+        elsif theme_dark_id contains theme_id
+            assign href = href | append: '?' | append: 'preview_theme_id='
+        endif
+
+        if collection.current_vendor
+            assign href = href | append: '&q=' | append: collection.current_vendor
+        endif
+
+        if collection.current_type
+            assign href = href | append: '&q=' | append: collection.current_type
+        endif
+
+        if request.page_type == 'search'
+            assign sort_by = search.sort_by | default: search.default_sort_by
+            assign terms = search.terms | escape
+            assign search_url = '&q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+            assign href = href | append: search_url
+        endif
+    endif
+
+    unless href contains '?'
+        assign href = href | append: '?'
+    endunless
+
+    assign href = href | append: '&view=' | append: template.suffix
+
+    if theme.name == 'index-2' and request.page_type == 'index'
+        assign show = false
+    endif
+-%}
+{%- if show -%}
+    {%- if show_wrapper -%}
+        <div class="demo-layouts-toggle {{ class }}" data-async-reload-required="demo-variants{{ suffix }}">
+            <ul>
+    {%- endif -%}
+                {%- if theme_light_id contains theme_id -%}
+                <li class="dark-light-mode" {% if request.page_type == 'index' and show_wrapper != true %}data-async-reload-required="demo-variants"{% endif %}>
+                        <div data-toggle="tooltip" data-tippy-content="{{ 'theme.general.enable_dark_mode' | t | escape }}" data-tippy-placement="right">
+                            {%- if settings.demo and request.page_type != 'collection' and request.page_type != 'search' and request.page_type != 'blog' and request.page_type != '404' -%}
+                                <async-reload data-reload="css">
+                            {%- endif -%}
+                                    <a href="{{ href }}">
+                                        <span>{% render 'icon-moon' %}</span>
+                                    </a>
+                            {%- if settings.demo and request.page_type != 'collection' and request.page_type != 'search' and request.page_type != 'blog' and request.page_type != '404' -%}
+                                </async-reload>
+                            {%- endif -%}
+                        </div>
+                    </li>
+                {%- elsif theme_dark_id contains theme_id   -%}
+                    <li class="dark-light-mode" {% if request.page_type == 'index' and show_wrapper != true %}data-async-reload-required="demo-variants"{% endif %}>
+                        <div data-toggle="tooltip" data-tippy-content="{{ 'theme.general.enable_light_mode' | t }}" data-tippy-placement="right">
+                            {%- if settings.demo and request.page_type != 'collection' and request.page_type != 'search' and request.page_type != 'blog' and request.page_type != '404' -%}
+                                <async-reload data-reload="css">
+                            {%- endif -%}
+                                        <a href="{{ href }}">
+                                            <span>{% render 'icon-sun' %}</span>
+                                        </a>
+                            {%- if settings.demo and request.page_type != 'collection' and request.page_type != 'search' and request.page_type != 'blog' and request.page_type != '404' -%}
+                                </async-reload>
+                            {%- endif -%}
+                        </div>
+                    </li>
+                {%- endif -%}
+    {%- if show_wrapper -%}
+            </ul>
+        </div>
+    {%- endif -%}
+{%- endif -%}

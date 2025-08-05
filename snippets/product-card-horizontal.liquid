@@ -1,0 +1,111 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- liquid
+  assign layout = 'product-card-horizontal'
+  assign section_id = 'product-card-horizontal'
+  assign product_form_id = 'product-form-' | append: product_form_suffix | append: section_id | append: '-' | append: product.id
+  if settings.catalog_mode and product.has_only_default_variant == true
+  endif
+  assign current_variant = product.selected_or_first_available_variant
+  assign image = product.selected_variant.featured_media | default: product.featured_media
+
+  assign aspect_ratio = settings.product_image_aspect_ratio
+
+  if aspect_ratio == 'custom'
+    assign aspect_ratio = settings.product_height_ratio | times: 100 | divided_by: settings.product_width_ratio
+  endif
+
+  assign in_collection = product.collections | where: 'handle', collection.handle | first
+  if collection == null or collection.handle == 'all' or in_collection == nil
+  assign all_products_count = 0
+  for c in product.collections
+  if c.handle != 'all' and c.handle != 'frontpage' and all_products_count < c.all_products_count
+  assign collection = c
+  assign all_products_count = c.all_products_count
+  endif
+  endfor
+  endif
+
+  assign product_card_countdown = product.metafields.custom.product_card_countdown | default: settings.product_card_countdown, allow_false: true
+
+  assign product_url_collection = product.url
+
+  if settings.product_card_url_within_collection
+    assign product_url_collection = product.url | within: collection
+  endif
+-%}
+<product-card class="prd prd-hor {% unless settings.product_card_add_to_cart %}prd--hover-off{% endunless %}" data-section-render>
+  <div class="prd-top">
+    <div class="prd-category">
+      {%- if vendor == 1 and settings.product_card_vendor -%}
+        <a class="prd-category" href="{{ current_variant.product.vendor | url_for_vendor }}" data-tippy-content="{{ 'theme.general.show_all_products_from_vendor' | t | escape }}" data-tippy-placement="right">
+            {{ current_variant.product.vendor | upcase | truncate: 15, '..' }}
+        </a>
+      {%- else -%}
+        {{ 'theme.general.hot_offer' | t }}
+      {%- endif -%}
+    </div>
+    {% render 'product-card-component-icons-bar', current_variant: current_variant, product_form_id: product_form_id, product: product, layout: layout %}
+  </div>
+  <div class="prd-hor-inside">
+    <div class="prd-image-wrap">
+      <div class="image-container ic--ignore-global-round {% if settings.product_card_cover %}ic--cover{% endif %} {% if settings.product_card_image_rounded == "1" %}ic--rd ic--img-r{% endif %} ic--bg" style="--product-aspect-ratio: {{ aspect_ratio }}%;--aspect-ratio: {{ aspect_ratio }}">
+        {%- liquid
+          render 'product-card-media', product: product, image: image, collection: collection, widths: widths, sizes: sizes, product_form_suffix: product_form_suffix, product_url_collection: product_url_collection
+          render 'product-card-badges', render: true, section: section, product: product, product_form_id: product_form_id
+          render 'product-badges-ticker', render: true, section: section, product: product, product_form_id: product_form_id, layout: layout
+        -%}
+        {%- if product_card_countdown -%}
+          {% render 'product-countdown', render: true, section: section, product: product, class: ' hide-on-hover', product_form_id: product_form_id %}
+        {%- endif -%}
+      </div>
+    </div>
+    <div class="prd-info">
+      {%- liquid
+        assign random = product.id | slice: -1, 1 | plus: 0
+        assign description = ''
+        assign description_truncate_words = 15
+        assign description_truncate_words_lg = 30 | plus: random
+        if settings.product_card_show_description
+          if settings.product_card_description_source == 'description'
+            assign description = product.description | strip_html | truncatewords: description_truncate_words
+            assign description_lg = product.description | strip_html | truncatewords: description_truncate_words_lg
+          else
+            assign description = product.metafields.custom.short_description | strip_html | truncatewords: description_truncate_words
+            assign description_lg = product.metafields.custom.short_description | strip_html | truncatewords: description_truncate_words_lg
+          endif
+        endif
+
+        assign title_truncate = 40
+        assign title = product.title | escape | truncate: title_truncate, '..'
+      -%}
+
+      <h3 class="prd-name"><a href="{{ product_url_collection }}" data-url>{{ title }}</a></h3>
+      {%- if settings.product_card_rating -%}
+        <div class="prd-rating">
+          {% render 'rating', product: product, layout: layout %}
+        </div>
+      {%- endif -%}
+      {%- if description != blank -%}
+        <div class="prd-desc-lg">
+					{{ description_lg }}
+				</div>
+				<div class="prd-desc-sm">
+					{{ description }}
+				</div>
+      {%- endif -%}
+      {%- render 'price', product: product, use_variant: true, render: true, product_card_style_1: false, product_form_id: product_form_id -%}
+
+      <div class="prd-hover">
+        {%- render 'price', product: product, use_variant: true, render: true, product_card_style_1: false, product_form_id: product_form_id -%}
+        {% render 'product-card-action'
+          product: product,
+          product_form_id: product_form_id,
+          show_variants: false,
+          product_direct: settings.product_direct,
+          layout: layout,
+          current_variant: current_variant
+        %}
+      </div>
+    </div>
+  </div>
+</product-card>

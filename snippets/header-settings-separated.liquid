@@ -1,0 +1,30 @@
+{%- if settings.enable_language_selector and localization.available_languages.size > 1 -%}
+    <!-- Header Language -->
+    <settings-dropdown>
+        <div class="dropdn_settings ds-language hide-mobile">
+            <div class="dropdn">
+            <a href="#" class="dropdn-link dropdn-link--marker js-dropdn-link"><span>{% if settings.language_name_truncate_yes %}{{ localization.language.name | capitalize | slice: 0, 3 | upcase }}{% else %}{{ localization.language.name | capitalize | upcase }}{% endif %}</span></a>
+            <div class="dropdn-content mb-2">
+                <div class="dropdn-content-scroll js-dropdn-content-scroll" data-ajax-container>
+                {% render 'header-languages', section: section, id: id1, class: 'mb-2' %}
+                </div>
+            </div>
+            </div>
+        </div>
+    </settings-dropdown>
+    <!-- /Header Language -->
+{%- endif -%}
+{%- if settings.enable_country_selector and localization.available_countries.size > 1 -%}
+    <!-- Header Currency -->
+    <settings-dropdown>
+        <div class="dropdn_settings ds-currency hide-mobile">
+            <div class="dropdn dropdn_settings">
+            <a href="#" class="dropdn-link dropdn-link--marker js-dropdn-link"><span>{{ localization.country.currency.iso_code }}</span></a>
+            <div class="dropdn-content mb-2">
+                {% render 'header-currencies', section: section, id: id2, class: 'mb-2' %}
+            </div>
+            </div>
+        </div>
+    </settings-dropdown>
+    <!-- /Header Currency -->
+{%- endif -%}

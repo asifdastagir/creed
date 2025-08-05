@@ -1,0 +1,526 @@
+{%- comment -%}theme-check-disable NestedSnippet, DeprecateBgsizes{%- endcomment -%}
+<!-- assign style 1 padding_no_bg = 66.14 -->
+{%- liquid
+    assign layout = 'banner'
+    assign section_id = section.id
+    assign product_form_id = 'product-form-' | append: section_id | append: '-' | append: block.id
+    assign product_object = block.settings.url.object
+    assign current_variant = product_object.selected_or_first_available_variant
+
+    assign padding_mobile = false
+    assign font_ratio = 200 | minus: section.settings.font_ratio | divided_by: 10.0 | at_least: 2
+    assign font_ratio_mobile = 200 | minus: section.settings.font_ratio_mobile | divided_by: 10 | at_least: 2
+    assign cover_mobile = false
+    assign per_row_mobile = section.settings.per_row_mobile | plus: 0
+
+    if section.settings.images_auto_height
+        assign padding = section.settings.images_auto_height_padding
+        if modulo == 1 and last == true
+            assign padding = padding | divided_by: 2
+            assign sizes = '(min-width: 1400px) 1148px, (min-width: 1200px) 1110px, (min-width: 1025px) 950px, calc(100vw - 30px)'
+            assign widths = '319,374,389,639,749,949,1109,1147px,1899,2219,2295,3454'
+        endif
+    else
+        assign padding = false
+    endif
+
+    if section.settings.images_auto_height_mobile
+        assign padding_mobile = section.settings.images_auto_height_padding_mobile
+
+        if per_row_mobile == 2
+            assign cover_mobile = true
+        endif
+    else
+        assign padding_mobile = false
+    endif
+
+
+    assign link_class = 'bnr-wrap'
+
+    if section.settings.style == 'style-9' and section.settings.layout == 'mosaic-1' or section.settings.layout == 'mosaic-2'
+        assign style = 'style-5'
+    endif
+
+    if style == 'style-3'
+        if block.settings.title == blank and block.settings.description == blank
+            assign class = 'hidden'
+        endif
+
+    elsif style == 'style-4'
+        assign link_class = 'card-category2 text-center'
+        assign font_ratio = false
+    endif
+
+
+    if section.settings.images_auto_height and modulo == 1 and last == true and section.settings.layout != 'mosaic-1'
+        assign font_ratio = font_ratio | times: 2
+    endif
+
+    if section.settings.layout == 'mosaic-1'
+        assign font_ratio_mobile = font_ratio
+        assign font_ratio = font_ratio_cycle
+        assign padding = padding_cycle
+
+    elsif section.settings.layout == 'mosaic-2'
+        assign padding = padding_cycle
+        assign style_inline = style_cycle
+
+    elsif section.settings.layout == 'mosaic-3'
+        assign font_ratio_mobile = font_ratio_cycle
+        assign font_ratio = font_ratio_cycle
+        assign padding = padding_cycle
+
+    elsif section.settings.layout == 'mosaic-4'
+        assign padding = padding_cycle
+        assign font_ratio = font_ratio_cycle
+        assign font_ratio_mobile = font_ratio_cycle
+        assign style_inline = style_cycle
+
+    elsif section.settings.layout == 'mosaic-5'
+        assign padding = padding_cycle
+
+    endif
+
+
+    assign aligment = block.settings.aligment
+    assign aligment_v = block.settings.aligment_v
+    assign aligment_text = block.settings.aligment_text
+    assign top_padding = block.settings.top_padding
+    assign right_padding = block.settings.left_padding
+    assign bottom_padding = block.settings.top_padding
+    assign left_padding = block.settings.left_padding
+    assign width = block.settings.width
+
+
+    assign aligment_mobile = block.settings.aligment_mobile
+    assign aligment_v_mobile = block.settings.aligment_v_mobile
+    assign aligment_text_mobile = block.settings.aligment_text_mobile
+    assign top_padding_mobile = block.settings.top_padding_mobile
+    assign right_padding_mobile = block.settings.left_padding_mobile
+    assign bottom_padding_mobile = block.settings.top_padding_mobile
+    assign left_padding_mobile = block.settings.left_padding_mobile
+    assign width_mobile = block.settings.width_mobile
+
+    if block.settings.mobile_sync
+        assign aligment_mobile = aligment
+        assign aligment_v_mobile = aligment_v
+        assign aligment_text_mobile = aligment_text
+        assign top_padding_mobile = top_padding
+        assign right_padding_mobile = right_padding
+        assign bottom_padding_mobile = bottom_padding
+        assign left_padding_mobile = left_padding
+        assign width_mobile = width
+
+    endif
+
+    assign ic_style = ''
+    assign color = block.settings.color_placeholder
+    if color != 'rgba(0,0,0,0)' and color != blank
+        assign ic_style = '--placeholder-bg: ' | append: color | append: ';'
+    endif
+
+    assign color_mobile = block.settings.color_placeholder_mobile
+    if color_mobile != 'rgba(0,0,0,0)' and color_mobile != blank
+        assign ic_style_mobile = '--placeholder-bg: ' | append: color_mobile | append: ';'
+    endif
+
+    assign banner_title = block.settings.title
+    assign banner_subtitle = block.settings.subtitle
+
+    assign button_text = block.settings.button_text
+
+    if button_text == blank
+        assign button_text = 'theme.general.shop_now' | t
+    endif
+
+    assign fast_shop = false
+
+    if block.settings.fast_shop and block.settings.url.object.url contains '/products/'
+        assign fast_shop = true
+        capture fast_shop_button
+            render 'product-card-action' product: block.settings.url.object, wrapper: false, product_form_id: product_form_id, show_variants: false, layout: layout, hide_quantity: 1, w_100: 0, class: block.settings.button_color, button_text: button_text, current_variant: current_variant
+        endcapture
+    endif
+
+    assign class_img_only = 'lazyload fade-up'
+    assign lazyload = true
+    assign fetchpriority = false
+
+    unless section.settings.lazyload
+        assign class_img_only = 'lazyloaded'
+        assign lazyload = false
+        assign fetchpriority = true
+    endunless
+
+    assign custom_caption_colorization = block.settings.custom_caption_colorization
+
+    if custom_caption_colorization
+        assign default_rgba = 'rgba(0,0,0,0)'
+        assign color_title = block.settings.color_title
+        assign color_subtitle = block.settings.color_subtitle
+        assign color_description = block.settings.color_description
+
+        if color_title != default_rgba and color_title != blank
+        assign color_title = 'color:' | append: color_title | append: ';'
+        else
+        assign color_title = ''
+        endif
+
+        if color_subtitle != default_rgba and color_subtitle != blank
+        assign color_subtitle = 'color:' | append: color_subtitle | append: ';'
+        else
+        assign color_subtitle = ''
+        endif
+
+        if color_description != default_rgba and color_description != blank
+        assign color_description = 'color:' | append: color_description | append: ';'
+        else
+        assign color_description = ''
+        endif
+    else
+        assign color_title = ''
+        assign color_subtitle = ''
+        assign color_description = ''
+    endif
+
+    if block.settings.video != blank and block.settings.video_darkness > 0
+        assign video_darkness = block.settings.video_darkness | divided_by: 100.0
+        assign style_video_darkness = '--video-overlay-opacity:' | append: video_darkness | append: ';'
+    endif
+-%}
+{%- if fast_shop -%}
+    {%- capture banner_title -%}<a href="{{ block.settings.url | default: '#' }}">{{ banner_title }}</a>{%- endcapture -%}
+    {%- capture banner_subtitle -%}<a href="{{ block.settings.url | default: '#' }}">{{ banner_subtitle }}</a>{%- endcapture -%}
+{%- elsif block.settings.url == blank -%}
+    {%- capture banner_title -%}{{ banner_title }}{%- endcapture -%}
+    {%- capture banner_subtitle -%}{{ banner_subtitle }}{%- endcapture -%}
+{%- endif -%}
+
+{%- if fast_shop  or block.settings.url == blank -%}
+    <div class="{{ link_class }}">
+{%- else -%}
+    <a href="{{ block.settings.url | default: '#' }}" class="{{ link_class }}" {% if block.settings.button_target_blank %}target="_blank"{% endif %}>
+{%- endif -%}
+    <div class="bnr {% if style != 'style-9' %}image-hover-scale{% endif %}
+        to-{{ aligment }}
+        to-{{ aligment_v }}
+        to-{{ aligment_mobile }}-mobile
+        to-{{ aligment_v_mobile }}-mobile
+        text-{{ aligment_text }}
+        text-{{ aligment_text_mobile }}-mobile
+        bnr--{{ style }}
+        {% if block.settings.invert_color %}colorize-invert{% endif %}"
+        {% if font_ratio != false %}data-fontratio="{{ font_ratio }}"{% endif %}
+        {% if  font_ratio_mobile != false %}data-fontratio-mobile="{{ font_ratio_mobile }} "{% endif %}
+    >
+        {%- if block.settings.video != blank -%}
+            <div class="bnr-img image-container" style="--padding-bottom: {{ padding }}%; --padding-bottom-mobile: {{ padding_mobile }}%">
+                <deferred-media data-autoplay data-media="mp4" class="inner-video">
+                    <div class="video-wrap-content js-video-wrap lazyload" {% if block.settings.video_darkness > 0 %}style="{{ style_video_darkness }}"{% endif %}></div>
+                    <template>
+                        {{
+                            block.settings.video
+                            | video_tag:
+                            image_size: '2000x',
+                            autoplay: true,
+                            loop: true,
+                            controls: false,
+                            muted: true,
+                            playsinline: true,
+                            preload: "metadata",
+                            class: "js-video-content"
+                        }}
+                    </template>
+                </deferred-media>
+            </div>
+        {%- else -%}
+            {%- if block.settings.image_mobile != blank -%}
+                {% render 'image-container',
+                    image: block.settings.image_mobile,
+                    image_default: image_default_cycle
+                    padding_no_bg: false,
+                    padding_mobile: padding_mobile,
+                    sizes: sizes,
+                    widths: widths,
+                    cover: cover_mobile,
+                    hover_scale: false,
+                    class_ic: 'bnr-img bnr-img-m',
+                    round: round,
+                    style: ic_style_mobile,
+                    class_img_only: class_img_only,
+                    lazyload: lazyload,
+                    fetchpriority: fetchpriority
+                %}
+            {%- endif -%}
+            {%- if style == 'style-9' -%}
+                {%- liquid
+                    assign cover = false
+                    if block.settings.image != blank
+                        assign cover = true
+                    endif
+                -%}
+                {% render 'image-container',
+                    image: block.settings.image,
+                    image_default: image_default_cycle
+                    padding_no_bg: padding,
+                    padding: padding,
+                    padding_mobile: padding_mobile,
+                    bg: false,
+                    cover: cover,
+                    hover_scale: false,
+                    class_ic: 'bnr-img ic--hover-light',
+                    style: ic_style,
+                    class_img_only: class_img_only,
+                    lazyload: lazyload,
+                    fetchpriority: fetchpriority
+                %}
+            {%- else -%}
+                {% render 'image-container',
+                    image: block.settings.image,
+                    padding_no_bg: padding,
+                    padding: padding,
+                    padding_mobile: padding_mobile,
+                    sizes: sizes,
+                    widths: widths,
+                    class_ic: 'bnr-img',
+                    round: round,
+                    style: ic_style,
+                    class_img_only: class_img_only,
+                    lazyload: lazyload,
+                    fetchpriority: fetchpriority
+                %}
+            {%- endif -%}
+        {%- endif -%}
+
+        <div class="bnr-caption {{ class }} {% if style == 'style-15' %}h-100{% endif %}"
+            style="
+                --padding: {{ top_padding }}% {{ right_padding }}% {{ bottom_padding }}% {{ left_padding }}%;
+                --padding-mobile: {{ top_padding_mobile }}% {{ right_padding_mobile }}% {{ bottom_padding_mobile }}% {{ left_padding_mobile }}%;
+                --caption-width: {{ width }}%;
+                --caption-width-mobile: {{ width_mobile }}%;
+            "
+        >
+            {%- if style == 'style-1' -%}
+                {%- if block.settings.title != blank -%}
+                    <div class="bnr-text1 heading-font mt-0" style="{{ color_title }}">{{ banner_title }}</div>
+                {%- endif -%}
+                {%- if banner_title != blank -%}
+                    <div class="bnr-text2 mt-sm"  style="{{ color_subtitle }}">{{ banner_subtitle }}</div>
+                {%- endif -%}
+                {%- if block.settings.button -%}
+                    <div class="bnr-btn-wrap mt-lg">
+                        {%- if fast_shop -%}
+                            {{ fast_shop_button }}
+                        {%- else -%}
+                            <div class="btn {{ block.settings.button_color }} btn--lg">{{ button_text }}</div>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+
+            {%- elsif style == 'style-2' -%}
+                {%- if banner_title != blank -%}
+                    <div class="bnr-text mt-0 text-uppercase" style="font-size:.15em; font-weight: var(--font-weight-300); line-height:1.5em; {{ color_subtitle }}">{{ banner_subtitle }}</div>
+                {%- endif -%}
+                {%- if block.settings.title != blank -%}
+                    <div class="bnr-text heading-font mt-sm" style="font-size:.45em; line-height:1em; {{ color_title }}">{{ banner_title }}</div>
+                {%- endif -%}
+                {%- if block.settings.description != blank -%}
+                    <div class="bnr-text mt-sm d-none d-md-block " style="font-size:.15em; font-weight: var(--font-weight-300); line-height:1.7em; {{ color_description }}">{{ block.settings.description }}</div>
+                {%- endif -%}
+                {%- if block.settings.button -%}
+                    <div class="bnr-btn-wrap mt-xl">
+                        {%- if fast_shop -%}
+                            {{ fast_shop_button }}
+                        {%- else -%}
+                            <div class="btn {{ block.settings.button_color }} btn--lg">{{ button_text }}</div>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+
+            {%- elsif style == 'style-3' -%}
+                {%- if block.settings.title != blank or block.settings.description != blank -%}
+                    <div class="bnr-caption-bg bnr-caption-bg--padding {% comment %} ignore-shadow{% endcomment %}" style="padding: 6% 11%">
+                        {%- if block.settings.title != blank -%}
+                            <div class="bnr-text1 heading-font mt-0" style="font-size:.25em; line-height:1.3em; {{ color_title }}">{{ banner_title }}</div>
+                        {%- endif -%}
+                        {%- if block.settings.description != blank -%}
+                            <div class="bnr-text2 mt-sm " style="font-size:.15em; line-height:1.5em; font-weight: var(--font-weight-300); {{ color_description }}">{{ block.settings.description }}</div>
+                        {%- endif -%}
+                        <span class="bnr-caption-bg-color"></span>
+                    </div>
+                {%- endif -%}
+
+            {%- elsif style == 'style-4' -%}
+                {%- if block.settings.title != blank -%}
+                    <div class="bnr-caption-bg bnr-caption-bg--padding {% comment %} ignore-shadow{% endcomment %}">
+                        <h5 class="card-category2-name heading-font" style="{{ color_title }}">{{ banner_title }}</h5>
+                        <span class="bnr-caption-bg-color"></span>
+                    </div>
+                {%- endif -%}
+
+            {%- elsif style == 'style-5' -%}
+                {%- if block.settings.title != blank -%}
+                    <div class="bnr-text1 heading-font mt-0" style="font-size:.5em; line-height:1.2em; {{ color_title }}">{{ banner_title }}</div>
+                {%- endif -%}
+                {%- if block.settings.button -%}
+                    <div class="bnr-btn-wrap mt-lg">
+                        {%- if fast_shop -%}
+                            {{ fast_shop_button }}
+                        {%- else -%}
+                            <div class="btn {{ block.settings.button_color }}">{{ button_text }}</div>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+
+            {%- elsif style == 'style-6' -%}
+                {%- if banner_title != blank -%}
+                    <div class="bnr-text1 mt-0" style="font-family: var(--heading-font-family); font-size:.29em; font-weight: {{ settings.font_weight_700 }}; line-height:1.2em; {{ color_subtitle }}">{{ banner_subtitle }}</div>
+                {%- endif -%}
+                {%- if block.settings.title != blank -%}
+                    <div class="bnr-text1 mt-0" style="font-family: var(--heading-font-family); font-size:.48em; font-weight: {{ settings.font_weight_700 }}; line-height:1.2em; {{ color_title }}">{{ banner_title }}</div>
+                {%- endif -%}
+                {%- if block.settings.button -%}
+                    <div class="bnr-btn-wrap mt-lg">
+                        {%- if fast_shop -%}
+                            {{ fast_shop_button }}
+                        {%- else -%}
+                            <div class="btn {{ block.settings.button_color }}">{{ button_text }}</div>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+
+            {%- elsif style == 'style-7' -%}
+                {%- if banner_title != blank -%}
+                    <div class="bnr-text text-uppercase mt-0" style="font-size:.15em; font-weight: {{ settings.font_weight_600 }}; line-height:1.2em; {{ color_subtitle }}">{{ banner_subtitle }}</div>
+                {%- endif -%}
+                {%- if block.settings.title != blank -%}
+                    <div class="bnr-text mt-sm" style="font-family: var(--heading-font-family); font-size:.39em; font-weight: {{ settings.font_weight_600 }}; line-height:1.35em; {{ color_title }}">{{ banner_title }}</div>
+                {%- endif -%}
+                {%- if block.settings.button -%}
+                    <div class="bnr-btn-wrap mt-lg">
+                        {%- if fast_shop -%}
+                            {{ fast_shop_button }}
+                        {%- else -%}
+                            <div class="btn {{ block.settings.button_color }}">{{ button_text }}</div>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+
+            {%- elsif style == 'style-8' -%}
+                {%- if banner_title != blank -%}
+                    <div class="bnr-text2 mt-0" style="font-size:.15em; font-weight: var(--font-weight-300); {{ color_subtitle }}">{{ banner_subtitle }}</div>
+                {%- endif -%}
+                {%- if block.settings.title != blank -%}
+                    <div class="bnr-text1 heading-font mt-sm fw-bold"  style="{{ style_inline }}{{ color_title }}">{{ banner_title }}</div>
+                {%- endif -%}
+                {%- if block.settings.button -%}
+                    <div class="bnr-btn-wrap mt-lg">
+                        {%- if fast_shop -%}
+                            {{ fast_shop_button }}
+                        {%- else -%}
+                            <div class="btn {{ block.settings.button_color }} btn--lg">{{ button_text }}</div>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+
+            {%- elsif style == 'style-9' -%}
+                {%- if banner_title != blank -%}
+                    <div class="bnr-text1 mt-0" style="font-family: var(--heading-font-family); font-size:.19em; font-weight: {{ settings.font_weight_700 }}; line-height:1.2em; {{ color_subtitle }}">{{ banner_subtitle }}</div>
+                {%- endif -%}
+                {%- if block.settings.title != blank -%}
+                    <div class="bnr-text2 mt-sm" style="font-family: var(--heading-font-family); font-size:.36em; font-weight: {{ settings.font_weight_700 }}; line-height:1.2em; {{ color_title }}">{{ banner_title }}</div>
+                {%- endif -%}
+
+            {%- elsif style == 'style-10' -%}
+                {%- if banner_title != blank -%}
+                    <div class="bnr-text1 mt-0 text-uppercase heading-font {% if custom_caption_colorization == false or color_subtitle == blank %}theme-color{% endif %}" style="font-size:.54em; font-weight: var(--font-weight-700); line-height:1.2em; {{ color_subtitle }}">{{ banner_subtitle }}</div>
+                {%- endif -%}
+                {%- if banner_title != blank -%}
+                    <div class="bnr-text1 text-uppercase heading-font" style="font-size:.25em; font-weight: var(--font-weight-400); line-height:1.2em; {{ color_title }}">{{ banner_title }}</div>
+                {%- endif -%}
+                {%- if block.settings.button -%}
+                    <div class="bnr-btn-wrap mt-lg">
+                        {%- if fast_shop -%}
+                            {{ fast_shop_button }}
+                        {%- else -%}
+                            <div class="btn {{ block.settings.button_color }} btn--lg">{{ button_text }}</div>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+
+            {%- elsif style == 'style-11' -%}
+                {%- if banner_title != blank -%}
+                    <div class="bnr-text1 mt-0" style="font-family: var(--heading-font-family); font-size:.29em; font-weight: {{ settings.font_weight_700 }}; line-height:1.2em; {{ color_subtitle }}">{{ banner_subtitle }}</div>
+                {%- endif -%}
+                {%- if block.settings.title != blank -%}
+                    <div class="bnr-text1 mt-1" style="font-family: var(--heading-font-family); font-size:.48em; font-weight: {{ settings.font_weight_700 }}; line-height:1.2em; {{ color_title }}">{{ banner_title }}</div>
+                {%- endif -%}
+                {%- if block.settings.button -%}
+                    <div class="bnr-btn-wrap mt-lg">
+                        {%- if fast_shop -%}
+                            <div class="hide-button-mobile">{{ fast_shop_button }}</div>
+                        {%- else -%}
+                            <div class="btn hide-button-mobile {{ block.settings.button_color }}">{{ button_text }}</div>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+
+            {%- elsif style == 'style-12' -%}
+                {%- if banner_title != blank -%}
+                    <div class="bnr-text2 mt-0" style="font-size:.15em; font-weight: {{ settings.font_weight_400 }}; {{ color_subtitle }}">{{ banner_subtitle }}</div>
+                {%- endif -%}
+                {%- if block.settings.title != blank -%}
+                    <div class="bnr-text1 heading-font mt-sm fw-bold" style="{{ color_title }}">{{ banner_title }}</div>
+                {%- endif -%}
+                {%- if block.settings.button -%}
+                    <div class="bnr-btn-wrap mt-lg">
+                        {%- if fast_shop -%}
+                            <div class="hide-button-mobile">{{ fast_shop_button }}</div>
+                        {%- else -%}
+                            <div class="btn hide-button-mobile {{ block.settings.button_color }}">{{ button_text }}</div>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+
+            {%- elsif style == 'style-13' -%}
+                {%- if banner_title != blank -%}
+                    <div class="bnr-text2 heading-font mt-0" style="font-size:.38em; font-weight: {{ settings.font_weight_500 }}; {{ color_subtitle }}">{{ banner_subtitle }}</div>
+                {%- endif -%}
+                {%- if block.settings.title != blank -%}
+                    <div class="bnr-text1 heading-font mt-0 fw-bold {% if custom_caption_colorization == false or color_title == blank %}theme-color{% endif %}" style="{{ color_title }}">{{ banner_title }}</div>
+                {%- endif -%}
+
+            {%- elsif style == 'style-14' -%}
+                {%- if banner_title != blank -%}
+                    <div class="bnr-text2 mt-0" style="font-size:.14em; font-weight: {{ settings.font_weight_500 }}; {{ color_subtitle }}">{{ banner_subtitle }}</div>
+                {%- endif -%}
+                {%- if block.settings.title != blank -%}
+                    <div class="bnr-text1 mt-md" style="font-family: var(--heading-font-family); font-size:.36em; font-weight: var(--font-weight-700); {{ color_title }}">{{ banner_title }}</div>
+                {%- endif -%}
+
+            {%- elsif style == 'style-15' -%}
+                {%- if banner_title != blank -%}
+                    <div class="bnr-text1 mt-0" style="font-family: var(--heading-font-family); font-size:.29em; font-weight: var(--font-weight-700); line-height:1.2em; {{ color_title }}">{{ banner_title }}</div>
+                {%- endif -%}
+                {%- if block.settings.title != blank -%}
+                    <div class="bnr-text1 mt-xl" style="font-size:.18em;font-weight: var(--font-weight-400);line-height:1.35em; {{ color_subtitle }}">{{ banner_subtitle }}</div>
+                {%- endif -%}
+
+                {%- if block.settings.button -%}
+                    <div class="bnr-btn-wrap mt-auto">
+                        {%- if fast_shop -%}
+                            <div class="hide-button-mobile">{{ fast_shop_button }}</div>
+                        {%- else -%}
+                            <div class="btn hide-button-mobile {{ block.settings.button_color }}">{{ button_text }}</div>
+                        {%- endif -%}
+                    </div>
+                {%- endif -%}
+
+            {%- endif -%}
+        </div>
+    </div>
+{%- if fast_shop or block.settings.url == blank -%}
+    </div>
+{%- else -%}
+    </a>
+{%- endif -%}

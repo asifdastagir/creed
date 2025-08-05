@@ -1,0 +1,47 @@
+{% comment %}theme-check-disable NestedSnippet, UnusedAssign{% endcomment %}
+{%- liquid
+  assign paginate_limit = settings.collection_products_per_page
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+      assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+-%}
+
+{%- paginate collection.products by paginate_limit -%}
+  {%- liquid
+    assign current_count = paginate.current_page | times: paginate_limit
+    assign show = true
+
+    if current_count > settings.limit_infinite
+      assign show = false
+    endif
+  -%}
+  {%- if show -%}
+  <div class="prd-grid row  row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3 g-md-4 justify-content-center">
+        {%- for product in collection.products limit: paginate_limit -%}
+          {%- liquid
+            if product.id == current_product.id
+              continue
+            endif
+          -%}
+          <div class="col">
+            {% render 'product-card', product: product, collection: collection %}
+          </div>
+        {%- endfor -%}
+    </div>
+
+    {%- if paginate.pages > 1 and paginate.parts.size > 0 -%}
+      {% render 'async-pagination-hidden',
+        paginate: paginate,
+        results: collection,
+        container: '.prd-grid'
+      %}
+    {%- endif -%}
+  {%- endif -%}
+{%- endpaginate -%}

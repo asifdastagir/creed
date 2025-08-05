@@ -1,0 +1,266 @@
+{%- liquid
+  assign layout_default = 'product-featured'
+  assign layout = layout | default: layout_default
+  assign section_id = section.id
+  assign product_form_id_default = 'product-form-' | append: section_id | append: '-' | append: block.id
+  assign product_form_id = product_form_id | default: product_form_id_default
+  assign product_title = product.title | append: ' ' | append: current_variant.title
+
+  unless layout == 'product-card'
+    if product_direct == blank
+      assign product_direct = false
+    endif
+  endunless
+
+  assign product_handle = product.handle
+
+  if use_variant
+    assign target = product.selected_or_first_available_variant | default: product.variants.first
+    assign product_form_object = product
+  else
+    assign target = product
+    assign product_form_object = product_form_object
+  endif
+
+  if request.page_type == 'search'
+    assign product_url = target.url | split: '?' | first | append: '?'
+  else
+    assign product_url = target.url
+  endif
+
+  if request.page_type == 'search' or request.page_type == 'collection'
+    if search.sort_by contains 'price' or collection.sort_by contains 'price'
+      if product.price_varies
+      endif
+    endif
+  endif
+
+  assign in_collection = product.collections | where: 'handle', collection.handle | first
+  if collection == null or collection.handle == 'all' or in_collection == nil
+    assign all_products_count = 0
+    for c in product.collections
+      if c.handle != 'all' and c.handle != 'frontpage' and all_products_count < c.all_products_count
+        assign collection = c
+        assign all_products_count = c.all_products_count
+      endif
+    endfor
+  endif
+
+  assign product_url_collection = product.url
+
+  if settings.product_card_url_within_collection
+    assign product_url_collection = product.url | within: collection
+  endif
+-%}
+{%- form 'product'
+  , product_form_object
+  , id: product_form_id
+  , class: 'form js-product-form'
+  , novalidate: 'novalidate' -%}
+
+  {%- if layout != 'product-card-horizontal' or layout == 'product-card-horizontal' and product.has_only_default_variant -%}
+    <input
+      type="hidden"
+      name="id"
+      value="{{ target.id | default: product.variants.first.id }}">
+  {%- endif -%}
+
+  {%- unless settings.catalog_mode -%}
+    {%- liquid
+      if target.available and target.inventory_management and target.inventory_quantity < 1
+        assign pre_order = true
+      endif
+    -%}
+    <input
+      type="hidden"
+      name="properties[{{ 'theme.general.status' | t }}]"
+      value="{{ 'theme.general.pre_order' | t }}"
+      {% unless pre_order %}
+      disabled{% endunless %}
+      data-form-preorder>
+    {%- if settings.product_card_add_to_cart -%}
+      {%- if product_direct -%}
+        <a
+          class="btn position-relative {% if w_100 != 0 %}w-100{% endif %} {{ class }}"
+          {{ btn_attributes }}
+          href="{{ product_url_collection }}">
+          {%- assign text = 'theme.general.view_product' | t -%}
+          <span class="btn-txt">{{ button_text | default: text }}</span>
+          <span class="btn-hover-txt">{{ button_text | default: text }}</span>
+        </a>
+      {%- else -%}
+        {%- if show_variants or product.has_only_default_variant -%}
+          {% render 'quantity'
+            , name: "quantity" min: 1
+            , value: 1
+            , product: target
+            , layout: layout
+            , hide_quantity: hide_quantity
+            , product_title: product_title
+            , current_variant: current_variant %}
+        {%- endif -%}
+        {%- liquid
+          assign simple_product = false
+          assign allow_show_add_to_cart = false
+
+          if product.has_only_default_variant
+            assign simple_product = true
+            assign allow_show_add_to_cart = true
+          endif
+
+          if product.requires_selling_plan
+            assign allow_show_add_to_cart = false
+          elsif simple_product == false
+            assign allow_show_add_to_cart = show_variants
+          endif
+
+          assign configurable = false
+          if product.metafields.custom.product_line_properties != blank
+            assign allow_show_add_to_cart = false
+            assign configurable = true
+          endif
+        -%}
+
+        {%- if allow_show_add_to_cart -%}
+          <button
+            type="submit"
+            name="add"
+            class="btn position-relative {% if w_100 != 0 %}w-100{% endif %} {{ class }}"
+            {{ btn_attributes }}
+            {% unless target.available %}
+            disabled{% endunless %}>
+            <div class="loading-overlay__spinner hidden">
+              <div data-load="loading"></div>
+            </div>
+            {%- if target.available -%}
+              {%- if target.inventory_management and target.inventory_quantity < 1 -%}
+                {%- assign text = 'theme.general.pre_order' | t -%}
+              {%- else -%}
+                {%- assign text = 'products.product.add_to_cart' | t -%}
+              {%- endif -%}
+              <span class="btn-txt">{{ button_text | default: text }}</span>
+              <span class="btn-hover-txt">{% render 'icon-cart3' %}</span>
+            {%- else -%}
+              <span class="btn-txt">{{ 'products.product.sold_out' | t }}</span>
+            {%- endif -%}
+          </button>
+
+          {%- if layout == 'product-card' and target.selling_plan_allocations.size > 0 and target.requires_selling_plan == false -%}
+            <quickview-popup
+              data-handle="{{ product_handle }}"
+              data-gallery="off"
+              class="min-height-off"
+              data-ajax="{{ product_url }}&section_id=quick-options"
+              data-selector="#quickView">
+              <a
+                class="btn btn--sm btn--animated-pulse btn--grey position-relative btn--subscribe {% if w_100 != 0 %}w-100{% endif %} {{ class }} {% if layout == 'product-sticky' %}js-scroll-to{% endif %}"
+                {{ btn_attributes }}
+                {% if layout == 'product-sticky' and target.selling_plan_allocations.size > 0 %}
+                href="#selling-selector"
+                {% else %}
+                href="{{ target.url | within: collection }}"
+                {% endif %}
+                {% if layout == 'product-card' %}
+                {% if target.requires_selling_plan %}
+                data-tippy-content="{{ 'theme.general.subscription_only' | t | escape }}"
+                {% elsif target.selling_plan_allocations.size > 0 %}
+                data-tippy-content="{{ 'theme.general.one_time_purchase_available' | t | escape }}"
+                {% endif %}
+                data-tippy-placement="bottom"
+                {% endif %}>
+                {%- if target.available -%}
+                  <span>
+                    {%- if target.inventory_management and target.inventory_quantity < 1 -%}
+                      {{ 'theme.general.pre_order' | t }}
+                    {%- else -%}
+                      {%- liquid
+                        assign min = target.selling_plan_allocations[0].per_delivery_price
+                        for sa in target.selling_plan_allocations
+                          if forloop.first
+                            continue
+                          endif
+                          if sa.per_delivery_price < min
+                            assign min = sa.per_delivery_price
+                          endif
+                        endfor
+                        assign difference = target.price | minus: min
+                        assign save = difference | times: 100.0 | divided_by: target.price | round
+                      -%}
+                      <span>{{ 'theme.general.subscribe_and_save' | t }}
+                        {% if save < 100 and save > 0 %}
+                          {{ save }}%{% endif %}
+                      </span>
+                    {%- endif -%}
+                  </span>
+                {%- else -%}
+                  <span>{{ 'products.product.sold_out' | t }}</span>
+                {%- endif -%}
+
+              </a>
+            </quickview-popup>
+          {%- endif -%}
+        {%- else -%}
+          {%- if configurable and layout == 'product-sticky' -%}
+            <a
+              class="btn position-relative btn--subscribe {% if w_100 != 0 %}w-100{% endif %} {{ class }} js-scroll-to-bottom"
+              {{ btn_attributes }}
+              href=".line-properties">
+              {%- assign text = 'theme.general.configure' | t -%}
+              <span>{{ button_text | default: text }}</span>
+            </a>
+          {%- else -%}
+            {%- if settings.product_card_add_to_cart_popup == 'popup' and layout != 'product-sticky' -%}
+              <quickview-popup
+                data-handle="{{ product_handle }}"
+                data-gallery="off"
+                class="min-height-off"
+                data-ajax="{{ product_url }}&section_id=quick-options"
+                data-selector="#quickView">
+            {%- endif -%}
+            <a
+              class="btn position-relative btn--subscribe {% if w_100 != 0 %}w-100{% endif %} {{ class }} {% if layout == 'product-sticky' %}js-scroll-to{% endif %}"
+              {{ btn_attributes }}
+              {% if layout == 'product-sticky' and target.selling_plan_allocations.size > 0 %}
+              href="#selling-selector"
+              {% else %}
+              href="{{ target.url | within: collection }}"
+              {% endif %}
+              {% if layout == 'product-card' %}
+              {% if target.requires_selling_plan %}
+              data-tippy-content="{{ 'theme.general.subscription_only' | t }}"
+              {% elsif target.selling_plan_allocations.size > 0 %}
+              data-tippy-content="{{ 'theme.general.one_time_purchase_available' | t | escape }}"
+              {% endif %}
+              data-tippy-placement="bottom"
+              {% endif %}>
+              {%- if target.selling_plan_allocations.size > 0 -%}
+                {%- liquid
+                  assign min = target.selling_plan_allocations[0].per_delivery_price
+                  for sa in target.selling_plan_allocations
+                    if forloop.first
+                      continue
+                    endif
+                    if sa.per_delivery_price < min
+                      assign min = sa.per_delivery_price
+                    endif
+                  endfor
+                  assign save = target.price | minus: min | times: 100 | divided_by: target.price
+                -%}
+                {%- capture text -%}
+                    {{ 'theme.general.subscribe_and_save' | t }} {% if save < 100 and save > 0 %}{{ save }}%{% endif %}
+                  {%- endcapture -%}
+                <span>{{ button_text | default: text }}</span>
+              {%- else -%}
+                {%- assign text = 'theme.general.select_variant' | t -%}
+                <span>{{ button_text | default: text }}</span>
+              {%- endif -%}
+            </a>
+            {%- if settings.product_card_add_to_cart_popup == 'popup' and layout != 'product-sticky' -%}
+              </quickview-popup>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endunless -%}
+{%- endform -%}

@@ -1,0 +1,5 @@
+{%- if section.settings.header_search and section.settings.header_mobile_search_open == false -%}
+  <search-toggle-mobile>
+    <a href="#" class="dropdn-link" title="{{ 'theme.general.search_products' | t }}" data-toggle-search><span class="icon-wrap">{% render 'icon-search' %}</span><span class="icon-wrap">{% render 'icon-close5' %}</span></a>
+  </search-toggle-mobile>
+{%- endif -%}

@@ -1,0 +1,110 @@
+{%- liquid
+  assign layout = 'product-card-wishlist'
+  assign section_id = 'product-card-wishlist'
+  assign product_form_id = 'product-form-' | append: section_id | append: '-' | append: product.id
+  assign current_variant = product.selected_variant
+  assign product_title = product.title | append: ' ' | append: current_variant.title
+  assign image = product.selected_variant.featured_media | default: product.featured_media
+
+  if current_variant.selling_plan_allocations.size > 0 or current_variant.requires_selling_plan
+    assign is_subscription = true
+  endif
+
+  assign data_available = false
+
+  if current_variant.available
+    assign data_available = true
+  endif
+
+  assign hide_quantity = 1
+
+  if settings.product_inventory_quantity and settings.product_inventory_quantity_on_wishlist
+    assign hide_quantity = 0
+  endif
+-%}
+{% if product != null and current_variant != nil %}
+  <div class="minicart-prd mp--sm {% if is_subscription %}mp--subscription{% endif %}" data-section-render>
+    <product-form data-form>
+      {%- form 'product', product, id: product_form_id, data-available: data_available -%}
+        <div class="minicart-prd-inside row gx-2">
+          {%- if image != blank -%}
+            <div class="minicart-prd-image col">
+              <a href="{{ current_variant.url | within: collection }}" data-url>
+                <minicart-prd-img>
+                  {% render 'image-container',
+                    image: image,
+                    product_aspect_ratio: true,
+                    sizes: '92px',
+                    width_times: 3,
+                    bg: settings.product_card_image_placeholder,
+                    cover: settings.product_card_cover
+                  %}
+                </minicart-prd-img>
+              </a>
+              <div data-render="badge-subscription-{{ product_form_id }}">{% if is_subscription %}<div class="subscription-label">{{ 'theme.general.badge_cart_subscription' | t }}</div>{% endif %}</div>
+              {%- liquid
+                if request.page_type == 'search'
+                assign product_url = current_variant.url | split: '?' | first
+                else
+                assign product_url = current_variant.url
+                endif
+              -%}
+              <div data-render="icons-{{ product_form_id }}">
+                <quickview-popup data-handle="{{ product.handle }}" data-ajax="{{ product_url }}&section_id=quick-view" data-selector="#quickView"  data-tippy-content="{{ 'theme.general.quick_view' | t | escape }}">
+                  <a href="#" class="prd-icon"><span>{% render 'icon-eye' %}</span></a>
+                </quickview-popup>
+              </div>
+            </div>
+          {%- endif -%}
+          <div class="minicart-prd-info col">
+            <toggle-minicart-actions class="minicart-prd-toggle-actions">{% render 'icon-three-dots' %}</toggle-minicart-actions>
+            {% render 'product-card-badges', render: true, section: section, product: product, product_form_id: product_form_id %}
+            <h3 class="minicart-prd-name "><a href="{{ current_variant.url | within: collection }}" title="{{ product.title | escape }}" data-url>{{ product.title | escape | truncate: 30, '..' }}</a></h3>
+            {% render 'product-card-component-options-selector',
+              product: product,
+              current_variant: current_variant,
+              section_id: section_id,
+              layout: layout,
+              product_form_id: product_form_id
+            %}
+            <div class="minicart-prd-info-bottom row">
+              <div class="col-auto minicart-prd-qty" data-node-desktop>{% render 'quantity', name: "quantity" min: 1, value: 1, product: current_variant, layout: layout, product_title: product_title, current_variant: current_variant, hide_quantity: hide_quantity %}</div>
+              <div class="col minicart-prd-price">
+                {%- render 'price', product: product, use_variant: true, render: true, product_card_style_1: false, product_form_id: product_form_id -%}
+              </div>
+            </div>
+            {% render 'error' %}
+          </div>
+
+          <div class="minicart-prd-info-bottom row">
+            <div class="col-sm-auto minicart-prd-qty"  data-node-mobile>
+            </div>
+            <div class="col-sm-auto minicart-prd-price">
+              {%- render 'price', product: product, use_variant: true, render: true, product_card_style_1: false, product_form_id: product_form_id -%}
+            </div>
+          </div>
+
+          <div class="minicart-prd-action" data-render="minicart-prd-action-{{ product_form_id }}">
+            <toggle-minicart-actions><a class="icon-wrap" href="{{ current_variant.url | within: collection }}"  data-tippy-content="{{ 'theme.general.close_cap' | t | escape }}" data-tippy-placement="left">{% render 'icon-arrow-right' %}</a></toggle-minicart-actions>
+            <wishlist-button data-no-animation data-handle="{{ product.handle }}" data-variant-id="{{ current_variant.id }}" data-tippy-content="{{ 'theme.general.remove_from_wishlist_small' | t | escape }}" data-tippy-placement="left">
+              <a class="icon-wrap icon-remove position-relative">
+                {% render 'icon-remove2' %}
+                <div class="loading-overlay__spinner hidden">
+                  <div data-load="loading"></div>
+                </div>
+              </a>
+            </wishlist-button>
+            {%- if current_variant.available -%}
+              <button type="submit" class="icon-wrap iw--alt icon-edit position-relative" data-tippy-content="{{ 'products.product.add_to_cart' | t | escape }}"  data-tippy-placement="left">
+                {% render 'icon-cart3' %}
+                <div class="loading-overlay__spinner hidden">
+                  <div data-load="loading"></div>
+                </div>
+              </button>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endform -%}
+    </product-form>
+  </div>
+{% endif %}ща

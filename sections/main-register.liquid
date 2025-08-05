@@ -1,0 +1,213 @@
+{% comment %}theme-check-disable UnusedAssign{% endcomment %}
+{%- liquid
+  assign layout = 'customers-register'
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+    assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+
+-%}
+{%- unless settings.catalog_mode -%}
+  <div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+    <div class="{% render 'section-container-class', layout: layout %}">
+      <div class="row align-items-center">
+        {%- if section.settings.image_register_page -%}
+          <div class="col-12 col-sm-6 col-md-7 pe-lg-5 pe-xl-10 mt-5 mt-sm-0 order-2 order-sm-1">
+            {% render 'image-container',
+                image: section.settings.image_register_page,
+                padding_no_bg: 145,
+                sizes: '(min-width: 445px) 1200px, (min-width: 495px) 992px, (min-width: 390px) 768px, (min-width: 240px) 576px, calc(100vw - 30px)',
+                class_img: 'w-100',
+                bg: false,
+                hover_scale: false
+            %}
+          </div>
+        {%- endif -%}
+        <div class="{% if section.settings.image_register_page != blank %}col-12 col-sm-6 col-md-5 ms-auto order-1 order-sm-2{% else %}col-12 mx-auto{% endif %}">
+          <div class="title-wrap text-center">
+            <h1 class="h1-style">{{ 'theme.general.register_to_our_store' | t }}</h1>
+            <div class="h-sub w-800">{{ 'theme.general.register_to_our_store_subtext' | t }}</div>
+          </div>
+          {%- form 'create_customer', class: 'mt-4 login-form login-form--max' -%}
+            {% render 'errors', form: form %}
+            <div class="form-group">
+              <label for="RegisterForm-FirstName">
+                {{ 'customer.register.first_name' | t }}
+              </label>
+              <div class="form-control-wrap">
+                <input
+                    type="text"
+                    name="customer[first_name]"
+                    {% if form.first_name %}value="{{ form.first_name }}"{% endif %}
+                    autocomplete="given-name"
+                    required class="form-control" placeholder="{{ 'theme.general.enter_your_first_name' | t }}"
+                >
+                {% render 'input-check' %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="RegisterForm-LastName">
+                {{ 'customer.register.last_name' | t }}
+              </label>
+              <div class="form-control-wrap">
+                <input
+                    type="text"
+                    name="customer[last_name]"
+                    {% if form.last_name %}value="{{ form.last_name }}"{% endif %}
+                    autocomplete="family-name"
+                    class="form-control" placeholder="{{ 'theme.general.enter_your_last_name' | t }}"
+                >
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="RegisterForm-email">
+                {{ 'customer.register.email' | t }}
+              </label>
+              <div class="form-control-wrap">
+                <input
+                    type="email"
+                    name="customer[email]"
+                    {% if form.email %} value="{{ form.email }}"{% endif %}
+                    spellcheck="false"
+                    autocapitalize="off"
+                    autocomplete="email"
+                    aria-required="true"
+                    {% if form.errors contains 'email' %}
+                      aria-invalid="true"
+                      aria-describedby="RegisterForm-email-error"
+                    {% endif %}
+                    placeholder="{{ 'theme.general.enter_your_email_here' | t }}"
+                    required class="form-control"
+                >
+                {% render 'input-check' %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="RegisterForm-password">
+                {{ 'customer.register.password' | t }}
+              </label>
+              <div class="form-control-wrap">
+                <input
+                    type="password"
+                    name="customer[password]"
+                    aria-required="true"
+                    minlength="5"
+                    {% if form.errors contains 'password' %}
+                      aria-invalid="true"
+                      aria-describedby="RegisterForm-password-error"
+                    {% endif %}
+                    required class="form-control" placeholder="******"
+                >
+                {% render 'input-check' %}
+              </div>
+            </div>
+            <div class="mt-5"></div>
+            <button type="submit" class="btn w-100">{{ 'theme.general.create_account' | t }}</button>
+            <div class="text-center mt-15 form-info">
+              {{ 'theme.general.already_have_an_account' | t }}
+              <a href="{{ routes.account_login_url }}" class="d-block d-sm-inline">{{ 'theme.general.login_here' | t }}</a>
+            </div>
+          {%- endform -%}
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endunless -%}
+
+{% schema %}
+{
+  "name": "Main register",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_register_page",
+      "label": "Image",
+      "info": "recommended width is min 495px (for retina is better to use 495x2 size)"
+    },
+    {
+      "type": "header",
+      "content": "SECTION WIDTH"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Select width source",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use store width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom width"
+        }
+      ],
+      "default": "global",
+      "info": "Store width you can set in Theme Settings / General"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 920,
+      "max": 1720,
+      "step": 8,
+      "unit": "px",
+      "label": "Custom width",
+      "default": 920,
+      "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 46
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": false,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 20
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": false,
+      "info": "from Theme Settings / General / Layout"
+    }
+  ]
+}
+{% endschema %}

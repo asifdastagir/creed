@@ -1,0 +1,262 @@
+{%- comment -%}theme-check-disable NestedSnippet, UndefinedObject{%- endcomment -%}
+{%- liquid
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+    assign rtl_mode = true
+  endif
+-%}
+<!doctype html>
+<html
+  class="no-js"
+  lang="{{ request.locale.iso_code }}"
+  {% if rtl_mode %}
+  dir="rtl"
+  {% endif %}>
+  <head>
+    {% render 'head' %}
+    {{ content_for_header }}
+  </head>
+  <body
+    class="shopify-theme template-{{ request.page_type | handle }} localization-{{ localization.language.iso_code | handle }} {% if rtl_mode %}rtl-mode{% endif %} page-{{ template.suffix }} first-section-off-animate {% if settings.use_ajax_scroll and template == 'index' %}has-ajax-scroll{% endif %} {% unless settings.rounded_disable == "1" %} has-rounded{% endunless %} {% unless settings.rounded_buttons_disable == "1" %} has-button-rounded{% endunless %} initial-hide{% if customer and customer.accepts_marketing %}subscribed{% endif %} {% if settings.animation_sections %}has-animate-scroll{% endif %} full-load-hide{% if settings.catalog_mode %}catalog-mode{% endif %} has-product-style{{ settings.product_card_layout }} filter-layout-{{ settings.filter_layout }} {% if settings.demo %}is-demo{% endif %} {% unless localization.language.iso_code == 'en' %}has-btn-wrap{% endunless %} {% if settings.header_sticky_always_visible %}has-hdr_sticky has-hdr_sticky_not_hiding{% endif %} wishlist-{% if settings.wishlist %}on{% else %}off{% endif %} {% if settings.shipping_calculator_static %}shipping-calculator-static{% endif %} {% if settings.font_headings_style == '2' %}has-headings-style2{% elsif settings.font_headings_style == '3' %}has-headings-style3{% endif %} {% if settings.header_cart_show %}header-cart-dropdown{% endif %} {% if settings.fbt_source == 'app' %}fbt-app{% endif %} {% if settings.product_swatches_rounded %}has-rounded-options{% endif %} {% if settings.fixed_footer %}has-fixed-footer{% endif %}"
+    data-tooltip-color="dark"
+    data-tooltip-animation="shift-toward"
+    data-tooltip-delay="100"
+    data-fbt-limit="{{ settings.recommendations_limit }}">
+    <a class="skip-to-content-link btn visually-hidden" href="#pageContent">
+      {{ "accessibility.skip_to_text" | t }}
+    </a>
+    <div id="control-height" style="height:100vh;width:0;position:fixed;pointer-events:none;{%- if template == 'product' -%}overflow:hidden;width:100%;{%- endif -%}">
+      {%- liquid
+          render 'placeholder-image'
+      -%}
+    </div>
+    {%- liquid
+      section 'announcement-bar'
+      section 'header'
+      render 'navigation-sub'
+      render 'header-navigation-mobile-bottom'
+    -%}
+
+    {%- if request.page_type == 'collection' or request.page_type == 'search' -%}
+      {%- liquid
+        if "ar he he-IL hi" contains localization.language.iso_code
+          assign rtl = '-rtl'
+        endif
+      -%}
+      {{ 'category-page' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+      {{ 'price-slider.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+    {%- if request.design_mode -%}
+      {% section 'megamenu' %}
+    {%- endif -%}
+    <div
+      class="page-content"
+      id="pageContent"
+      role="main">
+      {% render 'breadcrumbs' %}
+
+      {%- if settings.use_ajax_scroll and template == 'index' and request.design_mode == false -%}
+        {% capture content_for_layout %}
+          {{ content_for_layout }}
+        {% endcapture %}
+        {%- liquid
+          assign regex_match ='id="shopify-section-[section_id]" class="shopify-section'
+          assign prefix = regex_match | split: '[section_id]' | first
+          assign suffix = regex_match | split: '[section_id]' | last
+
+          if content_for_layout contains prefix
+            assign chunks = content_for_layout | split: prefix
+
+            for chunk in chunks
+              if chunk contains suffix
+                assign child_chunk = chunk | split: suffix
+                assign id = child_chunk | first
+                assign ids = ids | append: id | append: " "
+              endif
+            endfor
+
+            assign ids = ids | split: ' '
+            assign id_3 = ids[2]
+            assign regex_match_id_2 ='<section id="shopify-section-' | append: id_3 | append: '" class="shopify-section'
+            assign chunk_not_ajaxed = content_for_layout | split: regex_match_id_2 | first
+
+            assign regex_match ='id="shopify-section-[section_id]" class="shopify-section section-negative-margin'
+            assign suffix = regex_match | split: '[section_id]' | last
+
+            assign chunk_last = chunks | last
+            if chunk_last contains suffix
+              assign id_negative_last = chunk_last | split: suffix | first
+              assign id_last = ids | last
+
+              if id_negative_last == id_last
+                assign show_last_chunk = true
+                assign sections = content_for_layout | split: '</section>'
+                assign sections_pre_last = sections | size | minus: 2
+                assign section_last = sections[sections_pre_last]
+                assign chunk_not_ajaxed_last = section_last | append: '</section>'
+              endif
+            endif
+
+            echo chunk_not_ajaxed
+          endif
+        -%}
+        {%- for id in ids %}
+          {%- if forloop.index > 2 -%}
+            {% if id_negative_last == id_last and id_negative_last == id %}
+              {% continue %}
+            {% endif %}
+            <div data-ajax-section-scroll="{{ routes.root_url }}?section_id={{ id }}&preview_theme_id={{ theme.id }}" class="shopify-section show-on-scroll"></div>
+          {%- endif -%}
+        {% endfor -%}
+      {%- else -%}
+        {{ content_for_layout }}
+      {%- endif -%}
+      {%- liquid
+        if settings.use_ajax_scroll and template == 'index' and request.design_mode == false and show_last_chunk
+          echo chunk_not_ajaxed_last
+        endif
+      -%}
+    </div>
+
+    {% section 'footer' %}
+
+    {%- form 'customer'
+      , class: 'footer__newsletter newsletter-form'
+      , name: 'newsletter' -%}
+      <input
+        type="hidden"
+        name="contact[tags]"
+        value="newsletter">
+      {%- if form.posted_successfully? -%}
+        {% render 'newsletters-subscription-success' %}
+      {%- endif -%}
+      {%- if form.errors -%}
+        <div
+          id="popupSubscribeError"
+          class="modal-wrap modal-wrap--alert modal-wrap--error px-5 py-6"
+          style="display: none;">
+          <div class="modal-wrap-text text-center">
+            <h5>
+              <span class="modal-wrap-icon">{% render 'icon-error2' %}</span>
+              {{ 'templates.contact.form.error_heading' | t }}</h5>
+            <div>{{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}</div>
+            <div class="mt-3">
+              <a
+                href="#"
+                class="btn btn--showmore js-scroll-to-footer"
+                data-fancybox-close>{{ 'theme.general.adjust' | t }}</a>
+            </div>
+          </div>
+        </div>
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+            jq_lumia.fancybox.open({
+              src: '#popupSubscribeError',
+              type: 'inline',
+              afterClose: () => {
+                let top = document.querySelector('.page-footer') ? document.querySelector('.page-footer').offsetTop : document.body.scrollHeight;
+                smoothScrollTo(top, 1000);
+                history.replaceState && history.replaceState(
+                  null, '', location.pathname + location.search.replace(/[\?&][^&]+/, '').replace(/^&/, '?')
+                )
+              }
+            });
+            document.querySelector('body').classList.add('subscribed');
+          });
+          document.querySelector('body').classList.add('newslettermodal-off');
+        </script>
+      {%- endif -%}
+    {%- endform -%}
+
+    <ul hidden>
+      <li id="a11y-refresh-page-message">{{ 'accessibility.refresh_page' | t }}</li>
+      <li id="a11y-new-window-message">{{ 'accessibility.link_messages.new_window' | t }}</li>
+    </ul>
+
+    {%- if settings.use_bundles -%}
+      <link
+        rel="stylesheet"
+        href="{{ 'bundle-bottom' | append: rtl | append: '.css' | asset_url }}"
+        media="print"
+        onload="this.media='all';this.onload = null">
+    {%- else -%}
+      {{ 'mobile-menu' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+      {{ 'buy-now-popup' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+      {{ 'modals-newsletter' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+      {{ 'component-pickup-availability.css' | asset_url | stylesheet_tag }}
+      {{ 'component-deferred-media.css' | asset_url | stylesheet_tag }}
+      {{ 'component-product-model.css' | asset_url | stylesheet_tag }}
+      {{ 'model-viewer-ui.css' | asset_url | stylesheet_tag }}
+      {{ 'component-model-viewer-ui.css' | asset_url | stylesheet_tag }}
+    {%- endif -%}
+
+
+    {% section 'promo-products' %}
+    {% render 'before-body-end' %}
+
+    <script>
+      if (Shopify.designMode) {
+        document.documentElement.classList.add('shopify-design-mode');
+      }
+
+      window.shopUrl = window.Shopify.routes.root+'{{ request.origin }}';
+      window.routes = {
+        cart_url: '{{ routes.cart_url }}',
+        cart_add_url: '{{ routes.cart_add_url }}',
+        cart_change_url: '{{ routes.cart_change_url }}',
+        cart_update_url: '{{ routes.cart_update_url }}',
+        cart_clear_url: '{{ routes.cart_clear_url }}',
+        predictive_search_url: '{{ routes.predictive_search_url }}',
+        search_url: '{{ routes.search_url }}',
+        product_recommendations_url: '{{ routes.product_recommendations_url }}',
+        prepare_shipping_rates: window.Shopify.routes.root+'cart/prepare_shipping_rates.json',
+        async_shipping_rates: window.Shopify.routes.root+'cart/async_shipping_rates.json',
+      };
+      window.cartStrings = {
+        error: `{{ 'theme-sections.sections.cart.cart_error' | t }}`,
+        quantityError: `{{ 'theme-sections.sections.cart.cart_quantity_error_html' | t: quantity: '[quantity]' }}`,
+        successfully_added: `{{ 'theme.general.successfully_added' | t }}`,
+        successfully_updated: `{{ 'theme.general.successfully_updated' | t }}`,
+        successfully_line_item_updated: `{{ 'theme.general.successfully_line_item_updated' | t }}`
+      };
+      window.variantStrings = {
+        addToCart: `{{ 'products.product.add_to_cart' | t }}`,
+        soldOut: `{{ 'products.product.sold_out' | t }}`,
+        unavailable: `{{ 'products.product.unavailable' | t }}`,
+        preOrder: `{{ 'theme.general.pre_order' | t }}`,
+        addSubscriptionToCart: `{{ 'theme.general.add_subscription_to_cart' | t }}`,
+        addSelectedToCart: `{{ 'theme.general.add_selected_to_cart_html' | t }}`,
+        addSelectAll: `{{ 'theme.general.add_select_all' | t }}`,
+        added_to_cart: `{{ 'theme.general.added_to_cart' | t }}`,
+      };
+      window.accessibilityStrings = {
+        shareSuccess: `{{ 'general.share.success_message' | t }}`,
+      };
+      window.themeStrings = {
+        search: `{{ 'theme.general.search' | t }}`,
+        shippingServerIssue: `{{ 'theme.general.shipping_server_issue' | t }}`,
+        askTheSeller: `{{ 'theme.general.ask_the_seller' | t }}`,
+        selectShipping: `{{ 'theme.general.select_shipping' | t }}`,
+        freeShipping: `{{ 'theme.general.free_shipping' | t }}`,
+        productCountOne: `{{ 'theme.general.product_count_simple.one' | t }}`,
+        productCountOther: `{{ 'theme.general.product_count_simple.other' | t }}`,
+        loading: `{{ 'theme.general.loading' | t }}`,
+        addToWishlist: `{{ 'theme.general.add_to_wishlist_small' | t }}`,
+        removeFromWishlist: `{{ 'theme.general.remove_from_wishlist_small' | t }}`,
+        search_placeholder: `{{ 'theme.general.search_by' | t }}`,
+        search_placeholder_short: `{{ 'theme.general.search_by_short' | t }}`,
+        shipping_absent: `{{ 'theme.general.shipping_absent' | t }}`,
+        shareSuccess: `{{ 'theme.general.share_success' | t }}`,
+        new: `{{ 'theme.general.new' | t }}`,
+        sale: `{{ 'products.product.on_sale' | t }}`,
+      };
+      window.shippingLogos = {
+        usps: `{{ 'usps.png' | asset_img_url: '230x230' }}`,
+        ups: `{{ 'ups.png' | asset_img_url: '230x230' }}`,
+        dhl_express: `{{ 'dhl_express.png' | asset_img_url: '230x230' }}`,
+        freeDelivery: `{{ 'free-delivery.svg' | asset_url }}`,
+        "shopify": `{{ 'shipping-default.jpg' | asset_img_url: '230x260' }}`,
+      };
+    </script>
+  </body>
+</html>

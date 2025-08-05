@@ -1,0 +1,46 @@
+@media (max-width:767px) {
+  instagram-feed {
+    display: block;
+    max-width: calc(100vw - 30px);
+    overflow: hidden
+  }
+}
+.instagram-carousel {
+  padding-top: 50px;
+  margin-top: -50px
+}
+.instagram-carousel.swiper-container {
+  overflow: visible
+}
+.instagram-carousel a {
+  display: block;
+  opacity: 1;
+  border-radius: calc(var(--radius-xl) * .5);
+  overflow: hidden;
+  will-change: transform
+}
+.instagram-carousel a img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover
+}
+.instagram-carousel .swiper-arrows-carousel {
+  top: calc(50% + 25px);
+  pointer-events: all
+}
+@media (hover:hover),
+(hover:none) and (min-width:1025px) {
+  .instagram-carousel:hover .swiper-arrows-carousel {
+    opacity: 1
+  }
+}
+.instagram-item [data-tippy-root] {
+  max-width: none;
+  width: max-content
+}
+.instagram-item [data-tippy-root] .tippy-content {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis
+}

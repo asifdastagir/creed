@@ -1,0 +1,119 @@
+{% liquid
+    assign decoration = false
+    case settings.section_decoration
+        when "1"
+            assign section_decoration_global = "none"
+        when "2"
+            assign section_decoration_global = "grunge1"
+        when "3"
+            assign section_decoration_global = "grunge2"
+        when "4"
+            assign section_decoration_global = "grunge3"
+        when "5"
+            assign section_decoration_global = "paper"
+        when "6"
+            assign section_decoration_global = "mountains"
+        when "7"
+            assign section_decoration_global = "ellipse1"
+        when "8"
+            assign section_decoration_global = "ellipse2"
+        when "9"
+            assign section_decoration_global = "wave1"
+        when "10"
+            assign section_decoration_global = "wave2"
+        when "11"
+            assign section_decoration_global = "wave3"
+        when "21"
+          assign section_decoration_global = "wave4"
+        when "22"
+          assign section_decoration_global = "wave5"
+        when "12"
+            assign section_decoration_global = "triangle1"
+        when "13"
+            assign section_decoration_global = "triangle2"
+        when "14"
+            assign section_decoration_global = "triangle_assymetrical1"
+        when "15"
+            assign section_decoration_global = "triangle_assymetrical1_flip"
+        when "16"
+            assign section_decoration_global = "triangle_assymetrical2"
+        when "17"
+            assign section_decoration_global = "triangle_assymetrical2_flip"
+        when "18"
+            assign section_decoration_global = "tilt"
+        when "19"
+            assign section_decoration_global = "tilt_flip"
+        when "20"
+          assign section_decoration_global = "glaze"
+    endcase
+    assign section_decoration_top = section.settings.section_decoration_top
+    assign section_decoration_bottom = section.settings.section_decoration_bottom
+
+    echo 'container'
+
+    assign fluid = false
+    assign px_0 = false
+
+    if section.settings.fluid
+        assign fluid = true
+    endif
+
+    if layout == 'product-carousel' and section.settings.image_bg != blank or section.settings.banner and section.settings.layout == 'wide'
+        assign fluid = true
+
+        if section.settings.banner and section.settings.layout == 'wide'
+            assign px_0 = true
+        endif
+    endif
+
+    if layout == 'index-welcome' and section.settings.section_width != 'custom'
+        if section.settings.layout == 'layout_2' or section.settings.layout == 'layout_4' or section.settings.layout == 'layout_5'
+            assign fluid = true
+        endif
+
+        if section.settings.layout == 'layout_5' and section.settings.side_spaces == false
+            assign px_0 = true
+        endif
+    endif
+
+    if layout == 'index-gallery' and section.settings.ticker_mode
+        assign fluid = true
+        assign px_0 = true
+    endif
+
+    if fluid and section.settings.inner_space != nil and section.settings.inner_space == false
+        assign px_0 = true
+    endif
+
+    if fluid and layout == 'index-instagram' and section.settings.layout == 'square_grid_3'
+        assign px_0 = true
+    endif
+
+    if fluid
+        echo '-fluid ic--ignore-global-round '
+    endif
+
+    if section_decoration_top != 'none' and section_decoration_top != 'global' or section_decoration_global != 'none'
+        assign decoration = true
+    endif
+
+    if section_decoration_bottom != 'none' and section_decoration_bottom != 'global' or section_decoration_global != 'none'
+        assign decoration = true
+    endif
+
+    assign show_on_scroll = section.settings.section_animation
+
+    unless template.suffix contains 'separators.'
+        if decoration == false and show_on_scroll
+            echo ' show-on-scroll '
+        endif
+    endunless
+
+    if decoration and layout == 'product-featured' and section.settings.fluid
+        assign px_0 = true
+    endif
+
+    if px_0
+        echo ' px-0 '
+    endif
+%}

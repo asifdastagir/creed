@@ -1,0 +1,68 @@
+{%- liquid
+  assign item_final_line_price = item.final_line_price | money
+  assign item_original_line_price = item.original_line_price | money
+  assign currency_code = localization.country.currency.iso_code
+
+  if item_final_line_price contains ' ' and currency_code != 'SEK' and currency_code != 'TRY'
+    unless item_final_line_price contains 'money'
+      if currency_code != 'USD' and currency_code != 'EUR' and currency_code != 'GBP'
+        assign item_final_line_price = item.final_line_price | money_without_trailing_zeros
+        assign item_original_line_price = item.original_line_price | money_without_trailing_zeros
+      endif
+
+      assign part_1 = item_final_line_price | split: ' ' | first
+      assign part_2 = item_final_line_price | split: ' ' | last
+      assign part_1_new = part_1 | plus: 1
+
+      if part_1_new == 1
+        assign currency_code_wrapped = '<span style="font-weight: var(--font-weight-600);">' | append: part_1 | append: '</span>'
+        assign item_final_line_price = currency_code_wrapped | append: ' ' | append: part_2
+      else
+        assign currency_code_wrapped = '<span style="font-weight: var(--font-weight-600);">' | append: part_2 | append: '</span>'
+        assign item_final_line_price = part_1 | append: ' ' | append: currency_code_wrapped
+      endif
+
+      assign parts = item_original_line_price | split: ' '
+      assign part_1 = item_original_line_price | split: ' ' | first
+      assign part_2 = item_original_line_price | split: ' ' | last
+      assign part_1_new = part_1 | plus: 1
+
+      if part_1_new == 1
+        assign currency_code_wrapped = '<span style="font-weight: var(--font-weight-600);">' | append: part_1 | append: '</span>'
+        assign item_original_line_price = currency_code_wrapped | append: ' ' | append: part_2
+
+        if parts.size == 3
+            assign item_original_line_price = currency_code_wrapped | append: ' ' | append: parts[1] | append: ' ' | append: part_2
+        endif
+      else
+        assign currency_code_wrapped = '<span style="font-weight: var(--font-weight-600);">' | append: part_2 | append: '</span>'
+        assign item_original_line_price = part_1 | append: ' ' | append: currency_code_wrapped
+      endif
+    endunless
+  endif
+-%}
+
+<div class="prd-price" {% if item.quantity > 1 %}data-tippy-content="{% if item.selling_plan_allocation.selling_plan.name != blank %}{{ item.selling_plan_allocation.price | money | strip_html | escape }} {{ 'theme.general.per_subscription' | t }}{% else %}{{ item.variant.price | money | strip_html | escape }} {{ 'theme.general.per_item' | t }}{% endif %}" data-tippy-placement="top"{% endif %}>
+  <div class="loading-overlay hidden">
+    <div data-load="loading"></div>
+  </div>
+  {%- if item.original_line_price != item.final_line_price -%}
+    <div class="prd-price-regular ">{{ item_final_line_price }}</div>
+    <div class="prd-price-old">{{ item_original_line_price }}</div>
+  {%- else -%}
+    <div class="prd-price-regular ">{{ item_original_line_price }}</div>
+  {%- endif -%}
+  {%- if item.variant.available and item.unit_price_measurement -%}
+    <span class="flex-break"></span>
+    <small class="unit-price caption">
+      <span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span>
+      {{ item.variant.unit_price | money }}
+      <span aria-hidden="true">/</span>
+      <span class="visually-hidden">&nbsp;{{ 'accessibility.unit_price_separator' | t }}&nbsp;</span>
+      {%- if item.variant.unit_price_measurement.reference_value != 1 -%}
+        {{- item.variant.unit_price_measurement.reference_value -}}
+      {%- endif -%}
+      {{ item.variant.unit_price_measurement.reference_unit }}
+    </small>
+  {%- endif -%}
+</div>

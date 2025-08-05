@@ -1,0 +1,13 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- liquid
+  assign heading = 'theme.general.what_people_say_heading' | t
+  assign subtitle = 'theme.general.what_people_say_subtitle' | t
+
+  if request.page_type == 'search'
+    assign results = search.results
+  else
+    assign results = collection.products
+  endif
+
+  render 'index-reviews', results: results, collection: collection, heading: heading, subtitle: subtitle, source: 'products', use_global_desktop_space: true, use_global_mobile_space: true, use_global_desktop_space_padding: true, use_global_mobile_space_padding: true
+%}

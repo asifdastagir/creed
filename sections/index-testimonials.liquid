@@ -1,0 +1,1033 @@
+{% comment %}theme-check-disable UnusedAssign{% endcomment %}
+{%- liquid
+  assign layout = 'index-testimonials'
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+      assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+
+  assign button_show_more = false
+  if section.settings.button
+    if section.settings.heading_alignment == 'left'
+      assign button_show_more = true
+    elsif section.settings.layout != 'mini_horizontal_banner'
+      assign button_show_more = true
+    endif
+  endif
+
+  assign show_button = false
+  assign button_center = false
+  assign button_left = false
+
+  if button_show_more and section.settings.layout != 'mini_horizontal_banner'
+    assign show_button = true
+  endif
+
+  if show_button and section.settings.heading_alignment == 'center'
+    assign button_center = true
+  endif
+
+  if show_button and section.settings.heading_alignment == 'left' and section.settings.button_bottom_on_mobile
+    assign button_left = true
+  endif
+-%}
+{%- if section.settings.layout == 'carousel_1' -%}
+{{ 'reviews' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{%- else -%}
+{{ 'reviews3' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.js-reviews-tab').forEach((el, i) => {
+        el.addEventListener('click', function (e) {
+          e.preventDefault();
+          const parent = el.closest('.reviews-tab-row'),
+            holder = el.closest('.holder'),
+            swiper = holder.querySelector('swiper-carousel');
+          parent.querySelectorAll('span').forEach(el => {
+            el.classList.remove('active')
+          })
+          el.querySelector('span').classList.add('active');
+          if(swiper) swiper.carousel.slideTo(i, 500, false);
+        })
+      })
+    })
+  </script>
+{%- endif -%}
+{% render 'section-wrapper', placement: 'top' %}
+
+<div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+  <div class="{% render 'section-container-class', layout: layout %}">
+    {% render 'section-heading', section: section %}
+    {%- if section.settings.layout == 'carousel_1' -%}
+      <swiper-carousel data-destroy>
+        <div class="swiper-container reviews-carousel-wrap swiper-container-center {% if store_width > 1465 %}reviews-carousel-xxl-4{% endif %} {% if store_width > 1699 %}reviews-carousel-xxxl-5{% endif %}">
+          <div class="swiper-wrapper reviews-carousel">
+            {%- for block in section.blocks -%}
+              <div class="review swiper-slide swiper-slide--double" {{ block.shopify_attributes }}>
+                <div class="review-inside">
+                  <div class="review-author-photo">
+                    {% render 'image-container',
+                      image: block.settings.image,
+                      padding_no_bg: 100,
+                      padding: 100,
+                      sizes: '120px',
+                      width_times: 3,
+                    %}
+                  </div>
+                  <div class="reviews-author-name">
+                    {{ block.settings.title }}
+                  </div>
+                  <div class="reviews-author-post mt-0">{{ block.settings.profession }}</div>
+                  <div class="review-text">
+                    {{ block.settings.review }}
+                  </div>
+                  {% render 'rating', stars: block.settings.stars, layout: 'testimonials' %}
+                  <div class="review-bottom">
+                    <div class="review-address">{{ block.settings.city }}</div>
+                  </div>
+                </div>
+              </div>
+            {%- endfor -%}
+          </div>
+          <div class="swiper-pagination position-relative mt-4 mt-md-5"></div>
+          <div class="swiper-arrows-carousel container">
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+          </div>
+        </div>
+        <script type="application/json">
+          {
+            "pagination": {
+              "el": ".swiper-pagination",
+              "clickable": true
+            },
+            "navigation": {
+              "nextEl": ".swiper-button-next",
+              "prevEl": ".swiper-button-prev"
+            },
+            "slidesPerColumnFill": "row",
+            "watchOverflow": true,
+            "slidesPerView": 1,
+            "spaceBetween": 20,
+            "centerInsufficientSlides": true,
+            "breakpoints": {
+              "768": {
+                "slidesPerView": 2,
+                "spaceBetween": 30
+              },
+              "992": {
+                "slidesPerView": "auto",
+                "spaceBetween": 30
+              }
+            }
+          }
+        </script>
+      </swiper-carousel>
+    {%- else -%}
+      <div class="row border-radius-md gx-0 bg-alt">
+        <div class="col-md-6">
+          <!-- review-item-no-bg -->
+          <!-- ignore-shadow -->
+          <div class="review-items-wrap">
+            <swiper-carousel>
+              <div class="swiper-container">
+                <div class="swiper-wrapper review-item">
+                  {%- for block in section.blocks -%}
+                    <div class="swiper-slide review-item-inside" {{ block.shopify_attributes }}>
+                      <div class="review-item-author-name">
+                        {{ block.settings.title }}
+                      </div>
+                      <div class="review-item-author-post">{{ block.settings.profession }}</div>
+                      <div class="review-item-rating">
+                        {% render 'rating', stars: block.settings.stars, layout: 'testimonials' %}
+                      </div>
+                      <div class="review-item-text">
+                        {{ block.settings.review | truncate: 200, '..' }}
+                      </div>
+                    </div>
+                  {%- endfor -%}
+                </div>
+              </div>
+              <script type="application/json">
+                {
+                  "slidesPerColumnFill": "row",
+                  "watchOverflow": true,
+                  "slidesPerView": 1,
+                  "spaceBetween": 20,
+                  "noSwiping": true,
+                  "noSwipingClass": "swiper-slide",
+                  "centerInsufficientSlides": true
+                }
+              </script>
+            </swiper-carousel>
+          </div>
+          <reviews-tab>
+            <swiper-carousel>
+              <div class="swiper-container reviews-tab-row">
+                <div class="swiper-wrapper">
+                  {%- for block in section.blocks -%}
+                    <div class="swiper-slide">
+                      <a href="#" class="js-reviews-tab" {{ block.shopify_attributes }}>
+                        <span class="review-item-author-photo {% if forloop.first %}active{% endif %}">
+                          {% render 'image-container',
+                            image: block.settings.image,
+                            padding_no_bg: 100,
+                            padding: 100,
+                            sizes: '56px',
+                            width_times: 3
+                          %}
+                        </span>
+                      </a>
+                    </div>
+                  {%- endfor -%}
+                </div>
+                <div class="swiper-pagination position-relative mt-3"></div>
+              </div>
+              <script type="application/json">
+                {
+                  "pagination": {
+                    "el": ".swiper-pagination",
+                    "clickable": true
+                  },
+                  "slidesPerColumnFill": "row",
+                  "watchOverflow": true,
+                  "slidesPerView": 3,
+                  "spaceBetween": 10,
+                  "centerInsufficientSlides": true,
+                  "breakpoints": {
+                    "576": {
+                      "slidesPerView": 5
+                    },
+                    "768": {
+                      "slidesPerView": 3
+                    },
+                    "1025": {
+                      "slidesPerView": 3
+                    },
+                    "1200": {
+                      "slidesPerView": 4
+                    },
+                    "1400": {
+                      "slidesPerView": 5
+                    }
+                  }
+                }
+              </script>
+            </swiper-carousel>
+          </reviews-tab>
+        </div>
+        <div class="col-md-6 mt-3 mt-md-0">
+          <flow-type>
+            <a href="{{ section.settings.button_url }}" class="bnr-wrap h-100">
+              <div class="bnr to-center to-middle text-center image-bg-wrap image-hover-scale fontratio-calc h-100" data-fontratio=5.83>
+                {%- liquid
+                  assign ic_style = ''
+                  assign color = section.settings.color_placeholder
+                  if color != 'rgba(0,0,0,0)' and color != blank
+                    assign ic_style = '--placeholder-bg: ' | append: color | append: ';'
+                  endif
+                -%}
+                {% render 'image-container',
+                  image: section.settings.image,
+                  padding_no_bg: 79.93,
+                  sizes: '(min-width: 768px) 574px, calc(100vw - 30px)',
+                  widths: '319,374,390,573,767'
+                  class_ic: 'bnr-img ic--bg-cover',
+                  style: ic_style
+                %}
+                <div class="bnr-caption {% if section.settings.invert_color %}colorize-invert{% endif %}" style="padding: 14% 10%">
+                  <div class="bnr-text1 mt-0" style="font-size:.18em; font-weight: var(--font-weight-400); line-height:1.3em">{{ section.settings.banner_description }}</div>
+                  <div class="bnr-text2 mt-sm heading-font" style="font-size:.56em; font-weight: var(--font-weight-500); line-height:1.3em">{{ section.settings.banner_title }}</div>
+                  <div class="bnr-text2 mt-0 heading-font" style="font-size:.32em; font-weight: var(--font-weight-400); line-height:1.2em">{{ section.settings.banner_subtitle }}</div>
+                  {%- if button_center or button_left -%}
+                    <div class="btn-showmore-wrap text-center mt-3 mt-lg-6  {% if button_left %}show-mobile-sm{% endif %}">
+                      <div href="{{ section.settings.button_url }}" class="btn btn--invert btn--showmore">{{ section.settings.button_text }}</div>
+                    </div>
+                  {%- endif -%}
+                </div>
+              </div>
+            </a>
+          </flow-type>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+{% render 'section-wrapper' %}
+{% schema %}
+{
+  "name": "Store testimonials",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_animation",
+      "label": "Enable soft appearing of section",
+      "default": true,
+      "info": "Global sections animation disabling in Theme Settings / General / Sections. AUTODISABLED if section has top or bottom separator."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "radio",
+      "id": "layout",
+      "label": "Select design variant",
+      "options": [
+        {
+          "value": "carousel_1",
+          "label": "Carousel"
+        },
+        {
+          "value": "carousel_2",
+          "label": "Carousel with banner"
+        }
+      ],
+      "default": "carousel_1"
+    },
+    {
+      "type": "radio",
+      "id": "heading_alignment",
+      "label": "Heading aligment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "invert_color",
+      "label": "Invert captions color",
+      "default": true,
+      "info": "Invert color you can set in Theme Settings / General / Colors - General"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "What People Say About Us"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "default": "Subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "header",
+      "content": "Banner",
+      "info": "for layout Carousel with banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "recommended size for retina displays is 894x514px"
+    },
+    {
+      "type": "color",
+      "id": "color_placeholder",
+      "label": "Placeholder background loader",
+      "info": "Set the main color of the image (visually softens the appearance of the image)"
+    },
+    {
+      "type": "text",
+      "id": "banner_title",
+      "default": "95% Clients",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "banner_subtitle",
+      "default": "recommend our shop.",
+      "label": "Sub title"
+    },
+    {
+      "type": "text",
+      "id": "banner_description",
+      "default": "Happy Customer Testimonials",
+      "label": "Description"
+    },
+    {
+      "type": "header",
+      "content": "Button",
+      "info": "for layout Carousel with banner"
+    },
+    {
+      "type": "checkbox",
+      "id": "button",
+      "label": "Show",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "button_bottom_on_mobile",
+      "label": "Show at bottom on mobile in case when Heading layout is 'Left'",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Caption",
+      "default": "View all"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Link"
+    },
+    {
+      "type": "select",
+      "id": "button_color",
+      "label": "Button color",
+      "options": [
+        {
+          "value": "btn--default",
+          "label": "Primary"
+        },
+        {
+          "value": "btn--invert",
+          "label": "Secondary"
+        },
+        {
+          "value": "btn--grey",
+          "label": "Third"
+        },
+        {
+          "value": "btn--white",
+          "label": "Fourth"
+        },
+        {
+          "value": "btn--fifth",
+          "label": "Fifth"
+        }
+      ],
+      "default": "btn--white"
+    },
+    {
+      "type": "header",
+      "content": "SECTION WIDTH"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Select width source",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use store width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom width"
+        }
+      ],
+      "default": "global",
+      "info": "Store width you can set in Theme Settings / General"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 1178,
+      "max": 1978,
+      "step": 8,
+      "unit": "px",
+      "label": "Custom width",
+      "default": 1178,
+      "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable background",
+      "default": false,
+      "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+    },
+    {
+      "type": "select",
+      "id": "background_preset",
+      "label": "Background image - preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "product-cosmetics-bg.png",
+          "label": "Leaves 1"
+        },
+        {
+          "value": "bottom-cosmetics-bg.png",
+          "label": "Leaves 2"
+        },
+        {
+          "value": "bg-makeup1.png,bg-makeup1-m.png",
+          "label": "Pink and Waves 1"
+        },
+        {
+          "value": "bg-makeup2.png,bg-makeup2-m.png",
+          "label": "Pink and Waves 2"
+        },
+        {
+          "value": "bg-makeup4.png,bg-makeup4-m.png",
+          "label": "Pink and Waves 3"
+        },
+        {
+          "value": "bg-makeup3.png,bg-makeup3-m.png",
+          "label": "Purple Splash"
+        },
+        {
+          "value": "bg-sweets1.png",
+          "label": "Blue Sun Rays"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image - custom on Desktop"
+    },
+    {
+      "type": "select",
+      "id": "background_behavior",
+      "label": "Background image behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image - custom on Mobile",
+      "info": "only if Background image - custom on Desktop selected"
+    },
+    {
+      "type": "select",
+      "id": "background_image_placeholder_type",
+      "label": "Placeholder background color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_secondary_bg"
+    },
+    {
+      "type": "color",
+      "id": "background_image_placeholder",
+      "label": "Custom - Placeholder background color"
+    },
+    {
+      "type": "header",
+      "content": "SECTION SEPARATOR"
+    },
+    {
+      "type": "header",
+      "content": "Top separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_header_main_bg",
+          "label": "Header - Middle(main) part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_top_color",
+      "label": "Custom - top separator color"
+    },
+    {
+      "type": "header",
+      "content": "Bottom separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "paragraph",
+      "content": "'Global separator' is set in Theme Settings / Separators / Global separator style"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_footer_top_bg",
+          "label": "Footer - Top part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_bottom_color",
+      "label": "Custom - bottom separator color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "review",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Title",
+          "label": "Author"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Avatar"
+        },
+        {
+          "type": "text",
+          "id": "profession",
+          "label": "Profession",
+          "default": "Designer"
+        },
+        {
+          "type": "textarea",
+          "id": "review",
+          "label": "Review",
+          "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas vitae elementum elit. Nulla eget pellentesque risus. Phasellus aliquam placerat erat, in auctor augue molestie id. Duis ante metus, ullamcorper in lorem a, bibendum auctor nibh. Nam sit amet elit ultricies, ullamcorper libero molestie, mollis mauris."
+        },
+        {
+          "type": "range",
+          "id": "stars",
+          "min": 1,
+          "max": 5,
+          "step": 0.5,
+          "label": "Stars",
+          "default": 5
+        },
+        {
+          "type": "text",
+          "id": "city",
+          "label": "City",
+          "default": "New York"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Store testimonials / constructor",
+      "blocks": [
+        {
+          "type": "review"
+        },
+        {
+          "type": "review"
+        },
+        {
+          "type": "review"
+        },
+        {
+          "type": "review"
+        }
+      ]
+    },
+    {
+      "name": "Store testimonials / preset 1 Carousel",
+      "blocks": [
+        {
+          "type": "review"
+        },
+        {
+          "type": "review"
+        },
+        {
+          "type": "review"
+        },
+        {
+          "type": "review"
+        }
+      ]
+    },
+    {
+      "name": "Store testimonials / preset 2 Carousel with banner",
+      "settings": {
+        "layout": "carousel_2"
+      },
+      "blocks": [
+        {
+          "type": "review"
+        },
+        {
+          "type": "review"
+        },
+        {
+          "type": "review"
+        },
+        {
+          "type": "review"
+        },
+        {
+          "type": "review"
+        },
+        {
+          "type": "review"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

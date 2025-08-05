@@ -1,0 +1,83 @@
+{%- liquid
+  assign search_collection_show = search_collection_show | default: settings.search_collection_show, allow_false: true
+-%}
+<div class="predictive-search_" tabindex="-1" data-predictive-search>
+  <div id="predictive-search-results">
+      {%- if search_collection_show -%}
+        <div class="searchmodal-bottom">
+          <h2 class="h2-style heading-font text-center d-none d-sm-block">{{ 'theme.general.search_popup_block' | t }}</h2>
+          <div class="position-relative">
+            <swiper-carousel data-center-arrows>
+              <div class="swiper-container swiper-container-prd-carousel">
+                <div class="swiper-wrapper">
+                  {%- if settings.search_collection != blank and preview -%}
+                    {%- for product in collections[settings.search_collection].products limit: 8 -%}
+                      {%- liquid
+                        assign show = true
+
+                        if settings.collection_out_of_stock_hide and product.selected_or_first_available_variant.available == false
+                          assign show = false
+                        endif
+                      -%}
+                      {%- if show -%}
+                        <div class="swiper-slide">{% render 'product-card-search', product: product, data_tippy_placement_qv: 'top' %}</div>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  {%- else -%}
+                    {%- for i in (1..8) -%}
+                      {% render 'product-placeholder' %}
+                    {%- endfor -%}
+                  {%- endif -%}
+                </div>
+                <div class="swiper-pagination position-relative mt-3"></div>
+                <div class="swiper-arrows-carousel container">
+                  <div class="swiper-button-next"></div>
+                  <div class="swiper-button-prev"></div>
+                </div>
+              </div>
+              <script type="application/json">
+                {
+                  "pagination": {
+                    "el": ".swiper-pagination",
+                    "clickable": true
+                  },
+                  "navigation": {
+                    "nextEl": ".swiper-button-next",
+                    "prevEl": ".swiper-button-prev"
+                  },
+                  "slidesPerColumnFill": "row",
+                  "watchOverflow": true,
+                  "slidesPerView": 2,
+                  "spaceBetween": 15,
+                  "breakpoints": {
+                    "575": {
+                      "slidesPerView": 3,
+                      "spaceBetween": 15
+                    },
+                    "768": {
+                      "slidesPerView": 5,
+                      "spaceBetween": 20
+                    },
+                    "1200": {
+                      "slidesPerView": 6,
+                      "spaceBetween": 20
+                    }
+                  }
+                }
+              </script>
+            </swiper-carousel>
+          </div>
+        </div>
+      {%- else -%}
+        <div class="mt-1"></div>
+      {%- endif -%}
+  </div>
+</div>
+<span class="predictive-search-status visually-hidden" role="status" aria-hidden="true"></span>
+<span class="hidden" data-predictive-search-live-region-count-value>
+  {%- if search.results_count == 0 -%}
+    {{ 'templates.search.no_results' | t: terms: predictive_search.terms }}
+  {%- else -%}
+    {{ 'templates.search.results_with_count' | t: terms: predictive_search.terms, count: predictive_search.resources.products.size }}
+  {%- endif -%}
+</span>

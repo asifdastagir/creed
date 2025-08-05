@@ -1,0 +1,9 @@
+@media (min-width:1025px) {
+  .hdr.hdr--style6 .hdr-content > .container > .row {
+    min-height: 103px
+  }
+  .hdr.hdr--style6 .hdr-content > .container > .row > * {
+    padding-top: 28px;
+    padding-bottom: 28px
+  }
+}

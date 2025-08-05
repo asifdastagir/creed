@@ -1,0 +1,132 @@
+{% comment %}theme-check-disable  ValidHTMLTranslation{% endcomment %}
+{%- unless settings.catalog_mode -%}
+  {%- if settings.free_shipping_enable or settings.shipping_calculator -%}
+    {%- if cart != empty or layout == 'product' -%}
+      {%- liquid
+        if settings.free_shipping_enable
+          assign free_delivery = false
+          assign delivery_limit = settings.free_shipping_limit
+
+          if delivery_limit == blank or localization.available_countries.size > 1
+            assign free_delivery_schema = settings.free_shipping_all_currencies_limit
+
+            if free_delivery_schema != blank
+              assign free_delivery_schema = free_delivery_schema | split: ','
+
+              for item in free_delivery_schema
+                assign a = item | split: ':'
+                assign item_curreny = a | first
+
+                if item_curreny == cart.currency.iso_code
+                  assign delivery_limit = a | last
+
+                  break
+                endif
+              endfor
+            endif
+          endif
+
+          if delivery_limit != blank
+            assign total_free = delivery_limit | plus: 0 | times: 100
+            assign total_cart = cart.total_price
+
+            if total_cart < total_free
+              assign free_delivery = true
+            endif
+          assign how_much_to_add = total_free | minus: total_cart | money
+          endif
+        endif
+
+        assign freeShippingStatus = false
+
+        if settings.free_shipping_enable and delivery_limit != blank
+          if cart == empty or free_delivery
+            assign freeShippingStatus = false
+          else
+            assign freeShippingStatus = true
+          endif
+        endif
+
+        assign total_cart_weight_placement = 'top'
+        assign total_cart_weight = ''
+        assign total_txt = 'theme.general.total_cart_weight_is' | t
+        assign total_weight_calculated_kg = cart.total_weight | divided_by: 1000
+        assign total_weight_calculated_lb = total_weight_calculated_kg | times: 2.2
+
+        if cart.total_weight > 0
+          assign total_cart_weight = total_txt | append: ' ' | append: total_weight_calculated_kg | append: ' kg (' | append: total_weight_calculated_lb | append: ' lb)'
+
+          if layout == 'header-cart'
+            assign total_cart_weight_placement = 'left'
+          endif
+        endif
+      -%}
+
+      {%- if layout == 'header-cart' or layout == 'product' -%}
+        <div data-free-shipping-status="{{ freeShippingStatus }}">
+          {%- if settings.free_shipping_enable -%}
+            <div class="minicart-drop-text {% if freeShippingStatus %}text-animated-static{% endif %}" data-animated-element {% if cart.total_weight > 0 %}data-tippy-content="{{ total_cart_weight | escape }}" data-tippy-placement="{{ total_cart_weight_placement }}"{% endif %}>
+              {%- if settings.free_shipping_enable and delivery_limit != blank -%}
+                {%- if cart == empty -%}
+                  <span>{{ 'theme.general.free_delivery_init_html' | t: add: how_much_to_add }}</span>
+                {%- else -%}
+                  {%- if free_delivery -%}
+                    <span>{{ 'theme.general.free_delivery_false_html' | t: add: how_much_to_add }}</span>
+                  {%- else -%}
+                    <span>{{ 'theme.general.free_delivery_true_html' | t }}</span>
+                    <span class="text-animated-icon">{% render 'icon-truck-move' %}</span>
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endif -%}
+            </div>
+          {%- endif -%}
+
+          {%- if settings.shipping_calculator and request.page_type != 'cart' -%}
+            <shipping-calculator>
+              <a href="#" data-update="false" data-title-element=".cart-toggle-title" data-toggle-form-elements=".cart-form-element,.shipping-form-element" class="shipping-closed">
+                <span>
+                  <span class="d-none d-sm-inline-flex">{% if settings.shipping_calculator_static %}{{ 'theme.general.estimate_shipping_static' | t }}{% else %}{{ 'theme.general.estimate_shipping' | t }}{% endif %}</span>
+                  <span class="d-sm-none">{% render 'icon-truck4' %}</span>
+                  <span class="d-sm-none">{% render 'icon-calculator' %}</span>
+                </span>
+                <span class="hidden">
+                  <span class="d-none d-sm-inline-flex">{{ 'theme.general.back_to_cart' | t }}</span>
+                  <span class="d-sm-none icon-arrow-wrap">{% render 'icon-arrow-left' %}</span>
+                  <span class="d-sm-none icon-cart-wrap">{% render 'icon-cart' %}</span>
+                </span>
+              </a>
+            </shipping-calculator>
+          {%- endif -%}
+        </div>
+      {%- elsif layout == 'main-cart-items' -%}
+        {%- if settings.free_shipping_enable -%}
+          <div class="cart-table-info-text w-100" data-free-shipping-status="{{ freeShippingStatus }}" aria-level="polite" role="status">
+            <div aria-level="polite" role="status" {% if freeShippingStatus %}class="text-animated-static"{% endif %} data-animated-element>
+              {%- if settings.free_shipping_enable and delivery_limit != blank -%}
+                {%- if cart == empty -%}
+                  <span>{{ 'theme.general.free_delivery_init_html' | t: add: how_much_to_add }}</span>
+                {%- else -%}
+                  {%- if free_delivery -%}
+                    <span>{{ 'theme.general.free_delivery_false_html' | t: add: how_much_to_add }}</span>
+                  {%- else -%}
+                    <span>{{ 'theme.general.free_delivery_true_html' | t }}</span>
+                    <span class="text-animated-icon">{% render 'icon-truck-move' %}</span>
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endif -%}
+            </div>
+          </div>
+        {%- endif -%}
+        {%- if settings.shipping_calculator -%}
+          <div class="cart-table-info-text col-auto">
+            <shipping-calculator-cart>
+              <a href="#" data-update="false">
+                <span>{% if settings.shipping_calculator_static %}{{ 'theme.general.estimate_shipping_static' | t }}{% else %}{{ 'theme.general.estimate_shipping' | t }}{% endif %}</span><span class="icon-wrap">{% render 'icon-calculator' %}</span>
+              </a>
+            </shipping-calculator-cart>
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endunless -%}

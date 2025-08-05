@@ -1,0 +1,69 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- liquid
+  if recommendations.performed?
+    if recommendations.products_count > 0
+      assign prd_collection = recommendations
+    endif
+  else
+    if product.collections.size > 0
+      for loop_collection in product.collections
+        if loop_collection.metafields.custom.frequently_bought_together == true
+          assign prd_collection = loop_collection
+          break
+        endif
+      endfor
+    endif
+  endif
+
+  assign at_least_one_product_not_in_cart = false
+  assign prd_ids = prd_collection.products | where: 'available' | map: 'id'
+
+  assign prd_ids_size = prd_ids.size | minus: 1
+  assign counter = 0
+
+  for prd_id in prd_ids
+    assign prd_id_in_cart = cart.items | where: 'product_id', prd_id | first
+
+    if prd_id_in_cart == nil
+      assign at_least_one_product_not_in_cart = true
+      assign counter = counter | plus: 1
+    endif
+  endfor
+
+  if counter > settings.recommendations_limit
+    assign counter = settings.recommendations_limit
+  endif
+-%}
+{%- if layout contains 'cart' -%}
+  {% render 'frequently-bought-together-view-cart', prd_collection: prd_collection, counter: counter, product: product, layout: layout %}
+{%- else -%}
+  <div id="fbt_{{ layout }}"  {{ bsa }}>
+    <div {% if settings.fbt_source == 'collection' %}data-render-after-cart-update{% endif %}>
+      {%- if at_least_one_product_not_in_cart -%}
+        {%- if layout contains 'inner' -%}
+          {% render 'frequently-bought-together-view-inner', prd_collection: prd_collection, counter: counter, product: product, layout: layout %}
+        {%- elsif layout contains 'outer' -%}
+          {% render 'frequently-bought-together-view-outer', prd_collection: prd_collection, counter: counter, product: product, layout: layout %}
+        {%- endif -%}
+      {%- elsif prd_collection != nil and prd_ids_size > 0-%}
+        <div data-render-only>
+          {%- if layout contains 'outer' -%}
+            <div class="holder mt-7 mt-md-8">
+              <div class="container">
+                <div class="title-wrap text-center">
+          {%- endif -%}
+                <h3 class="prd-block-desc-title">{{ 'theme.general.congratulations' | t }}</h3>
+                  {%- liquid
+                    assign message = 'theme.general.fbt_description_after' | t
+                    render 'success', message: message, large: 1, class: 'justify-content-center'
+                  -%}
+          {%- if layout contains 'outer' -%}
+                </div>
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}

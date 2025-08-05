@@ -1,0 +1,191 @@
+{% comment %}theme-check-disable ContentForHeaderModification{% endcomment %}
+{%- liquid
+  if request.page_type == 'search'
+    assign results_count = search.results_count
+    assign target = search
+  else
+    assign results_count = results.products.size
+    assign target = collection
+  endif
+
+  capture contentForQuerystring
+    echo content_for_header
+  endcapture
+
+  assign pageUrl = contentForQuerystring | split: '"pageurl":"' | last | split: '"' | first | split: '.myshopify.com' | last | replace: '\/', '/' | replace: '%20', ' ' | replace: '\u0026', '&' | replace: request.host, '' | append: '&amp;'
+
+  unless pageUrl contains "?"
+    assign pageUrl = request.path | append: '?'
+  endunless
+
+  assign facetsRequestUrl = pageUrl | append: 'section_id=async-facets'
+
+  assign navigation = settings.collection_categories
+  assign navigation_filter = false
+
+  if navigation != blank and navigation.links.size > 0
+    assign navigation_filter = true
+  endif
+
+  assign enable_filtering = settings.enable_filtering
+  assign enable_sorting = settings.enable_sorting
+-%}
+
+<div class="filter-row p-0 order-1 order-lg-1 mt-0 {% unless results_count > 0 %}hidden{% endunless %}" data-facets-sorting>
+  <div class="collection-loading-overlay"></div>
+  <div class="row flex-nowrap align-items-center">
+    {%- if enable_filtering and settings.sidebar_always_visible == false and navigation_filter or results.filters != empty and enable_filtering -%}
+      <div class="col align-items-center hide-filter-mobile">
+        {%- if settings.filter_layout == 'inner' -%}
+          <save-attr data-filter-toggle>
+            <filter-toggle  data-ajax='{{ facetsRequestUrl }}' data-selector="#filterColumn" data-toggle="closed_filter" data-handler="onFilterClickHandler" data-save-attr='{ "closed_filter": {% if closed_filter %}"false"{% else %}true{% endif %} }' class="filter-toggle js-filter-btn-desc-toggle {% unless closed_filter %}is-opened{% endunless %}" data-close="{{ 'theme.general.close' | t }}" data-open="{{ 'theme.general.open' | t }}">
+                {% render 'icon-filter2' %}
+                {% render 'icon-filter-close' %}
+                {%- if closed_filter -%}
+                <span>{{ 'theme.general.open' | t }}</span>
+                {%- else -%}
+                <span>{{ 'theme.general.close' | t }}</span>
+                {%- endif -%}
+            </filter-toggle>
+          </save-attr>
+        {%- else -%}
+          <filter-popup  {% if settings.filter_layout == 'outer' %}data-outer{% endif %} data-clone="[data-filter]" data-selector="#dropdnFilterPopup" data-close="{{ 'theme.general.close' | t }}" data-open="{{ 'theme.general.open' | t }}"><a class="filter-toggle" href="#">{% render 'icon-filter2' %}{% render 'icon-filter-close' %}<span>{{ 'theme.general.open' | t }}</span></a></filter-popup>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    {%- if enable_filtering and navigation_filter or target.filters.size > 0 -%}
+      <div class="col align-items-center d-filter-mobile">
+        <div class="filter-popup">
+          <a href="#" class="filter-toggle " data-click-target=".hdr-mobile-bottom filter-popup > a">{% render 'icon-filter2' %} {{ 'theme.general.filter' | t }}</a>
+        </div>
+      </div>
+    {%- endif -%}
+
+    <div class="col col-view-mode {% unless settings.collection_bar_per_row %}hidden{% endunless %}">
+      <save-attr>
+        <view-mode>
+          <div class="view-mode view-mode--sm d-md-none">
+            {%- if settings.collection_grid_list and settings.product_card_disable_hover == false -%}
+              <span data-save-attr='{ "prd_per_row_sm": "list" }' data-view="grid_list_sm" {% if prd_per_row_sm == 'list' %}class="active"{% endif %}>{% render 'icon-view-listing' %}</span>
+            {%- endif -%}
+            <span data-save-attr='{ "prd_per_row_sm": 1 }' data-view="grid_1_sm" {% if prd_per_row_sm == '1' %}class="active"{% endif %}>{% render 'icon-view1' %}</span>
+            <span data-save-attr='{ "prd_per_row_sm": 2 }' data-view="grid_2_sm" {% if prd_per_row_sm == '2' %}class="active"{% endif %}>{% render 'icon-view2' %}</span>
+          </div>
+          <div class="view-mode view-mode--md d-none d-md-flex d-xl-none">
+            {%- if settings.collection_grid_list and settings.product_card_disable_hover == false -%}
+              <span data-save-attr='{ "prd_per_row_md": "list" }' data-view="grid_list_md" {% if prd_per_row_md == 'list' %}class="active"{% endif %}>{% render 'icon-view-listing' %}</span>
+            {%- endif -%}
+            <span data-save-attr='{ "prd_per_row_md": 2 }' data-view="grid_2_md" {% if prd_per_row_md == '2' %}class="active"{% endif %}>{% render 'icon-view2' %}</span>
+            <span data-save-attr='{ "prd_per_row_md": 3 }' data-view="grid_3_md" {% if prd_per_row_md == '3' %}class="active"{% endif %}>{% render 'icon-view3' %}</span>
+            <span data-save-attr='{ "prd_per_row_md": 4, "closed_filter": true }' data-view="grid_4_md" {% if prd_per_row_md == '4' %}class="active"{% endif %} data-handler="onPerRowClickHandler">{% render 'icon-view4' %}</span>
+          </div>
+          <div class="view-mode view-mode--xl d-none d-xl-flex {% if store_width > 1465 %} d-xxl-none{% endif %}">
+            {%- if settings.collection_grid_list and settings.product_card_disable_hover == false -%}
+              <span data-save-attr='{ "prd_per_row_xl": "list" }' data-view="grid_list_xl" {% if prd_per_row_xl == 'list' %}class="active"{% endif %}>{% render 'icon-view-listing' %}</span>
+            {%- endif -%}
+            <span data-save-attr='{ "prd_per_row_xl": 2 }' data-view="grid_2_xl" {% if prd_per_row_xl == '2' %}class="active"{% endif %}>{% render 'icon-view2' %}</span>
+            <span data-save-attr='{ "prd_per_row_xl": 3 }' data-view="grid_3_xl" {% if prd_per_row_xl == '3' %}class="active"{% endif %}>{% render 'icon-view3' %}</span>
+            <span data-save-attr='{ "prd_per_row_xl": 4 }' data-view="grid_4_xl" {% if prd_per_row_xl == '4' %}class="active"{% endif %}>{% render 'icon-view4' %}</span>
+            <span data-save-attr='{ "prd_per_row_xl": 5, "closed_filter": true }' onclick="" data-view="grid_5_xl" {% if prd_per_row_xl == '5' %}class="active"{% endif %}  data-handler="onPerRowClickHandler">{% render 'icon-view5' %}</span>
+          </div>
+          {% if store_width > 1465 %}
+          <div class="view-mode view-mode--xxl d-none d-xxl-flex">
+            {%- if settings.collection_grid_list and settings.product_card_disable_hover == false -%}
+              <span data-save-attr='{ "prd_per_row_xxl": "list" }' data-view="grid_list_xxl" {% if prd_per_row_xxl == 'list' %}class="active"{% endif %}>{% render 'icon-view-listing' %}</span>
+            {%- endif -%}
+            <span data-save-attr='{ "prd_per_row_xxl": 2 }' data-view="grid_2_xxl" {% if prd_per_row_xxl == '2' %}class="active"{% endif %}>{% render 'icon-view2' %}</span>
+            <span data-save-attr='{ "prd_per_row_xxl": 3 }' data-view="grid_3_xxl" {% if prd_per_row_xxl == '3' %}class="active"{% endif %}>{% render 'icon-view3' %}</span>
+            <span data-save-attr='{ "prd_per_row_xxl": 4 }' data-view="grid_4_xxl" {% if prd_per_row_xxl == '4' %}class="active"{% endif %}>{% render 'icon-view4' %}</span>
+            <span data-save-attr='{ "prd_per_row_xxl": 5 }' data-view="grid_5_xxl" {% if prd_per_row_xxl == '5' %}class="active"{% endif %}>{% render 'icon-view5' %}</span>
+            <span data-save-attr='{ "prd_per_row_xxl": 6, "closed_filter": true }' onclick="" data-view="grid_6_xxl" {% if prd_per_row_xxl == '6' %}class="active"{% endif %}  data-handler="onPerRowClickHandler">{% render 'icon-view6' %}</span>
+          </div>
+          {% endif %}
+        </view-mode>
+      </save-attr>
+    </div>
+    <div class="col-auto ms-auto">
+      <div class="row align-items-center gx-1 gx-sm-3">
+        {%- if enable_filtering and enable_sorting -%}
+          <div class="col-auto form-select-wrap form-control-wrap--select">
+            {%- liquid
+              assign sort_by = results.sort_by | default: results.default_sort_by
+
+              assign data_ajax = request.path | append: '?section_id=async-facets'
+            -%}
+            <facet-sort-by data-ajax="{{ data_ajax }}">
+              <select form="FacetFiltersForm" name="sort_by" class="form-select " aria-describedby="a11y-refresh-page-message">
+                {%- for option in results.sort_options -%}
+                  <option value="{{ option.value | escape }}"{% if option.value == sort_by %} selected="selected"{% endif %}>{{ option.name | escape }}</option>
+                {%- endfor -%}
+              </select>
+            </facet-sort-by>
+          </div>
+        {%- endif -%}
+        <div class="col-auto hide-filter-mobile ProductCountDesktop">
+          <span class="">
+            {%- if request.page_type == 'search' -%}
+              {%- if search.results_count > 0 -%}
+                <span role="status">{{ 'templates.search.results_with_count_and_term' | t: terms: search.terms, count: search.results_count }}</span>
+              {%- endif -%}
+            {%- else -%}
+              {%- if results.results_count -%}
+                {{ 'templates.search.results_with_count' | t: terms: results.terms, count: results.results_count }}
+                {%- elsif results.products_count == results.all_products_count -%}
+                {{ 'products.facets.product_count_simple' | t: count: results.products_count }}
+              {%- else -%}
+                {{ 'products.facets.product_count' | t: product_count: results.products_count, count: results.all_products_count }}
+              {%- endif -%}
+            {%- endif -%}
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function onFilterClickHandler() {
+
+    viewModeElement = document.querySelector('view-mode');
+    if (!this.isFilterOpened() &&
+        viewModeElement.getCurrentBreakpointMode() === 'xl' &&
+        viewModeElement.getCurrentBreakpointActiveCount() === '5'
+    ) {
+      viewModeElement.setGridPerRow(4, 'xl');
+      this.dataset.saveAttr = `{ "${this.dataset.toggle}": ${JSON.parse(this.dataset.saveAttr)[this.dataset.toggle]}, "prd_per_row_xl": 4 }`;
+    }
+
+    if (!this.isFilterOpened() &&
+        viewModeElement.getCurrentBreakpointMode() === 'xxl' &&
+        viewModeElement.getCurrentBreakpointActiveCount() === '6'
+    ) {
+      viewModeElement.setGridPerRow(5, 'xxl');
+      this.dataset.saveAttr = `{ "${this.dataset.toggle}": ${JSON.parse(this.dataset.saveAttr)[this.dataset.toggle]}, "prd_per_row_xxl": 5 }`;
+    }
+
+    if (!this.isFilterOpened() &&
+      viewModeElement.getCurrentBreakpointMode() === 'md' &&
+      viewModeElement.getCurrentBreakpointActiveCount() === '4'
+    ) {
+      viewModeElement.setGridPerRow(3, 'md');
+      this.dataset.saveAttr = `{ "${this.dataset.toggle}": ${JSON.parse(this.dataset.saveAttr)[this.dataset.toggle]}, "prd_per_row_md": 3 }`;
+    }
+
+    viewModeElement.setGridAligment(this.isFilterOpened() ? 'center' : 'left');
+  }
+
+  function onPerRowClickHandler() {
+    const viewModeElement = document.querySelector('view-mode');
+    const filterToggle = document.querySelector('filter-toggle');
+
+    if (filterToggle && filterToggle.isFilterOpened()) {
+      if (viewModeElement.getCurrentBreakpointMode() === 'xxl' && this.dataset.view === 'grid_6_xxl' ||
+          viewModeElement.getCurrentBreakpointMode() === 'xl' && this.dataset.view === 'grid_5_xl' ||
+          viewModeElement.getCurrentBreakpointMode() === 'md' && this.dataset.view === 'grid_4_md'
+      ) filterToggle.close();
+    }
+
+    viewModeElement.setGridAligment((!filterToggle || !filterToggle.isFilterOpened()) ? 'center' : 'left');
+  }
+</script>

@@ -1,0 +1,7 @@
+<div class="product-form__error-message-wrapper {{ class }} {% if large == 1 %}error-lg{% endif %}" role="alert" {% if message == blank or message == true %}hidden{% endif %}>
+  {% render 'icon-alert' %}
+  <span class="product-form__error-message">{% if message != blank and message != true %}{{ message }}{% endif %}</span>
+  {%- if close == true -%}
+    <span class="product-form__error-message-close" data-errorclose>{% render 'icon-close4' %}</span>
+  {%- endif -%}
+</div>

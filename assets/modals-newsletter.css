@@ -1,0 +1,96 @@
+.modal-wrap.fancybox-content.newslettermodal {
+  width: 1148px;
+  max-width: calc(100% - 60px);
+  padding: 0;
+  overflow: hidden
+}
+@media (min-width:1025px) {
+  .modal-wrap.fancybox-content.newslettermodal {
+    transform: translateX(calc(-.5 * var(--scroll-width)))
+  }
+}
+@media (max-width:767px) {
+  .modal-wrap.fancybox-content.newslettermodal {
+    width: 420px;
+    padding: 55px 33px
+  }
+}
+@media (max-width:575px) {
+  .modal-wrap.fancybox-content.newslettermodal {
+    padding: 45px 25px
+  }
+}
+@media (max-width:374px) {
+  .modal-wrap.fancybox-content.newslettermodal {
+    display: -ms-inline-flexbox!important;
+    display: inline-flex!important;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    margin: 0;
+    padding: 40px 20px;
+    -ms-flex-align: center;
+    align-items: center;
+    border-radius: 0
+  }
+}
+.modal-wrap.fancybox-content.newslettermodal .scroll-content {
+  padding: 0
+}
+.modal-wrap.fancybox-content.newslettermodal .form-wrap {
+  width: 307px;
+  max-width: 100%;
+  min-height: 400px;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-pack: center;
+  justify-content: center
+}
+.modal-wrap.fancybox-content.newslettermodal .form-wrap .title-wrap:not(:last-child) {
+  margin-bottom: 0
+}
+.modal-wrap.fancybox-content.newslettermodal .image-container:not(.ic--ignore-global-round) {
+  border-radius: var(--radius-ic) 0 0 var(--radius-ic)
+}
+.modal-wrap.fancybox-content.newslettermodal img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover
+}
+.modal-wrap.fancybox-content.newslettermodal .block-social-inline svg {
+  width: 23px;
+  height: 23px
+}
+.modal-wrap.fancybox-content.newslettermodal .block-social-inline li {
+  margin: 5px
+}
+.modal-wrap.fancybox-content.newslettermodal .block-social-inline li a {
+  color: var(--modal-social-color)
+}
+@media (hover:hover),
+(hover:none) and (min-width:1025px) {
+  .modal-wrap.fancybox-content.newslettermodal .block-social-inline li a:hover {
+    color: var(--modal-social-hover-color)
+  }
+}
+.newslettermodal-col-form {
+  height: 100%;
+  padding: clamp(50px,11vh,84px) clamp(50px,3vh,60px)
+}
+@media (max-width:767px) {
+  .newslettermodal-col-form {
+    padding: 40px 50px
+  }
+}
+@media (max-width:575px) {
+  .newslettermodal-col-form {
+    padding: 40px 30px
+  }
+}
+@media (max-width:374px) {
+  .newslettermodal-col-form {
+    padding: 0 30px
+  }
+}

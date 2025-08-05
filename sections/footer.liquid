@@ -1,0 +1,552 @@
+{% comment %}theme-check-disable ImgLazyLoading, UndefinedObject, NestedSnippet{% endcomment %}
+<style data-async-reload-css="footer-colors">
+  {%- liquid
+    assign default_rgba = 'rgba(0,0,0,0)'
+
+    if "ar he he-IL hi" contains localization.language.iso_code
+      assign rtl = '-rtl'
+    endif
+  -%}
+  :root {
+    {% assign color = settings.color_footer_global_bg -%}{%- if color != default_rgba and color != blank -%}--footer-global-bg: {{ color }};{%- endif %}
+    {% assign color = settings.color_footer_global -%}{%- if color != default_rgba and color != blank -%}--footer-global-color: {{ color }};{%- endif %}
+    {% assign color = settings.color_footer_global_link -%}{%- if color != default_rgba and color != blank -%}--footer-global-link-color: {{ color }};{%- endif %}
+    {% assign color = settings.color_footer_global_link_hover -%}{%- if color != default_rgba and color != blank -%}--footer-global-link-hover-color: {{ color }};{%- endif %}
+
+    {% assign color = settings.color_footer_bg -%}{%- if color != default_rgba and color != blank -%}--footer-content-bg: {{ color }};{%- endif %}
+    {% assign color = settings.color_footer -%}{%- if color != default_rgba and color != blank -%}--footer-content-color: {{ color }};{%- endif %}
+    {% assign color = settings.color_footer_link -%}{%- if color != default_rgba and color != blank -%}--footer-content-link-color: {{ color }};{%- endif %}
+    {% assign color = settings.color_footer_link_hover -%} {%- if color != default_rgba and color != blank -%}--footer-content-link-hover-color: {{ color }};{%- endif %}
+
+    {% assign color = settings.color_footer_social -%}{%- if color != default_rgba and color != blank -%}--footer-social-color: {{ color }};{%- endif %}
+    {% assign color = settings.color_footer_social_hover -%}{%- if color != default_rgba and color != blank -%}--footer-social-hover-color: {{ color }};{%- endif %}
+    {% assign color = settings.color_footer_border -%}{%- if color != default_rgba and color != blank -%}--footer-border-color: {{ color }};{%- endif %}
+
+    {% assign color = settings.color_footer_top_bg -%}{%- if color != default_rgba and color != blank -%}--footer-top-bg: {{ color }};{%- endif %}
+    {% assign color = settings.color_footer_top -%}{%- if color != default_rgba and color != blank -%}--footer-top-color: {{ color }};{%- endif %}
+    {% assign color = settings.color_footer_top_link -%}{%- if color != default_rgba and color != blank -%}--footer-top-link-color: {{ color }};{%- endif %}
+    {% assign color = settings.color_footer_top_link_hover -%}{%- if color != default_rgba and color != blank -%}--footer-top-link-hover-color: {{ color }};{%- endif %}
+
+    {% assign color = settings.color_footer_bottom_bg -%}{%- if color != default_rgba and color != blank -%}--footer-bottom-bg: {{ color }};{%- endif %}
+    {% assign color = settings.color_footer_bottom -%}{%- if color != default_rgba and color != blank -%}--footer-bottom-color: {{ color }};{%- endif %}
+    {% assign color = settings.color_footer_bottom_link -%}{%- if color != default_rgba and color != blank -%}--footer-bottom-link-color: {{ color }};{%- endif %}
+    {% assign color = settings.color_footer_bottom_link_hover -%}{%- if color != default_rgba and color != blank -%}--footer-bottom-link-hover-color: {{ color }};{%- endif %}
+
+    {% assign brightness = settings.color_footer_bg | color_brightness %}
+    {%- if brightness > 200 -%}
+    --footer-border-color: {{ settings.color_footer_bg | color_darken: 10 }};
+    {% else %}
+    --footer-border-color: {{ settings.color_footer_bg | color_lighten: 10 }};
+    {%- endif -%}
+    --footer-border-color: {{ settings.color_footer_global_bg | color_mix: '#ddd', 50 }};
+  }
+</style>
+{{ 'footer' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{%- if settings.fixed_footer -%}
+<fixed-footer>
+  <div class="footer-placeholder"></div>
+{%- endif -%}
+{% liquid
+  assign layout = section.settings.layout | plus: 0
+  case layout
+  when 1
+    render 'footer-layout-big-subscription', section: section
+  when 2
+    render 'footer-layout-small-subscription', section: section
+  when 3
+    render 'footer-layout-vertical', section: section
+  when 4
+    render 'footer-layout-logo-nav-at-bottom', section: section
+  when 5
+    render 'footer-layout-logo-copyright-at-bottom', section: section
+  endcase
+%}
+{%- if settings.fixed_footer -%}
+  </div>
+</fixed-footer>
+{%- endif -%}
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "1",
+          "label": "Big subscription"
+        },
+        {
+          "value": "2",
+          "label": "Small subscription"
+        },
+        {
+          "value": "3",
+          "label": "Vertical"
+        },
+        {
+          "value": "4",
+          "label": "Logo + Nav at bottom"
+        },
+        {
+          "value": "5",
+          "label": "Logo + Copyright at bottom"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "checkbox",
+      "id": "svg_logo",
+      "label": "Use svg logo",
+      "default": false,
+      "info": "You need to upload logo.svg in Settings/Files"
+    },
+    {
+      "type": "text",
+      "id": "svg_logo_name",
+      "label": "Svg logo name",
+      "info": "for ex., logo.svg",
+      "default": "logo.svg"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Logo width on desktop",
+      "min": 10,
+      "max": 240,
+      "step": 5,
+      "unit": "px",
+      "default": 145
+    },
+    {
+      "type": "range",
+      "id": "logo_width_mobile",
+      "label": "Logo width on mobile",
+      "min": 10,
+      "max": 240,
+      "step": 5,
+      "unit": "px",
+      "default": 145
+    },
+    {
+      "type": "header",
+      "content": "Email Signup",
+      "info": "Subscribers added automatically to your “accepted marketing” customer list. [Learn more](https://help.shopify.com/manual/customers/manage-customers)"
+    },
+    {
+      "type": "select",
+      "id": "input_style",
+      "label": "Input style",
+      "options": [
+        {
+          "value": "shadow",
+          "label": "With shadow border"
+        },
+        {
+          "value": "stroke",
+          "label": "With stroke border"
+        },
+        {
+          "value": "border-0",
+          "label": "No border"
+        }
+      ],
+      "default": "shadow"
+    },
+    {
+      "type": "select",
+      "id": "button_color",
+      "label": "Button color",
+      "options": [
+        {
+          "value": "btn--default",
+          "label": "Primary"
+        },
+        {
+          "value": "btn--invert",
+          "label": "Secondary"
+        },
+        {
+          "value": "btn--grey",
+          "label": "Third"
+        },
+        {
+          "value": "btn--white",
+          "label": "Fourth"
+        },
+        {
+          "value": "btn--fifth",
+          "label": "Fifth"
+        }
+      ],
+      "default": "btn--invert"
+    },
+    {
+      "type": "checkbox",
+      "id": "newsletter_enable",
+      "default": true,
+      "label": "Show email signup on top"
+    },
+    {
+      "type": "radio",
+      "id": "top_bottom_space",
+      "label": "Bottom space under the subscription",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "small",
+          "label": "Small"
+        },
+        {
+          "value": "medium",
+          "label": "Medium"
+        }
+      ],
+      "default": "small",
+      "info": "Calibration if Top and Main parts of the footer have different background colors"
+    },
+    {
+      "type": "checkbox",
+      "id": "payment_enable",
+      "default": true,
+      "label": "Show payment icons"
+    },
+    {
+      "type": "checkbox",
+      "id": "bottom_socials_media",
+      "default": false,
+      "label": "Socials media in footer"
+    },
+    {
+      "type": "range",
+      "id": "column_width",
+      "min": 15,
+      "max": 50,
+      "step": 1,
+      "unit": "%",
+      "label": "Column width",
+      "default": 25,
+      "info": "If you want to set equal width for columns"
+    },
+    {
+      "type": "checkbox",
+      "id": "set_equal_width",
+      "label": "Enable equal columns width",
+      "default": true,
+      "info": "Uncheck if you want to use individual columns width"
+    },
+    {
+      "type": "radio",
+      "id": "space_between_columns",
+      "label": "Space between columns",
+      "options": [
+        {
+          "value": "gx-none",
+          "label": "Small"
+        },
+        {
+          "value": "gx-5",
+          "label": "Big"
+        }
+      ],
+      "default": "gx-5"
+    },
+    {
+      "type": "select",
+      "id": "columns_text_aligment",
+      "label": "Columns text aligment",
+      "options": [
+        {
+          "value": "start",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "end",
+          "label": "Right"
+        }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "select",
+      "id": "collections_column_title_style",
+      "label": "Columns heading style",
+      "options": [
+        {
+          "value": "0",
+          "label": "Default"
+        },
+        {
+          "value": "1",
+          "label": "Small uppercase"
+        },
+        {
+          "value": "2",
+          "label": "Small"
+        },
+        {
+          "value": "3",
+          "label": "Large"
+        },
+        {
+          "value": "4",
+          "label": "Large bold uppercase"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "textarea",
+      "id": "copyright",
+      "label": "Copyright"
+    },
+    {
+      "type": "header",
+      "content": "Separator"
+    },
+    {
+      "type": "paragraph",
+      "content": "You can set footer styled separator in Theme Settings / Separators"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo_text_socials",
+      "name": "Logo+Text+Socials",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.</p>"
+        },
+        {
+          "type": "header",
+          "content": "Social media icons",
+          "info": "To display your social media accounts, link them in your theme settings."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_social",
+          "default": true,
+          "label": "Show social media icons"
+        },
+        {
+          "type": "range",
+          "id": "column_width",
+          "min": 15,
+          "max": 50,
+          "step": 1,
+          "unit": "%",
+          "label": "Column width",
+          "default": 25,
+          "info": "If you want to set equal width for columns - then set it in the main section settings."
+        }
+      ]
+    },
+    {
+      "type": "contacts",
+      "name": "Contacts",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_captions",
+          "label": "Show captions",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Contacts",
+          "label": "Contacts"
+        },
+        {
+          "type": "text",
+          "id": "phone",
+          "label": "Phone",
+          "default": "+1-202-555-0158"
+        },
+        {
+          "type": "text",
+          "id": "email",
+          "label": "Email",
+          "default": "loremipsum@gmail.com"
+        },
+        {
+          "type": "text",
+          "id": "address",
+          "label": "Address",
+          "default": "2414 Wescam Court, Orovada"
+        },
+        {
+          "type": "range",
+          "id": "column_width",
+          "min": 15,
+          "max": 50,
+          "step": 1,
+          "unit": "%",
+          "label": "Column width",
+          "default": 25,
+          "info": "If you want to set equal width for columns - then set it in the main section settings."
+        },
+        {
+          "type": "checkbox",
+          "id": "column_opened",
+          "label": "Opened by default on mobile",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "link_list",
+      "name": "Menu",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Quick links",
+          "label": "Heading",
+          "info": "Heading required to display the menu."
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "default": "footer",
+          "label": "Menu",
+          "info": "Displays only top-level menu items."
+        },
+        {
+          "type": "range",
+          "id": "column_width",
+          "min": 15,
+          "max": 50,
+          "step": 1,
+          "unit": "%",
+          "label": "Column width",
+          "default": 25,
+          "info": "If you want to set equal width for columns - then set it in the main section settings."
+        },
+        {
+          "type": "checkbox",
+          "id": "column_opened",
+          "label": "Opened by default on mobile",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Heading",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "subtext",
+          "default": "<p>Share store details, promotions, or brand content with your customers.</p>",
+          "label": "Subtext"
+        },
+        {
+          "type": "range",
+          "id": "column_width",
+          "min": 15,
+          "max": 50,
+          "step": 1,
+          "unit": "%",
+          "label": "Column width",
+          "default": 25,
+          "info": "If you want to set equal width for columns - then set it in the main section settings."
+        },
+        {
+          "type": "checkbox",
+          "id": "column_opened",
+          "label": "Opened by default on mobile",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "subscribe",
+      "name": "Subscribe",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "column_width",
+          "min": 15,
+          "max": 50,
+          "step": 1,
+          "unit": "%",
+          "label": "Column width",
+          "default": 25,
+          "info": "If you want to set equal width for columns - then set it in the main section settings."
+        }
+      ]
+    },
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "range",
+          "id": "column_width",
+          "min": 15,
+          "max": 50,
+          "step": 1,
+          "unit": "%",
+          "label": "Column width",
+          "default": 25,
+          "info": "If you want to set equal width for columns - then set it in the main section settings."
+        }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      {
+        "type": "logo_text_socials"
+      },
+      {
+        "type": "link_list"
+      },
+      {
+        "type": "link_list"
+      },
+      {
+        "type": "contacts"
+      }
+    ]
+  }
+}
+{% endschema %}

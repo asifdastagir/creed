@@ -1,0 +1,443 @@
+{%- comment -%}theme-check-disable RemoteAsset{%- endcomment -%}
+
+{%- unless product.has_only_default_variant -%}
+  {%- liquid
+    assign aspect_ratio = settings.product_image_aspect_ratio
+
+    if aspect_ratio == 'custom'
+      assign aspect_ratio = settings.product_height_ratio | times: 100 | divided_by: settings.product_width_ratio
+    else
+      assign aspect_ratio = aspect_ratio | plus: 0
+    endif
+
+    assign swatches_width = product.metafields.custom.product_card_swatches_width | default: swatches_width
+
+    if aspect_ratio < 100
+      assign swatches_width = swatches_width | times: 1.3
+    endif
+
+
+    assign product_card_quick_options = product.metafields.custom.product_card_quick_options | default: settings.product_card_quick_options
+
+    if request.page_type == 'product' and template.suffix contains 'variant-picker'
+      if layout == 'product-sticky'
+        if template.suffix == 'variant-picker-pills-text'
+          assign picker_type = 'button'
+          assign use_pics = false
+          assign use_variants_media = false
+
+        elsif template.suffix == 'variant-picker-pills-pics'
+          assign picker_type = 'button'
+          assign use_pics = true
+          assign use_variants_media = false
+
+        elsif template.suffix == 'variant-picker-pills-media'
+          assign picker_type = 'button'
+          assign use_pics = true
+          assign use_variants_media = true
+
+        elsif template.suffix == 'variant-picker-dropdown'
+          assign picker_type = 'dropdown'
+          assign use_pics = false
+          assign use_variants_media = false
+
+        endif
+      endif
+    else
+      assign picker_type = product.metafields.custom.product_card_picker_type | default: picker_type
+      assign use_pics = product.metafields.custom.product_card_use_pics | default: use_pics, allow_false: true
+      assign use_variants_media = product.metafields.custom.product_card_use_variants_media | default: use_variants_media, allow_false: true
+    endif
+
+
+    if picker_type == 'button' and layout != 'product'
+      if product.options.size == 1 and product.variants.size > 10
+        assign picker_type = 'dropdown'
+      elsif product.options.size == 2 and product.variants.size > 36
+        assign picker_type = 'dropdown'
+      elsif product.options.size == 3 and product.variants.size > 100 or layout == 'product-sticky'
+        assign picker_type = 'dropdown'
+      endif
+    endif
+
+    assign section_id = section_id | append: product_form_suffix
+
+    assign color_options_name = settings.product_card_color_options_name | downcase | split: ","
+
+    assign options_with_values = product.options_with_values
+    assign quick_options = quick_options | default: false, allow_false: true
+
+    if quick_options == true
+      if product_card_quick_options == 'first'
+        if options_with_values.size > 0
+          assign quick_single_option = options_with_values[0]
+        endif
+
+      elsif product_card_quick_options == 'second'
+        if options_with_values.size > 1
+          assign quick_single_option = options_with_values[1]
+
+        elsif options_with_values.size > 0
+          assign quick_single_option = options_with_values[0]
+
+        endif
+
+      elsif product_card_quick_options == 'third'
+        if options_with_values.size > 2
+          assign quick_single_option = options_with_values[2]
+
+        elsif options_with_values.size > 1
+          assign quick_single_option = options_with_values[1]
+
+        elsif options_with_values.size > 0
+          assign quick_single_option = options_with_values[0]
+
+        endif
+      endif
+
+      if quick_single_option != blank
+        assign options_with_values = options_with_values | where: 'name', quick_single_option.name
+      endif
+    endif
+
+    assign show = true
+    assign has_color_option = false
+
+    for option in options_with_values
+      assign has_color_option = false
+      assign option_name_downcase = option.name | downcase
+
+      if color_options_name contains option_name_downcase
+        assign has_color_option = true
+        assign color_option_order = forloop.index0
+
+        break;
+      endif
+    endfor
+
+    if quick_options and quick_single_option == blank and has_color_option == false
+      assign show = false
+    endif
+
+    comment
+      echo '<hr/>quick_options: ' | append: quick_options
+      echo '<hr/>product_card_quick_options: ' | append: product_card_quick_options
+      echo '<hr/>quick_single_option: ' | append: quick_single_option
+      echo '<hr/>options_with_values.size: ' | append: options_with_values.size
+      echo '<hr/>has_color_option: ' | append: has_color_option
+    endcomment
+  -%}
+  {%- if show -%}
+    {%- if picker_type == 'button' -%}
+
+      {% if quick_options == true %}
+        <div class="no-js-hidden {% if quick_options %}show_colors_only{% endif %}" data-init-variant="{{ product.selected_or_first_available_variant.id }}" data-section="{{ section_id }}" data-request-page-type="{{ request.page_type }}" data-section-id="{{ section_id }}"  data-url="{{ product.url | split: '?' | first }}"  data-section-layout="{{ layout }}" data-lvls="{{ product.options.size }}" data-catalog-mode="{{ settings.catalog_mode }}" data-has-color-option="{{ has_color_option }}" {% if has_color_option %}data-color-option-order="{{ color_option_order }}"{% endif %}>
+      {% else %}
+        <variant-radios
+          class="no-js-hidden {% if quick_options %}show_colors_only{% endif %}"
+          data-inventory-status="{{ settings.product_swatches_inventory_status }}"
+          data-inventory-many-in-stock-from="{{ settings.product_swatches_inventory_many_in_stock_from }}"
+          data-inventory-low-in-stock-less-than="{{ settings.product_swatches_inventory_low_in_stock_less_than }}"
+          data-init-variant="{{ product.selected_or_first_available_variant.id }}"
+          data-section="{{ section_id }}" data-request-page-type="{{ request.page_type }}"
+          data-section-id="{{ section_id }}"  data-url="{{ product.url | split: '?' | first }}"
+          data-section-layout="{{ layout }}" data-lvls="{{ product.options.size }}"
+          data-catalog-mode="{{ settings.catalog_mode }}"
+          data-has-color-option="{{ has_color_option }}"
+          {% if has_color_option %}data-color-option-order="{{ color_option_order }}"{% endif %}
+        >
+      {% endif %}
+
+        <div
+          class="prd-options table_r"
+          {{ shopify_attributes }}
+          {% if layout == 'product-card' %}
+          {% unless quick_options %}
+          data-scrollbar{% endunless %}
+          style="max-height: var(--maxheight)"
+          {% endif %}>
+          {%- for option in options_with_values -%}
+            {%- liquid
+              assign option_forloop_last = forloop.last
+              assign option_forloop_first = forloop.first
+
+              assign is_color_option = false
+              assign option_name_downcase = option.name | downcase
+
+              if color_options_name contains option_name_downcase
+                assign is_color_option = true
+              endif
+
+              if quick_options and quick_single_option == blank and is_color_option == false
+                continue
+              endif
+            -%}
+            {%- assign index = forloop.index0 -%}
+            <div class="prd-option tr_d {% if option.values.size == 1 and settings.product_card_single_option == false %}hidden{% endif %}">
+              {%- unless quick_options -%}
+                <div class="prd-option-title td_d ">{{ option.name }}:
+                  <span data-option-value>{{ option.selected_value }}</span>
+                </div>
+              {%- endunless -%}
+
+              <div class="td_d">
+                <fieldset class="prd-option-list has-quantity-status {% if forloop.first %}option-first{% endif %} {% if is_color_option and image != false or use_pics %}has-option-color{% endif %}" data-lvl="{{ forloop.index0 }}">
+                  {%- for value in option.values -%}
+                    {%- liquid
+                      assign absent_value = true
+
+                      if option_forloop_first
+                        assign available_variants = product.variants | where: 'available', true
+
+                        for variant in available_variants
+                          if variant.option1 == value
+                            assign absent_value = false
+                            break
+                          endif
+                        endfor
+                      else
+                        assign absent_value = false
+                      endif
+
+                      assign image = false
+                      assign absent_variant_pic = true
+
+                      if use_variants_media == true and is_color_option
+                        for variant in product.variants
+                          if variant.options[index] contains value and variant.featured_media
+                            assign image = variant.featured_media
+                            assign absent_variant_pic = false
+                            break
+                          endif
+                        endfor
+                      endif
+
+                      if use_pics
+                        assign absent_file_pic = false
+                        assign color_image_preffix = 'pill-pic-' | append: option.name | handle | append: '-'
+                        assign color_pic_url = color_image_preffix | append: value | handle | append: '.png' | file_img_url: width: '72', height: '72'
+                        assign color_pic_url_size = color_pic_url | split: '?' | last | size
+                        if color_pic_url_size <= 6 or color_pic_url contains 'no-image-'
+                          assign absent_file_pic = true
+                        endif
+                      endif
+
+                      assign label_option_color = false
+
+                      if absent != true and is_color_option and image != false or use_pics
+                        assign label_option_color = true
+                      elsif absent_file_pic == false and option.name contains 'aterial' and use_pics
+                        assign label_option_color = true
+                      endif
+                    -%}
+                    {%- if absent_file_pic == false and option.name contains 'aterial' and use_pics -%}
+                      {%- capture material -%}
+                        <div><img src="{{ color_pic_url }}" alt="{{ value | escape }}" width="72" height="72" /></div>
+                      {%- endcapture -%}
+                    {%- endif -%}
+                    <label
+                      {% if option_forloop_last %}
+                        style="--qty-status-persent: 100%;"
+                      {% endif %}
+                      class="label-radio {% if label_option_color %}label-option-color{% endif %} {% if value == option.selected_value %}swatch-active{% endif %} {% if absent_value %}disabled{% endif %}"
+                      {% unless absent %}
+                      data-toggle="tooltip"
+                      {% if option.name contains 'aterial' and use_pics %}
+                      data-tippy-allowhtml="true"
+                      {% if material != blank and swatches_width < 45 %}
+                      data-tippy-content='{{ material }}'
+                      {% endif %}
+                      {% elsif is_color_option and use_pics or use_variants_media %}
+                      data-tippy-content="{{ value | escape }}"
+                      {% endif %}
+                      {% endunless %}>
+                      {%- liquid
+                        assign show_only_values = false
+                        if use_variants_media == false and use_pics == false
+                          assign show_only_values = true
+                        endif
+                        if absent_variant_pic and absent_file_pic
+                          assign show_only_values = true
+                        endif
+
+                        if use_pics == false and use_variants_media == true and is_color_option == false
+                          assign show_only_values = true
+                        endif
+
+                        if use_pics == false and use_variants_media == true and is_color_option == true and absent_variant_pic
+                          assign show_only_values = true
+                        endif
+                      -%}
+                      {%- if show_only_values -%}
+                        {%- if layout == 'product-card' -%}
+                          {{ value | truncate: 34 }}
+                        {%- else -%}
+                          {{ value }}
+                        {%- endif -%}
+                      {%- else -%}
+                        {%- if use_variants_media == true and image != false -%}
+                          {%- liquid
+                            assign sizes = swatches_width | append: 'px'-%}
+                          <span class="d-block">
+                            {% render 'image-container'
+                              , image: image
+                              , product_aspect_ratio: true
+                              , sizes: sizes
+                              , width_times: 3
+                              , product_round: false
+                              , swatch: true
+                            %}
+                          </span>
+                        {%- elsif use_pics -%}
+                          <span class="d-block">
+                            {% comment %}theme-check-disable RemoteAsset{% endcomment %}
+                            <div class="image-container" style="padding-bottom: {% if use_variants_media == true and is_color_option %}{{ aspect_ratio }}{% else %}100{% endif %}%;">
+                              <img
+                                src="{{ color_pic_url }}"
+                                alt="{{ value | escape }}"
+                                width="44"
+                                height="44">
+                            </div>
+                          {% comment %}theme-check-enable RemoteAsset{% endcomment %}
+                          </span>
+                        {%- endif -%}
+                      {%- endif -%}
+
+                      {%- unless quick_options -%}
+                        <input
+                          type="radio"
+                          name="{{ option.name }}"
+                          value="{{ value | escape }}"
+                          form="{{ product_form_id }}"
+                          {% if option.selected_value == value %}
+                          checked{% endif %} />
+                      {%- endunless -%}
+
+                      {%- if option_forloop_last -%}
+                        {%- liquid
+                          assign assign inventory_quantity = current_variant.inventory_quantity
+
+                          assign qs_class = ''
+
+                          if current_variant.available
+                            if inventory_quantity >= 10 or current_variant.inventory_management and inventory_quantity < 1
+                              assign qs_class = 'full'
+                            endif
+
+                            if inventory_quantity < 10
+                              assign qs_class = 'middle'
+                            endif
+
+                            if inventory_quantity < 6
+                              assign qs_class = 'start'
+                            endif
+                          endif
+                        -%}
+                        {%- if qs_class != blank -%}
+                          <div class="quantity-status qs--{{ qs_class }}"></div>
+                        {%- endif -%}
+                      {%- endif -%}
+
+                    </label>
+                  {%- endfor -%}
+                </fieldset>
+              </div>
+            </div>
+            {%- liquid
+              if quick_options and is_color_option
+                break
+              endif
+            -%}
+          {%- endfor -%}
+        </div>
+        {%- if quick_options != true -%}
+          <script type="application/json">
+            {{ product.variants | json }}
+          </script>
+        {%- endif -%}
+        {% if quick_options == true %}
+        </div>
+      {% else %}
+        </variant-radios>
+      {% endif %}
+    {%- else -%}
+      {%- unless quick_options -%}
+
+        {% if quick_options == true %}
+          <div  data-section="{{ section.id }}" data-init-variant="{{ product.selected_or_first_available_variant.id }}" data-request-page-type="{{ request.page_type }}" data-section-id="{{ section_id }}"  data-url="{{ product.url | split: '?' | first }}"  data-section-layout="{{ layout }}" data-has-color-option="{{ has_color_option }}" {% if has_color_option %}data-color-option-order="{{ color_option_order }}"{% endif %}>
+        {% else %}
+          <variant-selects  data-section="{{ section.id }}" data-init-variant="{{ product.selected_or_first_available_variant.id }}" data-request-page-type="{{ request.page_type }}" data-section-id="{{ section_id }}"  data-url="{{ product.url | split: '?' | first }}"  data-section-layout="{{ layout }}" data-has-color-option="{{ has_color_option }}" {% if has_color_option %}data-color-option-order="{{ color_option_order }}"{% endif %}>
+        {% endif %}
+
+          <div class="prd-options table_r">
+            {%- for option in product.options_with_values -%}
+              {%- if layout != 'product-card-' -%}
+                <div class="form-group {% if option.values.size == 1 and settings.product_card_single_option == false %}hidden{% endif %}">
+                  <label class="form-label">{{ option.name }}</label>
+                  <div class="form-control-wrap form-control-wrap--select">
+                    <select
+                      id="Option-{{ section.id }}-{{ forloop.index0 }}"
+                      class="form-select form-control form-control--rounded {% if forloop.first %}option-first{% endif %}"
+                      name="options[{{ option.name | escape }}]"
+                      form="{{ product_form_id }}">
+                      {%- for value in option.values -%}
+                        {%- liquid
+                          assign selected = false
+                          if item != nil
+                            assign selectedFirst = item.options_with_values | where: 'value', value | first
+                            if selectedFirst != nil
+                              assign selected = true
+                            endif
+                          elsif option.selected_value == value
+                            assign selected = true
+                          endif
+                        -%}
+                        <option
+                          value="{{ value | escape }}"
+                          {% if selected %}
+                          selected="selected"
+                          {% endif %}>
+                          {{ value }}
+                        </option>
+                      {%- endfor -%}
+                    </select>
+                  </div>
+                </div>
+              {%- else -%}
+                <div class="prd-option tr_d {% if option.values.size == 1 and settings.product_card_single_option == false %}hidden{% endif %}">
+                  <div class="prd-option-title td_d ">{{ option.name }}</div>
+                  <div class="td_d">
+                    <select
+                      id="Option-{{ section.id }}-{{ forloop.index0 }}"
+                      class="form-control {% if forloop.first %}option-first{% endif %}"
+                      name="options[{{ option.name | escape }}]"
+                      form="{{ product_form_id }}">
+                      {%- for value in option.values -%}
+                        <option
+                          value="{{ value | escape }}"
+                          {% if option.selected_value == value %}
+                          selected="selected"
+                          {% endif %}>
+                          {{ value }}
+                        </option>
+                      {%- endfor -%}
+                    </select>
+                  </div>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+          {%- if quick_options != true -%}
+            <script type="application/json">
+              {{ product.variants | json }}
+            </script>
+          {%- endif -%}
+          {% if quick_options == true %}
+          </div>
+        {% else %}
+          </variant-selects>
+        {% endif %}
+      {%- endunless -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endunless -%}

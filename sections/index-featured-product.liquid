@@ -1,0 +1,1328 @@
+{% comment %}theme-check-disable  NestedSnippet, DeprecateBgsizes{% endcomment %}
+{%- liquid
+  assign default_rgba = 'rgba(0,0,0,0)'
+  assign product = section.settings.product
+  assign layout = 'product-featured'
+  assign section_id = section.id
+  assign product_form_id = 'product-form-' | append: section_id | append: '-' | append: product.id
+  assign current_variant = product.selected_or_first_available_variant
+
+
+  if settings.catalog_mode and product.has_only_default_variant == true
+  endif
+
+  if request.page_type == 'search' or request.page_type == 'collection'
+  if search.sort_by contains 'price' or collection.sort_by contains 'price'
+  if product.price_varies
+  endif
+  endif
+  endif
+
+  assign in_collection = product.collections | where: 'handle', collection.handle | first
+  if collection == null or collection.handle == 'all' or in_collection == nil
+  assign all_products_count = 0
+  for c in product.collections
+  if c.handle != 'all' and c.handle != 'frontpage' and all_products_count < c.all_products_count
+  assign collection = c
+  assign all_products_count = c.all_products_count
+  endif
+  endfor
+  endif
+
+
+  if section.settings.product == blank
+    assign use_blocks = true
+  else
+    assign use_blocks = section.settings.use_blocks
+  endif
+
+  assign images_uploaded = false
+  if use_blocks
+    assign media_images = section.blocks
+    for media in media_images
+      if media.settings.image != blank
+        assign images_uploaded = true
+        break
+      endif
+    endfor
+  else
+    assign media_images = product.media | where: 'media_type', 'image'
+    for media in media_images
+      if media.featured_media != blank
+        assign images_uploaded = true
+        break
+      endif
+    endfor
+  endif
+
+  if media_images.size == 0
+    assign placeholder_caption = 'theme.general.add_photos' | t
+  else
+    assign placeholder_caption = 'theme.general.product' | t
+  endif
+
+  if section.settings.image_bg != blank
+    assign background = section.settings.image_bg | image_url: width: section.settings.image_bg.width
+    assign background = "data-bgset=" | append: background | append: '"'
+  elsif section.settings.image_bg_preset != 'none'
+    assign background = section.settings.image_bg_preset | asset_img_url: 'master'
+    assign background = "data-bgset=" | append: background | append: '"'
+  endif
+
+  assign product_url_collection = product.url
+
+  if settings.product_card_url_within_collection
+    assign product_url_collection = product.url | within: collection
+  endif
+
+  assign color_title = section.settings.color_title
+  assign color_subtitle = section.settings.color_subtitle
+  assign color_stars = section.settings.color_stars
+
+  if color_title != default_rgba and color_title != blank
+    assign color_title = 'color:' | append: color_title | append: ';'
+  else
+    assign color_title = ''
+  endif
+
+  if color_subtitle != default_rgba and color_subtitle != blank
+    assign color_subtitle = 'color:' | append: color_subtitle | append: ';'
+  else
+    assign color_subtitle = ''
+  endif
+-%}
+{%- if color_stars != default_rgba and color_stars != blank -%}
+  <style>
+    :root section#shopify-section-{{ section.id }} .prd-rating{--ps-rating-color: {{ color_stars }}}
+  </style>
+{%- endif -%}
+{% render 'section-wrapper', placement: 'top' %}
+
+<div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+  <div class="{% render 'section-container-class', layout: layout %}">
+        {%- if section.settings.layout == 'layout_1' -%}
+          <div class="product-single row row-cols-1 row-cols-md-2 g-0 {% if section.settings.reverse %}ps--invert{% endif %}" style="--ps-line-color: #FF92B9;">
+            <div class="col ps-previews-wrap py-global-strict">
+              <product-single-previews>
+                <div class="ps-previews">
+                  {%- if media_images.size > 1 and section.settings.product_thumbs -%}
+                    <swiper-carousel>
+                      <div class="swiper-container ps-tabs">
+                        <div class="swiper-wrapper">
+                          {%- for media in media_images limit: 7 -%}
+                            {%- liquid
+                              if use_blocks
+                                assign src = media.settings.image_thumb | default: media.settings.image
+                              else
+                                assign src = media
+                              endif
+                              if src == blank and use_blocks == false
+                                continue
+                              endif
+                              assign class_ic = 'js-ps-tab'
+                              if forloop.first
+                                assign class_ic = class_ic | append: ' active'
+                              endif
+
+                              assign bg = false
+                              if images_uploaded == false
+                                assign bg = true
+                              endif
+                            -%}
+                            <div class="swiper-slide">
+                              {% render 'image-container',
+                                image: src,
+                                padding_no_bg: section.settings.image_aspect_ratio,
+                                padding: section.settings.image_aspect_ratio,
+                                sizes: '84px',
+                                class_ic: class_ic,
+                                is_link: true,
+                                href: '#',
+                                bg: bg
+                              %}
+                            </div>
+                          {%- endfor -%}
+                        </div>
+                      </div>
+                      <script type="application/json">
+                        {
+                          "slidesPerColumnFill": "row",
+                          "watchOverflow": true,
+                          "slidesPerView": 4,
+                          "spaceBetween": 2
+                        }
+                      </script>
+                    </swiper-carousel>
+                  {%- endif -%}
+                  <div class="ps-text">
+                    <h3 class="ps-text-title">{{ 'theme.general.short_description' | t }}</h3>
+                    <div class="ps-text-content">{{ section.settings.description | truncate: 200, '..' }}</div>
+                    <div class="ps-text-actions row align-items-center g-2">
+                      <div class="col">
+                        {%- render 'price',
+                          product: product,
+                          use_variant: true,
+                          render: false,
+                          product_card_style_1: false,
+                          product_form_id: product_form_id,
+                          only_simple_add_to_cart: 1,
+                          layout: layout
+                        -%}
+                      </div>
+                      <div class="col-auto">
+                        {% render 'product-card-action'
+                          product: product,
+                          product_form_id: product_form_id,
+                          show_variants: false,
+                          layout: layout,
+                          hide_quantity: 1,
+                          current_variant: current_variant
+                        %}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </product-single-previews>
+            </div>
+            <div class="col ps-info-wrap bg-cover lazyload {{ section.settings.image_bg_behaviour }} py-global-strict" {{ background }} data-sizes="auto">
+              <div class="ps-info {% if section.settings.invert_color %}colorize-invert{% endif %}">
+                <h3 class="ps-category" style="{{ color_subtitle }}">{{ section.settings.product_subtitle }}</h3>
+                <h2 class="ps-title heading-font" style="font-size: {{ section.settings.product_subtitle_layout_1_font_size }}px"><a href="{{ product_url_collection }}" style="{{ color_title }};">{{ product.title | truncate: 40, '..' | default: section.settings.product_subtitle }}</a></h2>
+                {%- if section.settings.stars -%}
+                  <div class="ps-rating">
+                    <div class="prd-rating">
+                      {%- liquid
+                        render 'icon-star'
+                        render 'icon-star'
+                        render 'icon-star'
+                        render 'icon-star'
+                        render 'icon-star'
+                      -%}
+                    </div>
+                  </div>
+                {%- endif -%}
+                  <div class="ps-main-gallery">
+                    {% if media_images.size == 0 and section.settings.product == blank %}
+                      {% render 'product-placeholder' class: 'product-card-empty-wrap-single', title: placeholder_caption, style: 'prd-w-md' %}
+                    {%- else -%}
+                      <swiper-carousel>
+                        <div class="swiper-container">
+                          <div class="swiper-wrapper">
+                            {%- for media in media_images limit: 7 -%}
+                              {%- liquid
+                                if use_blocks
+                                  assign src = media.settings.image
+                                else
+                                  assign src = media
+                                endif
+                                if use_blocks
+                                  assign media = media.settings.image
+                                endif
+                                unless section.settings.product_thumbs
+                                  if forloop.index == 2
+                                    break
+                                  endif
+                                endunless
+
+                                assign bg = false
+                                if images_uploaded == false
+                                  assign bg = true
+                                endif
+                              -%}
+                              <div class="swiper-slide">
+                                {% render 'image-container',
+                                  image: src,
+                                  padding_no_bg: section.settings.image_aspect_ratio,
+                                  padding: section.settings.image_aspect_ratio,
+                                  sizes: '(min-width: 992px) 400px, (min-width: 768px) 260px,calc(100vw - px)',
+                                  is_link: true,
+                                  href: product_url_collection,
+                                  bg: bg
+                                %}
+                                {%- if src != blank -%}
+                                  <div data-load="loading"></div>
+                                {%- endif -%}
+                              </div>
+                            {%- endfor -%}
+                          </div>
+                        </div>
+                        <script type="application/json">
+                          {
+                            "slidesPerColumnFill": "row",
+                            "watchOverflow": true,
+                            "slidesPerView": 1,
+                            "spaceBetween": 0,
+                            "noSwiping": true,
+                            "noSwipingClass": "swiper-slide"
+                          }
+                        </script>
+                      </swiper-carousel>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+          </div>
+        {%- else -%}
+          {%- liquid
+            assign background_placeholder = section.settings.color_placeholder
+            if background_placeholder != default_rgba and background_placeholder != blank
+              assign style_background_placeholder = 'style = "background-color:' | append: background_placeholder | append: '";'
+            else
+              assign style_background_placeholder = ''
+            endif
+            if section.settings.image_bg != blank
+              assign background = section.settings.image_bg | image_url: width: section.settings.image_bg.width
+            else
+              unless background_placeholder != default_rgba and background_placeholder != blank
+                if section.settings.reverse
+                  assign preset = 'product-belt-bg.png'
+                else
+                  assign preset = 'product-bag-bg.png'
+                endif
+                assign background = preset | asset_img_url: 'master'
+              endunless
+            endif
+            assign background = "data-bgset=" | append: background | append: '"'
+          -%}
+          <div class="product-single product-single--horizontal row row-cols-1 row-cols-md-2  {% if section.settings.reverse %}ps--invert{% endif %}">
+            <div class="col">
+              <div class="row ps-product lazyload {% if section.settings.invert_color %}colorize-invert{% endif %} {{ section.settings.image_bg_behaviour }} py-global-strict" {{ background }} data-sizes="auto" {{ style_background_placeholder }}>
+                <div class="col">
+                  <div class="ps-product-info">
+                    <h2 class="ps-product-title h-xl-style" style="font-size: {{ section.settings.product_subtitle_layout_2_font_size }}px"><a href="{{ product_url_collection }}"  style="{{ color_title }};">{{ product.title | truncate: 40, '..' | default: section.settings.product_subtitle }}</a></h2>
+                    <div class="ps-product-description" style="{{ color_subtitle }}">{{ section.settings.product_subtitle }}</div>
+                      <div class="ps-previews-wrap d-none d-md-block">
+                        <product-single-previews>
+                          <div class="ps-previews">
+                            {%- if media_images.size > 1 and section.settings.product_thumbs -%}
+                              <swiper-carousel>
+                                <div class="swiper-container ps-tabs">
+                                  <div class="swiper-wrapper">
+                                    {%- for media in media_images limit: 7 -%}
+                                      {%- liquid
+                                        if use_blocks
+                                          assign src = media.settings.image_thumb | default: media.settings.image_bg
+                                        else
+                                          assign src = media
+                                        endif
+                                        if src == blank and use_blocks == false
+                                          continue
+                                        endif
+                                        assign class_ic = 'js-ps-tab'
+                                        if forloop.first
+                                          assign class_ic = class_ic | append: ' active'
+                                        endif
+                                      -%}
+                                      <div class="swiper-slide">
+                                        {% render 'image-container',
+                                          image: src,
+                                          padding_no_bg: 100,
+                                          padding: 100,
+                                          sizes: '84px',
+                                          class_ic: class_ic,
+                                          is_link: true,
+                                          href: '#'
+                                        %}
+                                      </div>
+                                    {%- endfor -%}
+                                  </div>
+                                  <div class="swiper-pagination position-relative mt-3"></div>
+                                </div>
+                                <script type="application/json">
+                                  {
+                                    "pagination": {
+                                      "el": ".swiper-pagination",
+                                      "clickable": true
+                                    },
+                                    "slidesPerColumnFill": "row",
+                                    "watchOverflow": true,
+                                    "slidesPerView": 3,
+                                    "spaceBetween": 15
+                                  }
+                                </script>
+                              </swiper-carousel>
+                            {%- endif -%}
+                          </div>
+                        </product-single-previews>
+                      </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="ps-main-gallery">
+                    {% if media_images.size == 0 and section.settings.product == blank %}
+                      {% render 'product-placeholder' class: 'product-card-empty-wrap-single', title: placeholder_caption, style: 'prd-w-md' %}
+                    {%- else -%}
+                      <swiper-carousel>
+                        <div class="swiper-container">
+                          <div class="swiper-wrapper">
+                            {%- for media in media_images limit: 7 -%}
+                              {%- liquid
+                                if use_blocks
+                                  assign src = media.settings.image
+                                else
+                                  assign src = media
+                                endif
+                                if use_blocks
+                                  assign media = media.settings.image
+                                endif
+                                unless section.settings.product_thumbs
+                                  if forloop.index == 2
+                                    break
+                                  endif
+                                endunless
+
+                                assign bg = false
+                                if images_uploaded == false
+                                  assign bg = true
+                                endif
+                              -%}
+                              <div class="swiper-slide">
+                                {% render 'image-container',
+                                  image: src,
+                                  padding_no_bg: 100,
+                                  padding: 100,
+                                  sizes: '(min-width: 992px) 400px, (min-width: 768px) 260px,calc(100vw - px)',
+                                  is_link: true,
+                                  href: product_url_collection,
+                                  bg: bg
+                                %}
+                              </div>
+                            {%- endfor -%}
+                          </div>
+                        </div>
+                        <script type="application/json">
+                          {
+                            "slidesPerColumnFill": "row",
+                            "watchOverflow": true,
+                            "slidesPerView": 1,
+                            "spaceBetween": 0,
+                            "noSwiping": true,
+                            "noSwipingClass": "swiper-slide"
+                          }
+                        </script>
+                      </swiper-carousel>
+                    {%- endif -%}
+                  </div>
+                  <div class="ps-previews-wrap d-md-none">
+                    <product-single-previews>
+                      <div class="ps-previews">
+                        {%- if media_images.size > 1 and section.settings.product_thumbs -%}
+                          <swiper-carousel>
+                            <div class="swiper-container ps-tabs">
+                              <div class="swiper-wrapper">
+                                {%- for media in media_images limit: 7 -%}
+                                  {%- liquid
+                                    if use_blocks
+                                      assign src = media.settings.image_thumb | default: media.settings.image_bg
+                                    else
+                                      assign src = media
+                                    endif
+                                    if src == blank
+                                      continue
+                                    endif
+                                    assign class_ic = 'js-ps-tab'
+                                    if forloop.first
+                                      assign class_ic = class_ic | append: ' active'
+                                    endif
+                                  -%}
+                                  <div class="swiper-slide">
+                                    {% render 'image-container',
+                                      image: src,
+                                      padding_no_bg: 100,
+                                      padding: 100,
+                                      sizes: '84px',
+                                      class_ic: class_ic,
+                                      is_link: true,
+                                      href: '#',
+                                      bg_alt: true
+                                    %}
+                                  </div>
+                                {%- endfor -%}
+                              </div>
+                              <div class="swiper-pagination position-relative mt-3"></div>
+                            </div>
+                            <script type="application/json">
+                              {
+                                "pagination": {
+                                  "el": ".swiper-pagination",
+                                  "clickable": true
+                                },
+                                "slidesPerColumnFill": "row",
+                                "watchOverflow": true,
+                                "slidesPerView": 3,
+                                "spaceBetween": 15
+                              }
+                            </script>
+                          </swiper-carousel>
+                        {%- endif -%}
+                      </div>
+                    </product-single-previews>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col ps-product-info-right py-global-strict">
+              <h3>{{ 'theme.general.short_description' | t }}</h3>
+              <div class="ps-product-description">{{ section.settings.description | truncate: 200, '..' }}</div>
+              <div class="ps-product-action">
+                {% render 'product-card-action'
+                  product: product,
+                  product_form_id: product_form_id,
+                  show_variants: false,
+                  layout: layout,
+                  hide_quantity: 1,
+                  w_100: 0,
+                  current_variant: current_variant
+                %}
+              </div>
+            </div>
+          </div>
+        {%- endif -%}
+  </div>
+</div>
+{% render 'section-wrapper' %}
+
+{% schema %}
+{
+  "name": "Product single",
+  "tag": "section",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_animation",
+      "label": "Enable soft appearing of section",
+      "default": true,
+      "info": "Global sections animation disabling in Theme Settings / General / Sections. AUTODISABLED if section has top or bottom separator."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "fluid",
+      "label": "Fluid layout",
+      "default": true
+    },
+    {
+      "type": "radio",
+      "id": "layout",
+      "label": "Select design variant",
+      "options": [
+        {
+          "value": "layout_1",
+          "label": "Layout 1"
+        },
+        {
+          "value": "layout_2",
+          "label": "Layout 2"
+        }
+      ],
+      "default": "layout_1"
+    },
+    {
+      "type": "checkbox",
+      "id": "product_thumbs",
+      "label": "Show product thumbs",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "image_aspect_ratio",
+      "min": 50,
+      "max": 130,
+      "step": 2,
+      "unit": "%",
+      "label": "Media aspect ratio",
+      "default": 120
+    },
+    {
+      "type": "checkbox",
+      "id": "stars",
+      "label": "Stars decorative element",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse",
+      "label": "Reverse layout",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "use_blocks",
+      "label": "Load manually images",
+      "default": false,
+      "info": "use blocks images instead of product gallery"
+    },
+    {
+      "type": "radio",
+      "id": "heading_alignment",
+      "label": "Heading aligment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "checkbox",
+      "id": "invert_color",
+      "label": "Invert captions color",
+      "default": false,
+      "info": "Invert color you can set in Theme Settings / General / Colors - General"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "text",
+      "id": "product_subtitle",
+      "default": "Product Of The Day",
+      "label": "Product subtitle"
+    },
+    {
+      "type": "range",
+      "id": "product_subtitle_layout_1_font_size",
+      "min": 20,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size of product subtitle",
+      "default": 48,
+      "info": "if Layout 1"
+    },
+    {
+      "type": "range",
+      "id": "product_subtitle_layout_2_font_size",
+      "min": 20,
+      "max": 55,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size of product subtitle",
+      "default": 43,
+      "info": "if Layout 2"
+    },
+    {
+      "type": "paragraph",
+      "content": "Captions colorization. Instead of default banners colorization from Theme settings / Colors - Banners"
+    },
+    {
+      "type": "color",
+      "id": "color_title",
+      "label": "Product title"
+    },
+    {
+      "type": "color",
+      "id": "color_subtitle",
+      "label": "Product subtitle"
+    },
+    {
+      "type": "color",
+      "id": "color_stars",
+      "label": "Product stars"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Short description",
+      "default": "<p>Global, Description. </p>"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_bg",
+      "label": "Background",
+      "info": "set empty if you want to use 'Background preset'"
+    },
+    {
+      "type": "select",
+      "id": "image_bg_preset",
+      "label": "Background preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "product-single-bg1.png",
+          "label": "for Toys 1 (Background behavior set Cover)"
+        },
+        {
+          "value": "product-single-bg2.png",
+          "label": "for Toys 2 (Background behavior set Cover)"
+        },
+        {
+          "value": "product-belt-bg.png",
+          "label": "Texture 1 (Background behavior set Repeat)"
+        },
+        {
+          "value": "product-bag-bg.png",
+          "label": "Texture 2 (Background behavior set Repeat)"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+    {
+      "type": "color",
+      "id": "color_placeholder",
+      "label": "Placeholder background loader",
+      "info": "Set the main color of the image (visually softens the appearance of the image)"
+    },
+    {
+      "type": "select",
+      "id": "image_bg_behaviour",
+      "label": "Background behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable background",
+      "default": false,
+      "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+    },
+    {
+      "type": "select",
+      "id": "background_preset",
+      "label": "Background image - preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "product-cosmetics-bg.png",
+          "label": "Leaves 1"
+        },
+        {
+          "value": "bottom-cosmetics-bg.png",
+          "label": "Leaves 2"
+        },
+        {
+          "value": "bg-makeup1.png,bg-makeup1-m.png",
+          "label": "Pink and Waves 1"
+        },
+        {
+          "value": "bg-makeup2.png,bg-makeup2-m.png",
+          "label": "Pink and Waves 2"
+        },
+        {
+          "value": "bg-makeup4.png,bg-makeup4-m.png",
+          "label": "Pink and Waves 3"
+        },
+        {
+          "value": "bg-makeup3.png,bg-makeup3-m.png",
+          "label": "Purple Splash"
+        },
+        {
+          "value": "bg-sweets1.png",
+          "label": "Blue Sun Rays"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image - custom on Desktop"
+    },
+    {
+      "type": "select",
+      "id": "background_behavior",
+      "label": "Background image behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image - custom on Mobile",
+      "info": "only if Background image - custom on Desktop selected"
+    },
+    {
+      "type": "select",
+      "id": "background_image_placeholder_type",
+      "label": "Placeholder background color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_secondary_bg"
+    },
+    {
+      "type": "color",
+      "id": "background_image_placeholder",
+      "label": "Custom - Placeholder background color"
+    },
+    {
+      "type": "header",
+      "content": "SECTION SEPARATOR"
+    },
+    {
+      "type": "header",
+      "content": "Top separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_header_main_bg",
+          "label": "Header - Middle(main) part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_top_color",
+      "label": "Custom - top separator color"
+    },
+    {
+      "type": "header",
+      "content": "Bottom separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "paragraph",
+      "content": "'Global separator' is set in Theme Settings / Separators / Global separator style"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_footer_top_bg",
+          "label": "Footer - Top part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_bottom_color",
+      "label": "Custom - bottom separator color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_thumb",
+          "label": "Image thumb",
+          "info": "set empty if the Image the same as Image thumb"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product single / constructor",
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "Product single / preset 1 Central image(Toys ex.)",
+      "settings": {
+        "heading": "",
+        "subtitle": "",
+        "invert_color": true,
+        "image_bg_preset": "product-single-bg1.png",
+        "spacing_sections": 32,
+        "use_global_desktop_space": false
+      },
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "Product single / preset 1 Central image reversed  (Toys ex.)",
+      "settings": {
+        "reverse": true,
+        "heading": "",
+        "subtitle": "",
+        "invert_color": true,
+        "image_bg_preset": "product-single-bg2.png",
+        "spacing_sections": 32,
+        "use_global_desktop_space": false
+      },
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "Product single / preset 2 Side image (Bags ex.)",
+      "settings": {
+        "layout": "layout_2",
+        "heading": "",
+        "subtitle": "",
+        "invert_color": true,
+        "spacing_sections": 0,
+        "spacing_sections_mobile": 0,
+        "use_global_desktop_space": false,
+        "use_global_mobile_space": false,
+        "image_bg_preset": "product-bag-bg.png",
+        "image_bg_behaviour": "bg-repeat"
+      },
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        }
+      ]
+    },
+    {
+      "name": "Product single / preset 2 Side image reversed (Bags ex.)",
+      "settings": {
+        "layout": "layout_2",
+        "reverse": true,
+        "heading": "",
+        "subtitle": "",
+        "invert_color": true,
+        "spacing_sections": 0,
+        "spacing_sections_mobile": 0,
+        "use_global_desktop_space": false,
+        "use_global_mobile_space": false,
+        "image_bg_preset": "product-belt-bg.png",
+        "image_bg_behaviour": "bg-repeat"
+      },
+      "blocks": [
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        },
+        {
+          "type": "image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

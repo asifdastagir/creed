@@ -1,0 +1,77 @@
+{%- liquid
+  if item == nil
+    assign target = product.selected_or_first_available_variant
+    assign product_form_object = product
+  else
+    assign target = item.variant
+    assign product_form_object = item.product
+  endif
+  assign layout = 'header-cart-line-item'
+  assign section_id = 'header-cart-line-item-edit'
+  assign product_form_id = 'product-form-' | append: section_id | append: '-' | append: target.id | append: item.index
+  assign product_form_id_same_id = 'product-form-' | append: section_id | append: '-' | append: product_form_object.id
+-%}
+
+{%- form 'product', product_form_object, id: product_form_id, class: 'header-cart-line-item hidden' -%}
+  <input type="hidden" name="id" value="{{ target.id }}">
+  {%- liquid
+    if target.available and target.inventory_management and target.inventory_quantity < 1
+    assign pre_order = true
+    endif
+  -%}
+  <input type="hidden" name="properties[{{ 'theme.general.status' | t }}]" value="{{ 'theme.general.pre_order' | t }}" {% unless pre_order %}disabled{% endunless %} data-form-preorder>
+  {% render 'variant_picker',
+    product: item.product,
+    picker_type: 'dropdown',
+    section: section_id,
+    section_id: section_id
+    layout: layout,
+    product_form_id: product_form_id,
+    item: item
+  %}
+  <div class="line-properties">{{ item.product.metafields.custom.product_line_properties }}</div>
+  <div data-render="selling-plan-selector-{{ product_form_id_same_id }}">
+    {%- if target.selling_plan_allocations.size > 0 -%}
+      <div class="form-group">
+        <label class="form-label">{{ 'theme.general.badge_cart_subscription' | t }}</label>
+        <div class="form-control-wrap form-control-wrap--select">
+            <select class="form-select form-control form-control--rounded" name="selling_plan">
+              {%- unless target.requires_selling_plan -%}
+                <option value="">{{ 'theme.general.one_time_purchase' | t }} {{ target.price | money }}</option>
+              {%- endunless -%}
+              {%- for spa in target.selling_plan_allocations -%}
+                <option value="{{ spa.selling_plan.id }}" {% if spa.selling_plan.id == item.selling_plan_allocation.selling_plan.id %}selected{% endif %}>{{ spa.selling_plan.name }} {% if spa.price < spa.compare_at_price %}{{ spa.price | money }} instead of {{ spa.compare_at_price | money }}{% endif %}</option>
+              {%- endfor -%}
+            </select>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+  {% render 'error' %}
+  <div class="minicart-prd-info-bottom row">
+    <div class="col-auto minicart-prd-qty">
+      {% render 'quantity',
+        name: 'quantity',
+        min: 1,
+        value: item.quantity,
+        layout: layout,
+        product_form_id: product_form_id,
+        product_title: item.product.title,
+        current_variant: target
+      %}
+    </div>
+    <div class="col minicart-prd-price">
+      {%- render 'price', product: target, use_variant: false, render: true -%}
+    </div>
+  </div>
+  <minicart-line-item data-has-edit-action>
+    {% if item.product.variants.size > 1 or item.product.selling_plan_groups.size > 0 %}
+      <button type="submit" class="btn icon-wrap position-relative mt-1 hidden" data-action="add">
+        <div class="loading-overlay__spinner hidden">
+          <div data-load="loading"></div>
+        </div>
+        <span>{% render 'icon-return2' %} <span>{{ 'theme.general.save' | t }}</span></span>
+      </button>
+    {%- endif -%}
+  </minicart-line-item>
+{%- endform -%}

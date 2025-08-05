@@ -1,0 +1,136 @@
+{% comment %}theme-check-disable NestedSnippet, UndefinedObject{% endcomment %}
+{%- liquid
+  assign layout = 'header-navigation-mobile'
+
+  assign menu_0 = linklists['main-menu-0'].links
+
+  unless settings.menu_on_desktop_only
+    assign menu_1 = settings.menu.links
+  endunless
+
+  assign menu_2 = linklists['main-menu-2'].links
+
+  if menu_0.size > 0
+    assign settings_menu = menu_0
+  endif
+
+  if menu_1.size > 0
+    assign settings_menu = settings_menu | concat: menu_1
+  endif
+
+  if menu_2.size > 0
+    assign settings_menu = settings_menu | concat: menu_2
+  endif
+
+
+  if settings.menu_mobile != blank
+    assign menu_3 = settings.menu_mobile.links
+
+    if menu_3.size > 0
+      assign settings_menu = settings_menu | concat: menu_3
+    endif
+  endif
+
+  if page.handle == 'intro' and linklists['intro'].links.size > 0
+    assign settings_menu = settings_menu | concat: linklists['intro'].links
+  endif
+-%}
+{% if settings.menu != blank and settings_menu.size > 0 %}
+  <div class="dropdn-tab-content mobilemenu js-tab-mobile-content is-current" id="tabMenu" data-ajax-container>
+    <div class="mobilemenu-content">
+      <div class="mobilemenu-scroll js-dropdn-content-scroll">
+        <slide-menu>
+          <div class="nav-wrapper show-menu">
+            <div class="nav-toggle">
+              <span class="nav-back js-nav-toggle">{% render 'icon-arrow-right' %}</span>
+              <span class="nav-title js-nav-toggle"></span>
+              <a href="#" class="nav-viewall js-nav-viewall" data-keywords="{{ routes.collections_url }}/">{{ 'theme.general.view_all_menu' | t }}</a>
+            </div>
+            <ul class="nav nav-level-1">
+              {%- for link in settings_menu -%}
+                {%- liquid
+                  for i in (1..10)
+                    assign catalog_handle = 'catalog_' | append: i
+                    assign catalog_handle = settings[catalog_handle]
+                    assign catalog_links = catalog_links | concat: linklists[catalog_handle].links
+                  endfor
+
+                  assign active = false
+
+                  if request.page_type == 'collection' and link.type == 'collection_link'
+                    for link_check in catalog_links
+                      assign match = link_check.links | where: 'url', collection.url | first
+
+                      if match and link_check.url == link.url
+                        assign active = true
+
+                        break
+                      endif
+                    endfor
+                  endif
+                -%}
+                <li {% if link.current or active %}class="active"{% endif %} {% if link.current or active %} aria-current="page"{% endif %}>
+                  {%- liquid
+                    assign link_links = link.links
+
+                    assign type = link.title | escape | split: 'type:'
+
+                    if type.size > 1
+                      assign type = type | last | split: '|' | first
+                    else
+                      assign type = ''
+                    endif
+
+                    if type == 'popup'
+                      assign catalog_handle = settings['catalog_1']
+                      assign catalog = linklists[catalog_handle]
+
+                      if catalog != blank and catalog.links.size > 0
+                        assign link_links = catalog.links
+                      endif
+                    endif
+                  -%}
+
+                  {% render 'header-navigation-component-link', link: link, span: false, show_class_has_badge: 1, is_mobile: 1, show_image_icons: false, disable_actions_wrap: true, layout: layout %}
+                  {%- if link_links != blank -%}
+                    <ul class="nav-level-2">
+                      {%- for childlink in link_links -%}
+                        <li>
+                          {% render 'header-navigation-component-link', link: childlink, span: false, show_class_has_badge: 1, is_mobile: 1, show_image_icons: false, disable_actions_wrap: true, layout: layout %}
+                          {%- if childlink.links != blank -%}
+                            <ul class="nav-level-3">
+                              {%- for grandchildlink in childlink.links -%}
+                                <li>
+                                  {% render 'header-navigation-component-link', link: grandchildlink, span: false, show_class_has_badge: 1, is_mobile: 1, show_image_icons: false, disable_actions_wrap: true, level: 3, layout: 'megamenu-dropdown', mobile: true %}
+                                </li>
+                              {%- endfor -%}
+                            </ul>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                </li>
+              {%- endfor -%}
+            </ul>
+          </div>
+        </slide-menu>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+<div class="dropdn-tab-content dropdn-modal-settings" id="tabSettings">
+  <div class="settings-content">
+    <div class="settings-scroll js-dropdn-content-scroll">
+      {% render 'header-languages', id: 'id3', class: 'mb-1' %}
+      {% render 'header-currencies', id: 'id4', class: 'mb-1', divider: true %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "class": "h-100"
+}
+{% endschema %}

@@ -1,0 +1,353 @@
+.info-center-image {
+  width: Min(570px,calc(100% - 380px));
+  padding: 0 50px;
+  -ms-flex-item-align: center;
+  -ms-grid-row-align: center;
+  align-self: center
+}
+@media (max-width:1024px) {
+  .info-center-image {
+    width: calc(100% - 300px)
+  }
+}
+@media (max-width:767px) {
+  .info-center-image {
+    padding: 30px 0;
+    width: Min(370px,100%)
+  }
+}
+.info-circles-wrap {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  width: 180px;
+  gap: 30px;
+  -ms-flex-pack: distribute;
+  justify-content: space-around
+}
+.info-circles-wrap.info-circles-3 {
+  -ms-flex-pack: justify;
+  justify-content: space-between
+}
+.info-circles-wrap.info-circles-3:first-child {
+  -ms-flex-align: end;
+  align-items: end
+}
+@media (max-width:767px) {
+  .info-circles-wrap.info-circles-3:first-child {
+    padding-top: 30px;
+    margin-top: 30px;
+    -ms-flex-pack: distribute;
+    justify-content: space-around
+  }
+}
+.info-circles-wrap.info-circles-3:first-child .info-circle:nth-child(2) {
+  -ms-flex-item-align: start;
+  -ms-grid-row-align: start;
+  align-self: start
+}
+@media (max-width:767px) {
+  .info-circles-wrap.info-circles-3:first-child .info-circle:nth-child(2) {
+    margin-top: -30px
+  }
+}
+.info-circles-wrap.info-circles-3:last-child {
+  -ms-flex-align: start;
+  align-items: start
+}
+@media (max-width:767px) {
+  .info-circles-wrap.info-circles-3:last-child {
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+    padding-bottom: 30px
+  }
+}
+.info-circles-wrap.info-circles-3:last-child .info-circle:nth-child(2) {
+  -ms-flex-item-align: end;
+  -ms-grid-row-align: end;
+  align-self: end
+}
+@media (max-width:767px) {
+  .info-circles-wrap.info-circles-3:last-child .info-circle:nth-child(2) {
+    margin-top: 30px
+  }
+}
+@media (max-width:1024px) {
+  .info-circles-wrap {
+    width: 150px
+  }
+}
+@media (max-width:767px) {
+  .info-circles-wrap {
+    width: 100%;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    gap: 30px
+  }
+}
+@media (max-width:575px) {
+  .info-circles-wrap {
+    gap: 15px
+  }
+}
+.info-center-image-full {
+  width: calc(100% - 260px);
+  margin: 0 auto;
+  padding-bottom: 150px
+}
+.info-circles-wrap-hor {
+  position: absolute;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -ms-flex-align: end;
+  align-items: flex-end;
+  -ms-flex-pack: center;
+  justify-content: center
+}
+.info-circles-wrap-hor .info-circle {
+  position: absolute
+}
+.info-circles-wrap-hor .info-circle:nth-child(1) {
+  top: 40%;
+  right: 0
+}
+.info-circles-wrap-hor .info-circle:nth-child(2) {
+  top: 68%;
+  right: 14%
+}
+.info-circles-wrap-hor .info-circle:nth-child(4) {
+  top: 68%;
+  left: 14%
+}
+.info-circles-wrap-hor .info-circle:nth-child(5) {
+  top: 40%;
+  left: 0
+}
+.info-circle {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 130px;
+  height: 130px;
+  padding: 15px;
+  border-radius: 10000px;
+  text-align: center
+}
+.info-circle-icon:not(:last-child) {
+  margin-bottom: 12px
+}
+.info-circle-icon svg {
+  height: 35px;
+  width: auto
+}
+@media (max-width:575px) {
+  .info-circle-icon svg {
+    height: 28px
+  }
+}
+.info-circle-num {
+  font-size: 36px;
+  line-height: 1em;
+  font-weight: var(--font-weight-500)
+}
+.info-circle-text {
+  margin: 25px 0 0 0
+}
+.info-circle-title {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: var(--font-weight-500)
+}
+@media (max-width:1024px) {
+  .info-circle {
+    width: 120px;
+    height: 120px;
+    padding: 10px;
+    font-size: 12px;
+    line-height: 15px
+  }
+}
+@media (max-width:767px) {
+  .info-circle {
+    width: 110px;
+    height: 110px
+  }
+}
+@media (max-width:575px) {
+  .info-circle {
+    width: 100px;
+    height: 100px;
+    font-size: 11px;
+    line-height: 14px
+  }
+}
+.info-rectangulars-row {
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap
+}
+@media (max-width:1024px) {
+  .info-rectangulars-row {
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-align: center;
+    align-items: center
+  }
+}
+.info-rectangulars-wrap {
+  width: 310px;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+  row-gap: 30px;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap
+}
+@media (max-width:1299px) {
+  .info-rectangulars-wrap {
+    width: 27%
+  }
+}
+@media (max-width:1024px) {
+  .info-rectangulars-wrap {
+    width: Min(470px,100%)
+  }
+}
+.info-rectangular {
+  min-height: 65px;
+  padding: 30px 20px;
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: var(--font-weight-400);
+  border-radius: var(--radius-md);
+  transition: all .2s;
+  box-shadow: 0 0 14px rgba(0,0,0,var(--global-box-shadow,.04))
+}
+@media (hover:hover),
+(hover:none) and (min-width:1025px) {
+  .info-rectangular:hover {
+    box-shadow: 0 0 14px rgba(0,0,0,calc(var(--global-box-shadow,.04) + var(--global-box-shadow-darker,.1)))
+  }
+}
+.info-rectangular-top {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  column-gap: 15px
+}
+.info-rectangular-icon svg {
+  height: 35px;
+  width: auto
+}
+@media (max-width:575px) {
+  .info-rectangular-icon svg {
+    height: 28px
+  }
+}
+.info-rectangular-num {
+  font-size: 36px;
+  line-height: 1em;
+  font-weight: var(--font-weight-600)
+}
+.info-rectangular-text {
+  margin: 25px 0 0 0
+}
+.info-rectangular-title {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: var(--font-weight-600)
+}
+@media (max-width:767px) {
+  .info-rectangular {
+    padding: 15px;
+    font-size: 12px;
+    line-height: 15px
+  }
+  .info-rectangular .info-rectangular-text {
+    margin-top: 15px
+  }
+}
+.info-rectangulars-wrap + .info-center-image {
+  width: Min(570px,calc(100% - 620px))
+}
+@media (max-width:1299px) {
+  .info-rectangulars-wrap + .info-center-image {
+    width: 46%;
+    padding: 0 30px
+  }
+}
+@media (max-width:1024px) {
+  .info-rectangulars-wrap + .info-center-image {
+    width: Min(570px,100%);
+    padding: 30px 0
+  }
+}
+.has-animation .info-circles-wrap:first-child > :nth-child(2),
+.has-animation .info-rectangulars-wrap:first-child > :nth-child(2) {
+  transition-delay: .2s
+}
+.has-animation .info-circles-wrap:first-child > :nth-child(3),
+.has-animation .info-rectangulars-wrap:first-child > :nth-child(3) {
+  transition-delay: .4s
+}
+.has-animation .info-circles-wrap:last-child > :nth-child(1),
+.has-animation .info-rectangulars-wrap:last-child > :nth-child(1) {
+  transition-delay: 1s
+}
+.has-animation .info-circles-wrap:last-child > :nth-child(2),
+.has-animation .info-rectangulars-wrap:last-child > :nth-child(2) {
+  transition-delay: .8s
+}
+.has-animation .info-circles-wrap:last-child > :nth-child(3),
+.has-animation .info-rectangulars-wrap:last-child > :nth-child(3) {
+  transition-delay: .6s
+}
+.has-animation .info-circles-wrap > * {
+  transition: all .5s
+}
+.has-animation .info-rectangulars-wrap > * {
+  transition: all 1s
+}
+.has-animation.lazyload .info-circles-wrap:first-child > * {
+  opacity: 0;
+  transform: translateX(-200%) scale(.2) rotate(-20deg)
+}
+.has-animation.lazyload .info-circles-wrap:last-child > * {
+  opacity: 0;
+  transform: translateX(150%) scale(.2) rotate(20deg)
+}
+.has-animation.lazyload .info-rectangulars-wrap:first-child > * {
+  opacity: 0;
+  transform: translateX(50%)
+}
+.has-animation.lazyload .info-rectangulars-wrap:last-child > * {
+  opacity: 0;
+  transform: translateX(-50%)
+}
+.has-animation.lazyloaded .info-circles-wrap:first-child > *,
+.has-animation.lazyloaded .info-circles-wrap:last-child > *,
+.has-animation.lazyloaded .info-rectangulars-wrap:first-child > *,
+.has-animation.lazyloaded .info-rectangulars-wrap:last-child > * {
+  opacity: 1;
+  transform: translateX(0)
+}

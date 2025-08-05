@@ -1,0 +1,1079 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- liquid
+  assign layout = 'index-product-grid'
+  if section.settings.fluid and section.settings.layout != 'mini_horizontal_banner'
+    assign container = '-fluid'
+  endif
+
+  if section.settings.layout == 'mini_horizontal_banner'
+    assign container = container | append: ' has-strict-width'
+  endif
+
+  assign ic_style = ''
+  assign color = section.settings.color_placeholder
+
+  if color != 'rgba(0,0,0,0)' and color != blank
+    assign ic_style = '--placeholder-bg: ' | append: color | append: ';'
+  endif
+
+  assign centerInsufficientSlides = false
+
+  if section.settings.layout == 'mini_horizontal' or section.settings.layout == 'max_horizontal'
+    if section.settings.slides_per_column == "1"
+      assign centerInsufficientSlides = true
+    endif
+  endif
+
+  assign per_row = section.settings.per_row
+
+  if section.settings.layout == 'max_horizontal' and per_row == "6"
+    assign per_row = "5"
+  endif
+
+  if per_row == "5" and section.settings.fluid == false or section.settings.layout == 'mini_horizontal' or section.settings.layout == 'max_horizontal'
+    assign per_row = "4"
+  endif
+
+  assign button_show_more = false
+  if section.settings.button
+    if section.settings.heading_alignment == 'left'
+      assign button_show_more = true
+    elsif section.settings.layout != 'mini_horizontal_banner'
+      assign button_show_more = true
+    endif
+  endif
+
+  assign show_button = false
+  assign button_center = false
+  assign button_left = false
+
+  if button_show_more and section.settings.layout != 'mini_horizontal_banner'
+    assign show_button = true
+  endif
+
+  if show_button and section.settings.heading_alignment == 'center'
+    assign button_center = true
+  endif
+
+  if show_button and section.settings.heading_alignment == 'left' and section.settings.button_bottom_on_mobile
+    assign button_left = true
+  endif
+-%}
+{% render 'section-wrapper', placement: 'top' %}
+
+<div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+  <div class="{% render 'section-container-class', layout: layout %}">
+
+    {%- if section.settings.layout == 'mini_horizontal_banner' -%}
+      <div class="row gy-4 {% if section.settings.mini_horizontal_banner_reversed %}flex-row-reverse{% endif %}">
+        <div class="col-sm-6 col-lg-4">
+
+          <flow-type>
+            <a href="{{ section.settings.button_url }}" class="bnr-wrap">
+              <div class="bnr to-center to-bottom text-center min-w-100" data-fontratio="3.63">
+                <swiper-carousel class="min-w-100">
+                  <div class="swiper-container categories-carousel">
+                    <div class="swiper-wrapper">
+                      {%- if section.settings.image != blank -%}
+                      <div class="swiper-slide min-w-100">
+                        {% render 'image-container',
+                          image: section.settings.image,
+                          sizes: '264px',
+                          class_ic: 'bnr-img',
+                          style: ic_style
+                        %}
+                      </div>
+                      {%- endif -%}
+                      {%- if section.settings.image_2 != blank -%}
+                        <div class="swiper-slide min-w-100">
+                          {% render 'image-container',
+                            image: section.settings.image_2,
+                            sizes: '264px',
+                            class_ic: 'bnr-img',
+                            style: ic_style
+                          %}
+                        </div>
+                      {%- endif -%}
+                    </div>
+                  </div>
+                  <div class="swiper-pagination {% if section.settings.invert_color %}colorize-invert{% endif %}"></div>
+                  <script type="application/json">
+                  {
+                    "pagination": {
+                        "el": ".swiper-pagination",
+                        "clickable": true
+                    },
+                    "watchOverflow": true,
+                    "slidesPerView": 1,
+                    "spaceBetween": 0,
+                    "effect": "fade",
+                    "autoplay": {
+                        "delay": 5000
+                    }
+                  }
+                  </script>
+                </swiper-carousel>
+                <div class="bnr-caption {% if section.settings.invert_color %}colorize-invert{% endif %}" style="--padding: 20% 3%; --padding-mobile: 20% 3%; --caption-width: 100%; --caption-width-mobile: 100%;">
+                  <div class="bnr-text2 mt-0" style="font-size:.15em; font-weight: 400">{{ section.settings.banner_title }}</div>
+                  <div class="bnr-text1 mt-sm" style="font-family: var(--heading-font-family); font-size:.29em; font-weight: var(--font-weight-700);">{{ section.settings.banner_subtitle }}</div>
+                </div>
+              </div>
+            </a>
+				  </flow-type>
+
+        </div>
+        <div class="col-sm-6 col-lg-8">
+          {% render 'section-heading', section: section, left: 1 %}
+          <div class="products-sm-list">
+            {%- for product in collections[section.settings.collection].products limit: section.settings.limit -%}
+              {% render 'product-card-horizontal-xs', product: product %}
+            {%- else -%}
+              {%- for i in (1..section.settings.limit) -%}
+                {% render 'product-placeholder', padding: 18, class: 'prd-prw-sm' %}
+              {%- endfor -%}
+            {%- endfor -%}
+          </div>
+        </div>
+      </div>
+    {%- else -%}
+      {% render 'section-heading', section: section %}
+
+      {%- if section.settings.layout == 'default' -%}
+        <smart-row>
+          <div class="prd-grid row row-cols-xxs-1 row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-{{ per_row }} g-3 g-md-{{ per_row }} justify-content-center">
+            {%- for product in collections[section.settings.collection].products limit: section.settings.limit -%}
+              <div class="col">{% render 'product-card', product: product, collection: section.settings.collection %}</div>
+              <div class='line-break'></div>
+            {%- else -%}
+              {%- for i in (1..section.settings.limit) -%}
+                {% render 'product-placeholder', class: 'col' %}
+              {%- endfor -%}
+            {%- endfor -%}
+          </div>
+        </smart-row>
+      {%- elsif section.settings.layout == 'mini_horizontal'  -%}
+        <swiper-carousel data-destroy>
+          <div class="swiper-container swiper-container-prd-carousel swiper-container-center">
+            <div class="swiper-wrapper">
+              {%- for product in collections[section.settings.collection].products limit: section.settings.limit -%}
+                <div class="swiper-slide">{% render 'product-card-horizontal-sm', product: product %}</div>
+              {%- else -%}
+                {%- for i in (1..10) -%}
+                {% render 'product-placeholder', padding: 28, style: 'w-100' %}
+                {%- endfor -%}
+              {%- endfor -%}
+            </div>
+            <div class="swiper-pagination position-relative mt-3 mt-md-4"></div>
+          </div>
+          <script type="application/json">
+            {
+              "pagination": {
+                "el": ".swiper-pagination",
+                "clickable": true
+              },
+              "slidesPerColumnFill": "row",
+              "watchOverflow": true,
+              "slidesPerView": 1,
+              "slidesPerColumn": 1,
+              "spaceBetween": 20,
+              "centerInsufficientSlides": true,
+              "breakpointsBase": "container",
+              "breakpoints": {
+                "{{ settings.product_card_one_in_row_width }}": {
+                  "slidesPerView": 1,
+                  "slidesPerColumn": {{ section.settings.slides_per_column | at_most: 2 }},
+                  "spaceBetween": 20
+                },
+                "575": {
+                  "slidesPerView": 2,
+                  "slidesPerColumn": {{ section.settings.slides_per_column | at_most: 2 }},
+                  "spaceBetween": 20,
+                  "centerInsufficientSlides": {{ centerInsufficientSlides }}
+                },
+                "768": {
+                  "slidesPerView": {{ per_row | at_most: 3 }},
+                  "slidesPerColumn": {{ section.settings.slides_per_column | at_most: 2 }},
+                  "spaceBetween": 20,
+                  "centerInsufficientSlides": {{ centerInsufficientSlides }}
+                },
+                "992": {
+                  "slidesPerView": {{ per_row | at_most: 4 }},
+                  "slidesPerColumn": 2,
+                  "spaceBetween": 20,
+                  "centerInsufficientSlides": {{ centerInsufficientSlides }}
+                },
+                "1200": {
+                  "slidesPerView": {{ per_row | at_most: 4 }},
+                  "slidesPerColumn": {{ section.settings.slides_per_column }},
+                  "spaceBetween": 20,
+                  "centerInsufficientSlides": {{ centerInsufficientSlides }}
+                },
+                "1700": {
+                  "slidesPerView": {{ per_row }},
+                  "slidesPerColumn": {{ section.settings.slides_per_column }},
+                  "spaceBetween": 20,
+                  "centerInsufficientSlides": {{ centerInsufficientSlides }}
+                }
+              }
+            }
+          </script>
+        </swiper-carousel>
+      {%- elsif section.settings.layout == 'max_horizontal'  -%}
+        <swiper-carousel>
+          <div class="swiper-container swiper-container-prd-carousel swiper-container-center">
+            <div class="swiper-wrapper">
+              {%- for product in collections[section.settings.collection].products limit: section.settings.limit -%}
+                <div class="swiper-slide">{% render 'product-card-horizontal', product: product, vendor: 1 %}</div>
+              {%- else -%}
+                {%- for i in (1..10) -%}
+                  {% render 'product-placeholder', padding: 68 %}
+                {%- endfor -%}
+              {%- endfor -%}
+            </div>
+            <div class="swiper-pagination position-relative mt-4 mt-md-5"></div>
+            <div class="swiper-arrows-carousel container">
+              <div class="swiper-button-next"></div>
+              <div class="swiper-button-prev"></div>
+            </div>
+          </div>
+          <script type="application/json">
+            {
+              "pagination": {
+                "el": ".swiper-pagination",
+                "clickable": true
+              },
+              "navigation": {
+                "nextEl": ".swiper-button-next",
+                "prevEl": ".swiper-button-prev"
+              },
+              "slidesPerColumnFill": "row",
+              "watchOverflow": true,
+              "slidesPerView": 1,
+              "slidesPerColumn": 1,
+              "spaceBetween": 20,
+              "centerInsufficientSlides": true,
+              "breakpoints": {
+                "{{ settings.product_card_one_in_row_width }}": {
+                  "slidesPerView": 1,
+                  "slidesPerColumn": 1,
+                  "spaceBetween": 20
+                },
+                "768": {
+                  "slidesPerView": 2,
+                  "slidesPerColumn": {{ section.settings.slides_per_column }},
+                  "spaceBetween": 20,
+                  "centerInsufficientSlides": {{ centerInsufficientSlides }}
+                },
+                "1200": {
+                  "slidesPerView": {{ per_row | at_most: 3 }},
+                  "slidesPerColumn": {{ section.settings.slides_per_column }},
+                  "spaceBetween": 30,
+                  "centerInsufficientSlides": {{ centerInsufficientSlides }}
+                },
+                "1600": {
+                  "slidesPerView": {{ per_row }},
+                  "slidesPerColumn": {{ section.settings.slides_per_column }},
+                  "spaceBetween": 30,
+                  "centerInsufficientSlides": {{ centerInsufficientSlides }}
+                }
+              }
+            }
+          </script>
+        </swiper-carousel>
+      {%- elsif section.settings.layout contains 'fixed_banner'  -%}
+        <div class="row flex-column-reverse flex-md-row{% if section.settings.layout contains 'reversed' %}-reverse{% endif %} row-under-title gy-6">
+            <div class="col-xs-6 col-md-4 col-lg-3">
+                <flow-type>
+                    <a href="{{ section.settings.button_url }}" class="bnr-wrap bnr-wrap--fixed">
+                          <div class="bnr image-hover-scale to-center to-{% if section.settings.layout contains 'reversed' %}top{% else %}bottom{% endif %} text-center bnr--style-8 fontratio-calc" data-fontratio="4.2">
+                          {% render 'image-container',
+                            image: section.settings.image,
+                            padding_no_bg: 229,
+                            padding: 229,
+                            sizes: '264px',
+                            class_ic: 'bnr-img',
+                            style: ic_style
+                          %}
+                          {%- if section.settings.banner_title != blank -%}
+                            <div class="bnr-caption {% if section.settings.invert_color %}colorize-invert{% endif %}" style="--padding: 25% 0; --padding-mobile: 25% 0; --caption-width: 80%; --caption-width-mobile: 80%; opacity: 1;">
+                              <div class="bnr-text1 heading-font mt-md mt-first-0 fw-bold">{{ section.settings.banner_title }}</div>
+                            </div>
+                          {%- endif -%}
+                        </div>
+                    </a>
+                </flow-type>
+            </div>
+
+            <div class="col-xs-6 col-md-8 col-lg-9">
+                <div class="prd-grid row row-cols-xxs-1 row-cols-2 row-cols-sm-2 row-cols-lg-3 g-3 g-md-4">
+                  {%- for product in collections[section.settings.collection].products limit: section.settings.limit -%}
+                    <div class="col">{% render 'product-card', product: product, collection: section.settings.collection %}</div>
+                    <div class='line-break'></div>
+                  {%- else -%}
+                    {%- for i in (1..section.settings.limit) -%}
+                      {% render 'product-placeholder', class: 'col' %}
+                    {%- endfor -%}
+                  {%- endfor -%}
+                </div>
+            </div>
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+
+    {%- if button_center or button_left -%}
+      <div class="btn-showmore-wrap text-center mt-3 mt-lg-6  {% if button_left %}show-mobile-sm{% endif %}">
+        <a href="{{ section.settings.button_url }}" class="btn btn--invert btn--showmore">{{ section.settings.button_text }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+{% render 'section-wrapper' %}
+
+{% schema %}
+{
+  "name": "Products grid",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_animation",
+      "label": "Enable soft appearing of section",
+      "default": true,
+      "info": "Global sections animation disabling in Theme Settings / General / Sections. AUTODISABLED if section has top or bottom separator."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "fluid",
+      "label": "Fluid layout",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Select design variant",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default (smart grid)"
+        },
+        {
+          "value": "mini_horizontal",
+          "label": "Mini horizontal"
+        },
+        {
+          "value": "mini_horizontal_banner",
+          "label": "Mini horizontal with banner"
+        },
+        {
+          "value": "max_horizontal",
+          "label": "Max horizontal"
+        },
+        {
+          "value": "fixed_banner",
+          "label": "Fixed banner"
+        },
+        {
+          "value": "fixed_banner_reversed",
+          "label": "Fixed banner - reversed"
+        }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "checkbox",
+      "id": "mini_horizontal_banner_reversed",
+      "label": "Reversed for 'Mini horizontal with banner'",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 3,
+      "max": 12,
+      "step": 1,
+      "label": "Limit products",
+      "default": 8
+    },
+    {
+      "type": "select",
+      "id": "per_row",
+      "label": "Per row",
+      "options": [
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "label": "5"
+        },
+        {
+          "value": "6",
+          "label": "6 (for high store width)"
+        }
+      ],
+      "default": "4",
+      "info": "The default layout with smart grid itself decides how many to show in a row, but always tries to show the specified number. She counts the number of products and divides the rows herself"
+    },
+    {
+      "type": "select",
+      "id": "slides_per_column",
+      "label": "Slides per column",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        }
+      ],
+      "default": "2",
+      "info": "only for layout 'Mini/Max horizontal'"
+    },
+    {
+      "type": "radio",
+      "id": "heading_alignment",
+      "label": "Heading aligment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "default": "Subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "header",
+      "content": "Banner"
+    },
+    {
+      "type": "checkbox",
+      "id": "banner",
+      "label": "Show",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "recommended size for retina displays is 724x894px"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image",
+      "info": "recommended size for retina displays is 724x894px"
+    },
+    {
+      "type": "color",
+      "id": "color_placeholder",
+      "label": "Placeholder background loader",
+      "info": "Set the main color of the image (visually softens the appearance of the image)"
+    },
+    {
+      "type": "text",
+      "id": "banner_title",
+      "default": "SPECIAL OFFER",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "banner_subtitle",
+      "default": "Speakers",
+      "label": "Subtitle"
+    },
+    {
+      "type": "checkbox",
+      "id": "invert_color",
+      "label": "Invert captions color",
+      "default": true,
+      "info": "Invert color you can set in Theme Settings / General / Colors - General"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "button",
+      "label": "Show",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "button_bottom_on_mobile",
+      "label": "Show at bottom on mobile in case when Heading layout is 'Left'",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Caption",
+      "default": "View all"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable background",
+      "default": false,
+      "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+    },
+    {
+      "type": "select",
+      "id": "background_preset",
+      "label": "Background image - preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "product-cosmetics-bg.png",
+          "label": "Leaves 1"
+        },
+        {
+          "value": "bottom-cosmetics-bg.png",
+          "label": "Leaves 2"
+        },
+        {
+          "value": "bg-makeup1.png,bg-makeup1-m.png",
+          "label": "Pink and Waves 1"
+        },
+        {
+          "value": "bg-makeup2.png,bg-makeup2-m.png",
+          "label": "Pink and Waves 2"
+        },
+        {
+          "value": "bg-makeup4.png,bg-makeup4-m.png",
+          "label": "Pink and Waves 3"
+        },
+        {
+          "value": "bg-makeup3.png,bg-makeup3-m.png",
+          "label": "Purple Splash"
+        },
+        {
+          "value": "bg-sweets1.png",
+          "label": "Blue Sun Rays"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image - custom on Desktop"
+    },
+    {
+      "type": "select",
+      "id": "background_behavior",
+      "label": "Background image behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image - custom on Mobile",
+      "info": "only if Background image - custom on Desktop selected"
+    },
+    {
+      "type": "select",
+      "id": "background_image_placeholder_type",
+      "label": "Placeholder background color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_secondary_bg"
+    },
+    {
+      "type": "color",
+      "id": "background_image_placeholder",
+      "label": "Custom - Placeholder background color"
+    },
+    {
+      "type": "header",
+      "content": "SECTION SEPARATOR"
+    },
+    {
+      "type": "header",
+      "content": "Top separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_header_main_bg",
+          "label": "Header - Middle(main) part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_top_color",
+      "label": "Custom - top separator color"
+    },
+    {
+      "type": "header",
+      "content": "Bottom separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "paragraph",
+      "content": "'Global separator' is set in Theme Settings / Separators / Global separator style"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_footer_top_bg",
+          "label": "Footer - Top part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_bottom_color",
+      "label": "Custom - bottom separator color"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Products grid / constructor"
+    },
+    {
+      "name": "Products grid / preset Default"
+    },
+    {
+      "name": "Products grid / preset 1 Fullwidth carousel of grids",
+      "settings": {
+        "fluid": true,
+        "layout": "max_horizontal",
+        "button": false
+      }
+    },
+    {
+      "name": "Products carousel / preset 6 Carousel 2x1 with wide card",
+      "settings": {
+        "fluid": false,
+        "layout": "max_horizontal",
+        "button": false,
+        "per_row": "2",
+        "slides_per_column": "1"
+      }
+    },
+    {
+      "name": "Products grid / preset 2 Mini",
+      "settings": {
+        "layout": "mini_horizontal",
+        "button": false
+      }
+    },
+    {
+      "name": "Products grid / preset 3 Mini with banner",
+      "settings": {
+        "layout": "mini_horizontal_banner",
+        "heading_alignment": "left"
+      }
+    },
+    {
+      "name": "Products grid / preset 4 Default with banner",
+      "settings": {
+        "layout": "fixed_banner"
+      }
+    },
+    {
+      "name": "Products grid / preset 5 Default with banner - Reversed",
+      "settings": {
+        "layout": "fixed_banner_reversed"
+      }
+    }
+  ]
+}
+{% endschema %}

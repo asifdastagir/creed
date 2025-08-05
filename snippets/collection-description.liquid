@@ -1,0 +1,295 @@
+{% comment %}theme-check-disable ImgLazyLoading, RemoteAsset{% endcomment %}
+{%- liquid
+  if request.page_type == 'search'
+    assign subcollection_vendor = 'vendor'
+    assign results_count = search.results_count
+  else
+    if collection.handle == 'all'
+      assign subcollection_vendor = 'vendor'
+    else
+      assign subcollection_vendor = subcollection_vendor
+    endif
+    assign results_count = results.products.size
+  endif
+
+  if subcollection_vendor == 'subcollection'
+    for i in (1..10)
+      assign catalog_handle = 'catalog_' | append: i
+      assign catalog_handle = settings[catalog_handle]
+      assign catalog = catalog | concat: settings[catalog_handle]
+      assign catalog_links = catalog_links | concat: linklists[catalog_handle].links
+    endfor
+    assign match = catalog_links | where: 'url', collection.url | first
+    unless match
+      for link in catalog_links
+        assign match = link.links | where: 'url', collection.url | first
+        if match
+          assign match = catalog_links | where: 'handle', link.handle | first
+          break
+        endif
+      endfor
+    endunless
+  endif
+
+  assign brand_label = 'theme.general.brand' | t
+  assign filter_vendor = results.filters | where: 'label', brand_label | first
+
+  assign show = false
+
+  if subcollection_vendor == 'none' or subcollection_vendor == 'subcollection' or subcollection_vendor == 'vendor'
+    assign show = true
+  endif
+
+  if subcollection_vendor == 'none' and collection_description != blank
+    assign show = true
+  endif
+
+  if collection.current_vendor
+    assign show = true
+  endif
+
+  assign title = collection.title
+
+  if request.page_type == 'collection' and collection.handle == 'all'
+    assign title =  'theme.general.all_products_title' | t
+
+    if current_tags.size == 1 and current_tags contains 'sale'
+      assign title =  'theme.general.our_sales' | t
+    endif
+  endif
+
+  assign container_bg_class = 'has-bg-alt'
+  assign container_mb_class = 'mb-lg-6'
+
+  if collection_description == blank and collection.current_vendor
+    assign container_bg_class = ''
+    assign container_mb_class = ''
+  endif
+
+  if collection_description == blank and collection.current_type and subcollection_vendor == 'none'
+    assign container_bg_class = ''
+    assign container_mb_class = ''
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+    assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+
+  assign collection_description = collection.description
+
+  unless settings.collection_description
+    assign collection_description = blank
+  endunless
+-%}
+{%- if show -%}
+  {%- if collection.current_vendor or collection_description != blank or match != blank or filter_vendor.values.size > 1 and results_count > 0 -%}
+    <div class="category-page-description {% if request.page_type != 'search' %}{{ container_bg_class }}{% endif %} order-0 order-lg-0 mb-2 {{ container_mb_class }}">
+      <div class="category-page-title show-filter-closed">
+          <h1>{{ title }}</h1>
+          {% render 'collection-subtitle' %}
+      </div>
+      {%- if collection_description -%}
+        <div class="category-page-description-text">{{- collection_description -}}</div>
+      {%- endif -%}
+      {%- if settings.subcollection_vendor != 'none' -%}
+      {%- if subcollection_vendor != 'none' and match or filter_vendor.values.size > 1 and results_count > 0 -%}
+      {%- if subcollection_vendor == 'subcollection' -%}
+        <async-reload data-reload="elements" data-url-update>
+      {%- endif -%}
+        <swiper-carousel data-filter-variable class="d-none d-sm-block" data-center-arrows>
+          <div class="swiper-container swiper-container--center" id="categoryPageCarousel">
+            <div class="card-categories card-categories--center swiper-wrapper row flex-nowrap row-cols-3 row-cols-sm-5 row-cols-md-8 g-0">
+              {%- if subcollection_vendor == 'subcollection' -%}
+                {%- for link in match.links -%}
+                  <div class="swiper-slide">
+                    {% capture img_title_alt %}
+                      <h4 class="card-category-xs-name">{{ link.title | escape | truncate: 23, '..' }}</h4>
+                    {% endcapture %}
+                    {%- liquid
+                      assign link_url = link.url
+
+                      if template.suffix contains 'store-width-'
+                        unless link_url contains '?'
+                          assign link_url = link_url | append: '?'
+                        endunless
+
+                        assign link_url = link_url | append: '&view=' | append: template.suffix
+                      endif
+                    -%}
+                    <a href="{{ link_url }}"  {% if link.title.size > 29 %}title="{{ link.title | escape }}"{% endif %} class="card-category-xs text-center {% if link.current %}active{% endif %}">
+                      {% render 'image-container',
+                        image: link.object.image,
+                        padding_no_bg: 100,
+                        padding: 100,
+                        sizes: '(min-width: 1200px) 81px, (min-width: 1025px) 54px, (min-width: 992px) 94px, (min-width: 768px) 116px, (min-width: 576px) 80px, calc(100vw - 30px -50px - 20px) / 3',
+                        class_ic: 'card-category-xs-img ',
+                        class_img: 'w-100',
+                        bg_alt: true,
+                        bg_border: true,
+                        img_title_alt: img_title_alt
+                      %}
+                      <h4 class="card-category-xs-name">
+                        {%- if link.object.image != blank -%}
+                          {{ link.title | escape | truncate: 29, '..' }}
+                        {%- endif -%}
+                      </h4>
+                    </a>
+                  </div>
+                {%- endfor -%}
+              {%- else -%}
+                {%- if filter_vendor.values.size > 1 and  results_count > 0 -%}
+                  {%- for value in filter_vendor.values -%}
+                    <div class="swiper-slide">
+                      {%- liquid
+                        assign data_ajax = filter_vendor.url_to_remove
+
+                        unless data_ajax contains "?"
+                          assign data_ajax = data_ajax | append: '?'
+                        endunless
+
+                        assign data_ajax = data_ajax | append: '&section_id=async-facets'
+                        assign value_url = filter_vendor.url_to_remove
+
+                        unless value_url contains "?"
+                          assign value_url = value_url | append: '?'
+                        endunless
+
+                        assign value_url = value_url | append: '&filter.p.vendor=' | append: value.label
+
+                        assign reset_url = filter_vendor.url_to_remove
+
+                        unless reset_url contains '?'
+                          if filter_vendor.active_values.size > 0
+                            assign reset_url = reset_url | append: '?'
+                          endif
+                        endunless
+
+                      -%}
+                      <facet-filter data-ajax="{{ data_ajax }}">
+                        {%- liquid
+                          assign absent = false
+                          assign color_pic_url =  'vendor-' | append: value.label | handle | append: '.png' | file_img_url: 'medium'
+                          assign color_pic_url_size = color_pic_url | split: '?' | last | size
+
+                          if color_pic_url_size <= 6
+                            assign absent = true
+                          endif
+                        -%}
+                        <a href="{{ value_url }}"  class="{% if value.active %}active{% endif %} card-category-xs text-center {% if value.count == 0 and value.active == false %}disabled{% endif %}" title="{{ 'theme.general.show_only' | t }}{{ value.label | escape }}" data-reset-url="{{ reset_url }}" data-value="{{ value.label | escape }}" data-control="Filter-{{ filter_vendor.param_name | handle | escape }}-{{ forloop.index }}">
+                          <div class="card-category-xs-img image-container ic--border {% if absent %}ic--bg-alt{% endif %} image-hover-scale" style="padding-bottom: 100%">
+                            {%- if absent -%}
+                              <h4 class="card-category-xs-name">{{ value.label | escape | truncate: 16, '..' }}</h4>
+                            {%- else -%}
+                              <img src="{{ color_pic_url }}" alt="{{ value | escape }}" width="81" height="81">
+                            {%- endif -%}
+                            <div class="loading-overlay hidden">
+                              <div data-load="loading"></div>
+                            </div>
+                          </div>
+                          <h4 class="card-category-xs-name">{{ 'theme-sections.sections.header.cart_count' | t: count: value.count }}</h4>
+                        </a>
+                      </facet-filter>
+                    </div>
+                  {%- endfor -%}
+                {%- endif -%}
+              {%- endif -%}
+            </div>
+            <div class="swiper-scrollbar position-relative mt-1 d-md-none"></div>
+            {%- if filter_vendor.values.size > 24 -%}
+              <div class="swiper-arrows-carousel container">
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+              </div>
+            {%- else -%}
+              <div class="swiper-pagination position-relative mt-3 d-none d-md-flex sw"></div>
+            {%- endif -%}
+          </div>
+          <script type="application/json" data-filter-closed>
+            {
+              "scrollbar": {
+                "el": ".swiper-scrollbar",
+                "draggable": true
+              },
+              "pagination": {
+                "el": ".swiper-pagination",
+                "clickable": true
+              },
+              "navigation": {
+                "nextEl": ".swiper-button-next",
+                "prevEl": ".swiper-button-prev"
+              },
+              "watchOverflow": true,
+              "slidesPerView": 3,
+              "spaceBetween": 10,
+              "breakpoints": {
+                "575": {
+                  "slidesPerView": 5,
+                  "spaceBetween": 15
+                },
+                "992": {
+                  "slidesPerView": 11,
+                  "spaceBetween": 15
+                }{% if store_width > 1465 %},
+                "1466": {
+                  "slidesPerView": 13,
+                  "spaceBetween": 15
+                }{%- endif -%}{% if store_width > 1700 %},
+                "1700": {
+                  "slidesPerView": 15,
+                  "spaceBetween": 15
+                }{%- endif -%}
+              }
+            }
+          </script>
+          <script type="application/json" data-filter-opened>
+            {
+              "scrollbar": {
+                "el": ".swiper-scrollbar",
+                "draggable": true
+              },
+              "pagination": {
+                "el": ".swiper-pagination",
+                "clickable": true
+              },
+              "navigation": {
+                "nextEl": ".swiper-button-next",
+                "prevEl": ".swiper-button-prev"
+              },
+              "watchOverflow": true,
+              "slidesPerView": 3,
+              "spaceBetween": 10,
+              "breakpoints": {
+                "575": {
+                  "slidesPerView": 5,
+                  "spaceBetween": 15
+                },
+                "992": {
+                  "slidesPerView": 8,
+                  "spaceBetween": 15
+                }{% if store_width > 1465 %},
+                "1466": {
+                  "slidesPerView": 13,
+                  "spaceBetween": 15
+                }{%- endif -%}{% if store_width > 1700 %},
+                "1700": {
+                  "slidesPerView": 15,
+                  "spaceBetween": 15
+                }{%- endif -%}
+              }
+            }
+          </script>
+        </swiper-carousel>
+        {%- if subcollection_vendor == 'subcollection' -%}
+          </async-reload>
+        {%- endif -%}
+      {%- endif -%}
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+{%- endif -%}

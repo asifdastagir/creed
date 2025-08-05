@@ -1,0 +1,5 @@
+{%- if section.settings.header_search -%}
+  <search-popup data-selector="#searchModal" data-ajax="{{ routes.root_url }}?section_id=header-search-popup" data-tippy-content="{{ 'theme.general.search_products' | t | escape }}" data-tippy-placement="top">
+    <a href="{{ routes.search_url }}" class="dropdn-link" aria-controls="searchModal" aria-label="{{ 'general.search.search' | t }}"><span class="icon-wrap">{% render 'icon-search' %}</span></a>
+  </search-popup>
+{%- endif -%}

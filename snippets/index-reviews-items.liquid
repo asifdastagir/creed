@@ -1,0 +1,161 @@
+{%- comment -%}theme-check-disable LiquidHTMLSyntaxError{%- endcomment -%}
+{%- for item in results -%}
+  {%- liquid
+      if count > 8
+          break
+      endif
+
+      assign class = ''
+      assign data_bgset = ''
+
+      if source == 'products'
+          assign product = item
+          assign invert_color = false
+          assign shopify_attributes = ''
+          assign title = product.metafields.custom.featured_review_author
+          assign category = product.type
+          assign review = product.metafields.custom.featured_review_text
+          assign stars = product.metafields.reviews.rating.value.rating
+          assign class = 'bg-alt shadow-only-hover'
+
+          if review == blank
+              continue
+          endif
+
+          assign count = count | plus: 1
+
+      else
+          assign product = item.settings.product
+          assign bg_style = ''
+
+          if item.settings.bg_preset == 'custom'
+              assign bg_color = item.settings.background_custom_color
+
+              if bg_color != 'rgba(0,0,0,0)' and bg_color != blank
+                  assign bg_style = 'style="background-color: ' | append: bg_color | append: '";'
+                  assign class = 'shadow-only-hover'
+              endif
+          elsif item.settings.bg != blank or item.settings.bg_preset != 'none' and item.settings.bg_preset != 'bg-alt'
+              assign class = 'lazyload bg-cover'
+              assign data_bgset = item.settings.bg_preset | asset_img_url: 'master'
+
+              if item.settings.bg != blank
+                  assign data_bgset = item.settings.bg | image_url: width: item.settings.bg.width
+              endif
+          elsif item.settings.bg_preset == 'bg-alt'
+              assign class = 'bg-alt shadow-only-hover'
+          endif
+
+          assign invert_color = item.settings.invert_color
+          assign shopify_attributes = item.shopify_attributes
+          assign title = item.settings.title
+          assign category = item.settings.category
+          assign review = item.settings.review
+          assign stars = item.settings.stars
+
+      endif
+
+      assign in_collection = product.collections | where: 'handle', collection.handle | first
+
+      if collection == null or collection.handle == 'all' or in_collection == nil
+          assign all_products_count = 0
+          for c in product.collections
+          if c.handle != 'all' and c.handle != 'frontpage' and all_products_count < c.all_products_count
+              assign collection = c
+              assign all_products_count = c.all_products_count
+          endif
+          endfor
+      endif
+
+      for i in (1..10)
+          assign catalog_handle = 'catalog_' | append: i
+          assign catalog_handle = settings[catalog_handle]
+          assign catalog_links = catalog_links | concat: linklists[catalog_handle].links
+      endfor
+
+      for link in catalog_links
+          assign lvl_2 = link.links | where: 'url', collection.url | first
+          unless lvl_2 == nil
+          assign lvl_1 = link
+          break
+          endunless
+      endfor
+      if lvl_1 == nil
+          assign lvl_1 = catalog_links | where: 'url', collection.url | first
+      endif
+
+      if lvl_2 == blank and lvl_1 == blank
+          for tag in product.tags
+              if tag contains 'collection-'
+                  assign collection_handle = tag | replace: 'collection-', ''
+                  assign collection = collections[collection_handle]
+              elsif tag contains 'collections-'
+                  assign collection_handle = tag | replace: 'collections-', ''
+                  assign collection = collections[collection_handle]
+              endif
+          endfor
+      endif
+
+      assign product_url_collection = product.url
+
+      if settings.product_card_url_within_collection
+        assign product_url_collection = product.url | within: collection
+      endif
+  -%}
+
+  {% if product != blank %}
+    <a href="{{ product_url_collection }}" class="{{ class_item }} review-grid-item  {% if invert_color %}colorize-invert{% endif %}">
+  {% else %}
+    <div class="{{ class_item }} review-grid-item  {% if invert_color %}colorize-invert{% endif %}">
+  {% endif %}
+      <div class="review-grid-inside  {{ class }}" {{ shopify_attributes }} {% if data_bgset != blank %}data-bgset="{{ data_bgset }}"{% endif %} {{ bg_style }}>
+      <div class="review-grid-author-name">
+          {{ title }}
+      </div>
+      <div class="review-grid-author-post">{{ category | default: product.type }}</div>
+      <div class="review-grid-rating">
+          {% render 'rating', stars: stars, layout: 'testimonials' %}
+      </div>
+      {%- if product != blank -%}
+          {%- liquid
+              assign image = product.selected_variant.featured_media | default: product.featured_media
+          -%}
+          <div class="review-grid-author-photo">
+          {% render 'image-container',
+              image: image,
+              padding: 100,
+              sizes: '129px',
+              width_times: 3,
+              product_object: product,
+              bg: settings.product_card_image_placeholder
+          %}
+          </div>
+          <div class="review-grid-product-name">
+          {{ product.title | escape }}
+          </div>
+      {%- endif -%}
+
+      {%- if product == blank and item.settings.image != blank -%}
+          <div class="review-grid-author-photo">
+              {% render 'image-container',
+                  image: item.settings.image,
+                  padding: 100,
+                  sizes: '129px',
+                  round: 0
+              %}
+          </div>
+      {%- endif -%}
+
+      <div class="review-grid-text">
+          {{ review }}
+      </div>
+      </div>
+
+  {% if product != blank %}</a>{% else %}</div>{% endif %}
+
+  {% comment %} </{% if product != blank %}a{% else %}div{% endif %}> {% endcomment %}
+
+  {%- if masonry != true -%}
+      <div class="line-break-lg"></div>
+  {%- endif -%}
+  {%- endfor -%}

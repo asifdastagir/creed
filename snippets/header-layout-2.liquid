@@ -1,0 +1,162 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- liquid
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign layout = 'header-layout-2'
+-%}
+{{ 'header2' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  if settings.mobile_bottom_navigation_account == 'header' and settings.mobile_bottom_navigation_wishlist == 'header' and settings.mobile_bottom_navigation_cart == 'header'
+    assign class = class | append: ' icons-compact-mobile'
+  endif
+
+  render 'header-sticky', section: section
+-%}
+<div class="hdr hdr--style2 {{ class }}">
+  <div class="hdr-content">
+    <div class="container">
+      <div class="row justify-content-between">
+        <div class="col-auto hdr-logo">
+          {% render 'logo',
+            header_transparent: header_transparent,
+            logo: logo,
+            svg_logo: svg_logo,
+            svg_logo_name: svg_logo_name,
+            logo_transparent: logo_transparent,
+            svg_logo_transparent: svg_logo_transparent,
+            svg_logo_name_transparent: svg_logo_name_transparent,
+            logo_width: section.settings.logo_width,
+            logo_width_mobile: section.settings.logo_width_mobile,
+            prefix: 'Header-logo-',
+            id: section.id,
+            class: 'logo'
+          %}
+        </div>
+        {% render 'header-search-disclosed', class: "hdr-open-search-form" %}
+        <div class="hdr-links-wrap col-auto ms-lg-auto">
+          <div class="hdr-inline-link hide-mobile">
+            {%- liquid
+              render 'header-settings', id1: 'languages', id2: 'currencies'
+              render 'header-get-help'
+              render 'header-account'
+              render 'header-wishlist'
+              render 'header-cart'
+            -%}
+          </div>
+          <div class="hdr-inline-link show-mobile">
+            {% render 'header-get-help' %}
+            {%- if settings.phone != blank -%}
+              <a href="tel:{{ settings.phone }}" title="tel:{{ settings.phone }}" class="dropdn-link">
+                <span class="icon-wrap">{% render 'icon-phone' %}</span>
+              </a>
+            {%- endif -%}
+            {%- liquid
+              render 'header-search-mobile-toggle'
+
+              if settings.mobile_bottom_navigation_account == 'header'
+                render 'header-account-icon', position: 'bottom'
+              endif
+
+              if settings.mobile_bottom_navigation_wishlist == 'header'
+                render 'header-wishlist-icon'
+              endif
+
+              if request.page_type == 'cart'
+                assign tag = 'shipping-calculator-cart'
+              endif
+
+              if settings.mobile_bottom_navigation_cart == 'header'
+                render 'header-cart-icon', tag: tag
+              endif
+
+              render 'header-burger'
+            -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="hdr-navline hide-mobile">
+    <div class="container">
+      <div class="row">
+        {%- if section.settings.menu_categories_button -%}
+          <div class="col-auto">
+            <mega-menu>
+              <ul class="mmenu mmenu--single mmenu-js">
+                <li class="mmenu-item--simple menu-item-btn">
+                  <a href="#" class="heading-font {% if section.settings.tab_button_invert %}btn-colorize-invert{% endif %}">
+                    <span class="icon-wrap">{% render 'icon-menu2' %}</span><span>{{ 'theme.general.categories' | t }}</span>
+                  </a>
+                  {%- if section.settings.menu_categories != blank and section.settings.menu_categories.links.size > 0 -%}
+                    <div class="mmenu-submenu">
+                      <ul class="submenu-list">
+                        {%- for link in section.settings.menu_categories.links -%}
+                          <li class="mmenu-item--simple{% if link.current or active %} active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>
+                            {% render 'header-navigation-component-link', link: link, span: true, layout: layout %}
+
+                            {%- if link.links != blank and show_dropdowns != false -%}
+                              <div class="submenu-list-wrap">
+                                {% render 'header-navigation-component-subtitle', link: link, layout: layout %}
+                                <ul>
+                                  {%- for childlink in link.links -%}
+                                    <li>
+                                      {%- liquid
+                                        assign show_collection_preview = false
+
+                                        if section.settings.menu_categories_previews
+                                          assign show_collection_preview = true
+
+                                          if childlink.links != blank
+                                            assign show_collection_preview = false
+                                          endif
+                                        endif
+
+                                      -%}
+                                      {% render 'header-navigation-component-link', link: childlink, show_collection_preview: show_collection_preview, layout: layout %}
+
+                                      {%- if childlink.links != blank and show_dropdowns != false -%}
+                                        <div class="submenu-list-wrap">
+                                          {% render 'header-navigation-component-subtitle', link: childlink, layout: layout %}
+                                          <ul>
+                                            {%- for grandchildlink in childlink.links -%}
+                                              <li>
+                                                {% render 'header-navigation-component-link', link: grandchildlink, show_collection_preview: section.settings.menu_categories_previews, layout: layout %}
+                                              </li>
+                                            {%- endfor -%}
+                                          </ul>
+                                        </div>
+                                      {%- endif -%}
+
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              </div>
+                            {%- endif -%}
+                          </li>
+                        {%- endfor -%}
+                      </ul>
+                    </div>
+                  {%- endif -%}
+                </li>
+              </ul>
+            </mega-menu>
+          </div>
+        {%- endif -%}
+        <div class="col {% if section.settings.menu_categories_button %}text-center{% else %}mmenu-to-start{% endif %}">
+          <div class="hdr-nav nav-holder text-center" role="navigation">
+            {% render 'header-navigation', show_dropdowns: false, section: section %}
+          </div>
+        </div>
+        {%- if section.settings.featured_link_text != blank -%}
+          <div class="col-auto">
+            <ul class="mmenu">
+              <li><a class="top-level-link" href="{{ section.settings.featured_link_url }}"><span>{{ section.settings.featured_link_text }}</span>{% if section.settings.featured_link_badge %}<span class="menu-label menu-label--color2">{{ section.settings.featured_link_badge }}</span>{% endif %}</a></li>
+            </ul>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>

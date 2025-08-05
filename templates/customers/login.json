@@ -1,0 +1,19 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-login",
+      "settings": {
+        "image_login_page": "shopify:\/\/shop_images\/account-01.png",
+        "section_width": "custom",
+        "container_max_width": 920,
+        "spacing_sections": 46,
+        "use_global_desktop_space": false,
+        "spacing_sections_mobile": 20,
+        "use_global_mobile_space": false
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

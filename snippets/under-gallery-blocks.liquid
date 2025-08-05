@@ -1,0 +1,12 @@
+{%- if section.settings.payment_enable -%}
+    <div class="prd-block-safety order-4 mt-3 mt-lg-5 {{ class }}">
+    <h2 class="h4-style line-text">{{ 'theme.general.guaranteed_safe_checkout' | t }}</h2>
+    {% render 'payments', class: 'row g-1 flex-wrap justify-content-center' %}
+    </div>
+{%- endif -%}
+
+{%- if section.settings.show_social -%}
+    <div class="prd-block-social order-5 w-100 mt-3 {{ class }}">
+    {% render 'social-media', class: 'product-block-social d-flex justify-content-center list-unstyled' %}
+    </div>
+{%- endif -%}

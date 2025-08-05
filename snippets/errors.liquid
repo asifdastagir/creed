@@ -1,0 +1,24 @@
+{%- if form.errors -%}
+  <div tabindex="-1" autofocus>
+    <span class="visually-hidden">{{ 'accessibility.error' | t }} </span>
+    {%- liquid
+      assign message = 'templates.contact.form.error_heading' | t
+      assign message = '<strong>' | append: message | append: '</strong>'
+    -%}
+    {% render 'error', message: message, strong: true %}
+  </div>
+  <div class="errors">
+    <ul>
+      {%- for field in form.errors -%}
+        {%- if field == 'form' -%}
+          <li>{{ form.errors.messages[field] }}</li>
+        {%- else -%}
+          <li>
+            {{ form.errors.translated_fields[field] | capitalize }}
+            {{ form.errors.messages[field] }}
+          </li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endif -%}

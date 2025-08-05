@@ -1,0 +1,12 @@
+{%- assign first_3d_model = product.media | where: "media_type", "model" | first -%}
+<!-- {{ first_3d_model }} -->
+{%- if first_3d_model -%}
+  <script type="application/json" id="ProductJSON-{{ product.id }}">
+    {{ product.media | where: 'media_type', 'model' | json }}
+  </script>
+  {%- if product.metafields.custom.model_with_variants.value == true and product.metafields.custom.model_variants_schema.value != blank -%}
+    <script type="application/json" id="3d-model-variants">
+      {{ product.metafields.custom.model_variants_schema }}
+    </script>
+    {%- endif -%}
+{%- endif -%}

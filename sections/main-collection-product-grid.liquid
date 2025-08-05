@@ -1,0 +1,543 @@
+{% comment %}theme-check-disable NestedSnippet, ContentForHeaderModification, UnusedAssign{% endcomment %}
+{%- liquid
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+    assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+
+  assign image_k = 1
+
+  if store_width > 1178
+    assign image_k = store_width | divided_by: 1178.00 | round: 2
+  endif
+
+  assign closed_filter = cart.attributes.closed_filter | default: settings.filter_close
+
+  if closed_filter == 'false' or closed_filter == false
+    assign closed_filter = false
+  else
+    assign closed_filter = true
+  endif
+
+  assign sort_by = collection.sort_by | default: collection.default_sort_by
+
+  assign prd_per_row_sm = cart.attributes.prd_per_row_sm | default: settings.products_per_row_sm
+  assign prd_per_row_md = cart.attributes.prd_per_row_md | default: settings.products_per_row_md
+  assign prd_per_row_xl = cart.attributes.prd_per_row_xl | default: settings.products_per_row_xl
+  assign prd_per_row_xxl = cart.attributes.prd_per_row_xxl | default: settings.products_per_row_xxl
+
+  assign prd_per_row_sm = prd_per_row_sm | append: ''
+  assign prd_per_row_md = prd_per_row_md | append: ''
+  assign prd_per_row_xl = prd_per_row_xl | append: ''
+  assign prd_per_row_xxl = prd_per_row_xxl | append: ''
+
+  if prd_per_row_xxl == '6' and store_width < 1466
+    assign prd_per_row_xxl = '5'
+  endif
+
+  unless settings.collection_grid_list
+    if prd_per_row_sm == 'list'
+      assign prd_per_row_sm = '2'
+    endif
+
+    if prd_per_row_md == 'list'
+      assign prd_per_row_md = '3'
+    endif
+
+    if prd_per_row_xl == 'list'
+      assign prd_per_row_xl = '4'
+    endif
+
+    if prd_per_row_xxl == 'list'
+      assign prd_per_row_xxl = '6'
+    endif
+  endunless
+
+  case prd_per_row_sm
+    when 'list'
+      assign grid_class_on_prd_per_row_sm = 'grid_list_sm'
+    when '1'
+      assign grid_class_on_prd_per_row_sm = 'grid_1_sm'
+    when '2'
+      assign grid_class_on_prd_per_row_sm = 'grid_2_sm'
+  endcase
+
+  case prd_per_row_md
+    when 'list'
+      assign grid_class_on_prd_per_row_md = 'grid_list_md'
+    when '2'
+      assign grid_class_on_prd_per_row_md = 'grid_2_md'
+    when '3'
+      assign grid_class_on_prd_per_row_md = 'grid_3_md'
+    when '4'
+      assign grid_class_on_prd_per_row_md = 'grid_4_md'
+  endcase
+
+
+  case prd_per_row_xl
+    when 'list'
+      assign grid_class_on_prd_per_row_xl = 'grid_list_xl'
+    when '2'
+      assign grid_class_on_prd_per_row_xl = 'grid_2_xl'
+    when '3'
+      assign grid_class_on_prd_per_row_xl = 'grid_3_xl'
+    when '4'
+      assign grid_class_on_prd_per_row_xl = 'grid_4_xl'
+    when '5'
+      assign grid_class_on_prd_per_row_xl = 'grid_5_xl'
+  endcase
+
+  case prd_per_row_xxl
+    when 'list'
+      assign grid_class_on_prd_per_row_xxl = 'grid_list_xxl'
+    when '2'
+      assign grid_class_on_prd_per_row_xxl = 'grid_2_xxl'
+    when '3'
+      assign grid_class_on_prd_per_row_xxl = 'grid_3_xxl'
+    when '4'
+      assign grid_class_on_prd_per_row_xxl = 'grid_4_xxl'
+    when '5'
+      assign grid_class_on_prd_per_row_xxl = 'grid_5_xxl'
+    when '6'
+      assign grid_class_on_prd_per_row_xxl = 'grid_6_xxl'
+  endcase
+
+  if collection.products_count == 1
+    assign prd_per_row_sm = '1'
+    assign grid_class_on_prd_per_row_sm = 'grid_1_sm'
+  endif
+
+  if collection.filters.size < 1
+    assign closed_filter = true
+  endif
+
+  assign subcollection_vendor = collection.metafields.custom.subcollection_vendor | default: settings.subcollection_vendor
+
+  assign filter_layout = settings.filter_layout
+
+  if filter_layout == 'outer'
+    assign closed_filter = true
+  endif
+
+  if settings.sidebar_always_visible
+    assign closed_filter = false
+  endif
+
+  if section.settings.fluid
+    assign container = '-fluid'
+  endif
+
+  assign navigation = settings.collection_categories
+  assign navigation_filter = false
+
+  if navigation != blank and navigation.links.size > 0
+    assign navigation_filter = true
+  endif
+
+  assign grid_width_full = true
+  assign enable_filtering = settings.enable_filtering
+
+  if enable_filtering
+    if navigation_filter or filter_layout == 'inner' and collection.filters.size > 0 and collection.products.size > 0
+      assign grid_width_full = false
+    endif
+  endif
+-%}
+
+<div class="holder mt-global {% if store_width > 1465 %}use-grid-xxl{% endif %} {% if store_width > 1700 %}use-grid-xxxl{% endif %}" {% render 'section-style', section: section %} id="main-collection-filters" data-id="{{ section.id }}">
+  <div class="container{{ container }}">
+    {% comment %} {%- if collection.filters.size < 1 or filter_layout == 'outer' -%}
+      <div class="title-wrap text-center"  data-async-reload="main-collection-product-grid-collection-title">
+        <h1>{{- collection.title | escape -}}</h1>
+      </div>
+    {%- endif -%} {% endcomment %}
+
+    {% if section.settings.fluid %}<div class="container">{% endif %}
+      {% render 'collection-description-outer' section: section, subcollection_vendor: subcollection_vendor %}
+    {% if section.settings.fluid %}</div>{% endif %}
+
+    <div  data-async-reload="main-collection-product-grid-two-columns">
+      <div class="collection-loading-overlay"></div>
+    <!-- Two columns -->
+  <div class="row category-page-block js-category-page-block {% if closed_filter %}has-filter-closed{% endif %}">
+      <!-- Left column -->
+      {%- if collection.products.size > 0 and enable_filtering -%}
+        <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
+        <div id="filterColumn" class="{% if collection.filters.size < 1 and navigation_filter == false %}hidden{% endif %} col-lg-4 col-xl-3 aside aside--left filter-col filter-mobile-col filter-col--sticky js-sticky-collision js-filter-col filter-col--opened-desktop {% if filter_layout == 'outer' %}hidden{% endif %}">
+          {%- if closed_filter != true or filter_layout == 'outer' or collection.current_vendor or collection.current_type or navigation_filter -%}
+            {% render 'facets',
+              results: collection,
+              section: section,
+              id: 'FacetFiltersForm',
+              show_sizes: settings.show_sizes,
+              size_options_name: settings.size_options_name,
+              show_colorpics: settings.show_colorpics
+            %}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+      <!-- /Left column -->
+
+      <!-- Center column -->
+      <div class="col-lg-{% if grid_width_full %}12 {% else %}8 col-xl-9 {% endif %} aside d-flex flex-column">
+        {%- paginate collection.products by settings.collection_products_per_page -%}
+          <div id="ProductGridContainer" class="d-flex flex-column">
+            <div class="collection-loading-overlay"></div>
+            {% render 'facets-sorting',
+              results: collection,
+              closed_filter: closed_filter,
+              prd_per_row_sm: prd_per_row_sm,
+              prd_per_row_md: prd_per_row_md,
+              prd_per_row_xl: prd_per_row_xl,
+              prd_per_row_xxl: prd_per_row_xxl,
+              section: section,
+              store_width: store_width
+            %}
+
+            {% if section.settings.fluid %}<div class="container">{% endif %}
+            {% render 'collection-description',
+              section: section,
+              results: collection,
+              subcollection_vendor: subcollection_vendor
+            %}
+            {% if section.settings.fluid %}</div>{% endif %}
+
+            <div class="collection position-relative order-3 order-lg-3">
+              <div class="collection-loading-overlay"></div>
+              <div id="product-grid" data-id="{{ section.id }}{% if collection.current_vendor %}&amp;q={{ collection.current_vendor | url_encode }}{% endif %}">
+                {% render 'facets-active',
+                  results: collection,
+                  section: section,
+                  show_sizes: settings.show_sizes
+                  size_options_name: settings.size_options_name
+                  show_colorpics: settings.show_colorpics
+                %}
+                {%- if collection.products.size == 0 -%}
+                  <div class="category-empty text-center">
+                    <h2 class="category-empty-title">{{ 'theme-sections.sections.collection_template.empty' | t }}</h2>
+                    <div class="category-empty-text fw-light">{{ 'theme.general.no_products_matching' | t }}</div>
+                    <div class="mt-3">
+                      <a href="{{ routes.all_products_collection_url }}" class="btn btn--showmore">{{ 'general.continue_shopping' | t }}</a>
+                    </div>
+                  </div>
+                {%- else -%}
+                  <div class="prd-grid-wrap">
+                    <div class="prd-grid list-options-in-row {% if closed_filter == true or settings.filter_layout == 'outer' %}justify-content-center{% endif %} row {{ grid_class_on_prd_per_row_sm }} {{ grid_class_on_prd_per_row_md }} {{ grid_class_on_prd_per_row_xl }} {% if store_width > 1465 %}{{ grid_class_on_prd_per_row_xxl }}{% endif %} js-category-grid" data-product-grid>
+                      {%- liquid
+                        if prd_per_row_xl == '2' or prd_per_row_xxl == '2'
+                          assign image_width = 559 | times: image_k | round
+                          assign sizes = '(min-width: 1400px) ' | append: image_width | append: 'px, (min-width: 1200px) 540px, (min-width: 992px) 450px, calc(100vw)'
+
+                        elsif prd_per_row_xl == '3' or prd_per_row_xxl == '3'
+                          assign image_width = 363 | times: image_k | round
+                          assign sizes = '(min-width: 1400px) ' | append: image_width | append: 'px, (min-width: 1200px) 350px, (min-width: 992px) 289px, (min-width: 768px) 210px, calc(100vw)'
+
+                        elsif prd_per_row_xl == '4' or prd_per_row_xxl == '4'
+                          assign image_width = 264 | times: image_k | round
+                          assign sizes = '(min-width: 1400px) ' | append: image_width | append: 'px, (min-width: 1200px) 255px, (min-width: 992px) 210px, (min-width: 768px) 150px, calc(100vw)'
+
+                        else
+                          assign image_width = 205 | times: image_k | round
+                          assign sizes = '(min-width: 1400px) ' | append: image_width | append: 'px, (min-width: 1200px) 198px, (min-width: 992px) 162px, (min-width: 768px) 210px, calc(100vw)'
+                        endif
+
+
+                        assign widths = ''
+                        assign start_width = 540 | times: image_k | round
+                        assign breakpoints = start_width | append: '540,450,350,289,255' | split: ','
+
+                        for i in (1..2)
+                          assign k = i
+
+                          if i == 1
+                            assign k = 1.4
+                          endif
+
+                          for breakpoint in breakpoints
+                            assign width_ = breakpoint | plus: 0 | times: k
+                            assign widths = widths | append: width_ | append: ','
+                          endfor
+                        endfor
+                      -%}
+                      {%- for product in collection.products -%}
+                        {%- liquid
+                          assign width_ = product.featured_media.preview_image.width
+                          assign card_widths = widths | append: width_
+
+                          assign lazyload = false
+                          assign class_img_only = 'fade-up-none'
+
+                          if forloop.index > 1
+                            assign lazyload = true
+                            assign class_img_only = 'lazyload fade-up'
+                          endif
+
+                          assign fetchpriority = false
+                          if forloop.first
+                            assign fetchpriority = true
+                          endif
+
+                          assign swatches_lazy = true
+                          if prd_per_row_sm == 'list' or prd_per_row_md == 'list' or prd_per_row_xl == 'list' or prd_per_row_xxl == 'list'
+                            if forloop.index < 4
+                              assign swatches_lazy = false
+                            endif
+                          endif
+
+                          if request.design_mode
+                            assign swatches_lazy = false
+                          endif
+
+                          assign show = true
+
+                          if settings.collection_out_of_stock_hide and product.selected_or_first_available_variant.available == false
+                            assign show = false
+                          endif
+                        -%}
+                        {%- if show -%}
+                          <div class="col">
+                            {% render 'product-card',
+                              product: product,
+                              sizes: sizes,
+                              widths: card_widths,
+                              lazyload: lazyload,
+                              class_img_only: class_img_only,
+                              section_id: 'product-card',
+                              fetchpriority: fetchpriority,
+                              swatches_lazy: swatches_lazy
+                            %}
+                          </div>
+                        {%- endif -%}
+                      {%- endfor -%}
+                    </div>
+                  </div>
+                  {%- if paginate.pages > 1 -%}
+                    {% render 'pagination',
+                      paginate: paginate,
+                      anchor: '#ProductGridContainer',
+                      results: collection,
+                      section: section,
+                      container: '.prd-grid',
+                      item: '.col',
+                      infinite_scroll: section.settings.infinite_scroll
+                    %}
+                  {%- endif -%}
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endpaginate -%}
+      </div>
+      <!-- /Center column -->
+    </div>
+    <!-- /Two columns -->
+
+    {% render 'facets-mobile-popup-container' results: collection, sort_by: sort_by %}
+
+    </div>
+  </div>
+
+  {%- if section.settings.product_reviews -%}
+    {%- liquid
+      capture contentForQuerystring
+        echo content_for_header
+      endcapture
+
+      assign pageUrl = contentForQuerystring | split: '"pageurl":"' | last | split: '"' | first | split: '.myshopify.com' | last | replace: '\/', '/' | replace: '%20', ' ' | replace: '\u0026', '&' | replace: request.host, '' | append: '&amp;'
+
+      unless pageUrl contains "?"
+        assign pageUrl = request.path | append: '?'
+      endunless
+
+      assign collectionRequestUrl = pageUrl | append: 'section_id=async-index-reviews'
+    -%}
+    <div data-render-facets="reviews" data-async-reload-required="reviews">
+      <intersection-observer
+          data-name="product-reviews"
+          data-url="{{ collectionRequestUrl }}"
+          data-ajax-container=".section-ajax-container"
+          data-margin="0px 0px 600px 0px"
+          data-threshold="0.1"
+          data-once
+        >
+          <div class="section-ajax-container"></div>
+      </intersection-observer>
+    </div>
+  {%- endif -%}
+</div>
+<script src="{{ 'catalog.js' | asset_url }}" defer></script>
+
+
+
+{% schema %}
+{
+  "name": "Main collection",
+  "class": "spaced-section collection-grid-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION WIDTH"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Select width source",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use store width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom width"
+        }
+      ],
+      "default": "global",
+      "info": "Store width you can set in Theme Settings / General"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 1178,
+      "max": 1978,
+      "step": 8,
+      "unit": "px",
+      "label": "Custom width",
+      "default": 1178,
+      "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable secondary background",
+      "default": false,
+      "info": "Theme Settings / Colors - General"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "fluid",
+      "label": "Fluid grid",
+      "default": false,
+      "info": "fullwidth"
+    },
+    {
+      "type": "header",
+      "content": "General"
+    },
+    {
+      "type": "paragraph",
+      "content": "Products per page option is located in Theme Settings/ Collection page"
+    },
+    {
+      "type": "checkbox",
+      "id": "infinite_scroll",
+      "label": "Infinite scroll",
+      "default": true,
+      "info": "Infinite scroll is only on the frontend"
+    },
+    {
+      "type": "checkbox",
+      "id": "update_url",
+      "label": "Update browser url",
+      "default": false,
+      "info": "Saves infinity loading history in browser history"
+    },
+    {
+      "type": "checkbox",
+      "id": "product_reviews",
+      "label": "Show product reviews",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

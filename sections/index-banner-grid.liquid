@@ -1,0 +1,4238 @@
+{%- comment -%}theme-check-disable NestedSnippet,DeprecateBgsizes,TemplateLength, UnclosedHTMLElement{%- endcomment -%}
+
+{%- liquid
+  assign per_row = section.settings.per_row | plus: 0
+  assign per_row_mobile = section.settings.per_row_mobile | plus: 0
+  assign slideshow_control_layout = section.settings.slideshow_control_layout
+  assign layout = section.settings.layout
+
+  assign sizes = '(min-width: 1400px) 1147px, (min-width: 992px) 992px, (min-width: 768px) 768px, calc(100vw - 30px)'
+
+  if section.settings.fluid
+    if per_row == 1
+      assign sizes = '(min-width: 1400px) 1920px, (min-width: 992px) 992px, (min-width: 768px) 768px, calc(100vw - 30px)'
+    else
+      assign sizes = '(min-width: 1400px) 864px, (min-width: 992px) 720px, (min-width: 768px) 566px, calc(100vw - 30px)'
+    endif
+  endif
+
+  assign round = 0
+  assign inner_space = ' g-0'
+  if section.settings.inner_space
+    assign inner_space = ' ' | append: section.settings.inner_space_value
+    assign round = 1
+  endif
+
+  if section.settings.inner_space == false and section.settings.fluid == false
+    assign rounding = ' row--rounded'
+  endif
+
+  if layout contains 'slideshow' and section.settings.fluid == false
+    assign round = 1
+  endif
+
+  assign row = 'row-cols-' | append: per_row_mobile | append: ' row-cols-md-' | append: per_row | append: ' ' | append: inner_space | append: rounding
+
+
+  assign modulo = section.blocks.size | modulo: per_row
+  if per_row >= 2 and modulo > 0
+    assign modulo_index = section.blocks.size | minus: modulo
+    assign suffix = 12 | divided_by: modulo
+    if per_row_mobile == 2
+    endif
+
+  endif
+
+  if layout == 'mosaic-1'
+    assign row = 'gy-divider row-cols-' | append: per_row_mobile | append: ' ' | append: inner_space | append: rounding
+    assign modulo_index = blank
+  endif
+
+  if layout == 'mosaic-2'
+    assign row = 'row-cols-1 row-cols-md-3' | append: ' banners-mosaic ' | append: inner_space | append: rounding
+    assign modulo_index = blank
+  endif
+
+  if layout == 'mosaic-3'
+    assign row = 'row-sm-column-reverse' | append: ' banners-mosaic-3 ' | append: inner_space | append: rounding
+    assign modulo_index = blank
+  endif
+
+  if layout == 'mosaic-4'
+    assign row = 'row-cols-1 row-cols-md-3' | append: inner_space | append: rounding
+    assign modulo_index = blank
+  endif
+
+  if layout == 'mosaic-5'
+    assign row = 'row-cols-1 row-cols-md-3 ' | append: inner_space | append: rounding
+    assign modulo_index = blank
+  endif
+
+  assign hide_buttons_mobile = false
+
+  if per_row_mobile == 2
+    if layout == 'grid' and section.blocks.size > 1
+      assign hide_buttons_mobile = true
+    elsif layout == 'mosaic-1'
+      assign hide_buttons_mobile = true
+    endif
+
+  endif
+
+  if hide_buttons_mobile == true
+    assign row = row | append: ' hide-buttons-mobile'
+  endif
+
+  assign show = false
+
+  for block in section.blocks
+    if block.settings.image != blank
+      assign show = true
+    endif
+  endfor
+
+  if section.settings.placeholder and show == false
+    assign show = true
+  endif
+-%}
+
+{%- if show -%}
+  {% render 'section-wrapper', placement: 'top' %}
+
+  <div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+    <div class="{% render 'section-container-class', layout: layout %}">
+      {% render 'section-heading', section: section %}
+
+      {%- if layout contains 'slideshow' -%}
+        {{ 'slider.css' | asset_url | stylesheet_tag }}
+        {%- unless section.settings.effect == 'none' -%}{{ 'slider-effect.css' | asset_url | stylesheet_tag }}{% endunless %}
+        {%- unless section.settings.boxed -%}
+          <style>
+            :root section#shopify-section-{{ section.id }} main-slider{--container-max-width-boxed: {{ settings.container_max_width }}px}
+          </style>
+        {%- endunless -%}
+        {%- liquid
+          assign decoration = false
+          case settings.section_decoration
+            when "1"
+              assign section_decoration = "none"
+            when "2"
+              assign section_decoration = "grunge1"
+            when "3"
+              assign section_decoration = "grunge2"
+            when "4"
+              assign section_decoration = "grunge3"
+            when "5"
+              assign section_decoration = "paper"
+            when "6"
+              assign section_decoration = "mountains"
+            when "7"
+              assign section_decoration = "ellipse1"
+            when "8"
+              assign section_decoration = "ellipse2"
+            when "9"
+              assign section_decoration = "wave1"
+            when "10"
+              assign section_decoration = "wave2"
+            when "11"
+              assign section_decoration = "wave3"
+            when "21"
+              assign section_decoration = "wave4"
+            when "22"
+              assign section_decoration = "wave5"
+            when "12"
+              assign section_decoration = "triangle1"
+            when "13"
+              assign section_decoration = "triangle2"
+            when "14"
+              assign section_decoration = "triangle_assymetrical1"
+            when "15"
+              assign section_decoration = "triangle_assymetrical1_flip"
+            when "16"
+              assign section_decoration = "triangle_assymetrical2"
+            when "17"
+              assign section_decoration = "triangle_assymetrical2_flip"
+            when "18"
+              assign section_decoration = "tilt"
+            when "19"
+              assign section_decoration = "tilt_flip"
+            when "20"
+              assign section_decoration = "glaze"
+          endcase
+          assign section_decoration_bottom = section.settings.section_decoration_bottom
+
+          if section_decoration_bottom != 'none'
+            if section_decoration_bottom != 'global' or section_decoration != 'none'
+              assign decoration = true
+            endif
+          endif
+
+          assign decorCompensate = false
+          assign decorCompensateSm = ''
+
+          if decoration
+            assign decorCompensate = true
+            if slideshow_control_layout != 'left' and slideshow_control_layout != 'right'
+              assign decorCompensateSm = 'decor-compensate-sm'
+            endif
+          endif
+        -%}
+        <main-slider {% if section.settings.slideshow_autoplay %}data-autoplay="{{ section.settings.slideshow_autoplay_speed }}000" {% if decoration %}data-bottom-decor={{ section_decoration_bottom }}{% endif %}{% if decorCompensate %} data-decor-compensate{% endif %} style="--autoplay: {{ section.settings.slideshow_autoplay_speed }}000ms"{% endif %}>
+          <div style="--max-height-desktop: 65vw" class="swiper-slider-container swiper-container {% if layout contains 'modern' %}slider-boxed{% endif %} {% if layout contains 'fullheight' %}slider-fullheight {% if section.settings.slideshow_fullheight_mobile %}slider-fullheight-mobile{% endif %}{% endif %}  {% if section.settings.slider_bottom_ellipse %}slider-bottom-ellipse{% endif %}">
+            <div class="swiper-wrapper">
+              {%- for block in section.blocks -%}
+              {%- liquid
+                assign layout = 'banner'
+                assign section_id = section.id
+                assign product_form_id = 'product-form-' | append: section_id | append: '-' | append: block.id
+                assign product_object = block.settings.url.object
+                assign current_variant = product_object.selected_or_first_available_variant
+
+                assign fetchpriority = false
+
+                if forloop.first
+                  assign fetchpriority = true
+                endif
+
+                assign font_ratio = 200 | minus: section.settings.font_ratio | divided_by: 10.0 | at_least: 2
+                assign font_ratio_mobile = 200 | minus: section.settings.font_ratio_mobile | divided_by: 10 | at_least: 2
+
+                assign slide_link = false
+
+                if section.settings.fluid == false or block.settings.button == false
+                  assign slide_link = true
+                endif
+
+                if section.settings.layout contains 'modern'
+                  assign slide_link = false
+                endif
+
+
+                assign aligment = block.settings.aligment
+                assign aligment_v = block.settings.aligment_v
+                assign aligment_text = block.settings.aligment_text
+                assign top_padding = block.settings.top_padding
+                assign right_padding = block.settings.left_padding
+                assign bottom_padding = block.settings.top_padding
+                assign left_padding = block.settings.left_padding
+                assign width = block.settings.width
+
+
+                assign aligment_mobile = block.settings.aligment_mobile
+                assign aligment_v_mobile = block.settings.aligment_v_mobile
+                assign aligment_text_mobile = block.settings.aligment_text_mobile
+                assign top_padding_mobile = block.settings.top_padding_mobile
+                assign right_padding_mobile = block.settings.left_padding_mobile
+                assign bottom_padding_mobile = block.settings.top_padding_mobile
+                assign left_padding_mobile = block.settings.left_padding_mobile
+                assign width_mobile = block.settings.width_mobile
+
+                if block.settings.mobile_sync
+                    assign aligment_mobile = aligment
+                    assign aligment_v_mobile = aligment_v
+                    assign aligment_text_mobile = aligment_text
+                    assign top_padding_mobile = top_padding
+                    assign right_padding_mobile = right_padding
+                    assign bottom_padding_mobile = bottom_padding
+                    assign left_padding_mobile = left_padding
+                    assign width_mobile = width
+                endif
+
+                assign padding_desktop = section.settings.images_auto_height_padding
+
+                if layout contains 'fullheight'
+                  assign padding_mobile = false
+                else
+                  assign padding_mobile = section.settings.images_auto_height_padding_mobile
+                endif
+
+                assign sizes_mobile = '(min-width: 768px) 2px, (min-width: 390px) 390px, (min-width: 375px) 375px, (min-width: 320px) 320px, calc(100vw)'
+
+                if section.settings.fluid
+                  assign sizes = '(min-width: 3456px) 3456px, (min-width: 2560px) 2560px, (min-width: 1920px) 1920px, (min-width: 1536px) 1536px, (min-width: 1366px) 1366px, (min-width: 992px) 992px, (min-width: 768px) 768px,'
+                  if block.settings.image_mobile == blank
+                    assign sizes = sizes | append: '(min-width: 390px) 390px, (min-width: 375px) 375px, (min-width: 320px) 320px, calc(100vw)'
+                  else
+                    assign sizes = sizes | append: '(min-width: 2px) 2px, calc(100vw)'
+                  endif
+                endif
+
+                assign ic_style = ''
+                assign color = block.settings.color_placeholder
+                if color != 'rgba(0,0,0,0)' and color != blank
+                  assign ic_style = '--placeholder-bg: ' | append: color | append: ';'
+                endif
+
+                assign fast_shop = false
+                if block.settings.fast_shop and block.settings.url.object.url contains '/products/'
+                    assign fast_shop = true
+                endif
+
+                assign button_text = block.settings.button_text
+
+                if button_text == blank
+                  assign button_text = 'theme.general.shop_now' | t
+                endif
+
+                assign animation_off = false
+
+                if forloop.first
+                  assign animation_off = false
+                endif
+
+                assign class_img_only = 'fade-up'
+                assign lazyload = true
+
+                if forloop.first
+                  assign class_img_only = 'lazyloaded'
+                  assign lazyload = false
+                endif
+
+                unless forloop.first
+                  assign after_img = '<div data-load="loading"></div>'
+                endunless
+
+                unless section.settings.lazyload
+                  assign lazyload = false
+                endunless
+
+                assign custom_caption_colorization = block.settings.custom_caption_colorization
+
+                if custom_caption_colorization
+                  assign default_rgba = 'rgba(0,0,0,0)'
+                  assign color_title = block.settings.color_title
+                  assign color_subtitle = block.settings.color_subtitle
+                  assign color_description = block.settings.color_description
+                  assign color_caption_bg = block.settings.color_caption_bg
+
+                  if color_title != default_rgba and color_title != blank
+                    assign color_title = 'color:' | append: color_title | append: ';'
+                  else
+                    assign color_title = ''
+                  endif
+
+                  if color_subtitle != default_rgba and color_subtitle != blank
+                    assign color_subtitle = 'color:' | append: color_subtitle | append: ';'
+                  else
+                    assign color_subtitle = ''
+                  endif
+
+                  if color_description != default_rgba and color_description != blank
+                    assign color_description = 'color:' | append: color_description | append: ';'
+                  else
+                    assign color_description = ''
+                  endif
+
+                  if color_caption_bg != default_rgba and color_caption_bg != blank
+                    assign color_caption_bg = color_caption_bg | append: ';'
+                  else
+                    assign color_caption_bg = false
+                  endif
+
+                else
+                  assign color_title = ''
+                  assign color_subtitle = ''
+                  assign color_description = ''
+                  assign color_caption_bg = false
+                endif
+
+              -%}
+
+            {% if slide_link and fast_shop == false %}
+              <a href="{{ block.settings.url }}"  class="swiper-slide {% if block.settings.video != null %}swiper-slide--video has-autoplay {% if slide_link and fast_shop == false %}off-control{% endif %}{% endif %}" {% if block.settings.video != null %}data-video="mp4"{% endif %}>
+            {% else %}
+              <div  class="swiper-slide {% if block.settings.video != null %}swiper-slide--video has-autoplay {% if slide_link and fast_shop == false %}off-control{% endif %}{% endif %}" {% if block.settings.video != null %}data-video="mp4"{% endif %}>
+            {% endif %}
+
+                {%- if section.settings.style == 'style-8' -%}
+                  <div class="swiper-slide-caption-bg to-{{ aligment }} to-{{ aligment_mobile }}-mobile" {% if color_caption_bg %}style="--body-bg: {{ color_caption_bg }}"{% endif %} data-swiper-animation="animate__rotateIn" data-duration=".5s" data-delay="0s">
+                    {% render 'icon-sweets-slider-decor' %}
+                  </div>
+              {% endif %}
+
+                {%- if block.settings.video != null -%}
+                  {%- liquid
+                    assign poster = block.settings.video.preview_image | default: block.settings.image
+                    assign style_video = ''
+                    unless layout contains 'fullheight'
+                      assign style_video = '--slider-padding-bottom-desktop:' | append: padding_desktop | append: '%; --slider-padding-bottom-mobile:' | append: padding_mobile | append: '%;'
+                    endunless
+                    if block.settings.video_darkness > 0
+                      assign video_darkness = block.settings.video_darkness | divided_by: 100.0
+                      assign style_video = style_video | append: '--video-overlay-opacity:' | append: video_darkness
+                    endif
+                  -%}
+                  <div class="video-wrap-content w-100 js-video-wrap is-paused lazyload" style="{{ style_video }}">
+                    <div class="video-control">
+                      <div class="video-play" data-video-play>{% render 'icon-play' %}</div>
+                      <div class="video-stop" data-video-stop>{% render 'icon-pause' %}</div>
+                    </div>
+                    {%- if poster != blank -%}
+                      {%- liquid
+                        assign ic_style = ic_style | append: '--padding-bottom: 0;--padding-bottom-mobile: 0;'
+                      -%}
+                      <div class="video-wrap-poster">
+                        {% render 'image-container',
+                          image: poster,
+                          padding_backup: 41.3,
+                          padding_no_bg: padding_desktop,
+                          padding: padding_desktop,
+                          padding_mobile: padding_mobile,
+                          sizes: sizes,
+                          class_ic: 'h-100  w-100'
+                          round: round,
+                          hover_scale: false,
+                          style: ic_style,
+                          class_img_only: class_img_only,
+                          lazyload: lazyload,
+                          fetchpriority: fetchpriority
+                        %}
+                      </div>
+                    {%- endif -%}
+                    <div data-load="loading"></div>
+                    <div class="inner-video js-inner-video">
+                      <template>
+                        {{
+                          block.settings.video
+                          | video_tag:
+                            image_size: '2000x',
+                            autoplay: true,
+                            loop: block.settings.video_loop,
+                            controls: false,
+                            muted: true,
+                            class: "lazyload"
+                        }}
+                      </template>
+                    </div>
+                  </div>
+                {%- else -%}
+                  {%- if block.settings.image_mobile != blank -%}
+                    {% render 'image-container',
+                      image: block.settings.image_mobile,
+                      padding_backup: 62.3,
+                      padding_no_bg: padding_desktop,
+                      padding: padding_desktop
+                      padding_mobile: padding_mobile
+                      sizes: sizes_mobile,
+                      class_ic: 'swiper-slide-img swiper-slide-img-m',
+                      round: round,
+                      hover_scale: false,
+                      style: ic_style,
+                      class_img_only: class_img_only,
+                      after_img: after_img,
+                      lazyload: lazyload,
+                      fetchpriority: fetchpriority
+                    %}
+                  {%- endif -%}
+
+                  {%- liquid
+                    if block.settings.image == blank
+                      assign after_img = ''
+                    endif
+                  -%}
+                  {% render 'image-container',
+                    image: block.settings.image,
+                    padding_backup: 41.3,
+                    padding_no_bg: padding_desktop,
+                    padding: padding_desktop,
+                    padding_mobile: padding_mobile,
+                    sizes: sizes,
+                    class_ic: 'swiper-slide-img',
+                    round: round,
+                    hover_scale: false,
+                    style: ic_style,
+                    class_img_only: class_img_only,
+                    after_img: after_img,
+                    lazyload: lazyload,
+                    fetchpriority: fetchpriority
+                  %}
+                {%- endif -%}
+
+                <flow-type>
+                  <div class="container container-fluid"
+                    {%- if font_ratio != false %}data-fontratio="{{ font_ratio }}"{% endif %}
+                    {% if  font_ratio_mobile != false %}data-fontratio-mobile="{{ font_ratio_mobile }}"{% endif -%}
+                  >
+                    <div class="swiper-slide-caption
+                        to-{{ aligment }}
+                        to-{{ aligment_v }}
+                        to-{{ aligment_mobile }}-mobile
+                        to-{{ aligment_v_mobile }}-mobile
+                        text-{{ aligment_text }}
+                        text-{{ aligment_text_mobile }}-mobile
+                        {% if block.settings.invert_color %}colorize-invert{% endif %}
+                      "
+                      style="
+                          --padding: {{ top_padding }}% {{ right_padding }}% {{ bottom_padding }}% {{ left_padding }}%;
+                          --padding-mobile: {{ top_padding_mobile }}% {{ right_padding_mobile }}% {{ bottom_padding_mobile }}% {{ left_padding_mobile }}%;
+                          --caption-width: {{ width }}%;
+                          --caption-width-mobile: {{ width_mobile }}%;
+                        "
+                    >
+
+                      {%- if section.settings.style == 'style-2' -%}
+                        <div class="swiper-slide-text heading-font" data-swiper-animation="animate__fadeInLeft" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %}data-duration=".4s" data-delay="0"{% endif %} style="--offset-top: 0; --line-height: 1em; --font-size:1em; --font-weight:{{ settings.font_weight_700 }}; {{ color_subtitle }}">{{ block.settings.subtitle }}</div>
+                        <div class="swiper-slide-text heading-font {% if custom_caption_colorization == false or color_title == blank %}theme-color-strict{% endif %}" data-swiper-animation="animate__fadeInLeft" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %}data-duration=".4s" data-delay="0.75s"{% endif %} style="--offset-top: 0; --line-height: 1em; --font-size:1em; --font-weight:{{ settings.font_weight_700 }}; {{ color_title }}">{{ block.settings.title }}</div>
+                        <div class="swiper-slide-text hide-mobile" data-swiper-animation="animate__fadeInUp" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %}data-duration=".4s" data-delay="1.4s"{% endif %} style="--offset-top: 1em; --font-size:.31em; --font-weight:{{ settings.font_weight_400 }}; --line-height: 1.4em; {{ color_description }}">{{ block.settings.description }}</div>
+
+                      {%- elsif section.settings.style == 'style-3' -%}
+                        {%- capture slide_1 -%}
+                          <div class="swiper-slide-text heading-font" data-swiper-animation="animate__fadeInDown" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %}data-duration=".4s" data-delay=".4s"{% endif %} style="--offset-top: 0; --font-size: 82%;--font-weight:{{ settings.font_weight_800 }};--line-height:1.1em; {% if custom_caption_colorization and color_subtitle != blank %}{{ color_subtitle }}{% else %}color: #ffe600{% endif %}">{{ block.settings.subtitle }}</div>
+                          <div class="swiper-slide-text heading-font" data-swiper-animation="animate__fadeInDown" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %}data-duration=".4s" data-delay=".1s"{% endif %}  style="--offset-top: 0; --font-size: 96%;--font-weight:{{ settings.font_weight_800 }};--line-height:1.1em; {% if custom_caption_colorization and color_title != blank %}{{ color_title }}{% else %}color: #ffe600{% endif %}">{{ block.settings.title }}</div>
+                        {%- endcapture -%}
+                        {%- capture slide_2 -%}
+                          <div class="swiper-slide-text heading-font" data-swiper-animation="animate__fadeInDown" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %}data-duration=".4s" data-delay=".4s"{% endif %} style="--offset-top: 0; --font-size: 92%;--font-weight:{{ settings.font_weight_800 }};--line-height:1.1em; {% if custom_caption_colorization and color_subtitle != blank %}{{ color_subtitle }}{% else %}color: #ffe600{% endif %}">{{ block.settings.subtitle }}</div>
+                          <div class="swiper-slide-text heading-font" data-swiper-animation="animate__fadeInDown" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %}data-duration=".4s" data-delay=".1s"{% endif %}  style="--offset-top: 0; --font-size: 57%;--font-weight:{{ settings.font_weight_800 }};--line-height:1.1em; {% if custom_caption_colorization and color_title != blank %}{{ color_title }}{% else %}color: #ffe600{% endif %}">{{ block.settings.title }}</div>
+                        {%- endcapture -%}
+                        {%- cycle slide_1, slide_2 -%}
+                        <div class="swiper-slide-text  hide-mobile" data-swiper-animation="animate__fadeInDown" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %}data-duration=".4s" data-delay="1s"{% endif %} style="--offset-top: 2em; --font-size: 16%;--font-weight:{{ settings.font_weight_500 }};--line-height:1.8em; {{ color_description }}">{{ block.settings.description }}</div>
+
+                      {%- elsif section.settings.style == 'style-4' -%}
+                          <div class="swiper-slide-text" data-swiper-animation="animate__fadeInDown" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %}data-duration=".4s" data-delay="0"{% endif %} style="--offset-top: 0;--font-size: .15em;--font-weight: var(--font-weight-600); {{ color_subtitle }}">{{ block.settings.subtitle }}</div>
+                          <div class="swiper-slide-text heading-font" data-swiper-animation="animate__fadeInDown" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %}data-duration=".4s" data-delay="0"{% endif %} style="--offset-top: .1em;--font-size: 57%;--font-weight: var(--font-weight-700); {{ color_title }}">{{ block.settings.title }}</div>
+                          <div class="swiper-slide-text hide-mobile" data-swiper-animation="animate__fadeInUp" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %}data-duration=".4s" data-delay=".4s"{% endif %} style="--offset-top: 2em;--font-size: 15%;--font-weight: var(--font-weight-400);--line-height: 1.6em; {{ color_description }}">{{ block.settings.description }}</div>
+
+                      {%- elsif section.settings.style == 'style-5' -%}
+                          <div class="swiper-slide-text heading-font {% if custom_caption_colorization == false or color_subtitle == blank %}theme-color{% endif %}" data-swiper-animation="animate__fadeInDown"{% if animation_off %}data-duration="0s" data-delay="0s"{% else %} data-duration=".5s" data-delay=".5s"{% endif %} style="--offset-top: 0; --font-size: 80%;--font-weight: var(--font-weight-800);--line-height:1.1em; {{ color_subtitle }}">{{ block.settings.subtitle }}</div>
+                          <div class="swiper-slide-text heading-font" data-swiper-animation="animate__fadeInDown" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %}data-duration=".5s" data-delay="1s"{% endif %}  style="--offset-top: 0; --font-size: 55%;--font-weight: var(--font-weight-800);--line-height:1.1em; {{ color_title }}">{{ block.settings.title }}</div>
+                          <div class="swiper-slide-text hide-mobile" data-swiper-animation="animate__fadeInDown" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %}data-duration=".5s" data-delay="1.5s"{% endif %} style="--offset-top: 2em; --font-size: 15%;--font-weight: var(--font-weight-400);--line-height:1.8em; {{ color_description }}">{{ block.settings.description }}</div>
+
+                      {%- elsif section.settings.style == 'style-6' -%}
+                          <div class="swiper-slide-text heading-font {% if custom_caption_colorization == false or color_subtitle == blank %}theme-color{% endif %}" data-swiper-animation="animate__fadeInDown" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %} data-duration=".5s" data-delay=".5s"{% endif %}  style="--offset-top: 0; --font-size: 75%;--font-weight: var(--font-weight-600);--line-height:1.1em;  {{ color_subtitle }}">{{ block.settings.subtitle }}</div>
+                          <div class="swiper-slide-text heading-font" data-swiper-animation="animate__fadeInDown" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %} data-duration=".5s" data-delay="1s"{% endif %}   style="--offset-top: 0; --font-size: 75%;--font-weight: var(--font-weight-600);--line-height:1.1em; {{ color_title }}">{{ block.settings.title }}</div>
+                          <div class="swiper-slide-text hide-mobile" data-swiper-animation="animate__fadeInDown" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %} data-duration=".5s" data-delay="1.5s"{% endif %} style="--offset-top: 2em; --font-size: 15%;--font-weight: var(--font-weight-400);--line-height:1.8em;  {{ color_description }}">{{ block.settings.description }}</div>
+
+                      {%- elsif section.settings.style == 'style-7' -%}
+                        <div class="swiper-slide-text heading-font {% if custom_caption_colorization == false or color_subtitle == blank %}theme-color{% endif %}" data-swiper-animation="animate__fadeInDown" data-duration=".5s" data-delay=".5s" style="--offset-top: 0; --font-size: 80%;--font-weight: var(--font-weight-600);--line-height:1.1em; {{ color_title }}">{{ block.settings.title }}</div>
+                        <div class="swiper-slide-text heading-font" data-swiper-animation="animate__fadeInDown" data-duration=".5s" data-delay="1s"  style="--offset-top: 0.1em; --font-size: 55%;--font-weight: var(--font-weight-500);--line-height:1.1em; {{ color_subtitle }}">{{ block.settings.subtitle }}</div>
+                        <div class="swiper-slide-text hide-mobile" data-swiper-animation="animate__fadeIn" data-duration=".5s" data-delay="1.5s" style="--offset-top: 2em; --font-size: 20%;--font-weight: var(--font-weight-400);--line-height:1.85em; {{ color_description }}">{{ block.settings.description }}</div>
+
+                      {%- elsif section.settings.style == 'style-8' -%}
+                        <div class="swiper-slide-text heading-font {% if custom_caption_colorization == false or color_title == blank %}theme-color{% endif %}" data-swiper-animation="animate__fadeInDown" data-duration=".5s" data-delay=".5s" style="--offset-top: 0; --font-size: 75%;--font-weight: var(--font-weight-700);--line-height:1.1em; {{ color_title }}">{{ block.settings.title }}</div>
+                        <div class="swiper-slide-text" data-swiper-animation="animate__fadeIn" data-duration=".5s" data-delay="1.5s" style="--offset-top: 2em; --font-size: 20%;--font-weight: var(--font-weight-400);--line-height:1.5em; {{ color_description }}">{{ block.settings.description }}</div>
+
+                      {%- else -%}
+                        <div class="swiper-slide-text" data-swiper-animation="animate__fadeInDown" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %}data-duration=".4s" data-delay=".4s"{% endif %} style="--offset-top: 0;--font-size: 15%;--font-weight: {{ settings.font_weight_400 }};--line-height: 1.4em; {{ color_subtitle }}">{{ block.settings.subtitle }}</div>
+                        <div class="swiper-slide-text heading-font" data-swiper-animation="animate__fadeInDown" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %}data-duration=".4s" data-delay="0"{% endif %} style="--offset-top: .36em;--font-size: 61%;--font-weight: {{ settings.font_weight_400 }};--line-height: 1.1em; {{ color_title }}">{{ block.settings.title }}</div>
+                        <div class="swiper-slide-text  hide-mobile" data-swiper-animation="animate__fadeInUp" {% if animation_off %}data-duration="0s" data-delay="0s"{% else %}data-duration=".4s" data-delay="1.4s"{% endif %} style="--offset-top: 2em;--font-size: 15%;--font-weight: {{ settings.font_weight_400 }};--line-height: 1.6em; {{ color_description }}">{{ block.settings.description }}</div>
+
+                      {%- endif -%}
+
+                      {%- if block.settings.button -%}
+                        {%- liquid
+                          if animation_off
+                            assign data_delay = 'data-duration="0s" data-delay="0s"'
+                          else
+                            assign data_delay = 'data-duration=".4s" data-delay="1s"'
+                          endif
+
+                          assign btn_attributes = 'data-swiper-animation="animate__fadeInUp" ' | append: data_delay | append: ' style="--offset-top: 4em;"'
+
+                          if section.settings.style == 'style-4'
+                            if animation_off
+                              assign data_delay = 'data-duration="0s" data-delay="0s"'
+                            else
+                              assign data_delay = 'data-duration=".4s" data-delay="1s"'
+                            endif
+
+                            assign btn_attributes = 'data-swiper-animation="animate__fadeInUp" data-duration=".4s" data-delay="1s" style="--offset-top: 4em;"'
+                          endif
+                        -%}
+                        {%- if fast_shop -%}
+                          {% render 'product-card-action'
+                            product: product_object,
+                            wrapper: false,
+                            product_form_id: product_form_id,
+                            show_variants: false,
+                            layout: layout,
+                            hide_quantity: 1,
+                            w_100: 0,
+                            class: block.settings.button_color,
+                            btn_attributes: btn_attributes,
+                            button_text: button_text,
+                            current_variant: current_variant
+                          %}
+                        {%- else -%}
+
+                        {% if slide_link == false %}
+                        <a href="{{ block.settings.url | default: '#' }}"  class="btn {{ block.settings.button_color }}" {% if block.settings.button_target_blank %}target="_blank"{% endif %} {{ btn_attributes }}>
+                      {% else %}
+                        <div  class="btn {{ block.settings.button_color }}" {% if block.settings.button_target_blank %}target="_blank"{% endif %} {{ btn_attributes }}>
+                      {% endif %}
+
+                      {{ button_text }}
+
+                      {% if slide_link == false %}
+                        </a>
+                      {% else %}
+                        </div>
+
+                      {%- endif -%}
+
+
+
+                        {%- endif -%}
+                      {%- endif -%}
+                    </div>
+                  </div>
+                </flow-type>
+
+                {% if slide_link and fast_shop == false %}
+                </a>
+              {% else %}
+                </div>
+              {% endif %}
+
+              {%- endfor -%}
+            </div>
+            {%- if section.blocks.size > 1 -%}
+              {%- liquid
+                assign svg_width = '48'
+                assign circle_cx_width = '24'
+                assign circle_r_width = '23'
+                assign full_side_control = false
+
+                if slideshow_control_layout == 'left' or slideshow_control_layout == 'right'
+                  assign svg_width = '40'
+                  assign circle_cx_width = '20'
+                  assign circle_r_width = '19'
+                  assign full_side_control = true
+                endif
+              -%}
+
+              {%- capture slideshow_control_layout_html_left_right -%}
+                <div class="swiper-pagination-wrap {% if decorCompensate %}decor-compensate{% endif %} {% if full_side_control %}swiper-pagination--simple-{{ slideshow_control_layout }}{% endif %}">
+                  <div class="swiper-pagination"></div>
+                  <div class="swiper-button-prev"></div>
+                  <div class="swiper-button-next">
+                    {%- if section.settings.slideshow_autoplay -%}
+                      <svg height="{{ svg_width }}" width="{{ svg_width }}" class="swiper-progress-bar">
+                        {%- if settings.rounded_buttons_disable == "1" -%}
+                          <rect width="{{ svg_width }}" height="{{ svg_width }}" stroke-width="1" fill-opacity="0"></rect>
+                        {%- else -%}
+                          <circle cx="{{ circle_cx_width }}" cy="{{ circle_cx_width }}" r="{{ circle_r_width }}" stroke-width="1" fill-opacity="0"></circle>
+                        {%- endif -%}
+                      </svg>
+                    {%- endif -%}
+                  </div>
+                </div>
+              {%- endcapture -%}
+
+              {%- capture slideshow_control_layout_html_default -%}
+                <div class="swiper-arrows-carousel container-fluid holder--max-width">
+                  <div class="swiper-button-next">
+                    {%- if section.settings.slideshow_autoplay -%}
+                      <svg height="48" width="48" class="swiper-progress-bar">
+                        {%- if settings.rounded_buttons_disable == "1" -%}
+                          <rect width="42" height="42" stroke-width="1" fill-opacity="0" x="3px" y="3px" style="width:42px;height: 42px"></rect>
+                        {%- else -%}
+                          <circle cx="24" cy="24" r="22" stroke-width="1" fill-opacity="0"></circle>
+                        {%- endif -%}
+                      </svg>
+                    {%- endif -%}
+                  </div>
+                  <div class="swiper-button-prev"></div>
+                </div>
+              {%- endcapture -%}
+
+              {%- if slideshow_control_layout == 'none' -%}
+                <div class="swiper-pagination {% if decorCompensate %}decor-compensate{% endif %}"></div>
+              {%- elsif slideshow_control_layout == 'default' -%}
+                <div class="swiper-pagination {% if decorCompensate %}decor-compensate{% endif %}"></div>
+                {{ slideshow_control_layout_html_default }}
+              {%- else -%}
+                {{ slideshow_control_layout_html_left_right }}
+              {%- endif -%}
+
+
+            {%- endif -%}
+          </div>
+          {%- unless section.settings.effect == 'none' -%}<slider-effect data-effect="{{ section.settings.effect }}"><canvas></canvas></slider-effect>{% endunless %}
+        </main-slider>
+      {%- else -%}
+        <div class="row {{ row }}">
+          {%- for block in section.blocks -%}
+            {%- liquid
+
+              assign  inner_space_value = section.settings.inner_space_value
+              capture image_default_cycle
+                cycle 'pets_banner_1.png', 'pets_banner_2.png', 'pets_banner_3.png', 'pets_banner_4.png'
+              endcapture
+
+              if layout == 'mosaic-1'
+
+                if inner_space_value == 'g-1'
+                  assign padding_bottom_1 = '71.0'
+                elsif inner_space_value == 'g-2'
+                  assign padding_bottom_1 = '71.0'
+                else
+                  assign padding_bottom_1 = '71.9'
+                endif
+
+                capture font_ratio_cycle
+                  cycle '7.93', '11.1', '11.1', '7.93'
+                endcapture
+
+                capture padding_cycle
+                  if section.settings.inner_space
+                    cycle padding_bottom_1, '50.4', '50.4', padding_bottom_1
+                  else
+                    cycle '71.9', '51.36', '51.36', '71.9'
+                  endif
+                endcapture
+
+              elsif layout == 'mosaic-2'
+
+                if inner_space_value == 'g-1'
+                  assign padding_bottom_1 = '61'
+                elsif inner_space_value == 'g-2'
+                  assign padding_bottom_1 = '60.33'
+                else
+                  assign padding_bottom_1 = '57.33'
+                endif
+
+                capture padding_cycle
+                  if section.settings.inner_space
+                    cycle '123.16', padding_bottom_1, padding_bottom_1, '123.16'
+                  else
+                    cycle '122.16', '61.1', '61.1', '122.16'
+                  endif
+                endcapture
+
+                capture style_cycle
+                  cycle '', 'font-size:.39em;', 'font-size:.39em;', ''
+                endcapture
+
+              elsif layout == 'mosaic-3'
+
+                if inner_space_value == 'g-1'
+                  assign padding_bottom_1 = '80.5'
+                elsif inner_space_value == 'g-2'
+                  assign padding_bottom_1 = '79.6'
+                else
+                  assign padding_bottom_1 = '76.5'
+                endif
+
+                capture font_ratio_cycle
+                  cycle '4.2', '6.2', '4.2'
+                endcapture
+
+                capture padding_cycle
+                  if section.settings.inner_space
+                    cycle '162', padding_bottom_1, '162'
+                  else
+                    cycle '162', '81', '162'
+                  endif
+                endcapture
+
+              elsif layout == 'mosaic-4'
+                capture font_ratio_cycle
+                  cycle '7.6', '5.6', '5.6', '7.6'
+                endcapture
+
+                capture padding_cycle
+                    cycle '49.8', '109', '109', '49.8'
+                endcapture
+
+                capture style_cycle
+                  cycle '', 'font-size:.39em;', 'font-size:.39em;', ''
+                endcapture
+
+              elsif layout == 'mosaic-5'
+
+                if inner_space_value == 'g-1'
+                  assign padding_bottom_1 = '58.3'
+                  assign padding_bottom_2 = '118'
+                elsif inner_space_value == 'g-2'
+                  assign padding_bottom_1 = '59'
+                  assign padding_bottom_2 = '121'
+                else
+                  assign padding_bottom_1 = '57.3'
+                  assign padding_bottom_2 = '123'
+                endif
+
+                capture padding_cycle
+                  if section.settings.inner_space
+                    cycle padding_bottom_2, padding_bottom_1, padding_bottom_1,  padding_bottom_1, padding_bottom_1, padding_bottom_1, padding_bottom_2
+                  else
+                    cycle '116.5', '58.3', '58.3', '58.3', '58.3', '58.3', '116.5'
+                  endif
+                endcapture
+
+              endif
+
+              assign start = false
+              assign end = false
+
+              if layout == 'mosaic-2'
+                assign cycle_count = 4
+                assign shift = 2
+
+                if forloop.index == shift
+                  assign start = true
+
+                else
+                  assign modulo = forloop.index | divided_by: cycle_count | times: cycle_count | plus: shift
+                  assign modulo = forloop.index | modulo: modulo
+
+                  if modulo == 0
+                    assign start = true
+                  endif
+                endif
+
+                assign shift = 3
+
+                if forloop.index == shift
+                  assign end = true
+
+                else
+                  assign modulo = forloop.index | divided_by: cycle_count | times: cycle_count | plus: shift
+                  assign modulo = forloop.index | modulo: modulo
+
+                  if modulo == 0
+                    assign end = true
+                  endif
+                endif
+
+              elsif layout == 'mosaic-4'
+                assign modulo = forloop.index | modulo: 2
+
+                if modulo == 0
+                  assign end = true
+                else
+                  assign start = true
+                endif
+
+              elsif layout == 'mosaic-5'
+                assign modulo = forloop.index | modulo: 7
+
+                if modulo == 1 or modulo == 3 or modulo == 6
+                  assign start = true
+
+                elsif modulo == 2 or modulo == 5 or modulo == 0
+                  assign end = true
+                endif
+
+              endif
+            -%}
+            {%- if start -%}
+              <div class="col">
+                <div class="row row-cols-1 {% if section.settings.inner_space %}{{ inner_space }}{% else %}g-0{% endif %}">
+            {%- endif -%}
+
+            <div class="
+              {%- liquid
+                if layout contains 'mosaic-1'
+                  if per_row_mobile == 2
+                    echo 'col '
+                    if forloop.last
+                      assign modulo_mobile = section.blocks.size | modulo: per_row_mobile
+                      if modulo_mobile != 0
+                        echo 'col-12 '
+                      endif
+                    endif
+                  endif
+                  cycle 'col-md-5', 'col-md-7', 'col-md-7', 'col-md-5'
+
+                else
+                  echo 'col '
+                  if per_row_mobile == 2 and forloop.last
+                    assign modulo_mobile = section.blocks.size | modulo: per_row_mobile
+                    if modulo_mobile != 0
+                      echo 'col-12-before-md'
+                    endif
+                  endif
+                  if modulo_index != blank and modulo_index < forloop.index
+                    echo ' col-md-' | append: suffix
+                  endif
+
+                endif
+              -%}
+            " {{ block.shopify_attributes }}>
+
+              {%- if block.settings.style != 'style-4' -%}
+                <flow-type>
+              {%- endif -%}
+              {% render 'banner',
+                section: section,
+                block: block,
+                sizes: sizes,
+                round: round,
+                style: section.settings.style,
+                font_ratio_cycle: font_ratio_cycle,
+                padding_cycle: padding_cycle,
+                style_cycle: style_cycle,
+                image_default_cycle: image_default_cycle,
+                modulo: modulo,
+                last: forloop.last,
+                button_text: button_text
+              %}
+
+              {%- if block.settings.style != 'style-4' -%}
+                </flow-type>
+              {%- endif -%}
+            </div>
+
+            {%- if end -%}
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+    </div>
+  </div>
+  {% render 'section-wrapper', decorCompensateSm: decorCompensateSm %}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Banners grid",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_animation",
+      "label": "Enable soft appearing of section",
+      "default": true,
+      "info": "Global sections animation disabling in Theme Settings / General / Sections. AUTODISABLED if section has top or bottom separator."
+    },
+    {
+      "type": "header",
+      "content": "Layout general"
+    },
+    {
+      "type": "checkbox",
+      "id": "fluid",
+      "label": "Fluid layout",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "inner_space",
+      "label": "Inner space",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "inner_space_value",
+      "label": "Inner space size",
+      "options": [
+        {
+          "value": "g-1",
+          "label": "Small"
+        },
+        {
+          "value": "g-2",
+          "label": "Medium"
+        },
+        {
+          "value": "g-3 g-md-4",
+          "label": "Large (default)"
+        }
+      ],
+      "default": "g-3 g-md-4",
+      "info": "Only if inner space was enabled"
+    },
+    {
+      "type": "checkbox",
+      "id": "boxed",
+      "label": "Boxed layout for captions",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "slider_bottom_ellipse",
+      "label": "Bottom ellipse",
+      "default": false,
+      "info": "for only any slideshow layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Select layout",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "slideshow",
+          "label": "Slideshow"
+        },
+        {
+          "value": "slideshow_fullheight",
+          "label": "Slideshow fullheight"
+        },
+        {
+          "value": "slideshow_modern",
+          "label": "Slideshow modern"
+        },
+        {
+          "value": "mosaic-1",
+          "label": "Mosaic 1"
+        },
+        {
+          "value": "mosaic-2",
+          "label": "Mosaic 2 (4 banners min)"
+        },
+        {
+          "value": "mosaic-3",
+          "label": "Mosaic 3 (3 banners min)"
+        },
+        {
+          "value": "mosaic-4",
+          "label": "Mosaic 4 (6 banners min)"
+        },
+        {
+          "value": "mosaic-5",
+          "label": "Mosaic 5 (7 banners min)"
+        }
+      ],
+      "default": "grid",
+      "info": "if 'Slideshow fullheight' then sort current section as first"
+    },
+    {
+      "type": "checkbox",
+      "id": "slideshow_fullheight_mobile",
+      "label": "Set fullheight for mobile",
+      "info": " if 'Slideshow fullheight'",
+      "default": false
+    },
+    {
+      "type": "radio",
+      "id": "slideshow_control_layout",
+      "label": "Slideshow control layout",
+      "options": [
+        {
+          "value": "none",
+          "label": "Only pagination"
+        },
+        {
+          "value": "default",
+          "label": "Pagination and Side arrow control"
+        },
+        {
+          "value": "bottom",
+          "label": "Pagination and Bottom arrow control"
+        },
+        {
+          "value": "left",
+          "label": "Full control on left side"
+        },
+        {
+          "value": "right",
+          "label": "Full control on right side"
+        }
+      ],
+      "default": "bottom",
+      "info": "Touch swiping is enabled. If section has separator then pagination will be set autotomtically."
+    },
+    {
+      "type": "checkbox",
+      "id": "slideshow_autoplay",
+      "label": "Slideshow autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "slideshow_autoplay_speed",
+      "min": 4,
+      "max": 15,
+      "step": 1,
+      "unit": "sec",
+      "label": "Autoplay speed",
+      "default": 7
+    },
+    {
+    "type": "select",
+    "id": "effect",
+    "label": "Slideshow effect",
+    "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "sparkles",
+          "label": "Sparkles"
+        },
+        {
+          "value": "snowing",
+          "label": "Snowing slow"
+        },
+        {
+          "value": "snowing2",
+          "label": "Snowing fast"
+        },
+        {
+          "value": "heart",
+          "label": "Hearts"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "style",
+      "label": "Select banner design",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "Style 1"
+        },
+        {
+          "value": "style-2",
+          "label": "Style 2"
+        },
+        {
+          "value": "style-3",
+          "label": "Style 3 (big white box)"
+        },
+        {
+          "value": "style-4",
+          "label": "Style 4 (small white box)"
+        },
+        {
+          "value": "style-5",
+          "label": "Style 5"
+        },
+        {
+          "value": "style-6",
+          "label": "Style 6"
+        },
+        {
+          "value": "style-7",
+          "label": "Style 7"
+        },
+        {
+          "value": "style-8",
+          "label": "Style 8"
+        },
+        {
+          "value": "style-9",
+          "label": "Style 9 (only for grid layout, pets store)"
+        },
+        {
+          "value": "style-10",
+          "label": "Style 10"
+        },
+        {
+          "value": "style-11",
+          "label": "Style 11"
+        },
+        {
+          "value": "style-12",
+          "label": "Style 12"
+        },
+        {
+          "value": "style-13",
+          "label": "Style 13"
+        },
+        {
+          "value": "style-14",
+          "label": "Style 14"
+        },
+        {
+          "value": "style-15",
+          "label": "Style 15"
+        }
+      ],
+      "default": "style-1",
+      "info": "If the text is very small or vice versa large you need set the 'Font size Scale'. IMPORTANT! If you set Slideshow then Only Style 1...8 are available styles for 'Slideshow' banners layout."
+    },
+    {
+      "type": "header",
+      "content": "Layout for desktop"
+    },
+    {
+      "type": "select",
+      "id": "per_row",
+      "label": "Banners per row desktop",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        }
+      ],
+      "default": "2",
+      "info": "if layout Grid"
+    },
+    {
+      "type": "checkbox",
+      "id": "images_auto_height",
+      "label": "Auto height for banners on desktop",
+      "default": true,
+      "info": "usefull if banners have different dimensions"
+    },
+    {
+      "type": "range",
+      "id": "images_auto_height_padding",
+      "min": 20,
+      "max": 200,
+      "step": 2,
+      "unit": "%",
+      "label": "Aspect ratio for auto height on desktop",
+      "default": 70,
+      "info": "Only for auto height banners. If the text goes beyond the slide then you need increase current value or decrease the 'Font size Scale'"
+    },
+    {
+      "type": "range",
+      "id": "font_ratio",
+      "min": 2,
+      "max": 200,
+      "step": 2,
+      "label": "Font size Scale",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Layout for mobile"
+    },
+    {
+      "type": "radio",
+      "id": "per_row_mobile",
+      "label": "Banners per row mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        }
+      ],
+      "default": "1",
+      "info": "2 per row is not available only for layout 'Grid' and 'Mosaic 1'"
+    },
+    {
+      "type": "checkbox",
+      "id": "images_auto_height_mobile",
+      "label": "Auto height for banners on mobile",
+      "default": true,
+      "info": "usefull if banners have different dimensions"
+    },
+    {
+      "type": "range",
+      "id": "images_auto_height_padding_mobile",
+      "min": 20,
+      "max": 200,
+      "step": 2,
+      "unit": "%",
+      "label": "Aspect ratio for auto height on mobile",
+      "default": 70,
+      "info": "Only for auto height banners. If the text goes beyond the slide then you need increase current value or decrease the 'Font size Scale'"
+    },
+    {
+      "type": "range",
+      "id": "font_ratio_mobile",
+      "min": 2,
+      "max": 200,
+      "step": 2,
+      "label": "Font size Scale",
+      "default": 50
+    },
+    {
+      "type": "header",
+      "content": "Heading"
+    },
+    {
+      "type": "radio",
+      "id": "heading_alignment",
+      "label": "Heading aligment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "header",
+      "content": "Advanced"
+    },
+    {
+      "type": "checkbox",
+      "id": "lazyload",
+      "label": "Images lazyload",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "placeholder",
+      "label": "Show placeholder if image is absent",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable background",
+      "default": false,
+      "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+    },
+    {
+      "type": "select",
+      "id": "background_preset",
+      "label": "Background image - preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "product-cosmetics-bg.png",
+          "label": "Leaves 1"
+        },
+        {
+          "value": "bottom-cosmetics-bg.png",
+          "label": "Leaves 2"
+        },
+        {
+          "value": "bg-makeup1.png,bg-makeup1-m.png",
+          "label": "Pink and Waves 1"
+        },
+        {
+          "value": "bg-makeup2.png,bg-makeup2-m.png",
+          "label": "Pink and Waves 2"
+        },
+        {
+          "value": "bg-makeup4.png,bg-makeup4-m.png",
+          "label": "Pink and Waves 3"
+        },
+        {
+          "value": "bg-makeup3.png,bg-makeup3-m.png",
+          "label": "Purple Splash"
+        },
+        {
+          "value": "bg-sweets1.png",
+          "label": "Blue Sun Rays"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image - custom on Desktop"
+    },
+    {
+      "type": "select",
+      "id": "background_behavior",
+      "label": "Background image behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image - custom on Mobile",
+      "info": "only if Background image - custom on Desktop selected"
+    },
+    {
+      "type": "select",
+      "id": "background_image_placeholder_type",
+      "label": "Placeholder background color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_secondary_bg"
+    },
+    {
+      "type": "color",
+      "id": "background_image_placeholder",
+      "label": "Custom - Placeholder background color"
+    },
+    {
+      "type": "header",
+      "content": "SECTION SEPARATOR"
+    },
+    {
+      "type": "header",
+      "content": "Top separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_header_main_bg",
+          "label": "Header - Middle(main) part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_top_color",
+      "label": "Custom - top separator color"
+    },
+    {
+      "type": "header",
+      "content": "Bottom separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "paragraph",
+      "content": "'Global separator' is set in Theme Settings / Separators / Global separator style"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_footer_top_bg",
+          "label": "Footer - Top part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_bottom_color",
+      "label": "Custom - bottom separator color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "banner",
+      "name": "Banner",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "video",
+          "id": "video",
+          "label": "Video"
+        },
+        {
+          "type": "checkbox",
+          "id": "video_loop",
+          "label": "Loop video",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "video_darkness",
+          "min": 0,
+          "max": 80,
+          "step": 1,
+          "unit": "%",
+          "label": "Video darkness intensity",
+          "default": 0
+        },
+        {
+          "type": "color",
+          "id": "color_placeholder",
+          "label": "Placeholder background loader",
+          "info": "Set the main color of the image (visually softens the appearance of the image)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Sale<br>25% OFF",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "default": "Brake Systems",
+          "label": "Sub title"
+        },
+        {
+          "type": "checkbox",
+          "id": "invert_color",
+          "label": "Invert captions color",
+          "default": true,
+          "info": "Invert color you can set in Theme Settings / General / Colors - General"
+        },
+        {
+          "type": "checkbox",
+          "id": "custom_caption_colorization",
+          "label": "Use custom captions colorization",
+          "default": false,
+          "info": "Instead of default banners colorization from Theme settings / Colors - Banners"
+        },
+        {
+          "type": "color",
+          "id": "color_title",
+          "label": "Title"
+        },
+        {
+          "type": "color",
+          "id": "color_subtitle",
+          "label": "Subtitle"
+        },
+        {
+          "type": "color",
+          "id": "color_description",
+          "label": "Description"
+        },
+        {
+          "type": "color",
+          "id": "color_caption_bg",
+          "label": "Caption Background (if enable)"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Banner link"
+        },
+        {
+          "type": "checkbox",
+          "id": "fast_shop",
+          "label": "Enable fast shop",
+          "default": false,
+          "info": "Only if the link is a product. Banner button has to be enabled."
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "default": "Suspendisse ultrices viverra nibh in mollis quisque dictum mattis elementum mauris in luctus diam.",
+          "label": "Description",
+          "info": "only for layouts: Fullwidth, Fullwidth alt"
+        },
+        {
+          "type": "header",
+          "content": "Button"
+        },
+        {
+          "type": "checkbox",
+          "id": "button",
+          "label": "Button",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Custom text"
+        },
+        {
+          "type": "checkbox",
+          "id": "button_target_blank",
+          "label": "Target blank",
+          "default": false,
+          "info": "Opens link in new window tab"
+        },
+        {
+          "type": "select",
+          "id": "button_color",
+          "label": "Button color",
+          "options": [
+            {
+              "value": "btn--default",
+              "label": "Primary"
+            },
+            {
+              "value": "btn--invert",
+              "label": "Secondary"
+            },
+            {
+              "value": "btn--grey",
+              "label": "Third"
+            },
+            {
+              "value": "btn--white",
+              "label": "Fourth"
+            },
+            {
+              "value": "btn--fifth",
+              "label": "Fifth"
+            }
+          ],
+          "default": "btn--invert"
+        },
+        {
+          "type": "header",
+          "content": "Captions box Desktop",
+          "info": "for advanced setup"
+        },
+        {
+          "type": "radio",
+          "id": "aligment",
+          "label": "Captions box - X aligment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "radio",
+          "id": "aligment_v",
+          "label": "Captions box - Y aligment",
+          "options": [
+            {
+              "value": "top",
+              "label": "Top"
+            },
+            {
+              "value": "middle",
+              "label": "Middle"
+            },
+            {
+              "value": "bottom",
+              "label": "Bottom"
+            }
+          ],
+          "default": "middle"
+        },
+        {
+          "type": "radio",
+          "id": "aligment_text",
+          "label": "Captions text - X aligment",
+          "options": [
+            {
+              "value": "start",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "end",
+              "label": "Right"
+            }
+          ],
+          "default": "start"
+        },
+        {
+          "type": "range",
+          "id": "width",
+          "min": 40,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Width box",
+          "default": 100
+        },
+        {
+          "type": "range",
+          "id": "left_padding",
+          "min": 0,
+          "max": 15,
+          "step": 1,
+          "unit": "%",
+          "label": "Left/Right box indent",
+          "default": 14
+        },
+        {
+          "type": "range",
+          "id": "top_padding",
+          "min": 5,
+          "max": 15,
+          "step": 1,
+          "unit": "%",
+          "label": "Top/Bottom box indent",
+          "default": 14
+        },
+        {
+          "type": "header",
+          "content": "Captions box Mobile",
+          "info": "for advanced setup"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Mobile image"
+        },
+        {
+          "type": "color",
+          "id": "color_placeholder_mobile",
+          "label": "Placeholder background loader",
+          "info": "Set the main color of the image (visually softens the appearance of the image)"
+        },
+        {
+          "type": "checkbox",
+          "id": "mobile_sync",
+          "label": "Use desktop settings for mobile",
+          "default": false,
+          "info": "if you check it then mobile settings will be ignored"
+        },
+        {
+          "type": "radio",
+          "id": "aligment_mobile",
+          "label": "Captions box - X aligment",
+          "options": [
+            {
+              "value": "left",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "right",
+              "label": "Right"
+            }
+          ],
+          "default": "left"
+        },
+        {
+          "type": "radio",
+          "id": "aligment_v_mobile",
+          "label": "Captions box - Y aligment",
+          "options": [
+            {
+              "value": "top",
+              "label": "Top"
+            },
+            {
+              "value": "middle",
+              "label": "Middle"
+            },
+            {
+              "value": "bottom",
+              "label": "Bottom"
+            }
+          ],
+          "default": "middle"
+        },
+        {
+          "type": "radio",
+          "id": "aligment_text_mobile",
+          "label": "Captions text - X aligment",
+          "options": [
+            {
+              "value": "start",
+              "label": "Left"
+            },
+            {
+              "value": "center",
+              "label": "Center"
+            },
+            {
+              "value": "end",
+              "label": "Right"
+            }
+          ],
+          "default": "start"
+        },
+        {
+          "type": "range",
+          "id": "width_mobile",
+          "min": 40,
+          "max": 100,
+          "step": 1,
+          "unit": "%",
+          "label": "Width box",
+          "default": 100
+        },
+        {
+          "type": "range",
+          "id": "left_padding_mobile",
+          "min": 2,
+          "max": 15,
+          "step": 1,
+          "unit": "%",
+          "label": "Left/Right box indent",
+          "default": 14
+        },
+        {
+          "type": "range",
+          "id": "top_padding_mobile",
+          "min": 5,
+          "max": 35,
+          "step": 1,
+          "unit": "%",
+          "label": "Top/Bottom box indent",
+          "default": 14
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Banners / Constructor",
+      "settings": {
+        "font_ratio": 144,
+        "font_ratio_mobile": 144
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "button": false
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "button": false
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "button": false
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "button": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Banners / preset 1 (Cars ex. boxed 2x2)",
+      "settings": {
+        "images_auto_height_padding": 68,
+        "per_row_mobile": "2",
+        "font_ratio": 144,
+        "font_ratio_mobile": 144
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Sale<br>25% OFF",
+            "subtitle": "Brake Systems",
+            "button": false,
+            "left_padding": 8,
+            "left_padding_mobile": 8
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Hot<br>Discount",
+            "subtitle": "Turbo Systems",
+            "invert_color": false,
+            "button": false,
+            "left_padding": 8,
+            "left_padding_mobile": 8
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Special<br>Offer",
+            "subtitle": "Car Oil",
+            "invert_color": false,
+            "button": false,
+            "left_padding": 8,
+            "left_padding_mobile": 8
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Special<br>Sale",
+            "subtitle": "Headlight",
+            "button": false,
+            "left_padding": 8,
+            "left_padding_mobile": 8
+          }
+        }
+      ]
+    },
+    {
+      "name": "Banners / preset 2 (Fashion ex. fullwidth 2x1)",
+      "settings": {
+        "fluid": true,
+        "style": "style-2",
+        "inner_space": false,
+        "per_row": "2",
+        "images_auto_height_padding": 64,
+        "font_ratio": 106,
+        "font_ratio_mobile": 130
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "For Men",
+            "subtitle": "NEW ARRIVALS",
+            "invert_color": false,
+            "button": true,
+            "width": 65,
+            "left_padding": 10,
+            "top_padding": 10,
+            "width_mobile": 65,
+            "left_padding_mobile": 10,
+            "top_padding_mobile": 10
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "For Women",
+            "subtitle": "NEW ARRIVALS",
+            "invert_color": false,
+            "button": true,
+            "width": 65,
+            "left_padding": 10,
+            "top_padding": 10,
+            "width_mobile": 65,
+            "left_padding_mobile": 10,
+            "top_padding_mobile": 10
+          }
+        }
+      ]
+    },
+    {
+      "name": "Banners / preset 3 (Fashion ex. fullwidth 3x1 with white box)",
+      "settings": {
+        "fluid": true,
+        "style": "style-3",
+        "inner_space": false,
+        "per_row": "3",
+        "images_auto_height_padding": 80,
+        "font_ratio": 138,
+        "font_ratio_mobile": 150
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Gift Sale 20% OFF!",
+            "description": "Here to bring your life style to the next level",
+            "aligment": "center",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 60,
+            "left_padding": 5,
+            "top_padding": 5,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 70,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Create Your Style",
+            "description": "Here to bring your life style to the next level",
+            "aligment": "center",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 60,
+            "left_padding": 5,
+            "top_padding": 5,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 70,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "New Collection",
+            "description": "Here to bring your life style to the next level",
+            "aligment": "center",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 60,
+            "left_padding": 5,
+            "top_padding": 5,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 70,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        }
+      ]
+    },
+    {
+      "name": "Banners / preset 4 (Fashion ex. fullwidth 4x1 with short white box)",
+      "settings": {
+        "fluid": true,
+        "style": "style-4",
+        "inner_space": true,
+        "per_row": "4",
+        "per_row_mobile": "1",
+        "images_auto_height_padding": 100,
+        "images_auto_height_padding_mobile": 100
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Women's Clothing",
+            "subtitle": "Brake Systems",
+            "aligment_v": "bottom",
+            "mobile_sync": true
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Men's Clothing",
+            "subtitle": "Brake Systems",
+            "aligment_v": "bottom",
+            "mobile_sync": true
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Kid's Clothing",
+            "subtitle": "Brake Systems",
+            "aligment_v": "bottom",
+            "mobile_sync": true
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Accessories",
+            "subtitle": "Brake Systems",
+            "aligment_v": "bottom",
+            "mobile_sync": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Banners / preset 5 (Fashion ex. fullwidth 2x1 with white box)",
+      "settings": {
+        "fluid": true,
+        "layout": "grid",
+        "style": "style-3",
+        "inner_space": true,
+        "per_row": "2",
+        "images_auto_height_padding": 56,
+        "font_ratio": 108,
+        "font_ratio_mobile": 150
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Gift Sale 20% OFF!",
+            "description": "Here to bring your life style to the next level",
+            "aligment": "center",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 60,
+            "left_padding": 5,
+            "top_padding": 5,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 70,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "New Collection",
+            "description": "Here to bring your life style to the next level",
+            "aligment": "center",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 60,
+            "left_padding": 5,
+            "top_padding": 5,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 70,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        }
+      ]
+    },
+    {
+      "name": "Banners / preset 6 (Shoes ex. fullwidth 2x1)",
+      "settings": {
+        "fluid": true,
+        "style": "style-5",
+        "inner_space": false,
+        "per_row": "2",
+        "images_auto_height_padding": 48,
+        "font_ratio": 104,
+        "font_ratio_mobile": 130
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Sale<br>25% OFF",
+            "left_padding": 10,
+            "top_padding": 10,
+            "left_padding_mobile": 10,
+            "top_padding_mobile": 10
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Hot<br>Discount",
+            "left_padding": 10,
+            "top_padding": 10,
+            "left_padding_mobile": 10,
+            "top_padding_mobile": 10
+          }
+        }
+      ]
+    },
+    {
+      "name": "Banners / preset 7 (Toys ex. fullwidth 2x1+1x1)",
+      "settings": {
+        "fluid": false,
+        "style": "style-6",
+        "inner_space": true,
+        "per_row": "2",
+        "images_auto_height_padding": 56,
+        "font_ratio": 142,
+        "font_ratio_mobile": 142
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Baby Toy",
+            "subtitle": "Play Like",
+            "button_color": "btn--white",
+            "left_padding": 8,
+            "top_padding": 8,
+            "left_padding_mobile": 8,
+            "top_padding_mobile": 8
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "50% OFF",
+            "subtitle": "Big Discount",
+            "button_color": "btn--white",
+            "left_padding": 8,
+            "top_padding": 8,
+            "left_padding_mobile": 8,
+            "top_padding_mobile": 8
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Gift Voucher",
+            "subtitle": "Special Offer",
+            "button_color": "btn--white",
+            "aligment": "center",
+            "aligment_text": "center",
+            "left_padding": 8,
+            "top_padding": 8,
+            "aligment_mobile": "center",
+            "aligment_text_mobile": "center",
+            "left_padding_mobile": 8,
+            "top_padding_mobile": 8
+          }
+        }
+      ]
+    },
+    {
+      "name": "Banners / preset 8 (Toys ex. fullwidth 2x1)",
+      "settings": {
+        "fluid": true,
+        "style": "style-11",
+        "inner_space": true,
+        "per_row": "2",
+        "per_row_mobile": "2",
+        "images_auto_height_padding": 44,
+        "font_ratio": 94,
+        "font_ratio_mobile": 150
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Gift Voucher",
+            "subtitle": "Special Offer",
+            "button_color": "btn--white",
+            "aligment": "right",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 49,
+            "left_padding": 0,
+            "top_padding": 8,
+            "aligment_mobile": "right",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 49,
+            "left_padding_mobile": 8,
+            "top_padding_mobile": 8
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Special Offer",
+            "subtitle": "Special Offer",
+            "button_color": "btn--white",
+            "aligment": "left",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 49,
+            "left_padding": 0,
+            "top_padding": 8,
+            "aligment_mobile": "left",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 49,
+            "left_padding_mobile": 8,
+            "top_padding_mobile": 8
+          }
+        }
+      ]
+    },
+    {
+      "name": "Banners / preset 9 (Bags ex. fullwidth mosaic 2+2)",
+      "settings": {
+        "fluid": true,
+        "layout": "mosaic-1",
+        "style": "style-7",
+        "inner_space": false,
+        "images_auto_height_padding": 50,
+        "font_ratio": 120,
+        "font_ratio_mobile": 120
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "The Style Statement",
+            "subtitle": "MAKE YOUR WALLET",
+            "invert_color": true,
+            "button_color": "btn--white",
+            "width": 70,
+            "left_padding": 15,
+            "top_padding": 8,
+            "width_mobile": 64,
+            "left_padding_mobile": 11,
+            "top_padding_mobile": 8
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Leather Belts 10% OFF Everything",
+            "subtitle": "Brake SystemsA Style Statement",
+            "invert_color": false,
+            "width": 60,
+            "left_padding": 11,
+            "top_padding": 8,
+            "width_mobile": 60,
+            "left_padding_mobile": 11,
+            "top_padding_mobile": 8
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Style Is Way To Say Who You Are",
+            "subtitle": "NEW BAG COLLECTION",
+            "invert_color": false,
+            "width": 60,
+            "left_padding": 11,
+            "top_padding": 8,
+            "width_mobile": 60,
+            "left_padding_mobile": 11,
+            "top_padding_mobile": 8
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Gift Certificates",
+            "subtitle": "CHOICE YOUR GIFT",
+            "invert_color": true,
+            "button_color": "btn--white",
+            "width": 70,
+            "left_padding": 15,
+            "top_padding": 8,
+            "width_mobile": 64,
+            "left_padding_mobile": 11,
+            "top_padding_mobile": 8
+          }
+        }
+      ]
+    },
+    {
+      "name": "Banners / preset 10 (Electronics ex. mosaic 4x1)",
+      "settings": {
+        "fluid": false,
+        "layout": "mosaic-2",
+        "style": "style-8",
+        "inner_space": true,
+        "images_auto_height_padding": 122,
+        "images_auto_height_mobile": false,
+        "font_ratio": 164,
+        "font_ratio_mobile": 162
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Camera",
+            "subtitle": "THE EVOLUTION OF",
+            "aligment": "center",
+            "aligment_v": "top",
+            "aligment_text": "center",
+            "mobile_sync": true,
+            "button": false
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Of Mobile",
+            "subtitle": "THE EVOLUTION",
+            "aligment": "right",
+            "aligment_text": "start",
+            "width": 54,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true,
+            "button": false
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "MP3 PLayer",
+            "subtitle": "SPECIAL OFFER",
+            "invert_color": false,
+            "aligment": "right",
+            "aligment_text": "start",
+            "width": 54,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true,
+            "button": false
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Watch",
+            "subtitle": "NEW ARRIVALS",
+            "aligment": "center",
+            "aligment_v": "top",
+            "aligment_text": "center",
+            "mobile_sync": true,
+            "button": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Banners / preset 11 (Pets ex. 4x1)",
+      "settings": {
+        "style": "style-9",
+        "per_row": "4",
+        "per_row_mobile": "2",
+        "images_auto_height_padding": 82,
+        "font_ratio": 168,
+        "font_ratio_mobile": 168
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Special<br>Sale",
+            "subtitle": "Pets Food",
+            "aligment": "center",
+            "aligment_text": "center",
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Save Up<br>To 15% OFF",
+            "subtitle": "For Dog",
+            "aligment": "center",
+            "aligment_text": "center",
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Organic<br>Food",
+            "subtitle": "For Cat",
+            "aligment": "center",
+            "aligment_text": "center",
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Save Up<br>50% OFF",
+            "subtitle": "Pets Toys",
+            "aligment": "center",
+            "aligment_text": "center",
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Banners / preset 12 (Nutrition ex. fullwidth 3x1)",
+      "settings": {
+        "fluid": true,
+        "style": "style-10",
+        "per_row": "3",
+        "images_auto_height_padding": 80,
+        "font_ratio": 140,
+        "font_ratio_mobile": 130
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Build More Muscule",
+            "subtitle": "Protein",
+            "invert_color": false,
+            "aligment_v": "top",
+            "width": 90,
+            "left_padding": 13,
+            "top_padding": 8,
+            "mobile_sync": true,
+            "button": false
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "New Arrivals<br>15% OFF",
+            "subtitle": "Amino-Acids",
+            "aligment_v": "top",
+            "width": 90,
+            "left_padding": 13,
+            "top_padding": 8,
+            "mobile_sync": true,
+            "button": false
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Choose The Original",
+            "subtitle": "Vitamins",
+            "invert_color": false,
+            "aligment_v": "top",
+            "width": 90,
+            "left_padding": 13,
+            "top_padding": 8,
+            "mobile_sync": true,
+            "button": false
+          }
+        }
+      ]
+    },
+    {
+      "name": "Banners / preset 13 (Fishing ex. boxed mosaic 3x1 25%/50%/25%)",
+      "settings": {
+        "fluid": false,
+        "layout": "mosaic-3",
+        "style": "style-12",
+        "inner_space": true
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "FIND YOUR FISH",
+            "subtitle": "",
+            "button_color": "btn--grey",
+            "width": 90,
+            "left_padding": 13,
+            "top_padding": 13,
+            "width_mobile": 90,
+            "left_padding_mobile": 13,
+            "top_padding_mobile": 13,
+            "aligment": "center",
+            "aligment_v": "top",
+            "aligment_text": "center",
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "top",
+            "aligment_text_mobile": "center"
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Reel in the Fun",
+            "subtitle": "",
+            "button": false,
+            "width": 90,
+            "left_padding": 8,
+            "top_padding": 8,
+            "width_mobile": 90,
+            "left_padding_mobile": 8,
+            "top_padding_mobile": 8,
+            "aligment": "center",
+            "aligment_v": "bottom",
+            "aligment_text": "center",
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "bottom",
+            "aligment_text_mobile": "center"
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "LIGHT THE WAY",
+            "subtitle": "",
+            "button_color": "btn--invert",
+            "width": 90,
+            "left_padding": 13,
+            "top_padding": 13,
+            "width_mobile": 90,
+            "left_padding_mobile": 13,
+            "top_padding_mobile": 13,
+            "aligment": "center",
+            "aligment_v": "top",
+            "aligment_text": "center",
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "top",
+            "aligment_text_mobile": "center"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Slideshow / constructor",
+      "settings": {
+        "fluid": true,
+        "layout": "slideshow",
+        "style": "style-1",
+        "inner_space": false,
+        "images_auto_height_padding": 44,
+        "font_ratio": 80,
+        "font_ratio_mobile": 100
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Find Products for Store",
+            "subtitle": "New Arrival",
+            "invert_color": false,
+            "button_color": "btn--white",
+            "aligment": "center",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 50,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": false,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 80,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Find Products for Store",
+            "subtitle": "New Arrival",
+            "invert_color": false,
+            "button_color": "btn--white",
+            "aligment": "left",
+            "aligment_v": "middle",
+            "aligment_text": "start",
+            "width": 50,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 50,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Find Products for Store",
+            "subtitle": "New Arrival",
+            "invert_color": false,
+            "button_color": "btn--white",
+            "aligment": "right",
+            "aligment_v": "middle",
+            "aligment_text": "end",
+            "width": 50,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 50,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        }
+      ]
+    },
+    {
+      "name": "Slideshow / preset 1 Classic Style 1",
+      "settings": {
+        "fluid": true,
+        "layout": "slideshow",
+        "style": "style-1",
+        "inner_space": false,
+        "images_auto_height_padding": 34,
+        "font_ratio": 40,
+        "font_ratio_mobile": 100
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Find Products for Store",
+            "subtitle": "New Arrival",
+            "invert_color": false,
+            "button_color": "btn--white",
+            "aligment": "center",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 50,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": false,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 80,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Find Products for Store",
+            "subtitle": "New Arrival",
+            "invert_color": false,
+            "button_color": "btn--white",
+            "aligment": "left",
+            "aligment_v": "middle",
+            "aligment_text": "start",
+            "width": 50,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 50,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Find Products for Store",
+            "subtitle": "New Arrival",
+            "invert_color": false,
+            "button_color": "btn--white",
+            "aligment": "right",
+            "aligment_v": "middle",
+            "aligment_text": "end",
+            "width": 50,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 50,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        }
+      ]
+    },
+    {
+      "name": "Slideshow / preset 2 Classic Style 2",
+      "settings": {
+        "fluid": true,
+        "layout": "slideshow",
+        "style": "style-2",
+        "inner_space": false,
+        "images_auto_height_padding": 38,
+        "font_ratio": 40,
+        "font_ratio_mobile": 100
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "NUTRITION",
+            "subtitle": "YOUR ALL",
+            "invert_color": true,
+            "description": "Are You Ready To Get Seroous?",
+            "button_color": "btn--default",
+            "aligment": "left",
+            "aligment_v": "middle",
+            "aligment_text": "start",
+            "width": 60,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 60,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "NUTRITION",
+            "subtitle": "YOUR ALL",
+            "invert_color": true,
+            "description": "Are You Ready To Get Seroous?",
+            "button_color": "btn--default",
+            "aligment": "center",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 60,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": false,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 100,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "NUTRITION",
+            "subtitle": "YOUR ALL",
+            "invert_color": true,
+            "description": "Are You Ready To Get Seroous?",
+            "button_color": "btn--default",
+            "aligment": "right",
+            "aligment_v": "middle",
+            "aligment_text": "end",
+            "width": 60,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": false,
+            "aligment_mobile": "right",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "end",
+            "width_mobile": 100,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        }
+      ]
+    },
+    {
+      "name": "Slideshow / preset 3 Fullheight style 1",
+      "settings": {
+        "fluid": true,
+        "layout": "slideshow_fullheight",
+        "slideshow_fullheight_mobile": true,
+        "style": "style-1",
+        "inner_space": false,
+        "images_auto_height_padding": 44,
+        "font_ratio": 80,
+        "font_ratio_mobile": 100
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Find Products for Store",
+            "subtitle": "New Arrival",
+            "invert_color": false,
+            "button_color": "btn--white",
+            "aligment": "center",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 50,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 50,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 15
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Find Products for Store",
+            "subtitle": "New Arrival",
+            "invert_color": false,
+            "button_color": "btn--white",
+            "aligment": "left",
+            "aligment_v": "middle",
+            "aligment_text": "start",
+            "width": 50,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 50,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 15
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Find Products for Store",
+            "subtitle": "New Arrival",
+            "invert_color": false,
+            "button_color": "btn--white",
+            "aligment": "right",
+            "aligment_v": "middle",
+            "aligment_text": "end",
+            "width": 50,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 50,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        }
+      ]
+    },
+    {
+      "name": "Slideshow / preset 4 Fullheight style 2",
+      "settings": {
+        "fluid": true,
+        "layout": "slideshow_fullheight",
+        "style": "style-2",
+        "inner_space": false,
+        "images_auto_height_padding": 44,
+        "font_ratio": 80,
+        "font_ratio_mobile": 100
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "NUTRITION",
+            "subtitle": "YOUR ALL",
+            "invert_color": true,
+            "description": "Are You Ready To Get Seroous?",
+            "button_color": "btn--default",
+            "aligment": "left",
+            "aligment_v": "middle",
+            "aligment_text": "start",
+            "width": 60,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 60,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "NUTRITION",
+            "subtitle": "YOUR ALL",
+            "invert_color": true,
+            "description": "Are You Ready To Get Seroous?",
+            "button_color": "btn--default",
+            "aligment": "center",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 60,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": false,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 100,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "NUTRITION",
+            "subtitle": "YOUR ALL",
+            "invert_color": true,
+            "description": "Are You Ready To Get Seroous?",
+            "button_color": "btn--default",
+            "aligment": "right",
+            "aligment_v": "middle",
+            "aligment_text": "end",
+            "width": 60,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": false,
+            "aligment_mobile": "right",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "end",
+            "width_mobile": 100,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        }
+      ]
+    },
+    {
+      "name": "Slideshow / preset 5 Boxed style 1",
+      "settings": {
+        "fluid": false,
+        "layout": "slideshow",
+        "style": "style-1",
+        "inner_space": false,
+        "images_auto_height_padding": 44,
+        "font_ratio": 80,
+        "font_ratio_mobile": 100
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Find Products for Store",
+            "subtitle": "New Arrival",
+            "invert_color": false,
+            "button_color": "btn--white",
+            "aligment": "center",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 50,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 50,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Find Products for Store",
+            "subtitle": "New Arrival",
+            "invert_color": false,
+            "button_color": "btn--white",
+            "aligment": "left",
+            "aligment_v": "middle",
+            "aligment_text": "start",
+            "width": 50,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 50,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Find Products for Store",
+            "subtitle": "New Arrival",
+            "invert_color": false,
+            "button_color": "btn--white",
+            "aligment": "right",
+            "aligment_v": "middle",
+            "aligment_text": "end",
+            "width": 50,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 50,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        }
+      ]
+    },
+    {
+      "name": "Slideshow / preset 6 Ellipse",
+      "settings": {
+        "fluid": true,
+        "slider_bottom_ellipse": true,
+        "layout": "slideshow",
+        "style": "style-1",
+        "inner_space": false,
+        "images_auto_height_padding": 34,
+        "font_ratio": 40,
+        "font_ratio_mobile": 100
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Find Products for Store",
+            "subtitle": "New Arrival",
+            "invert_color": false,
+            "button_color": "btn--white",
+            "aligment": "center",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 50,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": false,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 80,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Find Products for Store",
+            "subtitle": "New Arrival",
+            "invert_color": false,
+            "button_color": "btn--white",
+            "aligment": "left",
+            "aligment_v": "middle",
+            "aligment_text": "start",
+            "width": 50,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 50,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Find Products for Store",
+            "subtitle": "New Arrival",
+            "invert_color": false,
+            "button_color": "btn--white",
+            "aligment": "right",
+            "aligment_v": "middle",
+            "aligment_text": "end",
+            "width": 50,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": true,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 50,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        }
+      ]
+    },
+    {
+      "name": "Slideshow / preset 7 Ellipse Fullheight style 3",
+      "settings": {
+        "fluid": true,
+        "slider_bottom_ellipse": true,
+        "layout": "slideshow_fullheight",
+        "style": "style-3",
+        "inner_space": false,
+        "font_ratio": 78,
+        "images_auto_height_mobile": true,
+        "images_auto_height_padding_mobile": 70,
+        "font_ratio_mobile": 100
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "subtitle": "Get Up to",
+            "title": "30% OFF",
+            "invert_color": true,
+            "button": true,
+            "button_color": "btn--white",
+            "aligment": "right",
+            "aligment_v": "middle",
+            "aligment_text": "start",
+            "width": 45,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": false,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "bottom",
+            "aligment_text_mobile": "center",
+            "width_mobile": 80,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "subtitle": "Big Sale",
+            "title": "Up to 70% OFF",
+            "invert_color": true,
+            "button": true,
+            "button_color": "btn--white",
+            "aligment": "right",
+            "aligment_v": "middle",
+            "aligment_text": "start",
+            "width": 45,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": false,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "bottom",
+            "aligment_text_mobile": "center",
+            "width_mobile": 80,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        }
+      ]
+    },
+    {
+      "name": "Slideshow / preset 8 Fullheight style 4",
+      "settings": {
+        "spacing_sections": 0,
+        "use_global_desktop_space": false,
+        "spacing_sections_mobile": 0,
+        "use_global_mobile_space": 0,
+        "slider_bottom_ellipse": true,
+        "fluid": true,
+        "layout": "slideshow_fullheight",
+        "slideshow_fullheight_mobile": true,
+        "style": "style-2",
+        "inner_space": false,
+        "images_auto_height_padding": 70,
+        "font_ratio": 20,
+        "font_ratio_mobile": 100
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Find Products for Store",
+            "subtitle": "New Arrival",
+            "description": "",
+            "invert_color": false,
+            "button_color": "btn--white",
+            "aligment": "center",
+            "aligment_v": "top",
+            "aligment_text": "center",
+            "width": 70,
+            "left_padding": 12,
+            "top_padding": 5,
+            "mobile_sync": false,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "top",
+            "aligment_text_mobile": "center",
+            "width_mobile": 70,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 9
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Find Products for Store",
+            "subtitle": "New Arrival",
+            "description": "",
+            "invert_color": false,
+            "button_color": "btn--white",
+            "aligment": "center",
+            "aligment_v": "top",
+            "aligment_text": "center",
+            "width": 70,
+            "left_padding": 12,
+            "top_padding": 5,
+            "mobile_sync": false,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "top",
+            "aligment_text_mobile": "center",
+            "width_mobile": 70,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 9
+          }
+        }
+      ]
+    },
+    {
+      "name": "Slideshow / preset 9 Fullheight style 5",
+      "settings": {
+        "spacing_sections": 100,
+        "use_global_desktop_space": true,
+        "spacing_sections_mobile": 70,
+        "use_global_mobile_space": true,
+        "spacing_padding_sections": 100,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "background": false,
+        "fluid": true,
+        "slider_bottom_ellipse": false,
+        "layout": "slideshow_fullheight",
+        "slideshow_fullheight_mobile": false,
+        "slideshow_control_layout": "bottom",
+        "slideshow_autoplay": true,
+        "style": "style-5",
+        "inner_space": false,
+        "per_row": "2",
+        "images_auto_height": true,
+        "images_auto_height_padding": 60,
+        "font_ratio": 68,
+        "per_row_mobile": "1",
+        "images_auto_height_mobile": true,
+        "images_auto_height_padding_mobile": 60,
+        "font_ratio_mobile": 100,
+        "heading_alignment": "center",
+        "heading": "",
+        "subtitle": "",
+        "lazyload": true,
+        "placeholder": true,
+        "boxed": false
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "video_loop": false,
+            "color_placeholder": "#f0f0f0",
+            "title": "70% Off",
+            "subtitle": "Big Sale",
+            "invert_color": false,
+            "url": "https://shopify.pxf.io/c/2245513/1061744/13624",
+            "fast_shop": false,
+            "description": "Explore our collection and discover tees that resonate with you. Join us on a journey of self-expression and style.",
+            "button": true,
+            "button_text": "Start free trial store",
+            "button_target_blank": true,
+            "button_color": "btn--default",
+            "aligment": "right",
+            "aligment_v": "middle",
+            "aligment_text": "start",
+            "width": 50,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": false,
+            "aligment_mobile": "right",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "end",
+            "width_mobile": 100,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        }
+      ]
+    },
+    {
+      "name": "Banners / preset 14 (Tshirts ex. mosaic 2+2+2)",
+      "settings": {
+        "layout": "mosaic-4",
+        "style": "style-8",
+        "inner_space": true,
+        "font_ratio": 144,
+        "images_auto_height_padding_mobile": 70,
+        "font_ratio_mobile": 144,
+        "heading": "",
+        "subtitle": ""
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Custom<br>Print",
+            "subtitle": "",
+            "invert_color": false,
+            "url": "#",
+            "button": true,
+            "button_color": "btn--default",
+            "aligment": "left",
+            "aligment_v": "middle",
+            "aligment_text": "start",
+            "width": 100,
+            "left_padding": 8,
+            "top_padding": 14,
+            "mobile_sync": true,
+            "aligment_mobile": "left",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "start",
+            "width_mobile": 100,
+            "left_padding_mobile": 14,
+            "top_padding_mobile": 14
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Women's Tees",
+            "subtitle": "NEW ARRIVALS",
+            "invert_color": true,
+            "url": "#",
+            "button": true,
+            "button_color": "btn--grey",
+            "aligment": "center",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 70,
+            "left_padding": 14,
+            "top_padding": 14,
+            "mobile_sync": true,
+            "aligment_mobile": "left",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "start",
+            "width_mobile": 100,
+            "left_padding_mobile": 14,
+            "top_padding_mobile": 14
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Men's<br>Tees",
+            "subtitle": "NEW ARRIVALS",
+            "invert_color": true,
+            "url": "#",
+            "button": true,
+            "button_color": "btn--grey",
+            "aligment": "center",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 70,
+            "left_padding": 14,
+            "top_padding": 14,
+            "mobile_sync": true,
+            "aligment_mobile": "left",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "start",
+            "width_mobile": 100,
+            "left_padding_mobile": 14,
+            "top_padding_mobile": 14
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Teens<br>Design",
+            "subtitle": "",
+            "invert_color": false,
+            "url": "#",
+            "button": true,
+            "button_target_blank": false,
+            "button_color": "btn--default",
+            "aligment": "right",
+            "aligment_v": "middle",
+            "aligment_text": "start",
+            "width": 45,
+            "left_padding": 8,
+            "top_padding": 14,
+            "mobile_sync": true,
+            "aligment_mobile": "left",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "start",
+            "width_mobile": 100,
+            "left_padding_mobile": 14,
+            "top_padding_mobile": 14
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "SUMMER SALE<br>50% OFF",
+            "subtitle": "",
+            "invert_color": true,
+            "url": "#",
+            "button": true,
+            "button_target_blank": false,
+            "button_color": "btn--grey",
+            "aligment": "center",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 100,
+            "left_padding": 8,
+            "top_padding": 14,
+            "mobile_sync": true,
+            "aligment_mobile": "left",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "start",
+            "width_mobile": 100,
+            "left_padding_mobile": 14,
+            "top_padding_mobile": 14
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "FINAL SALE",
+            "subtitle": "LAST SIZE",
+            "invert_color": false,
+            "url": "#",
+            "button": true,
+            "button_target_blank": false,
+            "button_color": "btn--default",
+            "aligment": "center",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 70,
+            "left_padding": 14,
+            "top_padding": 14,
+            "mobile_sync": true,
+            "aligment_mobile": "left",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "start",
+            "width_mobile": 100,
+            "left_padding_mobile": 14,
+            "top_padding_mobile": 14
+          }
+        }
+      ]
+    },
+    {
+      "name": "Banners / preset 15 (Cosmetics ex. mosaic 2+3+2)",
+      "settings": {
+        "inner_space": true,
+        "layout": "mosaic-5",
+        "style": "style-14",
+        "font_ratio": 162,
+        "images_auto_height_mobile": false,
+        "font_ratio_mobile": 154,
+        "heading": "",
+        "subtitle": ""
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "The Skincare",
+            "subtitle": "THE REVOLUTUION OF",
+            "invert_color": false,
+            "custom_caption_colorization": true,
+            "color_title": "#218a21",
+            "url": "#",
+            "aligment": "center",
+            "aligment_v": "top",
+            "aligment_text": "center",
+            "mobile_sync": true
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Honey",
+            "subtitle": "GET POWER OF",
+            "invert_color": false,
+            "url": "#",
+            "aligment": "right",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 46,
+            "left_padding": 5,
+            "top_padding": 14,
+            "mobile_sync": true
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Scrabs",
+            "subtitle": "SKIN CLEANING",
+            "invert_color": false,
+            "url": "#",
+            "aligment": "left",
+            "aligment_v": "middle",
+            "aligment_text": "start",
+            "width": 100,
+            "left_padding": 10,
+            "top_padding": 14,
+            "mobile_sync": true
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Organic",
+            "subtitle": "WE CARE ABOUT YOU",
+            "invert_color": true,
+            "url": "#",
+            "aligment": "center",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 100,
+            "left_padding": 14,
+            "top_padding": 14,
+            "mobile_sync": true
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Snail",
+            "subtitle": "REPAIR SERIES",
+            "custom_caption_colorization": true,
+            "color_title": "#218a21",
+            "url": "#",
+            "aligment": "right",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 46,
+            "left_padding": 5,
+            "top_padding": 14,
+            "mobile_sync": true
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Collagen",
+            "subtitle": "ANTIAGE SERIES",
+            "invert_color": false,
+            "aligment": "left",
+            "aligment_v": "middle",
+            "aligment_text": "start",
+            "width": 100,
+            "left_padding": 10,
+            "top_padding": 14,
+            "mobile_sync": true
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Herbal Care",
+            "subtitle": "NATURE BEAUTY",
+            "invert_color": false,
+            "custom_caption_colorization": true,
+            "color_title": "#218a21",
+            "url": "#",
+            "aligment": "center",
+            "aligment_v": "top",
+            "aligment_text": "center",
+            "width": 100,
+            "left_padding": 14,
+            "top_padding": 14,
+            "mobile_sync": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "Banners / preset 16 (Games ex. 4 in row)",
+      "settings": {
+        "fluid": true,
+        "inner_space": true,
+        "boxed": true,
+        "style": "style-15",
+        "per_row": "4",
+        "images_auto_height": true,
+        "images_auto_height_padding": 70,
+        "font_ratio": 152,
+        "per_row_mobile": "1",
+        "images_auto_height_mobile": true,
+        "images_auto_height_padding_mobile": 70,
+        "font_ratio_mobile": 144
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "invert_color": false,
+            "title": "HEADSETS",
+            "subtitle": "Experience Sound Like Never Before",
+            "button": true,
+            "button_color": "btn--default",
+            "aligment": "left",
+            "aligment_v": "top",
+            "aligment_text": "start",
+            "width": 70,
+            "left_padding": 11,
+            "top_padding": 11,
+            "width_mobile": 100,
+            "left_padding_mobile": 14,
+            "top_padding_mobile": 14
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "invert_color": false,
+            "title": "NEW MICE",
+            "subtitle": "Unleash Your Gaming Potential",
+            "button": true,
+            "button_color": "btn--default",
+            "aligment": "left",
+            "aligment_v": "top",
+            "aligment_text": "start",
+            "width": 70,
+            "left_padding": 11,
+            "top_padding": 11,
+            "width_mobile": 100,
+            "left_padding_mobile": 14,
+            "top_padding_mobile": 14
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "invert_color": false,
+            "title": "VR BOXES",
+            "subtitle": "Step into Virtual<br>Reality",
+            "button": true,
+            "button_color": "btn--default",
+            "aligment": "left",
+            "aligment_v": "top",
+            "aligment_text": "start",
+            "width": 70,
+            "left_padding": 11,
+            "top_padding": 11,
+            "width_mobile": 100,
+            "left_padding_mobile": 14,
+            "top_padding_mobile": 14
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "invert_color": false,
+            "title": "GAMES",
+            "subtitle": "Immerse Yourself<br>in Adventures",
+            "button": true,
+            "button_color": "btn--default",
+            "aligment": "left",
+            "aligment_v": "top",
+            "aligment_text": "start",
+            "width": 70,
+            "left_padding": 11,
+            "top_padding": 11,
+            "width_mobile": 100,
+            "left_padding_mobile": 14,
+            "top_padding_mobile": 14
+          }
+        }
+      ]
+    },
+    {
+      "name": "Slideshow / preset 10 Modern (Games ex.)",
+      "settings": {
+        "fluid": false,
+        "boxed": true,
+        "layout": "slideshow_modern",
+        "slideshow_fullheight_mobile": false,
+        "slideshow_control_layout": "bottom",
+        "slideshow_autoplay": true,
+        "slideshow_autoplay_speed": 7,
+        "style": "style-7",
+        "images_auto_height": true,
+        "images_auto_height_padding": 56,
+        "font_ratio": 86,
+        "per_row_mobile": "1",
+        "images_auto_height_mobile": true,
+        "images_auto_height_padding_mobile": 150,
+        "font_ratio_mobile": 130,
+        "heading_alignment": "center",
+        "heading": "",
+        "subtitle": "",
+        "lazyload": true,
+        "placeholder": true
+      },
+      "blocks": [
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Game Pad",
+            "subtitle": "StealthPro X1",
+            "invert_color": false,
+            "description": "Wireless Connectivity<br>                                         Ergonomic Design<br>                                         Precision Control<br>                                         Customizable Back Buttons<br>                                         Integrated Rechargeable Battery",
+            "button": true,
+            "button_color": "btn--invert",
+            "aligment": "left",
+            "aligment_v": "middle",
+            "aligment_text": "start",
+            "width": 100,
+            "left_padding": 8,
+            "top_padding": 14,
+            "mobile_sync": false,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "bottom",
+            "aligment_text_mobile": "center",
+            "width_mobile": 100,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 30
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Gaming Mouse",
+            "subtitle": "HyperStrike M7",
+            "invert_color": false,
+            "description": "High-Precision Sensor<br>\n                                        Customizable RGB Lighting<br>\n                                        Ergonomic Design<br>\n                                        Programmable Buttons<br>\n                                        On-the-Fly Profile Switching",
+            "button": true,
+            "button_color": "btn--invert",
+            "aligment": "left",
+            "aligment_v": "middle",
+            "aligment_text": "start",
+            "width": 100,
+            "left_padding": 8,
+            "top_padding": 14,
+            "mobile_sync": false,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "bottom",
+            "aligment_text_mobile": "center",
+            "width_mobile": 100,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 30
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Headset",
+            "subtitle": "SonicWave Pro X7",
+            "invert_color": false,
+            "description": "Crystal-Clear Microphone<br>\n                                        Immersive 7.1 Surround Sound<br>\n                                        Comfortable Design<br>\n                                        Customizable Lighting<br>\n                                        Durable Build",
+            "button": true,
+            "button_color": "btn--invert",
+            "aligment": "left",
+            "aligment_v": "middle",
+            "aligment_text": "start",
+            "width": 100,
+            "left_padding": 8,
+            "top_padding": 14,
+            "mobile_sync": false,
+            "aligment_mobile": "center",
+            "aligment_v_mobile": "bottom",
+            "aligment_text_mobile": "center",
+            "width_mobile": 100,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 30
+          }
+        }
+      ]
+    },
+    {
+      "name": "Slideshow / preset 11 Boxed (Sweets ex.)",
+      "settings": {
+        "fluid": false,
+        "layout": "slideshow",
+        "slideshow_control_layout": "right",
+        "slideshow_autoplay": true,
+        "slideshow_autoplay_speed": 7,
+        "style": "style-8",
+        "inner_space": false,
+        "images_auto_height_padding": 36,
+        "images_auto_height_padding_mobile": 50,
+        "font_ratio": 66,
+        "font_ratio_mobile": 76
+      },
+      "blocks": [
+        {
+        "type": "banner",
+        "settings": {
+          "title": "Easter Treats",
+          "description": "Where Sweet Dreams Become Reality Your Haven of Delight",
+          "invert_color": false,
+          "button_color": "btn--default",
+          "aligment": "left",
+          "aligment_v": "middle",
+          "aligment_text": "center",
+          "width": 40,
+          "left_padding": 5,
+          "top_padding": 5,
+          "mobile_sync": false,
+          "aligment_mobile": "left",
+          "aligment_v_mobile": "middle",
+          "aligment_text_mobile": "center",
+          "width_mobile": 48,
+          "left_padding_mobile": 5,
+          "top_padding_mobile": 5
+          }
+        },
+        {
+          "type": "banner",
+          "settings": {
+            "title": "Heart Day",
+            "description": "Where Sweet Dreams Become Reality Your Haven of Delight",
+            "invert_color": false,
+            "button_color": "btn--default",
+            "aligment": "left",
+            "aligment_v": "middle",
+            "aligment_text": "center",
+            "width": 40,
+            "left_padding": 5,
+            "top_padding": 5,
+            "mobile_sync": false,
+            "aligment_mobile": "left",
+            "aligment_v_mobile": "middle",
+            "aligment_text_mobile": "center",
+            "width_mobile": 48,
+            "left_padding_mobile": 5,
+            "top_padding_mobile": 5
+          }
+        },
+        {
+        "type": "banner",
+        "settings": {
+          "title": "Choco Mix",
+          "description": "Where Sweet Dreams Become Reality Your Haven of Delight",
+          "invert_color": false,
+          "button_color": "btn--default",
+          "aligment": "left",
+          "aligment_v": "middle",
+          "aligment_text": "center",
+          "width": 40,
+          "left_padding": 5,
+          "top_padding": 5,
+          "mobile_sync": false,
+          "aligment_mobile": "left",
+          "aligment_v_mobile": "middle",
+          "aligment_text_mobile": "center",
+          "width_mobile": 48,
+          "left_padding_mobile": 5,
+          "top_padding_mobile": 5
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,110 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- liquid
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+-%}
+{{ 'header3' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  if settings.mobile_bottom_navigation_account == 'header' and settings.mobile_bottom_navigation_wishlist == 'header' and settings.mobile_bottom_navigation_cart == 'header'
+    assign class = class | append: ' icons-compact-mobile'
+  endif
+
+  render 'header-sticky', section: section
+-%}
+<div class="hdr hdr--style3 {{ class }}">
+  <div class="hdr-content">
+    <div class="container">
+      <div class="row gx-1 justify-content-between">
+        <div class="hdr-links-wrap col-4 col-md-4">
+          <div class="hdr-inline-link hdr-inline-link--lg justify-content-start align-items-start">
+            {%- if settings.phone != blank -%}
+              <a href="tel:{{ settings.phone }}" title="tel:{{ settings.phone }}" class="dropdn-link">
+                <span class="icon-wrap">{% render 'icon-phone' %}</span>
+                <span class="dropdn-link-txt">{{ settings.phone }}</span>
+              </a>
+            {%- endif -%}
+            {%- if settings.mail_yes -%}
+              <a href="mailto:{{ settings.mail_to }}" class="dropdn-link  hide-mobile">
+                <span class="icon-wrap">{% render 'icon-mail4' %}</span>
+                <span class="dropdn-link-txt">{{ settings.mail_to }}</span>
+              </a>
+            {%- endif -%}
+             <div class="show-mobile">
+              {%- liquid
+                render 'header-get-help'
+
+                if settings.mobile_bottom_navigation_wishlist == 'header'
+                  render 'header-wishlist-icon'
+                endif
+              -%}
+            </div>
+          </div>
+        </div>
+        <div class="col hdr-logo justify-content-center">
+          {% render 'logo',
+            header_transparent: header_transparent,
+            logo: logo,
+            svg_logo: svg_logo,
+            svg_logo_name: svg_logo_name,
+            logo_transparent: logo_transparent,
+            svg_logo_transparent: svg_logo_transparent,
+            svg_logo_name_transparent: svg_logo_name_transparent,
+            logo_width: section.settings.logo_width,
+            logo_width_mobile: section.settings.logo_width_mobile,
+            prefix: 'Header-logo-',
+            id: section.id,
+            class: 'logo'
+           %}
+        </div>
+        <div class="hdr-links-wrap col-4">
+          <div class="hdr-inline-link hide-mobile">
+            {%- liquid
+              render 'header-account', icon: false
+              render 'header-get-help'
+              render 'header-wishlist'
+              render 'header-cart'
+            -%}
+          </div>
+          <div class="hdr-inline-link show-mobile">
+            {%- liquid
+              render 'header-search-mobile-toggle'
+
+              if settings.mobile_bottom_navigation_account == 'header'
+                render 'header-account-icon', position: 'bottom'
+              endif
+
+              if settings.mobile_bottom_navigation_cart == 'header'
+                render 'header-cart-icon', tag: tag
+              endif
+
+              render 'header-burger'
+            -%}
+          </div>
+        </div>
+        </div>
+      {% render 'header-search-disclosed', class: "hdr-open-search-form" %}
+    </div>
+  </div>
+  <div class="hdr-navline hide-mobile">
+    <div class="container">
+      <div class="row">
+        <div class="col-auto">
+          {%- liquid
+            render 'header-settings', id1: 'languages', id2: 'currencies'
+          -%}
+        </div>
+        <div class="col text-center">
+          <div class="hdr-nav hide-mobile nav-holder text-center" role="navigation">
+            {% render 'header-navigation', show_dropdowns: false, section: section %}
+          </div>
+        </div>
+        <div class="col-auto">
+          {%- liquid
+            render 'header-search'
+          -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

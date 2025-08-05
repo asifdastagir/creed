@@ -1,0 +1,44 @@
+{%- liquid
+    assign prefix = 'color_header' | append: suffix
+
+    assign c = c | append: prefix | append: '_global_bg:--header-global-bg|'
+    assign c = c | append: prefix | append: '_global:--header-global-color|'
+    assign c = c | append: prefix | append: '_global_link:--header-global-link-color|'
+    assign c = c | append: prefix | append: '_global_link_hover:--header-global-link-hover-color|'
+    assign c = c | append: prefix | append: '_top_bg:--header-top-bg|'
+    assign c = c | append: prefix | append: '_top:--header-top-color|'
+    assign c = c | append: prefix | append: '_top_link:--header-top-link-color|'
+    assign c = c | append: prefix | append: '_top_link_hover:--header-top-link-hover-color|'
+    assign c = c | append: prefix | append: '_main_bg:--header-content-bg|'
+    assign c = c | append: prefix | append: '_main_text:--header-content-color|'
+    assign c = c | append: prefix | append: '_main_link:--header-content-link-color|'
+    assign c = c | append: prefix | append: '_main_link_hover:--header-content-link-hover-color|'
+    assign c = c | append: prefix | append: '_main_link_active:--header-content-nav-link-active-color|'
+    assign c = c | append: prefix | append: '_bottom_bg:--header-bottom-bg|'
+    assign c = c | append: prefix | append: '_bottom_link:--header-bottom-link-color|'
+    assign c = c | append: prefix | append: '_bottom_link_hover:--header-bottom-link-hover-color|'
+    assign c = c | append: prefix | append: '_bottom_link_active:--header-bottom-link-active-color|'
+    assign c = c | append: prefix | append: '_main_border:--header-border-color|'
+    assign c = c | append: prefix | append: '_search_text:--header-form-color|'
+    assign c = c | append: prefix | append: '_search_placeholder:--header-form-palceholder-color!alpha0.6|'
+    assign c = c | append: prefix | append: '_search_border:--header-form-border-color|'
+    assign c = c | append: prefix | append: '_link_line_hover:--header-nav-link-border-hover-color|'
+    assign c = c | append: prefix | append: '_link_line_active:--header-nav-link-border-active-color|'
+
+    assign c = c | append: prefix | append: '_main_badge_text:--header-badge-color,--mobile-bottom-badge-color|'
+    assign c = c | append: prefix | append: '_main_badge_bg:--header-badge-bg,--mobile-bottom-badge-bg|'
+
+    unless suffix == 'transparent'
+        assign c = c | append: 'color_submenu_list_link_hover_bg:--submenu-list-link-hover-bg|'
+        assign c = c | append: 'color_column_title_link:--column-caption-style-color|'
+        assign c = c | append: 'color_column_title_link_hover:--column-caption-style-hover-color|'
+        assign c = c | append: 'color_header_view_more:--submenu-viewmore-link-color|'
+        assign c = c | append: 'color_mobilemenu_social_color:--mobile-menu-social-color|'
+        assign c = c | append: 'color_header_subcategories_bg:--header-subcategories-bg|'
+        assign c = c | append: 'color_header_subcategories_text:--header-subcategories-color|'
+        assign c = c | append: 'color_header_subcategories_link:--header-subcategories-link-color|'
+        assign c = c | append: 'color_header_subcategories_link_hover:--header-subcategories-link-hover-color|'
+    endunless
+
+    render 'css_vars', colors_map: c
+-%}

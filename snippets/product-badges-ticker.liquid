@@ -1,0 +1,37 @@
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign on_sale = false
+  assign badge_sale_ticker = settings.badge_sale_ticker
+
+  if current_variant.compare_at_price > current_variant.price
+    assign on_sale = true
+    assign percent = current_variant.compare_at_price | minus: current_variant.price | times: 100.0 | divided_by: current_variant.compare_at_price | times: 100 | divided_by: 100 | floor
+  endif
+
+  if badge_sale_ticker and settings.badge_sale_ticker_show_method == 'individually'
+    assign badge_sale_ticker = product.metafields.custom.badge_sale_ticker
+  endif
+
+  if badge_sale_ticker
+    if layout == 'product-media-main'
+      assign badge_sale_ticker = settings.badge_sale_ticker_product_page
+    endif
+
+    if layout == 'product-card' or layout == 'product-card-horizontal'
+      assign badge_sale_ticker = settings.badge_sale_ticker_product_card
+    endif
+  endif
+-%}
+{%- if badge_sale_ticker -%}
+  <div {% if render %}data-render="badges-ticker-{{ product_form_id }}"{% endif %}>
+    {%- if on_sale -%}
+      <promo-ticker class="promo-ticker text-uppercase" style="--ticker-speed: {{ settings.badge_sale_ticker_speed }}s;">
+        <div class="ticker-scroll">
+          {%- for i in (0..3) -%}
+            <div class="ticker-item"><div class="icon-wrap">{% render 'icon-star' %}</div>{{ 'theme.general.super_sale' | t }} <span class="label-badge">{{ percent }}% {{ 'theme.general.off' | t }}</span> {{ 'theme.general.time_limited' | t }}</div>
+          {%- endfor -%}
+        </div>
+      </promo-ticker>
+    {%- endif -%}
+  </div>
+{%- endif -%}

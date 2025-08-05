@@ -1,0 +1,80 @@
+{%- if settings.header_get_help and settings.header_get_help_title != blank or settings.header_get_help_phone != blank or settings.header_get_help_links != blank and settings.header_get_help_links.links.size > 0 -%}
+    <settings-dropdown>
+        <div class="dropdn_settings">
+            <div class="dropdn dropdn_settings">
+                <a href="#" class="dropdn-link js-dropdn-link" role="button" aria-label="{{ settings.header_get_help_title }}" aria-haspopup="dialog">
+                    <span>
+                        {%- if settings.header_get_help_icon_layout == 'icon' or settings.header_get_help_icon_layout == 'icon_text' -%}
+                            <span class="icon-wrap">{% render 'icon-chat3' %}</span>
+                            <span class="icon-wrap">{% render 'icon-close5' %}</span>
+                        {%- endif -%}
+                        {%- if settings.header_get_help_icon_layout == 'text' or settings.header_get_help_icon_layout == 'icon_text' -%}
+                            <span>{{ settings.header_get_help_icon_text }}</span>
+                        {%- endif -%}
+                    </span>
+                </a>
+                <div class="dropdn-content dropdn-content--info">
+                    <div class="services-dropdn">
+                        {%- if settings.header_get_help_title != blank -%}
+                            <div class="services-dropdn-title">{{ settings.header_get_help_title }}</div>
+                        {%- endif -%}
+                        {%- if settings.header_get_help_phone != blank -%}
+                            <div class="services-dropdn-phones">
+                                <a href="tel:{{ settings.header_get_help_phone }}"><span>{{ settings.header_get_help_phone }}</span><span></span></a>
+                            </div>
+                        {%- endif -%}
+                        {%- if settings.header_get_help_links != blank and settings.header_get_help_links.links.size > 0 and settings.header_get_help_links_primary_count > 0 -%}
+                            <div class="services-dropdn-info">
+                                {%- for link in settings.header_get_help_links.links limit: settings.header_get_help_links_primary_count -%}
+                                    {%- liquid
+                                        assign title = link.title | escape | split: '|' | first
+                                        assign icon = link.title | escape | split: 'icon:'
+
+                                        if icon.size > 1
+                                            assign icon = icon | last | split: '|' | first
+                                        else
+                                            assign icon = ''
+                                        endif
+                                    -%}
+                                    <a href="{{ link.url }}">
+                                        {%- if icon != blank -%}
+                                            <span class="icon-wrap">{% render 'icon', icon: icon %}</span>
+                                        {%- endif -%}
+                                        <span>{{ title }}</span>
+                                    </a>
+                                {%- endfor -%}
+                            </div>
+                        {%- endif -%}
+
+                        {%- if settings.header_get_help_links != blank and settings.header_get_help_links.links.size > settings.header_get_help_links_primary_count -%}
+                            <div class="services-dropdn-bottom">
+                                {%- liquid
+                                    assign count = 0
+                                    assign header_get_help_links_secondary_count = settings.header_get_help_links_secondary_count | plus: 1
+                                -%}
+                                {%- for link in settings.header_get_help_links.links -%}
+                                    {%- liquid
+                                        if forloop.index <= settings.header_get_help_links_primary_count
+                                            continue
+                                        endif
+
+                                        assign count = count | plus: 1
+                                        assign title = link.title | escape | split: '|' | first
+
+                                        if count == header_get_help_links_secondary_count
+                                            break
+                                        endif
+                                    -%}
+                                    <a href="{{ link.url }}" class="primary-link-strict">{{ title }}</a>
+                                    {%- if count < settings.header_get_help_links_secondary_count and forloop.last != true -%}
+                                        <span>–</span>
+                                    {%- endif -%}
+                                {%- endfor -%}
+                            </div>
+                        {%- endif -%}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </settings-dropdown>
+{%- endif -%}

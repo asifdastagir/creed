@@ -1,0 +1,45 @@
+<product-tabs>
+    <div class="swiper-container tab-wrap-nav">
+    <div class="swiper-scrollbar"></div>
+    <div class="swiper-wrapper">
+    {%- for block in blocks -%}
+        {%- liquid
+            if block.type == 'description' and product.description == blank
+            continue
+            endif
+        -%}
+        <div class="swiper-slide">{{ block.settings.heading | default: block.settings.page.title }}</div>
+        {%- endfor -%}
+    </div>
+    </div>
+    <div class="swiper-container tab-wrap-content product-tab-wrap">
+    <div class="swiper-wrapper">
+        {%- for block in blocks -%}
+        {%- liquid
+            if block.type == 'description' and product.description == blank
+            continue
+            endif
+        -%}
+        <div class="swiper-slide">
+            <div class="tab-content">
+            <div class="rte">
+                {%- liquid
+                if block.type == 'description'
+                    echo product.description
+                elsif block.type == 'collapsible_tab_apps'
+                    assign apps = section.blocks | where: 'type', '@app'
+                    for app in apps
+                    render app
+                    endfor
+                else
+                    echo block.settings.content | replace: '&lt;', '<' | replace: '&gt;', '>' | replace: '&amp;', '&' | replace: '&quot;', '"'
+                    echo block.settings.page.content
+                endif
+                -%}
+            </div>
+            </div>
+        </div>
+        {%- endfor -%}
+    </div>
+    </div>
+</product-tabs>

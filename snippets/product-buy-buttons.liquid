@@ -1,0 +1,175 @@
+{%- unless settings.catalog_mode -%}
+  {%- liquid
+    assign current_variant = product.selected_or_first_available_variant | default: product.variants.first
+    assign image = product.selected_variant.featured_media | default: product.featured_media
+    assign product_title = product.title | append: ' ' | append: current_variant.title
+    assign inventory_quantity = current_variant.inventory_quantity
+
+    assign checkout_agreement = false
+
+    if settings.checkout_agreement and block.settings.checkout_agreement
+      assign checkout_agreement = true
+    endif
+  -%}
+
+  <div class="prd-block-actions {{ class }}" {{ bsa }}>
+<product-form class="product-form" data-form {% if block.settings.add_to_cart_ajax == false and layout == 'product' %}data-only-animation{% endif %}>
+      {%- form 'product', product, id: product_form_id, class: 'form js-product-form' -%}
+        {%- unless settings.catalog_mode -%}
+        {%- liquid
+          if current_variant.available and current_variant.inventory_management and inventory_quantity < 1
+            assign pre_order = true
+          endif
+        -%}
+        <div class="hidden" data-render="product-buy-buttons-input-hidden-{{ product_form_id }}">
+          <input type="hidden" name="id" value="{{ current_variant.id }}">
+          <input type="hidden" name="properties[{{ 'theme.general.status' | t }}]" value="{{ 'theme.general.pre_order' | t }}" {% unless pre_order %}disabled{% endunless %} data-form-preorder>
+        </div>
+
+        <div class="line-properties">{{ product.metafields.custom.product_line_properties }}</div>
+
+        <div class="prd-block-actions js-sticky-add-to-cart-marker">
+
+
+          {%- if show_cart_note -%}
+            <div class="form-control-wrap">
+              <cart-note>
+                <textarea-autosize data-maxheight="87"><textarea class="form-control js-textarea-autosize" name="note" placeholder="{{ 'theme-sections.sections.cart.note' | t }}">{{ cart.note }}</textarea></textarea-autosize>
+              </cart-note>
+            </div>
+          {%- endif -%}
+          {% render 'selling-plans-picker', render: true, product: product, layout: layout, section_id: section_id, product_form_id: product_form_id %}
+          {% render 'error' %}
+
+          {%- if block.settings.wishlist -%}
+            <div class="row row-with-wishlist gx-3">
+              <div class="col-wishlist" data-render="wishlist-buy-buttons-{{ product_form_id }}">
+                {% render 'wishlist-component-toggle-button', product: product, current_variant: current_variant, layout: 'product-buy-buttons' %}
+              </div>
+              <div class="col-auto">
+          {%- endif -%}
+
+              <div class="row gx-2 gx-xl-3 gy-3">
+                {% comment %} <div class="col-12 col-sm-auto col-lg-12 col-xl-auto {% if hide_quantity == 1 %}p-0{% endif %}"> {% endcomment %}
+                <div class="col-12 col-sm-auto col-lg-12 col-xl-auto {% if hide_quantity == 1 %}d-none{% endif %}">
+                  {% render 'quantity',
+                    name: "quantity"
+                    min: 1,
+                    hide_quantity: hide_quantity,
+                    value: 1,
+                    product_title: product_title,
+                    current_variant: current_variant,
+                    layout: layout
+                  %}
+                </div>
+
+                <div class="col-auto position-relative">
+                  <button-animated data-pause="{{ block.settings.button_pause | plus: 0 | times: 1000 }}" data-delay-start="{{ block.settings.button_delay_start | plus: 0 | times: 1000 }}" data-delay-after-stop="15000" data-style="{{ block.settings.button_animation }}" data-render="product-buy-buttons-{{ product_form_id }}">
+                    <button
+                      id="product-form-add-to-cart"
+                      type="submit"
+                      name="add"
+                      class="btn w-100 position-relative {% if show_dynamic_checkout and product.selling_plan_groups == empty %}button--secondary{% else %}button--primary{% endif %} {% if hide_add_to_cart %}hidden{% endif %}"
+                      {% if current_variant.available == false %}disabled{% endif %}
+                    >
+                      <div class="loading-overlay__spinner hidden">
+                        <div data-load="loading"></div>
+                      </div>
+                      <span>
+                          {%- if current_variant.available -%}
+                            {%- if current_variant.selected_selling_plan_allocation != nil or current_variant.requires_selling_plan -%}
+                              {{ 'theme.general.add_subscription_to_cart' | t }}
+                            {%- else -%}
+                              {%- if current_variant.inventory_management and inventory_quantity < 1 -%}
+                                {{ 'theme.general.pre_order' | t }}
+                              {%- else -%}
+                                {{ 'products.product.add_to_cart' | t }}
+                              {%- endif -%}
+                            {%- endif -%}
+                          {%- else -%}
+                            {{ 'products.product.sold_out' | t }}
+                          {%- endif -%}
+                        </span>
+                    </button>
+                  </button-animated>
+                  {%- if checkout_agreement and show_dynamic_checkout -%}
+                    <info-popup data-ajax="{{ routes.root_url }}?section_id=async-agreement-info" id="js-modal-info-link-{{ section.id }}" data-selector="#agreementInfo" {% unless current_variant.available %}class="hidden"{% endunless %}><span></span></info-popup>
+                  {%- endif -%}
+                </div>
+
+                {%- if show_dynamic_checkout -%}
+                  <div class="col-auto {% if checkout_agreement %}shopify-payment-agree disabled{% endif %}">
+                    {{ form | payment_button }}
+                  </div>
+                {%- endif -%}
+              </div>
+
+          {%- if block.settings.wishlist -%}
+              </div>
+            </div>
+          {%- endif -%}
+
+        </div>
+        {%- if checkout_agreement and show_dynamic_checkout -%}
+          <div id="prd-block-agreement" class="prd-block-agreement custom-form {% unless current_variant.available %} hidden{% endunless %}" data-agree>
+            <input id="agreementCheckboxProductPage" class="js-agreement-checkbox" data-button=".shopify-payment-agree" name="agreementCheckboxProductPage" type="checkbox" {% if settings.checkout_agreement_check_by_default %}checked{% endif %}>
+            <label for="agreementCheckboxProductPage"><info-popup data-ajax="{{ routes.root_url }}?section_id=async-agreement-info" data-selector="#agreementInfo"><a href="#" class="modal-info-link">{{ 'theme.general.agree_to_the_terms' | t }}</a></info-popup></label>
+          </div>
+        {%- endif -%}
+          <div id="addToCartTarget" class="invisible"></div>
+        {%- endunless -%}
+      {%- endform -%}
+    </product-form>
+
+  {%- if pickup != false and settings.pickup -%}
+      <div class="pickup-min-height" data-render="pickup-{{ product_form_id }}" {% if layout == 'quick-view' or layout == 'quick-options' %}data-section="{{ layout }}" data-handle="{{ product.handle }}" {% if image == blank or settings.qv_show_media == false %}data-gallery="off"{% endif %} {% if layout == 'quick-options' %}data-button-text="{{ 'theme.general.back_to_product_options' | t }}"{% endif %} data-ajax="{{ current_variant.url }}&section_id={{ layout }}"{% endif %}>
+        {%- if current_variant.available -%}
+          {%- assign pick_up_availabilities = current_variant.store_availabilities | where: 'pick_up_enabled', true -%}
+          <pickup-availability class="product__pickup-availabilities no-js-hidden"
+            {% if current_variant.available and pick_up_availabilities.size > 0 %} available{% endif %}
+                              data-root-url="{{ routes.root_url }}"
+                              data-variant-id="{{ current_variant.id }}"
+                              data-has-only-default-variant="{{ product.has_only_default_variant }}"
+          >
+
+            <pickup-availability-preview class="pickup-availability-preview">
+              {%- liquid assign closest_location = pick_up_availabilities.first -%}
+              <template>
+                <pickup-availability-preview class="pickup-availability-preview">
+                  {% render 'icon-unavailable' %}
+                  <div class="pickup-availability-info">
+                    <p class="caption-large">{{ 'products.product.pickup_availability.unavailable' | t }}</p>
+                    <button class="pickup-availability-button link link--text underlined-link">{{ 'products.product.pickup_availability.refresh' | t }}</button>
+                  </div>
+                </pickup-availability-preview>
+              </template>
+              <div class="pickup-availability-info">
+              {%- if pick_up_availabilities.size > 0 -%}
+                {%- if closest_location.available -%}
+                  <p class="caption-large">{{ 'products.product.pickup_availability.pick_up_available_at_html' | t: location_name: closest_location.location.name }}</p>
+                  <p class="caption">{{ closest_location.pick_up_time }}</p>
+                  <button id="ShowPickupAvailabilityDrawer" class="pickup-availability-button link link--text underlined-link" aria-haspopup="dialog">
+                    {%- if pick_up_availabilities.size == 1 -%}
+                      {{ 'products.product.pickup_availability.view_store_info' | t }}
+                    {%- else -%}
+                      {{ 'products.product.pickup_availability.check_other_stores' | t }}
+                    {%- endif -%}
+                  </button>
+                {%- else -%}
+                  <p class="caption-large">{{ 'products.product.pickup_availability.pick_up_unavailable_at_html' | t: location_name: closest_location.location.name }}</p>
+                  {%- if pick_up_availabilities.size > 1 -%}
+                    <button id="ShowPickupAvailabilityDrawer" class="pickup-availability-button link link--text underlined-link" aria-haspopup="dialog">{{ 'products.product.pickup_availability.check_other_stores' | t }}</button>
+                  {%- endif -%}
+                {%- endif -%}
+                {%- else -%}
+                  <p class="caption-large">{{ 'theme.general.pickup_is_currently_unavailable_1' | t }}</p>
+                  <p class="caption">{{ 'theme.general.pickup_is_currently_unavailable_2' | t }}</p>
+                {%- endif -%}
+              </div>
+            </pickup-availability-preview>
+          </pickup-availability>
+        {%- endif-%}
+      </div>
+    {%- endif -%}
+  </div>
+{%- endunless -%}

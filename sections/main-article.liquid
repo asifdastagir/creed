@@ -1,0 +1,562 @@
+{% comment %}theme-check-disable UnusedAssign, UndefinedObject{% endcomment %}
+{%- liquid
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+      assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+-%}
+{{ 'blog' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+<article class="holder mt-global" {% render 'section-style', section: section %} itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="container">
+    {%- for block in section.blocks -%}
+      {%- case block.type -%}
+        {%- when '@app' -%}
+        <div class="post-full mt-4 mt-sm-6 mt-first-0">
+          {% render block %}
+        </div>
+      {%- when 'featured_image'-%}
+        {%- if article.image -%}
+          <div class="post-full mt-4 mt-sm-6 mt-first-0" {{ block.shopify_attributes }}>
+            {% render 'image-container',
+              image: article.image,
+              sizes: '(min-width: 1400px) 1148px, (min-width: 1200px) 1100px, (min-width: 992px) 930px, (min-width: 768px) 690px, (min-width: 576px) 510px, calc(100vw - 30px)',
+              class_ic: 'post-img ',
+              hover_scale: false,
+              lazyload: false,
+              class_img_only: "fade-up-none"
+            %}
+          </div>
+        {%- endif -%}
+      {%- when 'title'-%}
+        <div class="post-full-top mt-4 mt-sm-6 mt-first-0" {{ block.shopify_attributes }}>
+          <h1 class="h-post-title text-center">{{ article.title | escape }}</h1>
+          <div class="post-prw-meta row justify-content-center gx-xl-4">
+            {%- if block.settings.blog_show_date -%}
+              <div class="col-auto" itemprop="dateCreated pubdate datePublished"><b>{{ 'theme.general.date' | t }}:</b> {{ article.published_at | time_tag: format: 'date' }}</div>
+            {%- endif -%}
+            {%- if block.settings.blog_show_author -%}
+              <div class="col-auto"><b>{{ 'theme.general.posted_by' | t }}</b>: <span itemprop="author" itemscope itemtype="http://schema.org/Person">{{ article.author }}</span></div>
+            {%- endif -%}
+          </div>
+          {%- if block.settings.excerpt -%}
+            {%- if article.excerpt.size > 0 -%}
+              <div class="h-sub text-center mt-3 mt-sm-4">
+                <p class="article-card__excerpt rte-width">
+                  {{ article.excerpt | strip_html | truncatewords: 35 }}
+                </p>
+              </div>
+            {%- endif -%}
+          {%- endif -%}
+          {%- if block.settings.show_social -%}
+            <div class="blog-socials mt-3">
+              {% render 'social-media', class: 'product-block-social d-flex justify-content-center list-unstyled' %}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- when 'content'-%}
+        <div class="post-full mt-4 mt-sm-6 mt-first-0" itemprop="articleBody" {{ block.shopify_attributes }}>
+          <div class="post-text mt-lg-4">
+            <div class="rte">
+              {{ article.content }}
+            </div>
+          </div>
+
+          <div class="post-bot mt-4 mt-sm-6 mt-lg-10">
+            {%- if block.settings.tags and blog.all_tags.size > 0 -%}
+              <div class="text-center">
+                <a href="{{ blog.url }}" class="btn-link btn-link--invert"><span class="icon-wrap">{% render 'icon-arrow-left' %}</span><span>{{ 'blogs.article.back_to_blog' | t }}</span></a>
+              </div>
+              <div class="row justify-content-center align-items-center gy-2 pt-2">
+                <div class="col-auto"><b>{{ 'theme.general.tags' | t }}:</b></div>
+                <div class="col-auto">
+                  <ul class="tags-list post-tags-list">
+                    {% for tag in blog.all_tags %}
+                      <li>{{ tag | link_to_tag: tag }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              </div>
+            {%- endif -%}
+            {%- if block.settings.show_social -%}
+              <div class="blog-socials mt-2">
+                {% render 'social-media', class: 'product-block-social d-flex justify-content-center list-unstyled' %}
+              </div>
+            {%- endif -%}
+          </div>
+
+        </div>
+      {%- when 'share' -%}
+        <div class="article-template__social-sharing page-width page-width--narrow mt-2" {{ block.shopify_attributes }}>
+          {% render 'share', section: section, block: block, class: 'd-flex justify-content-center' %}
+        </div>
+    {%- endcase -%}
+  {%- endfor -%}
+  {%- assign blocks = section.blocks | where: "type", "featured_post" -%}
+  {%- if blocks.size > 0 -%}
+    <div class="mt-4 mt-sm-6">
+      <div class="mt-lg-4">
+        <swiper-carousel data-center-arrows>
+          <div class="post-prws-grid js-post-prws-carousel swiper-container">
+            <div class="swiper-wrapper">
+              {%- for block in blocks -%}
+                <div class="swiper-slide">
+                  {% render 'article-card' article: block.settings.article, show_image: true, show_date: true, show_author: true, class: 'post-prw--compact' %}
+                </div>
+              {%- endfor -%}
+            </div>
+            <div class="swiper-pagination position-relative mt-4 mt-md-5"></div>
+            <div class="swiper-arrows-carousel container">
+              <div class="swiper-button-next"></div>
+              <div class="swiper-button-prev"></div>
+            </div>
+          </div>
+          <script type="application/json">
+            {
+              "slidesPerView": 1,
+							"spaceBetween": 20,
+              "pagination": {
+                "el": ".swiper-pagination",
+                "clickable": true
+              },
+              "navigation": {
+                "nextEl": ".swiper-button-next",
+                "prevEl": ".swiper-button-prev"
+              },
+              "watchOverflow": true,
+              "centerInsufficientSlides": true,
+              "breakpointsBase": "container",
+              "breakpoints": {
+                "{{ settings.product_card_one_in_row_width }}": {
+                  "slidesPerView": 1,
+                  "spaceBetween": 20
+                },
+                "575": {
+                  "slidesPerView": 2,
+                  "spaceBetween": 30
+                },
+                "992": {
+                  "slidesPerView": 3,
+                  "spaceBetween": 30
+                },
+                "1466": {
+                  "slidesPerView": 4,
+                  "spaceBetween": 30
+                },
+                "1700": {
+                  "slidesPerView": 5,
+                  "spaceBetween": 30
+                }
+              }
+            }
+          </script>
+        </swiper-carousel>
+      </div>
+    </div>
+  {%- endif -%}
+  {%- if blog.comments_enabled? -%}
+    <div class="mt-4 mt-sm-6">
+      <div class="row justify-content-center mt-lg-2">
+        <div class="col-lg-10">
+          {%- if article.comments_count > 0 -%}
+            {%- assign anchorId = '#Comments-' | append: article.id -%}
+            <div class="post-comments mt-3 mt-md-4" id="Comments-{{ article.id }}" tabindex="-1">
+              {% paginate article.comments by 6 %}
+                <h3 class="h1-style">{{ 'blogs.article.comments' | t: count: article.comments_count }}</h3>
+                {%- if comment.status == 'pending' and comment.content -%}
+                  <article id="{{ comment.id }}" class="article-template__comments-comment">
+                    {{ comment.content }}
+                    <footer class="right">
+                      <span class="circle-divider caption-with-letter-spacing">{{ comment.author }}</span>
+                    </footer>
+                  </article>
+                {%- endif -%}
+                {%- for comment in article.comments -%}
+                  <div class="post-comment" id="{{ comment.id }}">
+                  <div class="row">
+                    <div class="col-auto">
+                      <div class="post-comment-author">{{ comment.author }}</div>
+                      <div class="post-comment-date">{{ comment.created_at | time_tag: format: 'date' }}</div>
+                      <div class="post-comment-text">
+                        <p>{{ comment.content }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {%- endfor -%}
+                {% render 'pagination', paginate: paginate, anchor: anchorId, infinite_scroll: section.settings.infinite_scroll %}
+              {% endpaginate %}
+            </div>
+          {%- endif -%}
+          {% form 'new_comment', article %}
+            {%- liquid
+              assign post_message = 'blogs.article.success'
+              if blog.moderated? and comment.status == 'unapproved'
+              assign post_message = 'blogs.article.success_moderated'
+              endif
+            -%}
+            <div class="post-comment-form mt-4 mt-md-6 mt-lg-10">
+              <h3 class="h1-style">{{ 'blogs.article.comment_form_title' | t }}</h3>
+              {%- if form.posted_successfully? -%}
+                <div tabindex="-1" autofocus>
+                  {%- liquid
+                    assign message = post_message | t
+                    render 'success', message: message
+                  -%}
+                </div>
+              {%- endif -%}
+
+              {% render 'errors', form: form %}
+
+              <div class="form-group {% if customer %}hidden {%- endif -%}">
+                <div class="row gy-3">
+                  <div class="col-sm-6">
+                    <label for="CommentForm-author">{{ 'blogs.article.name' | t }}</label>
+                    <div class="form-control-wrap">
+                      <input
+                        type="text"
+                        name="comment[author]"
+                        id="CommentForm-author"
+                        class="form-control"
+                        autocomplete="name"
+                        value="{% if customer %}{{ customer.first_name }}{%- else -%}{{ form.author }}{% endif %}"
+                        aria-required="true"
+                        {% if form.errors contains 'author' %}
+                          aria-invalid="true"
+                          aria-describedby="CommentForm-author-error"
+                        {% endif %}
+                        placeholder="{{ 'blogs.article.name' | t }}"
+                        required
+                      >
+                      {% render 'input-check' %}
+                    </div>
+                  </div>
+                  <div class="col-sm-6">
+                    <label>{{ 'blogs.article.email' | t }}</label>
+                    <div class="form-control-wrap">
+                      <input
+                        type="email"
+                        name="comment[email]"
+                        id="CommentForm-email"
+                        autocomplete="email"
+                        class="form-control"
+                        value="{% if customer %}{{ customer.email }}{%- else -%}{{ form.email }}{% endif %}"
+                        autocorrect="off"
+                        autocapitalize="off"
+                        aria-required="true"
+                        {% if form.errors contains 'email' %}
+                          aria-invalid="true"
+                          aria-describedby="CommentForm-email-error"
+                        {% endif %}
+                        placeholder="{{ 'blogs.article.email' | t }}"
+                        required
+                      >
+                      <span class="form-control-check" title="Required"></span><span class="form-control-check form-control-check--green" title="Accepted"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>{{ 'blogs.article.message' | t }}</label>
+                <div class="form-control-wrap">
+                  <textarea-autosize>
+                    <textarea
+                      rows="5"
+                      name="comment[body]"
+                      id="CommentForm-body"
+                      class="form-control"
+                      aria-required="true"
+                      {% if form.errors contains 'body' %}
+                        aria-invalid="true"
+                        aria-describedby="CommentForm-body-error"
+                      {% endif %}
+                      required
+                      placeholder="{{ 'blogs.article.message' | t }}"
+                    >{{ form.body }}</textarea>
+                    {% render 'input-check' %}
+                  </textarea-autosize>
+                </div>
+              </div>
+              {%- if blog.moderated? -%}
+                <p class="article-template__comment-warning caption">* {{ 'blogs.article.moderated' | t }}</p>
+              {%- endif -%}
+              <div class="mt-2 mt-md-3">
+                <button class="btn" type="submit">{{ 'blogs.article.post' | t }}</button>
+              </div>
+            </div>
+          {%- endform -%}
+        </div>
+      </div>
+    </div>
+    {%- endif -%}
+  </div>
+</article>
+
+<script type="application/ld+json">
+  {
+    "@context": "http://schema.org",
+    "@type": "Article",
+    "articleBody": {{ article.content | strip_html | json }},
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": {{ request.origin | append: page.url | json }}
+    },
+    "headline": {{ article.title | json }},
+    {% if article.excerpt != blank %}
+      "description": {{ article.excerpt | strip_html | json }},
+    {% endif %}
+    {% if article.image %}
+      "image": [
+        {{ article | image_url: width: article.image.width | prepend: "https:" | json }}
+      ],
+    {% endif %}
+    "datePublished": {{ article.published_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+    "dateCreated": {{ article.created_at | date: '%Y-%m-%dT%H:%M:%SZ' | json }},
+    "author": {
+      "@type": "Person",
+      "name": {{ article.author | json }}
+    },
+    "publisher": {
+      "@type": "Organization",
+      {% if settings.share_image %}
+        "logo": {
+          "@type": "ImageObject",
+          "height": {{ settings.share_image.height | json }},
+          "url": {{ settings.share_image | image_url: width: settings.share_image.width | prepend: "https:" | json }},
+          "width": {{ settings.share_image.width | json }}
+        },
+      {% endif %}
+      "name": {{ shop.name | json }}
+    }
+  }
+  </script>
+
+{% schema %}
+{
+  "name": "Main blog post",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION WIDTH"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Select width source",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use store width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom width"
+        }
+      ],
+      "default": "global",
+      "info": "Store width you can set in Theme Settings / General"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 1178,
+      "max": 1978,
+      "step": 8,
+      "unit": "px",
+      "label": "Custom width",
+      "default": 1178,
+      "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable secondary background",
+      "default": false,
+      "info": "Theme Settings / Colors - General"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "featured_image",
+      "name": "Featured image",
+      "limit": 1
+    },
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "blog_show_date",
+          "default": true,
+          "label": "Show date"
+        },
+        {
+          "type": "checkbox",
+          "id": "blog_show_author",
+          "default": false,
+          "label": "Show author"
+        },
+        {
+          "type": "checkbox",
+          "id": "excerpt",
+          "label": "Show excerpt",
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "show_social",
+          "default": true,
+          "label": "Show social media icons"
+        }
+      ]
+    },
+    {
+      "type": "content",
+      "name": "Content",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "tags",
+          "label": "Show article tags",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_social",
+          "default": true,
+          "label": "Show social media icons"
+        }
+      ]
+    },
+    {
+      "type": "share",
+      "name": "Share",
+      "limit": 2,
+      "settings": [
+        {
+          "type": "text",
+          "id": "share_label",
+          "label": "Text",
+          "default": "Share"
+        },
+        {
+          "type": "paragraph",
+          "content": "If you include a link in social media posts, the page’s featured image will be shown as the preview image. [Learn more](https://help.shopify.com/manual/online-store/images/showing-social-media-thumbnail-images)."
+        },
+        {
+          "type": "paragraph",
+          "content": "A store title and description are included with the preview image. [Learn more](https://help.shopify.com/manual/promoting-marketing/seo/adding-keywords#set-a-title-and-description-for-your-online-store)."
+        }
+      ]
+    },
+    {
+      "type": "featured_post",
+      "name": "Featured post",
+      "settings": [
+        {
+          "type": "article",
+          "id": "article",
+          "label": "Post"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

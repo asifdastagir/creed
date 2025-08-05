@@ -1,0 +1,31 @@
+{%- if product != blank -%}
+  {%- liquid
+    if product_direct == blank
+      assign product_direct = settings.product_direct
+    endif
+    assign class = class | append: ' btn--lg-disabled'
+  -%}
+  {%- if wrapper != false -%}
+    <div class="prd-action" data-render="button-add-to-cart-{{ product_form_id }}">
+  {%- endif -%}
+    <product-form class="product-form" data-form>
+      {% render 'error' close: true %}
+      {% render 'product-form-add-to-cart'
+        product: product,
+        use_variant: true,
+        product_form_id: product_form_id,
+        class: class,
+        show_variants: show_variants,
+        product_direct: product_direct,
+        layout: layout,
+        hide_quantity: hide_quantity,
+        w_100: w_100,
+        btn_attributes: btn_attributes,
+        button_text: button_text,
+        current_variant: current_variant
+      %}
+    </product-form>
+  {%- if wrapper != false -%}
+    </div>
+  {%- endif -%}
+{%- endif -%}

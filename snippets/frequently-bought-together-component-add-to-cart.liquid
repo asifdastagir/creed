@@ -1,0 +1,9 @@
+<button type="submit" class="btn btn--md {{ class }}">
+  {%- liquid assign products_text = 'theme.general.product_count_simple' | t: count: counter -%}
+  <div class="loading-overlay__spinner hidden"><div data-load="loading"></div></div>
+  {%- if counter == 1 -%}
+    <span>{{ 'products.product.add_to_cart' | t }}</span>
+  {%- else -%}
+    <span>{{ 'theme.general.add_selected_to_cart_html' | t: count: counter | replace: '[count]', counter | replace: '[products]', products_text }}</span>
+  {%- endif -%}
+</button>

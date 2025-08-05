@@ -1,0 +1,211 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- unless settings.catalog_mode -%}
+  {%- liquid
+    assign layout = 'header-cart'
+  -%}
+    {% render 'header-cart-icon', tag: tag %}
+    <div id="dropdnMinicartPopup" class="dropdn-modal-minicart">
+        <div class="dropdn-modal-slide border-divided secondary-color dropdn-content minicart-drop p-0">
+          <cart-items class="{% if cart == empty %}is-empty{% endif %}" id="header-cart" data-on-cart-page="{% if request.page_type == 'cart' %}true{% else %}false{% endif %}">
+            <div class="dropdn-content-block pb-0">
+
+            <h3 class="minicart-drop-title cart-toggle-title">
+                {%- unless request.page_type == 'cart' -%}
+                  <span>{{ 'theme.general.shopping_cart' | t }}
+                    {%- if settings.header_cart_reserved_for -%}
+                      <div class="cart-reserved-time">
+                        {{ 'theme.general.reserved_for' | t }} <count-down class="cart-reserved-countdown" data-time-reserved='{{ settings.header_cart_reserved_for_time }}'><div><div data-minutes></div></div>m<div style="margin-left:4px"><div data-seconds></div></div>s</count-down>
+                      </div>
+                    {%- endif -%}
+                  </span>
+                {%- endunless -%}
+                {%- if settings.shipping_calculator -%}
+                  <span {% unless request.page_type == 'cart' %}class="hidden"{% endunless %}>{{ 'theme.general.get_shipping_estimated' | t }}</span>
+                {%- endif -%}
+              </h3>
+              <div class="js-contents-free-shipping">
+                  {% render 'free-shipping-status' layout: layout %}
+              </div>
+              <div class="mt-2"></div>
+
+
+              <cart-form-element>
+              <div class="loading-overlay hidden"><div data-load="loading"></div></div>
+                {%- if settings.shipping_calculator -%}
+                  <div data-scrollbar class="minicart-drop-content js-dropdn-content-scroll shipping-form-element {% unless request.page_type == 'cart' %}hidden {% endunless %} mt-0">
+                    {% render 'shipping-calculator-form' %}
+                  </div>
+                {%- endif -%}
+                {%- unless request.page_type == 'cart' -%}
+                  <div class="cart-form-element">
+                    <div data-scrollbar  class="minicart-drop-content js-dropdn-content-scroll">
+                      <div class="js-contents-cart-items">
+                        {%- if cart != empty -%}
+                          {%- liquid
+                            assign cart_items = cart.items
+
+                            if settings.header_cart_order_reverted
+                              assign cart_items = cart.items | reverse
+                            endif
+                          -%}
+                          {% render 'header-cart-line-item' for cart_items as item %}
+                        {%- else -%}
+                          <div class="minicart-empty-wrap">
+                            <div class="minicart-empty js-minicart-empty">
+                              <div class="minicart-empty-icon">
+                                {% render 'icon-empty-cart' %}
+                              </div>
+                              <div class="minicart-empty-title h2-style">{{ 'theme-sections.sections.cart.empty' | t }}</div>
+                              <div class="minicart-empty-text">{% if settings.header_cart_collection == blank %}{{ 'theme.general.empty_description' | t }}{% else %}{{ 'theme.general.empty_description_2' | t }} <a href="{{ routes.all_products_collection_url }}">{{ 'theme.general.checkout_our_catalog' | t }}</a>{% endif %}</div>
+                              {%- if settings.header_cart_collection == blank -%}
+                                <div class="mt-3">
+                                  <a href="{{ routes.all_products_collection_url }}" class="btn btn--showmore">{{ 'general.continue_shopping' | t }}</a>
+                                </div>
+                              {%- endif -%}
+                            </div>
+                            {%- if settings.header_cart_collection != blank -%}
+                              <div class="minicart-prd-carousel mt-auto">
+                                <div data-ajax-container>
+                                  {% if request.page_type != 'cart' and request.design_mode %}
+                                    {% render 'async-header-cart-carousel' %}
+                                  {%- endif -%}
+                                </div>
+                              </div>
+                            {%- endif -%}
+                          </div>
+                        {%- endif -%}
+                      </div>
+                    </div>
+
+                    <div class="minicart-drop-fixed {% if settings.header_cart_opened_bottom_mobile %}is-opened{% endif %}"  data-slide>
+                      <form action="{{ routes.cart_url }}" method="post">
+                        <div class="row gx-2 gx-sm-3 gx-md-5 js-hide-empty">
+                          <div class="col">
+                            <a href="#" class="drop-fixed-toggle-wrap" data-slide-toggle><span><i class="icon-wrap">{% render 'icon-arrow-left' %}</i></span></a>
+                            <div class="js-contents-subtotal"  data-slide-visible>
+                              {%- if cart.cart_level_discount_applications.size > 0 -%}
+                                <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
+                                  {%- for discount in cart.cart_level_discount_applications -%}
+                                    <li class="discounts__discount discounts__discount--end">
+                                      {%- render 'icon-discount' -%}
+                                      {{ discount.title }}
+                                      (-{{ discount.total_allocated_amount | money }})
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              {%- endif -%}
+                              <div class="minicart-drop-total js-minicart-drop-total d-flex align-items-center">
+                                <div class="minicart-drop-total-txt">{{ 'theme-sections.sections.cart.subtotal' | t }}</div>
+                                <div class="minicart-drop-total-price">
+                                  {% if settings.currency_code_enabled %}
+                                    {{ cart.total_price | money_with_currency }}
+                                  {% else %}
+                                    {{ cart.total_price | money }}
+                                  {% endif %}
+                                </div>
+                              </div>
+                            </div>
+                            <div class="mt-1">
+                              {% comment %}
+                              <div id="cart-errors"></div>
+                              {% endcomment %}
+                              {%- if settings.show_cart_note -%}
+                                <div class="form-control-wrap">
+                                  <cart-note>
+                                    <textarea-autosize data-maxheight="87"><textarea class="form-control js-textarea-autosize" name="note" placeholder="{{ 'theme-sections.sections.cart.note' | t }}">{{ cart.note }}</textarea></textarea-autosize>
+                                  </cart-note>
+                                </div>
+                              {%- endif -%}
+                            </div>
+                            <div class="mt-2 mt-md-3"></div>
+                            <div class="minicart-drop-actions">
+                              <div class="js-contents-buttons">
+                                <div class="row gy-2 gx-2">
+                                  <div class="col-sm">
+                                    <a href="{{ routes.cart_url }}" class="btn btn--md btn--grey w-100"><i class="icon-basket"></i><span>{{ 'general.cart.view' | t: count: cart.item_count }}</span></a>
+                                  </div>
+                                  {%- if settings.header_cart_checkout_button -%}
+                                  <div class="col-sm position-relative">
+                                    <button type="submit" class="btn btn--md w-100 {% if settings.checkout_agreement %}shopify-payment-agree disabled{% endif %}" data-button=".shopify-payment-agree" name="checkout"{% if cart == empty %} disabled{% endif %}>
+                                      {{ 'theme-sections.sections.cart.checkout' | t }}
+                                    </button>
+                                    {% if settings.checkout_agreement -%}
+                                      <info-popup data-ajax="{{ routes.root_url }}?section_id=async-agreement-info" data-selector="#agreementInfo"><span></span></info-popup>
+                                    {%- endif -%}
+                                  </div>
+                                  {%- endif -%}
+                                </div>
+                              </div>
+                              {%- if additional_checkout_buttons and settings.header_cart_checkout_button -%}
+                                <div class="cart__dynamic-checkout-buttons position-relative additional-checkout-buttons {% if settings.checkout_agreement %}shopify-payment-agree disabled{% endif %}">
+                                  {{ content_for_additional_checkout_buttons }}
+                                </div>
+                              {%- endif -%}
+
+                              <div class="row align-items-center mt-1">
+                                <div class="col text-start">
+                                  <cart-clear-button>
+                                    <a href="{{ routes.cart_clear_url }}" class="link-clear-cart btn-link btn-link--sm position-relative">
+                                      <span class="icon-wrap">{% render 'icon-remove2' %}</span><span>{{ 'theme.general.clear_cart' | t }}</span>
+                                      <div class="loading-overlay hidden">
+                                        <div data-load="loading"></div>
+                                      </div>
+                                    </a>
+                                  </cart-clear-button>
+                                </div>
+                                {%- if settings.checkout_agreement and settings.header_cart_checkout_button -%}
+                                  <div class="col-auto">
+                                    <div class="prd-block-agreement custom-form" data-agree>
+                                      <input id="agreementCheckboxMinicart" class="js-agreement-checkbox" data-button=".shopify-payment-agree" name="agreementCheckboxProductPage" type="checkbox" {% if settings.checkout_agreement_check_by_default %}checked{% endif %}>
+                                      <label for="agreementCheckboxMinicart"><info-popup data-ajax="{{ routes.root_url }}?section_id=async-agreement-info" data-selector="#agreementInfo"><a href="#" class="modal-info-link">{{ 'theme.general.agree_to_the_terms' | t }}</a></info-popup></label>
+                                    </div>
+                                  </div>
+                                {%- endif -%}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                {%- endunless -%}
+              </cart-form-element>
+            </div>
+            {%- unless request.page_type == 'cart' -%}
+              <p class="visually-hidden" id="cart-live-region-text" aria-live="polite" role="status"></p>
+              <p class="visually-hidden" id="shopping-cart-line-item-status" aria-live="polite" aria-hidden="true" role="status">{{ 'accessibility.loading' | t }}</p>
+            {%- endunless -%}
+          </cart-items>
+          <button type="button" data-fancybox-close class="fancybox-button fancybox-close-small"><svg xmlns="http://www.w3.org/2000/svg" version="1" viewBox="0 0 24 24"><path d="M13 12l5-5-1-1-5 5-5-5-1 1 5 5-5 5 1 1 5-5 5 5 1-1z"></path></svg></button>
+        </div>
+
+        <div class="dropdn-modal-slide border-divided dropdn-content minicart-drop bought-with p-0">
+          <div class="dropdn-content-block">
+            <div data-render="fbt_cart"></div>
+          </div>
+          <button type="button" class="fancybox-button fancybox-close-small js-bought-with-close"><svg xmlns="http://www.w3.org/2000/svg" version="1" viewBox="0 0 24 24"><path d="M13 12l5-5-1-1-5 5-5-5-1 1 5 5-5 5 1 1 5-5 5 5 1-1z"></path></svg></button>
+        </div>
+      </div>
+
+    {%- if sticky == false -%}
+      <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          function isIE() {
+            const ua = window.navigator.userAgent;
+            const msie = ua.indexOf('MSIE ');
+            const trident = ua.indexOf('Trident/');
+            return (msie > 0 || trident > 0);
+          }
+
+          if (!isIE()) return;
+          const cartSubmitInput = document.createElement('input');
+          cartSubmitInput.setAttribute('name', 'checkout');
+          cartSubmitInput.setAttribute('type', 'hidden');
+          document.querySelector('#cart').appendChild(cartSubmitInput);
+          document.querySelector('#checkout').addEventListener('click', function (event) {
+            document.querySelector('#cart').submit();
+          });
+        });
+      </script>
+    {%- endif -%}
+{%- endunless -%}

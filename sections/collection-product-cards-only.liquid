@@ -1,0 +1,43 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- paginate collection.products by settings.collection_products_per_page -%}
+  <div class="prd-grid">
+    {%- for product in collection.products limit: settings.collection_products_per_page -%}
+      {%- liquid
+        assign show = true
+
+        if settings.collection_out_of_stock_hide and product.selected_or_first_available_variant.available == false
+          assign show = false
+        endif
+      -%}
+      {%- if show -%}
+        <div class="col">
+          {% render 'product-card', product: product, collection: collection %}
+        </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  {%- if paginate.pages > 1 -%}
+    {% render 'pagination',
+      paginate: paginate,
+      results: collection,
+      section: section,
+      container: '.prd-grid',
+      infinite_scroll: section.settings.infinite_scroll
+    %}
+  {%- endif -%}
+{%- endpaginate -%}
+{% schema %}
+{
+  "name": "Product cards only",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "infinite_scroll",
+      "label": "Infinite scroll",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,35 @@
+{
+  "sections": {
+    "main": {
+      "type": "index-categories-with-subcategories",
+      "settings": {
+        "spacing_sections": 46,
+        "use_global_desktop_space": false,
+        "spacing_sections_mobile": 20,
+        "use_global_mobile_space": false,
+        "spacing_padding_sections": 100,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "background": false,
+        "show_images": true,
+        "images_auto_height_padding": 100,
+        "large_space": false,
+        "limit": 50,
+        "catalog": "catalog",
+        "manual": false,
+        "alignment": "left",
+        "heading_alignment": "center",
+        "hover_scale": false,
+        "heading": "Catalog subcategories",
+        "subtitle": "Subtitle",
+        "button": true,
+        "button_text": "All products",
+        "button_url": "shopify://collections/all"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

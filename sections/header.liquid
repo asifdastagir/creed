@@ -1,0 +1,576 @@
+{% comment %}theme-check-disable NestedSnippet, UndefinedObject{% endcomment %}
+{%- liquid
+  assign logo = section.settings.logo
+  assign svg_logo = section.settings.svg_logo
+  assign svg_logo_name = section.settings.svg_logo_name
+
+  if section.settings.header_transparent and request.page_type == 'index' or page.handle == 'intro'
+    assign header_transparent = true
+    assign logo_transparent = section.settings.logo_transparent | default: logo
+    assign svg_logo_transparent = section.settings.svg_logo_transparent | default: svg_logo
+    assign svg_logo_name_transparent = section.settings.svg_logo_name_transparent | default: svg_logo_name
+  else
+    assign header_transparent = false
+  endif
+
+  case settings.section_decoration
+    when "1"
+      assign section_decoration = "none"
+    when "2"
+      assign section_decoration = "grunge1"
+    when "3"
+      assign section_decoration = "grunge2"
+    when "4"
+      assign section_decoration = "grunge3"
+    when "5"
+      assign section_decoration = "paper"
+    when "6"
+      assign section_decoration = "mountains"
+    when "7"
+      assign section_decoration = "ellipse1"
+    when "8"
+      assign section_decoration = "ellipse2"
+    when "9"
+      assign section_decoration = "wave1"
+    when "10"
+      assign section_decoration = "wave2"
+    when "11"
+      assign section_decoration = "wave3"
+    when "21"
+      assign section_decoration = "wave4"
+    when "22"
+      assign section_decoration = "wave5"
+    when "12"
+      assign section_decoration = "triangle1"
+    when "13"
+      assign section_decoration = "triangle2"
+    when "14"
+      assign section_decoration = "triangle_assymetrical1"
+    when "15"
+      assign section_decoration = "triangle_assymetrical1_flip"
+    when "16"
+      assign section_decoration = "triangle_assymetrical2"
+    when "17"
+      assign section_decoration = "triangle_assymetrical2_flip"
+    when "18"
+      assign section_decoration = "tilt"
+    when "19"
+      assign section_decoration = "tilt_flip"
+    when "20"
+      assign section_decoration = "glaze"
+  endcase
+
+  case settings.header_decoration_style
+    when "0"
+      assign section_decoration_header = "global"
+    when "1"
+      assign section_decoration_header = "none"
+    when "2"
+      assign section_decoration_header = "grunge1"
+    when "3"
+      assign section_decoration_header = "grunge2"
+    when "4"
+      assign section_decoration_header = "grunge3"
+    when "5"
+      assign section_decoration_header = "paper"
+    when "6"
+      assign section_decoration_header = "mountains"
+    when "7"
+      assign section_decoration_header = "ellipse1"
+    when "8"
+      assign section_decoration_header = "ellipse2"
+    when "9"
+      assign section_decoration_header = "wave1"
+    when "10"
+      assign section_decoration_header = "wave2"
+    when "11"
+      assign section_decoration_header = "wave3"
+    when "21"
+      assign section_decoration_header = "wave4"
+    when "22"
+      assign section_decoration_header = "wave5"
+    when "12"
+      assign section_decoration_header = "triangle1"
+    when "13"
+      assign section_decoration_header = "triangle2"
+    when "14"
+      assign section_decoration_header = "triangle_assymetrical1"
+    when "15"
+      assign section_decoration_header = "triangle_assymetrical1_flip"
+    when "16"
+      assign section_decoration_header = "triangle_assymetrical2"
+    when "17"
+      assign section_decoration_header = "triangle_assymetrical2_flip"
+    when "18"
+      assign section_decoration_header = "tilt"
+    when "19"
+      assign section_decoration_header = "tilt_flip"
+    when "20"
+      assign section_decoration_header = "glaze"
+  endcase
+
+  if section_decoration_header != 'none' and section_decoration_header != 'global'
+    assign section_decoration = section_decoration_header
+  endif
+
+  if settings.header_decoration_on_homepage == false and request.page_type == 'index' or template.suffix contains 'separators'
+    assign section_decoration = 'none'
+  endif
+-%}
+{%- unless page.handle == 'intro' -%}
+  <style data-async-reload-css="header-colors">
+    :root {
+      {% render 'header-colors' %}
+    }
+
+    {%- if header_transparent -%}
+      .hdr.hdr-transparent {
+        {% render 'header-colors', suffix: '_transparent' %}
+      }
+    {%- endif -%}
+  </style>
+{%- endunless -%}
+{% liquid
+  if section.settings.header_border_on_home_page_disabled_select == "1" and template == 'index' or template.suffix contains 'separators.' or section_decoration != 'none' and section_decoration_header != 'none'
+    assign class = class | append: ' border-0'
+  endif
+
+  if header_transparent or page.handle == 'intro'
+    assign class = class | append: ' hdr-transparent'
+  endif
+
+  if section.settings.header_mobile_burger_aligment == 'left'
+    assign class = class | append: ' hdr--reversed-menu-icon'
+  endif
+
+  assign style = section.settings.style | plus: 0
+
+  if page.handle == 'intro'
+    assign style = 1
+  endif
+
+  if section_decoration_header != 'none'
+    for i in (1..10)
+      assign catalog_handle = 'catalog_' | append: i
+      assign catalog_handle = settings[catalog_handle]
+      assign catalog = catalog | concat: settings[catalog_handle]
+      assign catalog_links = catalog_links | concat: linklists[catalog_handle].links
+    endfor
+
+    assign match = false
+
+
+    if request.page_type == 'collection'
+      if collection.handle == 'all'
+        assign match = linklists.catalog
+      else
+        assign match = catalog_links | where: 'url', collection.url | first
+        unless match
+          for link in catalog_links
+            assign match = link.links | where: 'url', collection.url | first
+            if match
+              break
+            endif
+          endfor
+        endunless
+      endif
+
+      assign subcollection_vendor = collection.metafields.custom.subcollection_vendor | default: settings.subcollection_vendor
+
+      if subcollection_vendor == 'subcollection_outer' or subcollection_vendor == 'subcollection'
+        assign match = false
+      endif
+    endif
+
+    if match == false or match == nil or match == empty
+      assign decoration = true
+
+      if request.page_type == 'index' and section.settings.header_transparent
+        assign decoration = false
+      endif
+    else
+      assign class = class | replace: 'border-0', ''
+    endif
+  endif
+
+
+  case style
+    when 1
+      render 'header-layout-1', section: section, header_transparent: header_transparent, logo: logo, svg_logo: svg_logo, svg_logo_name: svg_logo_name, logo_transparent: logo_transparent, svg_logo_transparent: svg_logo_transparent, svg_logo_name_transparent: svg_logo_name_transparent, class: class
+    when 2
+      render 'header-layout-2', section: section, header_transparent: header_transparent, logo: logo, svg_logo: svg_logo, svg_logo_name: svg_logo_name, logo_transparent: logo_transparent, svg_logo_transparent: svg_logo_transparent, svg_logo_name_transparent: svg_logo_name_transparent, class: class
+    when 3
+      render 'header-layout-3', section: section, header_transparent: header_transparent, logo: logo, svg_logo: svg_logo, svg_logo_name: svg_logo_name, logo_transparent: logo_transparent, svg_logo_transparent: svg_logo_transparent, svg_logo_name_transparent: svg_logo_name_transparent, class: class
+    when 4
+      render 'header-layout-4', section: section, header_transparent: header_transparent, logo: logo, svg_logo: svg_logo, svg_logo_name: svg_logo_name, logo_transparent: logo_transparent, svg_logo_transparent: svg_logo_transparent, svg_logo_name_transparent: svg_logo_name_transparent, class: class
+    when 5
+      render 'header-layout-5', section: section, header_transparent: header_transparent, logo: logo, svg_logo: svg_logo, svg_logo_name: svg_logo_name, logo_transparent: logo_transparent, svg_logo_transparent: svg_logo_transparent, svg_logo_name_transparent: svg_logo_name_transparent, class: class
+    when 6
+      render 'header-layout-6', section: section, header_transparent: header_transparent, logo: logo, svg_logo: svg_logo, svg_logo_name: svg_logo_name, logo_transparent: logo_transparent, svg_logo_transparent: svg_logo_transparent, svg_logo_name_transparent: svg_logo_name_transparent, class: class
+  endcase
+
+  if template.suffix contains 'separators'
+    assign section_decoration_header = 'none'
+  endif
+%}
+
+{%- liquid
+  if settings.header_decoration_on_homepage == false and request.page_type == 'index'
+    assign section_decoration_header = 'none'
+  endif
+  if section_decoration_header == 'global' and settings.section_decoration == "1"
+    assign section_decoration_header = 'none'
+  endif
+-%}
+
+{%- if section_decoration_header != 'none' -%}
+  {%- if decoration -%}
+    {%  liquid
+      assign header_decoration_bg_color_type = ''
+      assign decor_style = ''
+      if template == 'index'
+        assign header_decoration_bg_color_type = settings.header_decoration_bg_color_type
+
+        if header_decoration_bg_color_type == 'custom'
+          assign color = settings.header_decoration_bg_custom_color
+
+          if color != 'rgba(0,0,0,0)' and color != blank
+            assign decor_style = 'style="background-color: ' | append: color | append: '"'
+          else
+            assign header_decoration_bg_color_type = 'bg-body'
+          endif
+        endif
+      endif
+    %}
+    <div class="hdr-edge-bottom style-{{ section_decoration }}">
+      {% render 'icon'
+        , icon: section_decoration %}
+    </div>
+    <div class="hdr-edge-bottom-bg {{ header_decoration_bg_color_type }}" {{ decor_style}}></div>
+  {%- endif -%}
+{%- endif -%}
+<script type="application/ld+json">
+  {
+      "@context": "http://schema.org",
+      "@type": "Organization",
+      "name": {{ shop.name | json }},
+      {% if section.settings.logo %}
+      "logo": {{ section.settings.logo | image_url: width: section.settings.logo.width | prepend: "https:" | json }},
+      {% endif %}
+      "sameAs": [
+        {{ settings.social_twitter_link | json }},
+        {{ settings.social_facebook_link | json }},
+        {{ settings.social_pinterest_link | json }},
+        {{ settings.social_instagram_link | json }},
+        {{ settings.social_tiktok_link | json }},
+        {{ settings.social_tumblr_link | json }},
+        {{ settings.social_snapchat_link | json }},
+        {{ settings.social_youtube_link | json }},
+        {{ settings.social_vimeo_link | json }},
+        {{ settings.social_discord_link | json }},
+        {{ settings.social_wechat_link | json }}
+      ],
+      "url": {{ request.origin | append: page.url | json }}
+    }
+</script>
+
+{%- if request.page_type == 'index' -%}
+  {% assign potential_action_target = request.origin | append: routes.search_url | append: "?q={search_term_string}" %}
+  <script type="application/ld+json">
+    {
+      "@context": "http://schema.org",
+      "@type": "WebSite",
+      "name": {{ shop.name | json }},
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {{ potential_action_target | json }},
+        "query-input": "required name=search_term_string"
+      },
+      "url": {{ request.origin | append: page.url | json }}
+    }
+  </script>
+{%- endif -%}
+
+{% schema %}
+  {
+    "name": "Header",
+    "class": "hdr-wrap",
+    "tag": "header",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Layout"
+      },
+      {
+        "type": "select",
+        "id": "style",
+        "label": "Layout for Desktop",
+        "options": [
+          {
+            "value": "1",
+            "label": "Header 1 (default)"
+          },
+          {
+            "value": "2",
+            "label": "Header 2 (categories button, open search)"
+          },
+          {
+            "value": "3",
+            "label": "Header 3 (central logo)"
+          },
+          {
+            "value": "4",
+            "label": "Header 4 (open search)"
+          },
+          {
+            "value": "5",
+            "label": "Header 5 (large icons, open search)"
+          },
+          {
+            "value": "6",
+            "label": "Header 6 (informative)"
+          }
+        ],
+        "default": "1"
+      },
+      {
+        "type": "radio",
+        "id": "header_mobile_burger_aligment",
+        "label": "Mobile burger icon aligment",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "right",
+            "label": "Right"
+          }
+        ],
+        "default": "right"
+      },
+      {
+        "type": "checkbox",
+        "id": "header_mobile_search_open",
+        "label": "Mobile search is open",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "header_border_on_home_page_disabled_select",
+        "label": "Disable bottom border on home page",
+        "options": [
+          {
+            "value": "0",
+            "label": "No"
+          },
+          {
+            "value": "1",
+            "label": "Yes"
+          }
+        ],
+        "default": "1"
+      },
+      {
+        "type": "checkbox",
+        "id": "header_sticky",
+        "label": "Sticky header",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "header_sticky_border",
+        "label": "Sticky header border",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "header_sticky_compact",
+        "label": "Sticky header boxed",
+        "options": [
+          {
+            "value": "0",
+            "label": "No"
+          },
+          {
+            "value": "1",
+            "label": "Yes"
+          }
+        ],
+        "default": "0"
+      },
+      {
+        "type": "checkbox",
+        "id": "header_transparent",
+        "label": "Transparent header on homepage",
+        "default": false,
+        "info": "only useful to use if the first section is Slider"
+      },
+      {
+        "type": "text",
+        "id": "welcome_txt",
+        "label": "Welcome text",
+        "default": "WELCOME TO OUR STORE LOGO",
+        "info": "only for Header 6"
+      },
+      {
+        "type": "header",
+        "content": "Logo"
+      },
+      {
+        "type": "checkbox",
+        "id": "svg_logo",
+        "label": "Use svg logo",
+        "default": false,
+        "info": "You need to upload logo.svg in Settings/Files"
+      },
+      {
+        "type": "text",
+        "id": "svg_logo_name",
+        "label": "Svg logo name",
+        "info": "for ex., logo.svg",
+        "default": "logo.svg"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo",
+        "label": "Logo image"
+      },
+      {
+        "type": "range",
+        "id": "logo_width",
+        "label": "Logo width on desktop",
+        "min": 40,
+        "max": 240,
+        "step": 2,
+        "unit": "px",
+        "default": 144
+      },
+      {
+        "type": "range",
+        "id": "logo_width_mobile",
+        "label": "Logo width on mobile",
+        "min": 40,
+        "max": 240,
+        "step": 2,
+        "unit": "px",
+        "default": 80
+      },
+      {
+        "type": "header",
+        "content": "Logo for transparent header",
+        "info": "By default the same as previous not transparent Logo. Usefull to setup if transparent header has to have lighter logo then usual dark."
+      },
+      {
+        "type": "checkbox",
+        "id": "svg_logo_transparent",
+        "label": "Use svg logo",
+        "default": false,
+        "info": "You need to upload logo.svg in Settings/Files"
+      },
+      {
+        "type": "text",
+        "id": "svg_logo_name_transparent",
+        "label": "Svg logo name",
+        "info": "for ex., logo.svg",
+        "default": "logo.svg"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo_transparent",
+        "label": "Logo image"
+      },
+      {
+        "type": "header",
+        "content": "Logo for sticky header"
+      },
+      {
+        "type": "image_picker",
+        "id": "logo_sticky",
+        "label": "Sticky Logo image",
+        "info": "if empty, the default 'Logo Image' is used"
+      },
+      {
+        "type": "range",
+        "id": "logo_sticky_width",
+        "label": "Logo width on desktop",
+        "min": 40,
+        "max": 240,
+        "step": 2,
+        "unit": "px",
+        "default": 144
+      },
+      {
+        "type": "header",
+        "content": "Other settings"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_cart_note",
+        "default": true,
+        "label": "Enable cart note"
+      },
+      {
+        "type": "checkbox",
+        "id": "header_search",
+        "label": "Show Search",
+        "default": true
+      },
+      {
+        "type": "header",
+        "content": "Header Layout 2",
+        "info": "settings for only header layout 2"
+      },
+      {
+        "type": "text",
+        "id": "featured_link_text",
+        "label": "Featured link title",
+        "default": "Buy Theme"
+      },
+      {
+        "type": "url",
+        "id": "featured_link_url",
+        "label": "Featured link url"
+      },
+      {
+        "type": "text",
+        "id": "featured_link_badge",
+        "label": "Badge",
+        "default": "Sale"
+      },
+      {
+        "type": "checkbox",
+        "id": "menu_categories_button",
+        "label": "Show 'Categories' button",
+        "default": true
+      },
+      {
+        "type": "link_list",
+        "id": "menu_categories",
+        "label": "Categories for 'Header 2'",
+        "default": "main-menu"
+      },
+      {
+        "type": "checkbox",
+        "id": "menu_categories_previews",
+        "label": "Show categories preview",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "tab_button_invert",
+        "label": "Invert colors for tab button",
+        "default": false,
+        "info": "replace active tab button text color with its background color"
+      },
+      {
+        "type": "header",
+        "content": "Separator"
+      },
+      {
+        "type": "paragraph",
+        "content": "You can set header styled separator in Theme Settings / Separators"
+      }
+    ]
+  }
+{% endschema %}

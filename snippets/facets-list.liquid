@@ -1,0 +1,88 @@
+{% comment %}theme-check-disable ImgLazyLoading, RemoteAsset{% endcomment %}
+
+{%- liquid
+    assign value_disabled = false
+
+    if value.count == 0 and value.active == false
+        assign value_disabled = true
+    endif
+    unless show == 'all'
+        if show == 'enabled' and value_disabled
+            continue
+        elsif show == 'disabled' and value_disabled == false
+            continue
+        endif
+    endunless
+
+    assign value_label = value.label | escape
+
+    assign tooltip = false
+
+    if colorpics
+        assign truncate = 7
+
+        if value_label contains ' '
+            assign truncate = 12
+        endif
+
+        if settings.filter_layout == 'outer'
+            assign truncate = truncate | plus: 6
+        endif
+
+        assign value_label = value_label | truncate: truncate, '..'
+
+        if value.label.size > truncate
+            assign tooltip = true
+        endif
+
+        assign absent = false
+        assign color_image_preffix = 'pill-pic-' | append: filter.label | handle | append: '-'
+        assign color_pic_url =  color_image_preffix | append: value.label | handle | append: '.png' | file_img_url: width: '72', height: '72'
+        assign color_pic_url_size = color_pic_url | split: '?' | last | size
+
+        if color_pic_url_size <= 6
+            assign absent = true
+        endif
+    endif
+
+    assign show = true
+    assign collection_filters_hidden_list = settings.collection_filters_hidden_list | split: ','
+
+    if collection_filters_hidden_list.size > 0
+        for option_to_hide in collection_filters_hidden_list
+            assign value_label_downcase = value_label | downcase | strip
+            assign option_to_hide_downcase = option_to_hide | downcase | strip
+
+            if value_label_downcase == option_to_hide_downcase
+                assign show = false
+            endif
+        endfor
+    endif
+-%}
+{%- if show -%}
+    <div class="input-wrap {% if value.active %}active{% endif %} {% if value.count == 0 and value.active == false %} is-disable{% endif %}">
+        <input class="js-filter-input" type="checkbox"
+            name="{{ value.param_name }}"
+            value="{{ value.value }}"
+            id="Filter-{{ filter.param_name | handle | escape }}-{{ forloop.index }}"
+            {% if value.active %}checked{% endif %}
+            {% if value.count == 0 and value.active == false %}disabled{% endif %}
+        >
+        <label for="Filter-{{ filter.param_name | handle | escape }}-{{ forloop.index }}" class=" {% if colorpics %}js-color-toggle{% endif %}">
+        {%- if colorpics -%}
+            {%- unless absent -%}
+            <span class="value">
+                <img src="{{ color_pic_url }}" alt="{{ value_label }}" width="36" height="36">
+                </span>
+            {%- endunless -%}
+            <span class="colorname" {% if tooltip %}data-tippy-content="{{ value.label | escape }}"{% endif %}>{{ value_label }}<span data-facet-count>({{ value.count }})</span></span>
+        {%- else -%}
+            {%- if sizes -%}
+            <span>{{ value_label | upcase }}</span><span class="filter-count" data-facet-count>({{ value.count }})</span>
+            {%- else -%}
+            {{ value_label }}<span data-facet-count>({{ value.count }})</span>
+            {%- endif -%}
+        {%- endif -%}
+        </label>
+    </div>
+{%- endif -%}

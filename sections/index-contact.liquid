@@ -1,0 +1,1170 @@
+{% comment %}theme-check-disable UnusedAssign{% endcomment %}
+{%- liquid
+  assign layout = 'index-contact'
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+      assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+
+  if store_width > 1178
+    assign image_k = store_width | divided_by: 1178.00 | round: 2
+  endif
+-%}
+{{ 'map' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign form_block = section.blocks | where: 'type', 'form' | size
+  assign map_block = section.blocks | where: 'type', 'map' | size
+-%}
+{% render 'section-wrapper', placement: 'top' %}
+
+<div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+  <div class="{% render 'section-container-class', layout: layout %}">
+    <div class="row gy-5">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when 'form' -%}
+            <div class="col {% if map_block > 0 %}{% else %}mx-auto{% endif %} col-contact-form" {{ block.shopify_attributes }}>
+              <div class="title-wrap">
+                <h1>{{ block.settings.heading }}</h1>
+                <div class="h-sub" style="font-size: {{ settings.font_heading_subtitle_font_size }}px;">{{ block.settings.subtext }}</div>
+              </div>
+              {%- form 'contact', class: 'contact-form contact-form--max400 mt-4' -%}
+                {%- if form.posted_successfully? -%}
+                  <div tabindex="-1" autofocus>
+                    {%- liquid
+                      assign message = 'templates.contact.form.post_success' | t
+                      render 'success', message: message
+                    -%}
+                  </div>
+                  {%- elsif form.errors -%}
+                  <div tabindex="-1" autofocus>
+                    {%- liquid
+                      assign message = 'templates.contact.form.error_heading' | t | append: ' ' | append: form.errors.translated_fields['email'] | capitalize | append: ' ' | append: form.errors.messages['email']
+                      render 'error', message: message
+                    -%}
+                  </div>
+                {%- endif -%}
+
+                <div class="form-group">
+                  <label>{{ 'templates.contact.form.name' | t }}</label>
+                  <div class="form-control-wrap">
+                    <input autocomplete="name" type="text" name="contact[{{ 'templates.contact.form.name' | t }}]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"  class="form-control" placeholder="{{ 'theme.general.enter_your_first_name' | t }}">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>{{ 'templates.contact.form.email' | t }}</label>
+                  <div class="form-control-wrap">
+                    <input
+                      autocomplete="email"
+                      type="email"
+                      class="form-control"
+                      name="contact[email]"
+                      spellcheck="false"
+                      autocapitalize="off"
+                      value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+                      aria-required="true"
+                      {% if form.errors contains 'email' %}
+                        aria-invalid="true"
+                        aria-describedby="ContactForm-email-error"
+                      {% endif %}
+                      placeholder="{{ 'theme.general.enter_your_email_here' | t }}"
+                      required
+                    >
+                    {% render 'input-check' %}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>{{ 'templates.contact.form.phone' | t }}</label>
+                  <div class="form-control-wrap">
+                    <input type="tel" class="form-control" autocomplete="tel" name="contact[{{ 'templates.contact.form.phone' | t }}]" pattern="[0-9\-]*" value="{% if form.phone %}{{ form.phone }}{% elsif customer %}{{ customer.phone }}{% endif %}" placeholder="{{ 'templates.contact.form.phone' | t }}">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label>{{ 'templates.contact.form.comment' | t }}</label>
+                  <div class="form-control-wrap">
+                    <textarea-autosize>
+                      <textarea
+                        class="form-control"
+                        name="contact[{{ 'templates.contact.form.comment' | t }}]"
+                        placeholder="{{ 'templates.contact.form.comment' | t }}"
+                        required
+                        style="min-height: 42px"
+                      >
+                        {{- form.body -}}
+                      </textarea>
+                      {% render 'input-check' %}
+                    </textarea-autosize>
+                  </div>
+                </div>
+                <div class="mt-5">
+                  <button type="submit" class="btn w-100">{{ 'templates.contact.form.send' | t }}</button>
+                </div>
+              {%- endform -%}
+            </div>
+          {%- when 'map' -%}
+            <div class="col-md {% if form_block > 0 %}{% else %}mx-auto{% endif %} col-contact-map" {{ block.shopify_attributes }}>
+              {%- capture poster -%}
+                {% render 'image-container', image: block.settings.map_image, padding_no_bg: 48, sizes: '(min-width: 1920px) 1375px, (min-width: 1602px) 1087px, (min-width: 1466px) 951px, (min-width: 1200px) 645px, (min-width: 1025px) 588px, (min-width: 360px) 330px, calc(100vw - 30px)', image_k: image_k %}
+              {%- endcapture -%}
+
+              {%- if block.settings.map_image != blank -%}
+                <deferred-media data-media="googlemap">
+                  <div class="contact-map js-map-wrap">
+                    {%- if block.settings.google_map != blank -%}
+                      <div class="contact-map-control">
+                        <div class="contact-map-play js-map-play">{% render 'icon-expand' %}</div>
+                      </div>
+                    {%- endif -%}
+
+
+                    <div class="contact-map-poster">
+                    {{ poster }}
+                    </div>
+                    <loading-bar data-time="1500ms" class="hidden" style="--load-time:1500ms; width: 0px;"></loading-bar>
+                  </div>
+                  <template>
+                    {{ block.settings.google_map }}
+                  </template>
+                </deferred-media>
+              {%- else -%}
+                <div class="contact-map js-map-wrap">
+                  {{ block.settings.google_map }}
+                </div>
+              {%- endif -%}
+
+
+              <div class="mt-4"></div>
+              {% assign infos = section.blocks | where: "type", "info" %}
+              {%- if infos.size > 0 -%}
+                <div class="contact-info-row row row-cols-1 row-cols-sm-3 gx-3 gy-4">
+                  {%- for info in infos -%}
+                    <div class="col contact-info-wrap" {{ info.shopify_attributes }}>
+                      <div class="contact-info d-flex align-items-center">
+                        <div class="contact-info-icon">
+                          {% render 'icon', icon: info.settings.icon %}
+                        </div>
+                        <div class="contact-info-text">
+                          <div class="contact-info-title">{{ info.settings.title }}:</div>
+                          <span>{{ info.settings.description }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+              {%- if block.settings.show_social -%}
+                <div class="mt-3">
+                  {% render 'social-media', class: 'block-social-inline d-flex justify-content-center list-unstyled' %}
+                </div>
+              {%- endif -%}
+          </div>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+{% render 'section-wrapper' %}
+{% schema %}
+{
+  "name": "Contact",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_animation",
+      "label": "Enable soft appearing of section",
+      "default": true,
+      "info": "Global sections animation disabling in Theme Settings / General / Sections. AUTODISABLED if section has top or bottom separator."
+    },
+    {
+      "type": "header",
+      "content": "SECTION WIDTH"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Select width source",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use store width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom width"
+        }
+      ],
+      "default": "global",
+      "info": "Store width you can set in Theme Settings / General"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 1178,
+      "max": 1978,
+      "step": 8,
+      "unit": "px",
+      "label": "Custom width",
+      "default": 1178,
+      "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable background",
+      "default": false,
+      "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+    },
+    {
+      "type": "select",
+      "id": "background_preset",
+      "label": "Background image - preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "product-cosmetics-bg.png",
+          "label": "Leaves 1"
+        },
+        {
+          "value": "bottom-cosmetics-bg.png",
+          "label": "Leaves 2"
+        },
+        {
+          "value": "bg-makeup1.png,bg-makeup1-m.png",
+          "label": "Pink and Waves 1"
+        },
+        {
+          "value": "bg-makeup2.png,bg-makeup2-m.png",
+          "label": "Pink and Waves 2"
+        },
+        {
+          "value": "bg-makeup4.png,bg-makeup4-m.png",
+          "label": "Pink and Waves 3"
+        },
+        {
+          "value": "bg-makeup3.png,bg-makeup3-m.png",
+          "label": "Purple Splash"
+        },
+        {
+          "value": "bg-sweets1.png",
+          "label": "Blue Sun Rays"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+     {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image - custom on Desktop"
+    },
+    {
+      "type": "select",
+      "id": "background_behavior",
+      "label": "Background image behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image - custom on Mobile",
+      "info": "only if Background image - custom on Desktop selected"
+    },
+    {
+      "type": "select",
+      "id": "background_image_placeholder_type",
+      "label": "Placeholder background color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_secondary_bg"
+    },
+    {
+      "type": "color",
+      "id": "background_image_placeholder",
+      "label": "Custom - Placeholder background color"
+    },
+    {
+      "type": "header",
+      "content": "SECTION SEPARATOR"
+    },
+    {
+      "type": "header",
+      "content": "Top separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_header_main_bg",
+          "label": "Header - Middle(main) part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_top_color",
+      "label": "Custom - top separator color"
+    },
+    {
+      "type": "header",
+      "content": "Bottom separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "paragraph",
+      "content": "'Global separator' is set in Theme Settings / Separators / Global separator style"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_footer_top_bg",
+          "label": "Footer - Top part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_bottom_color",
+      "label": "Custom - bottom separator color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "form",
+      "name": "Form",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Title",
+          "default": "Let’s Talk"
+        },
+        {
+          "type": "textarea",
+          "id": "subtext",
+          "label": "Subtext",
+          "default": "To request a quote our products, contact us directly or fill out the form and we will get back to you promptly."
+        }
+      ]
+    },
+    {
+      "type": "map",
+      "name": "Map",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Social media icons",
+          "info": "To display your social media accounts, link them in your theme settings."
+        },
+        {
+          "type": "checkbox",
+          "id": "show_social",
+          "default": true,
+          "label": "Show social media icons"
+        },
+        {
+          "type": "header",
+          "content": "Map"
+        },
+        {
+          "type": "textarea",
+          "id": "google_map",
+          "label": "Google maps Embed code",
+          "default": "<iframe title=\"Google Map\" src='https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2201.3258493677126!2d-74.01291322172017!3d40.70657451080482!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sua!4v1492962272380'></iframe>",
+          "info": "Go to [maps.google.com](https://maps.google.com) > Find location > Menu > Share or Embed > Copy Embed code"
+        },
+        {
+          "type": "image_picker",
+          "id": "map_image",
+          "label": "Map Poster",
+          "info": "(Recommended size 1100x576px) for better page perfomance required"
+        }
+      ],
+      "limit": 1
+    },
+    {
+      "type": "info",
+      "name": "Info",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Preset Icon",
+          "options": [
+            {
+              "value": "icon-404",
+              "label": "404"
+            },
+            {
+              "value": "icon-arrow-down2",
+              "label": "arrow-down"
+            },
+            {
+              "value": "icon-arrow-left",
+              "label": "arrow-left"
+            },
+            {
+              "value": "icon-arrow-right",
+              "label": "arrow-right"
+            },
+            {
+              "value": "icon-arrow-up2",
+              "label": "arrow-up"
+            },
+            {
+              "value": "icon-card",
+              "label": "card"
+            },
+            {
+              "value": "icon-cart",
+              "label": "cart"
+            },
+            {
+              "value": "icon-cart3",
+              "label": "cart2"
+            },
+            {
+              "value": "icon-catalog3",
+              "label": "catalog"
+            },
+            {
+              "value": "icon-check",
+              "label": "check"
+            },
+            {
+              "value": "icon-checkmark",
+              "label": "checkmark"
+            },
+            {
+              "value": "icon-child",
+              "label": "child"
+            },
+            {
+              "value": "icon-coupon",
+              "label": "coupon"
+            },
+            {
+              "value": "icon-dress",
+              "label": "dress"
+            },
+            {
+              "value": "icon-edit",
+              "label": "pensil"
+            },
+            {
+              "value": "icon-email",
+              "label": "email"
+            },
+            {
+              "value": "icon-mail",
+              "label": "email2"
+            },
+            {
+              "value": "icon-mail2",
+              "label": "email3"
+            },
+            {
+              "value": "icon-eye",
+              "label": "eye"
+            },
+            {
+              "value": "icon-facebook",
+              "label": "facebook"
+            },
+            {
+              "value": "icon-filter3",
+              "label": "filter"
+            },
+            {
+              "value": "icon-gift-card",
+              "label": "gift-card"
+            },
+            {
+              "value": "icon-gift",
+              "label": "gift"
+            },
+            {
+              "value": "icon-heart",
+              "label": "heart"
+            },
+            {
+              "value": "icon-heart2",
+              "label": "heart2"
+            },
+            {
+              "value": "icon-home",
+              "label": "home"
+            },
+            {
+              "value": "icon-instagram",
+              "label": "instagram"
+            },
+            {
+              "value": "icon-location",
+              "label": "location"
+            },
+            {
+              "value": "icon-man",
+              "label": "man"
+            },
+            {
+              "value": "icon-message2",
+              "label": "message"
+            },
+            {
+              "value": "icon-minus",
+              "label": "minus"
+            },
+            {
+              "value": "icon-new",
+              "label": "new"
+            },
+            {
+              "value": "icon-pause",
+              "label": "pause"
+            },
+            {
+              "value": "icon-phone",
+              "label": "phone"
+            },
+            {
+              "value": "icon-phone2",
+              "label": "phone2"
+            },
+            {
+              "value": "icon-play",
+              "label": "play"
+            },
+            {
+              "value": "icon-plus",
+              "label": "plus"
+            },
+            {
+              "value": "icon-quote",
+              "label": "quote"
+            },
+            {
+              "value": "icon-remove2",
+              "label": "remove"
+            },
+            {
+              "value": "icon-return",
+              "label": "return"
+            },
+            {
+              "value": "icon-sale",
+              "label": "sale"
+            },
+            {
+              "value": "icon-search",
+              "label": "search"
+            },
+            {
+              "value": "icon-secure",
+              "label": "secure"
+            },
+            {
+              "value": "icon-settings",
+              "label": "settings"
+            },
+            {
+              "value": "icon-size",
+              "label": "size"
+            },
+            {
+              "value": "icon-size2",
+              "label": "size 2"
+            },
+            {
+              "value": "icon-star",
+              "label": "star"
+            },
+            {
+              "value": "icon-star2",
+              "label": "star2"
+            },
+            {
+              "value": "icon-support",
+              "label": "support"
+            },
+            {
+              "value": "icon-suppor2",
+              "label": "support2"
+            },
+            {
+              "value": "icon-tag",
+              "label": "tag"
+            },
+            {
+              "value": "icon-tiktok",
+              "label": "tiktok"
+            },
+            {
+              "value": "icon-truck",
+              "label": "truck"
+            },
+            {
+              "value": "icon-truck2",
+              "label": "truck2"
+            },
+            {
+              "value": "icon-truck3",
+              "label": "truck3"
+            },
+            {
+              "value": "icon-truck4",
+              "label": "truck4"
+            },
+            {
+              "value": "icon-twitter",
+              "label": "twitter"
+            },
+            {
+              "value": "icon-user",
+              "label": "user"
+            },
+            {
+              "value": "icon-video",
+              "label": "video"
+            },
+            {
+              "value": "icon-woman",
+              "label": "woman"
+            },
+            {
+              "value": "icon-youtube",
+              "label": "youtube"
+            },
+            {
+              "value": "icon-zoom",
+              "label": "zoom"
+            },
+            {
+              "value": "icon-zoom2",
+              "label": "zoom2"
+            },
+            {
+              "value": "placeholder",
+              "label": "placeholder"
+            }
+          ],
+          "default": "icon-truck"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Description text goes here"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Form / constructor",
+      "blocks": [
+        {
+          "type": "form"
+        },
+        {
+          "type": "map"
+        },
+        {
+          "type": "info",
+          "settings": {
+            "icon": "icon-location",
+            "title": "Location",
+            "description": "165th St, Jamaica, NY 11"
+          }
+        },
+        {
+          "type": "info",
+          "settings": {
+            "icon": "icon-mail",
+            "title": "Email",
+            "description": "loremipsum@gmail.com"
+          }
+        },
+        {
+          "type": "info",
+          "settings": {
+            "icon": "icon-phone2",
+            "title": "Phone",
+            "description": "+1-202-555-0158"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contact Form / preset 1 Feedback form + Map",
+      "blocks": [
+        {
+          "type": "form"
+        },
+        {
+          "type": "map"
+        },
+        {
+          "type": "info",
+          "settings": {
+            "icon": "icon-location",
+            "title": "Location",
+            "description": "165th St, Jamaica, NY 11"
+          }
+        },
+        {
+          "type": "info",
+          "settings": {
+            "icon": "icon-mail",
+            "title": "Email",
+            "description": "loremipsum@gmail.com"
+          }
+        },
+        {
+          "type": "info",
+          "settings": {
+            "icon": "icon-phone2",
+            "title": "Phone",
+            "description": "+1-202-555-0158"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contact Form / preset 2 Map + Feedback form",
+      "blocks": [
+        {
+          "type": "map"
+        },
+        {
+          "type": "form"
+        },
+        {
+          "type": "info",
+          "settings": {
+            "icon": "icon-location",
+            "title": "Location",
+            "description": "165th St, Jamaica, NY 11"
+          }
+        },
+        {
+          "type": "info",
+          "settings": {
+            "icon": "icon-mail",
+            "title": "Email",
+            "description": "loremipsum@gmail.com"
+          }
+        },
+        {
+          "type": "info",
+          "settings": {
+            "icon": "icon-phone2",
+            "title": "Phone",
+            "description": "+1-202-555-0158"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Contact Form / preset 3 Only Feedback form",
+      "blocks": [
+        {
+          "type": "form"
+        }
+      ]
+    },
+    {
+      "name": "Contact Form / preset 4 Only Map",
+      "blocks": [
+        {
+          "type": "map"
+        },
+        {
+          "type": "info",
+          "settings": {
+            "icon": "icon-location",
+            "title": "Location",
+            "description": "165th St, Jamaica, NY 11"
+          }
+        },
+        {
+          "type": "info",
+          "settings": {
+            "icon": "icon-mail",
+            "title": "Email",
+            "description": "loremipsum@gmail.com"
+          }
+        },
+        {
+          "type": "info",
+          "settings": {
+            "icon": "icon-phone2",
+            "title": "Phone",
+            "description": "+1-202-555-0158"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

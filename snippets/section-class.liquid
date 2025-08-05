@@ -1,0 +1,176 @@
+{%- liquid
+    assign background = section.settings.background
+
+    case settings.section_decoration
+        when "1"
+            assign section_decoration = "none"
+        when "2"
+            assign section_decoration = "grunge1"
+        when "3"
+            assign section_decoration = "grunge2"
+        when "4"
+            assign section_decoration = "grunge3"
+        when "5"
+            assign section_decoration = "paper"
+        when "6"
+            assign section_decoration = "mountains"
+        when "7"
+            assign section_decoration = "ellipse1"
+        when "8"
+            assign section_decoration = "ellipse2"
+        when "9"
+            assign section_decoration = "wave1"
+        when "10"
+            assign section_decoration = "wave2"
+        when "11"
+            assign section_decoration = "wave3"
+        when "21"
+            assign section_decoration = "wave4"
+        when "22"
+            assign section_decoration = "wave5"
+        when "12"
+            assign section_decoration = "triangle1"
+        when "13"
+            assign section_decoration = "triangle2"
+        when "14"
+            assign section_decoration = "triangle_assymetrical1"
+        when "15"
+            assign section_decoration = "triangle_assymetrical1_flip"
+        when "16"
+            assign section_decoration = "triangle_assymetrical2"
+        when "17"
+            assign section_decoration = "triangle_assymetrical2_flip"
+        when "18"
+            assign section_decoration = "tilt"
+        when "19"
+            assign section_decoration = "tilt_flip"
+        when "20"
+            assign section_decoration = "glaze"
+    endcase
+
+    case settings.section_decoration
+        when "1"
+            assign section_decoration_global = "none"
+        when "2"
+            assign section_decoration_global = "grunge1"
+        when "3"
+            assign section_decoration_global = "grunge2"
+        when "4"
+            assign section_decoration_global = "grunge3"
+        when "5"
+            assign section_decoration_global = "paper"
+        when "6"
+            assign section_decoration_global = "mountains"
+        when "7"
+            assign section_decoration_global = "ellipse1"
+        when "8"
+            assign section_decoration_global = "ellipse2"
+        when "9"
+            assign section_decoration_global = "wave1"
+        when "10"
+            assign section_decoration_global = "wave2"
+        when "11"
+            assign section_decoration_global = "wave3"
+        when "21"
+            assign section_decoration_global = "wave4"
+        when "22"
+            assign section_decoration_global = "wave5"
+        when "12"
+            assign section_decoration_global = "triangle1"
+        when "13"
+            assign section_decoration_global = "triangle2"
+        when "14"
+            assign section_decoration_global = "triangle_assymetrical1"
+        when "15"
+            assign section_decoration_global = "triangle_assymetrical1_flip"
+        when "16"
+            assign section_decoration_global = "triangle_assymetrical2"
+        when "17"
+            assign section_decoration_global = "triangle_assymetrical2_flip"
+        when "18"
+            assign section_decoration_global = "tilt"
+        when "19"
+            assign section_decoration_global = "tilt_flip"
+        when "20"
+            assign section_decoration_global = "glaze"
+    endcase
+
+    assign section_decoration_top = section.settings.section_decoration_top
+    assign section_decoration_bottom = section.settings.section_decoration_bottom
+
+    assign py_global = false
+    assign mt_global = false
+
+
+    assign class = class | append: ' holder '
+
+    if layout == 'index-categories-styled'
+        assign class = class | append: ' holder--max-width '
+    endif
+
+    if section_decoration_top != 'global'
+        assign section_decoration = section_decoration_top
+    endif
+
+    if template.suffix contains 'separators.' and section_decoration_top == 'global'
+        if template.suffix contains '.bottom'
+            assign mt_global = true
+        endif
+    else
+        if section_decoration == 'none' or section_decoration == nil
+            assign mt_global = true
+        endif
+    endif
+
+    if mt_global
+        assign class = class | append: ' mt-global'
+    else
+        assign class = class | append: ' mt-0'
+    endif
+
+    assign section_decoration = 'none'
+
+    if section_decoration_top != 'none'
+        assign section_decoration = section_decoration_top
+    endif
+
+    if section_decoration_bottom != 'none'
+        assign section_decoration = section_decoration_bottom
+    endif
+
+    if section_decoration == 'global' and section_decoration_global != 'none'
+        assign section_decoration = section_decoration_global
+    endif
+
+    if background or section_decoration != 'none' and section_decoration != 'global' and section_decoration != nil
+        if layout != 'product-featured' and layout != 'index-video'
+            assign py_global = true
+        endif
+    endif
+
+    if layout == 'index-welcome' and section.settings.layout == 'layout_2' or section.settings.layout == 'layout_4'
+        assign py_global = false
+    endif
+
+    if layout == 'index-search' and section.settings.bg_image != blank or section.settings.bg_color != blank
+        assign py_global = true
+    endif
+
+    if py_global
+        assign class = class | append: ' py-global '
+    endif
+
+    if section.settings.hide_on_mobile
+        assign class = class | append: ' hide-mobile '
+    endif
+
+    if background
+        if layout == 'index-ticker' and section.settings.background_image != blank
+            assign class = class | append: ' lazyload ' | append: section.settings.background_behavior
+        elsif section.settings.background_image != blank or section.settings.background_preset != 'none'
+            assign class = class | append: ' lazyload ' | append: section.settings.background_behavior
+        endif
+    endif
+
+    echo class
+-%}

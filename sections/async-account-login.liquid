@@ -1,0 +1,214 @@
+
+{%- liquid
+  assign color = settings.color_placeholder_login
+  if color != 'rgba(0,0,0,0)' and color != blank
+    assign ic_style = '--placeholder-bg: ' | append: color | append: ';'
+  endif
+-%}
+<div class="modal-wrap-scroll js-dropdn-content-scroll">
+  <div class="row m-0">
+    {%- if settings.image_login -%}
+      <div class="col-6 d-none d-md-flex p-0">
+        <div class="image-container w-100 h-100 p-0">
+          {% render 'image-container',
+            image: settings.image_login,
+            sizes: '(min-width: 1200px) 570px, calc((100vw - 60px)/2)',
+            class_ic: 'w-100  h-100 p-0',
+
+            cover: false,
+            hover_scale: false,
+
+            style: ic_style
+          %}
+          {%- comment -%}
+            class_img_only: 'no-lazy',
+            lazyload: false,
+          {%- endcomment -%}
+        </div>
+      </div>
+    {%- endif -%}
+    <div class="col">
+      <div class="loginmodal-col-form d-flex align-items-center justify-content-center">
+        <div class="login-form-wrap passwordForm d-none w-100">
+          <div class="title-wrap text-center">
+            <h2 class="h1-style">{{ 'theme.general.caption_reset' | t }}</h2>
+          </div>
+          {%- form 'recover_customer_password', class: "mt-5" -%}
+            <div class="form-group">
+              <label for="RecoverEmail">
+                {{ 'customer.login_page.email' | t }}
+              </label>
+              <div class="form-control-wrap">
+                <input type="email"
+                       value=""
+                       name="email"
+                       id="RecoverEmail"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       autocomplete="email"
+                  {% if form.errors %}
+                    aria-invalid="true"
+                    aria-describedby="RecoverEmail-email-error"
+                    autofocus
+                  {% endif %}
+                       required class="form-control" placeholder="{{ 'theme.general.enter_your_email_here' | t }}"
+                >
+                {% render 'input-check', status: 'verify' %}
+              </div>
+            </div>
+            <div class="mt-5"></div>
+            <button type="submit" class="btn w-100">{{ 'theme.general.send_reset_link' | t }}</button>
+            <div class="text-center mt-15 form-info">
+              <a href="#" class="btn-link js-toggle-forms" data-form="loginForm"><span class="icon-wrap">{% render 'icon-arrow-left' %}</span><span>{{ 'theme.general.return_back' | t }}</span></a>
+            </div>
+          {%- endform -%}
+        </div>
+        <div class="login-form-wrap loginForm w-100">
+          <div class="title-wrap text-center">
+            <h2 class="h1-style">{{ 'theme.general.caption_login' | t }}</h2>
+            <div class="h-sub w-800">{{ 'theme.general.caption_2_login' | t }}</div>
+          </div>
+          {%- form 'customer_login', class: 'mt-5' -%}
+            <div class="form-group">
+              <label for="CustomerEmail">
+                {{ 'customer.login_page.email' | t }}
+              </label>
+              <div class="form-control-wrap">
+                <input
+                  type="email"
+                  name="customer[email]"
+                  id="CustomerEmail"
+                  autocomplete="email"
+                  autocorrect="off"
+                  autocapitalize="off"
+                  {% if form.errors contains 'form' %}
+                    aria-invalid="true"
+                  {% endif %}
+                  placeholder="{{ 'theme.general.enter_your_email_here' | t }}"
+                  required
+                  class="form-control"
+                >
+                {% render 'input-check', status: 'verify' %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="CustomerPassword">
+                {{ 'customer.login_page.password' | t }}
+              </label>
+              <div class="form-control-wrap">
+                <input
+                  type="password"
+                  value=""
+                  name="customer[password]"
+                  minlength="5"
+                  id="CustomerPassword"
+                  autocomplete="current-password"
+                  {% if form.errors contains 'form' %}
+                    aria-invalid="true"
+                  {% endif %}
+                  placeholder="******"
+                  required class="form-control"
+                >
+                {% render 'input-check', status: 'verify' %}
+              </div>
+            </div>
+            <div class="mt-5"></div>
+            <button type="submit" class="btn w-100">{{ 'customer.login_page.sign_in' | t }}</button>
+            <div class="text-center mt-15 form-info">
+              <a href="#" class="js-toggle-forms" data-form="passwordForm">{{ 'customer.login_page.forgot_password' | t }}</a>
+            </div>
+            <div class="text-center mt-1 form-info">
+              {{ 'theme.general.dont_have_an_account' | t }}
+              <a href="#" class="d-block d-md-inline js-toggle-forms" data-form="registerForm">{{ 'theme.general.register_here' | t }}</a>
+            </div>
+          {%- endform -%}
+        </div>
+        <div class="login-form-wrap registerForm d-none w-100">
+          <div class="title-wrap text-center">
+            <h2 class="h1-style">{{ 'theme.general.caption_1_register' | t }}</h2>
+            <div class="h-sub w-800">{{ 'theme.general.caption_2_register' | t }}</div>
+          </div>
+          {%- form 'create_customer', class: 'mt-5' -%}
+            <div class="form-group">
+              <label for="RegisterForm-FirstName">
+                {{ 'customer.register.first_name' | t }}
+              </label>
+              <div class="form-control-wrap">
+                <input
+                  type="text"
+                  name="customer[first_name]"
+                  {% if form.first_name %}value="{{ form.first_name }}"{% endif %}
+                  autocomplete="given-name"
+                  required class="form-control" placeholder="{{ 'theme.general.enter_your_first_name' | t }}"
+                >
+                {% render 'input-check' %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="RegisterForm-LastName">
+                {{ 'customer.register.last_name' | t }}
+              </label>
+              <div class="form-control-wrap">
+                <input
+                  type="text"
+                  name="customer[last_name]"
+                  {% if form.last_name %}value="{{ form.last_name }}"{% endif %}
+                  autocomplete="family-name"
+                  class="form-control" placeholder="{{ 'theme.general.enter_your_last_name' | t }}"
+                >
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="RegisterForm-email">
+                {{ 'customer.register.email' | t }}
+              </label>
+              <div class="form-control-wrap">
+                <input
+                  type="email"
+                  name="customer[email]"
+                  {% if form.email %} value="{{ form.email }}"{% endif %}
+                  spellcheck="false"
+                  autocapitalize="off"
+                  autocomplete="email"
+                  aria-required="true"
+                  {% if form.errors contains 'email' %}
+                    aria-invalid="true"
+                    aria-describedby="RegisterForm-email-error"
+                  {% endif %}
+                  placeholder="{{ 'theme.general.enter_your_email_here' | t }}"
+                  required class="form-control"
+                >
+                {% render 'input-check' %}
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="RegisterForm-password">
+                {{ 'customer.register.password' | t }}
+              </label>
+              <div class="form-control-wrap">
+                <input
+                  type="password"
+                  name="customer[password]"
+                  aria-required="true"
+                  minlength="5"
+                  {% if form.errors contains 'password' %}
+                    aria-invalid="true"
+                    aria-describedby="RegisterForm-password-error"
+                  {% endif %}
+                  required class="form-control" placeholder="******"
+                >
+                {% render 'input-check' %}
+              </div>
+            </div>
+            <div class="mt-5"></div>
+            <button type="submit" class="btn w-100">{{ 'theme.general.create_account' | t }}</button>
+            <div class="text-center mt-15 form-info">
+              {{ 'theme.general.already_have_an_account' | t }}
+              <a href="#" class="d-block d-sm-inline js-toggle-forms" data-form="loginForm">{{ 'theme.general.login_here' | t }}</a>
+            </div>
+          {% endform %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

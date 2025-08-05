@@ -1,0 +1,8 @@
+{%- unless settings.catalog_mode -%}
+  {%- if shop.customer_accounts_enabled -%}
+    {% render 'header-account-icon' icon: icon %}
+    <div class="modal-wrap loginmodal {% if settings.image_login != blank %}fancybox-effect-slide-out{% endif %} {% unless settings.image_login != blank %}w-auto{% endunless %}" style="display: none;" id="loginModal">
+      <div data-load="loading"></div>
+    </div>
+  {%- endif -%}
+{%- endunless -%}

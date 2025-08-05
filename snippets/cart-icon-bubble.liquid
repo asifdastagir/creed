@@ -1,0 +1,2 @@
+<span class="icon-wrap" id="cart-icon-bubble"><span class="header-cart-count">{% if request.page_type == 'cart' %}{% render 'icon-shipping' %}{% else %}{% render 'icon-cart-2' %}{% endif %}{% if cart != empty %}<span class="minicart-qty">{{ cart.item_count }}</span>{% endif %}</span></span>
+<span class="dropdn-link-sm-text">{% if request.page_type == 'cart' %}{{ 'theme.general.calc' | t }}{% else %}{{ 'theme.general.cart' | t }}{% endif %}</span>

@@ -1,0 +1,44 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+<footer class="page-footer footer--style5 mt-global">
+  {% render 'footer-decoration', section: section %}
+  {% render 'footer-top-small', section: section %}
+  <div class="footer-bottom text-center py-3 py-xl-5">
+    <div class="container">
+      <div class="row gy-3">
+        {%- liquid assign size = section.blocks | where: 'type', 'link_list' | size -%}
+        {%- if size > 0 -%}
+          <div class="col footer-hor-nav">
+            <div class="container mb-2" role="navigation">
+              {%- for block in section.blocks -%}
+                {%- case block.type -%}
+                {%- when 'link_list' -%}
+                  {%- if block.settings.menu != blank -%}
+                    <ul class="footer-hor-nav-list justify-content-center">
+                      {%- for link in block.settings.menu.links -%}
+                        <li><a href="{{ link.url }}" {% if link.active %}class="active"{% endif %}>{{ link.title }}</a></li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                {% break %}
+                {%- endcase -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+        {%- if section.settings.payment_enable -%}
+          <div class="col footer-payment-wrap">
+            {% render 'footer-payments' %}
+          </div>
+        {%- endif -%}
+        {%- if section.settings.bottom_socials_media -%}
+          <div class="col footer-social-wrap">
+            {% render 'social-media', class: 'footer-social list-unstyled' %}
+          </div>
+        {%- endif -%}
+        <div class="col footer-copyright-wrap">
+          {% render 'copyright', section: section %}
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>

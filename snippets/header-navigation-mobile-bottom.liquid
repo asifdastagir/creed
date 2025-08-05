@@ -1,0 +1,138 @@
+
+  {%- liquid
+    if request.page_type == 'collection'
+      assign target = collection
+    elsif request.page_type == 'search'
+      assign target = search
+    endif
+
+    if request.page_type == 'cart'
+      assign tag = 'shipping-calculator-cart'
+    endif
+
+    assign show = true
+    assign counter = 0
+
+
+    if settings.mobile_bottom_navigation_home
+      assign counter = counter | plus: 1
+    endif
+
+    if settings.mobile_bottom_navigation_catalog
+      assign counter = counter | plus: 1
+    endif
+
+    if settings.mobile_bottom_navigation_account == 'default' and shop.customer_accounts_enabled
+      assign counter = counter | plus: 1
+    endif
+
+    if settings.mobile_bottom_navigation_wishlist == 'default'
+      assign counter = counter | plus: 1
+    endif
+
+    if settings.mobile_bottom_navigation_cart == 'default'
+      assign counter = counter | plus: 1
+    endif
+
+    if counter == 0
+      assign show = false
+    endif
+
+    if show == false and request.page_type == 'collection' or request.page_type == 'search'
+      if target.filters.size > 0 and settings.enable_filtering
+        assign show = true
+      endif
+    endif
+
+    if request.page_type == 'collection' or request.page_type == 'search'
+      if target.filters.size > 0 and settings.enable_filtering
+        assign counter = counter | plus: 1
+      endif
+    endif
+
+    assign alignment = 'justify-content-between'
+
+    if counter < 4
+      assign alignment = 'justify-content-around'
+    endif
+  -%}
+
+  {%- if show -%}
+    <mobile-bottom-sticky>
+      <div class="hdr-mobile-bottom show-mobile {{ class }}">
+        <div class="hdr-inline-link row align-items-center h-100 text-center {{ alignment }}">
+          <div class="d-flex {{ alignment }} px-xxs-0">
+
+            {%- if settings.mobile_bottom_navigation_home -%}
+              <div class="dropdn dropdn_home">
+                <a href="{{ routes.root_url }}" class="dropdn-link">
+                  <span class="icon-wrap m-0">{% render 'icon-home' %}</span>
+                  <span class="dropdn-link-sm-text">{{ 'theme.general.home' | t }}</span>
+                </a>
+              </div>
+            {%- endif -%}
+
+            {% render 'facets-mobile-popup-trigger' results: target, sort_by: sort_by %}
+
+            {%- if settings.mobile_bottom_navigation_catalog -%}
+              {%- liquid
+                assign section_param= '?section_id=async-catalog-popup'
+                if request.page_type == 'collection'
+                assign question_mark = '?'
+                assign collection_url_parts = collection.url | split: question_mark
+                if collection_url_parts.size > 1
+                assign collection_url = collection.url | append: section_param
+                assign collection_url_parts = collection_url | split: question_mark
+                assign collection_url = ''
+                for part in collection_url_parts
+                assign collection_url = collection_url | append: ampersand_mark | append: part | append: question_mark
+                assign question_mark = ''
+                if forloop.index > 1
+                assign ampersand_mark = '&amp;'
+                endif
+                endfor
+                else
+                assign collection_url = collection.url | append: section_param
+                endif
+                else
+                assign collection_url = routes.root_url | append: section_param
+                endif
+              -%}
+
+              {%- liquid
+                assign catalog_handle = settings['catalog_1']
+                assign catalog = linklists[catalog_handle]
+              -%}
+              {%- if catalog != blank and catalog.links.size > 0 -%}
+                <div class="dropdn dropdn_catalog">
+                  <category-popup data-ajax="{{ collection_url }}">
+                    <a href="{{ routes.all_products_collection_url }}" class="dropdn-link">
+                      <span class="icon-wrap m-0">{% render 'icon-catalog3' %}</span>
+                      <span class="dropdn-link-sm-text">{{ 'theme.general.catalog' | t }}</span>
+                    </a>
+                  </category-popup>
+                  <div class="modal-wrap mmenu dropdn-modal-slide secondary-color js-modal-wrap-mmenu-mobile" style="display: none;" id="menuPopupMobile01">
+                    <div data-load="loading"></div>
+                  </div>
+                </div>
+              {%- endif -%}
+            {%- endif -%}
+
+            {%- liquid
+              if settings.mobile_bottom_navigation_account == 'default'
+                render 'header-account-icon', position: 'bottom'
+              endif
+
+              if settings.mobile_bottom_navigation_wishlist == 'default'
+                render 'header-wishlist-icon', position: 'bottom'
+              endif
+
+              if settings.mobile_bottom_navigation_cart == 'default'
+                render 'header-cart-icon', tag: tag
+              endif
+            -%}
+          </div>
+        </div>
+      </div>
+    </mobile-bottom-sticky>
+  {%- endif -%}

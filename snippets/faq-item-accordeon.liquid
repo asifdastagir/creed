@@ -1,0 +1,20 @@
+<div class="block-accordion {% if section.settings.collapsible_tabs and section.settings.collapsible_tabs_style == 'bg' %}block-accordion--bg{% endif %}">
+    <form>
+    {%- for block in section.blocks -%}
+        {%- if block.settings.category == category or disable_category == true -%}
+            <div class="tab-accordion-item faq-item mt-{% if section.settings.collapsible_tabs and section.settings.collapsible_tabs_style == 'bg' %}15{% else %}0{% endif %} {% if forloop.first %}opened{% endif %}" {{ block.shopify_attributes }}>
+                <input type="checkbox" name="tab-accordion" id="faqAccordion-{{ block.id }}">
+                <label for="faqAccordion-{{ block.id }}" class="text-uppercase">{{ block.settings.title }}<span class="toggle-arrow"></span></label>
+                <div class='tab-accordion-item-content js-set-height'>
+                <div class="tab-accordion-item-content-inside">
+                    {%- unless disable_category -%}
+                        <ul class="tags-list faq-tags-list"><li>{{ 'theme.general.category' | t }}:</li><li><span class="tags-list-inside">{{ category }}</span></li></ul>
+                    {%- endunless -%}
+                    {{ block.settings.answer }}
+                </div>
+                </div>
+            </div>
+        {%- endif -%}
+    {%- endfor -%}
+    </form>
+</div>

@@ -1,0 +1,18 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- liquid
+  if request.page_type == 'search'
+    assign results = search
+  else
+    assign results = collection
+  endif
+-%}
+{% render 'facets'
+    results: results,
+    enable_filtering: true,
+    section: section,
+    id: 'FacetFiltersForm',
+    show_sizes: settings.show_sizes,
+    size_options_name: settings.size_options_name,
+    color_options_name: settings.product_card_color_options_name,
+    show_colorpics: settings.show_colorpics
+%}

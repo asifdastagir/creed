@@ -1,0 +1,1234 @@
+{% comment %}theme-check-disable ImgLazyLoading, DeprecateLazysizes, DeprecateBgsizes, UnusedAssign, LiquidTag, UndefinedObject{% endcomment %}
+{%- liquid
+  assign layout = 'index-welcome'
+  assign image_default = section.settings.image_preset
+
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign subtitle = subtitle | default: section.settings.subtitle
+
+  if image_default == 'none'
+    assign image_default = blank
+  endif
+
+  if section.settings.text_column_max
+    assign content_max_width = section.settings.text_column_max_width | append: 'px'
+  else
+    assign content_max_width = '100%'
+  endif
+
+  if section.settings.image_bg != blank
+    assign background = section.settings.image_bg | image_url: width: section.settings.image_bg.width
+    assign background = "data-bgset=" | append: background | append: '"'
+  elsif section.settings.image_bg_preset != 'none'
+    assign background = section.settings.image_bg_preset | asset_img_url: 'master'
+    assign background = "data-bgset=" | append: background | append: '"'
+  endif
+
+  assign button_show_more = false
+  if section.settings.button
+    if section.settings.heading_alignment == 'left'
+      assign button_show_more = true
+    elsif section.settings.layout != 'mini_horizontal_banner'
+      assign button_show_more = true
+    endif
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+    assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+
+  assign ic_style = ''
+  assign color = section.settings.color_placeholder
+  if color != 'rgba(0,0,0,0)' and color != blank
+    assign ic_style = '--placeholder-bg: ' | append: color | append: ';'
+  endif
+
+  assign bg_color_style = ''
+  assign image_bg_placeholder = section.settings.image_bg_placeholder
+  if image_bg_placeholder != 'rgba(0,0,0,0)' and image_bg_placeholder != blank
+    assign bg_color_style = '--body-bg: ' | append: image_bg_placeholder | append: '; background-color: var(--body-bg);'
+  endif
+
+  assign colorize_invert_style = ''
+  if section.settings.invert_color
+    assign colorize_invert_style = 'colorize-invert'
+  endif
+
+-%}
+{{ 'image-compare-viewer.min' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+
+{% render 'section-wrapper'
+  , placement: 'top' %}
+
+<div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+  {%- if section.settings.layout == 'layout_1' -%}
+    <div class="{% render 'section-container-class', layout: layout %}">
+      <div class="container text-{{ section.settings.description_aligment }}">
+        {% render 'section-heading' %}
+
+        {%- if section.settings.image != blank or section.settings.image_preset != 'none' -%}
+          {%- capture image_1 -%}
+            {% render 'image-container',
+                image: section.settings.image,
+                image_default: image_default,
+                padding_no_bg: 26.45,
+                bg: false,
+                cover: false,
+                hover_scale: false,
+                class_ic: 'bnr-img',
+                style: ic_style
+              %}
+          {%- endcapture -%}
+          {%- capture image_2 -%}
+            {% render 'image-container',
+              image: section.settings.image_2,
+              image_default: image_default,
+              padding_no_bg: 26.45,
+              bg: false,
+              cover: false,
+              hover_scale: false,
+              class_ic: 'bnr-img',
+              style: ic_style
+            %}
+          {%- endcapture -%}
+          {%- if section.settings.image_2 != blank -%}
+            <image-compare data-options='{"verticalMode": false,  "controlColor": "#fff", "showLabels": false, "labelOptions": {"before": "BEFORE","after": "AFTER"}}'>
+              <div class="image-compare">
+                {{ image_1 }}
+                {{ image_2 }}
+              </div>
+            </image-compare>
+          {%- else -%}
+            {{ image_1 }}
+          {%- endif -%}
+
+          <div class="mt-3"></div>
+        {%- endif -%}
+        {{ section.settings.description }}
+
+        {%- if button_show_more -%}
+          <div class="btn-showmore-wrap text-{{ section.settings.description_aligment }} mt-3">
+            <a href="{{ section.settings.button_url }}" class="btn {{ section.settings.button_color }} btn--showmore">{{ section.settings.button_text }}</a>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  {%- elsif section.settings.layout == 'layout_2' -%}
+    <div class="{% render 'section-container-class', layout: layout %} position-relative px-0">
+      <div
+        class="py-global-strict lazyload {{ section.settings.image_bg_behaviour }} w-100"
+        {{ background }}
+        data-sizes="auto">
+        <div class="container">
+          <div class="d-flex justify-content-center align-items-center h-100">
+            <div class="text-{{ section.settings.description_aligment }} mx-auto py-6 py-md-8 {{ colorize_invert_style }}" style="max-width: 640px">
+              {% render 'section-heading'
+                , section: section %}
+              {{ section.settings.description }}
+
+              {%- if button_show_more -%}
+                <div class="btn-showmore-wrap text-{{ section.settings.description_aligment }} mt-3 mt-md-4">
+                  <a href="{{ section.settings.button_url }}" class="btn {{ section.settings.button_color }} btn--showmore">{{ section.settings.button_text }}</a>
+                </div>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {%- elsif section.settings.layout == 'layout_3' -%}
+    <div class="container  {% render 'section-container-class', layout: layout %}">
+      <div class="row gy-4 {% if section.settings.reverse %}flex-row-reverse{% endif %}">
+        <div class="col-md col-md-custom d-flex align-items-center" style="--col-width-md: {{ section.settings.image_column_width }}%">
+          {%- liquid
+            assign bg = true
+
+            if section.settings.image != blank
+              assign bg = false
+            endif
+
+            assign sizes = '(min-width: 1200px) 540px, (min-width: 992px) 446px, (min-width: 768px) 354px,'
+          -%}
+          {%- capture image_1 -%}
+            {% render 'image-container',
+                image: section.settings.image,
+                image_default: image_default,
+                padding_no_bg: 75.74,
+                sizes: sizes,
+                hover_scale: false,
+                class_ic: 'w-100',
+                bg: bg,
+                style: ic_style
+              %}
+          {%- endcapture -%}
+          {%- capture image_2 -%}
+            {% render 'image-container',
+              image: section.settings.image_2,
+              image_default: image_default,
+              padding_no_bg: 75.74,
+              sizes: sizes,
+              hover_scale: false,
+              class_ic: 'w-100',
+              bg: bg,
+              style: ic_style
+            %}
+          {%- endcapture -%}
+          {%- if section.settings.image_2 != blank -%}
+            <image-compare data-options='{"verticalMode": false,  "controlColor": "#fff", "showLabels": false, "labelOptions": {"before": "BEFORE","after": "AFTER"}}'>
+              <div class="image-compare">
+                {{ image_1 }}
+                {{ image_2 }}
+              </div>
+            </image-compare>
+          {%- else -%}
+            {{ image_1 }}
+          {%- endif -%}
+
+        </div>
+        <div class="text-with-bg-column col-sm lazyload {{ section.settings.image_bg_behaviour }} {{ colorize_invert_style }} {% if bg_color_style == blank %}-theme-bg{% endif %}"
+            style="--col-text-max-width: {{ content_max_width }};{{ bg_color_style }}"
+            {{ background }}
+            data-sizes="auto">
+          <div class="text-{{ section.settings.description_aligment }}">
+            <h3 class="h-xl-style fw-500-strict {% if subtitle != blank %}mb-1{% endif %}">{{ section.settings.heading }}</h3>
+            {% if subtitle != blank %}
+              <div class="h-sub w-800" style="font-size: {{ settings.font_heading_subtitle_font_size }}px;">{{ subtitle }}</div>
+            {% endif %}
+            {{ section.settings.description }}
+          </div>
+        </div>
+      </div>
+      {%- if button_show_more -%}
+        <div class="btn-showmore-wrap text-{{ section.settings.description_aligment }} mt-3">
+          <a href="{{ section.settings.button_url }}" class="btn {{ section.settings.button_color }} btn--showmore">{{ section.settings.button_text }}</a>
+        </div>
+      {%- endif -%}
+    </div>
+  {%- elsif section.settings.layout == 'layout_4' -%}
+    <div class="container{% if section.settings.section_width != 'custom' %}-fluid{% endif %} position-relative px-0 {% render 'section-container-class', layout: layout %}">
+      <div
+        class="py-global-strict lazyload {{ section.settings.image_bg_behaviour }} w-100 {{ colorize_invert_style }}"
+        {{ background }}
+        data-sizes="auto">
+        <div class="container">
+          <div class="row gy-0 {% if section.settings.reverse %}flex-row-reverse{% endif %}">
+            <div class="col-md col-md-custom d-flex align-items-center position-relative my-5" style="--col-width-md: {{ section.settings.image_column_width }}%">
+              {%- capture image_1 -%}
+                  {% render 'image-container',
+                      image: section.settings.image,
+                      image_default: image_default,
+                      padding_no_bg: 95.2,
+                      hover_scale: false,
+                      class_ic: 'w-100',
+                      style: ic_style
+                    %}
+                {%- endcapture -%}
+              {%- capture image_2 -%}
+                  {% render 'image-container',
+                    image: section.settings.image_2,
+                    image_default: image_default,
+                    padding_no_bg: 95.2,
+                    hover_scale: false,
+                    class_ic: 'w-100',
+                    style: ic_style
+                  %}
+                {%- endcapture -%}
+              {%- if section.settings.image_2 != blank -%}
+                <image-compare data-options='{"verticalMode": false,  "controlColor": "#fff", "showLabels": false, "labelOptions": {"before": "BEFORE","after": "AFTER"}}'>
+                  <div class="image-compare">
+                    {{ image_1 }}
+                    {{ image_2 }}
+                  </div>
+                </image-compare>
+              {%- else -%}
+                {{ image_1 }}
+              {%- endif -%}
+            </div>
+            <div class="text-with-bg-column col-md py-5" style="--col-text-max-width: {{ content_max_width }}">
+              <div class="text-center text-md-start">
+                <h3 class="h-xxl-style {% if subtitle != blank %}mb-1{% endif %}">
+                  {%- liquid
+                    for i in (0..section.settings.heading.size)
+                      capture color
+                        cycle '<span style="color:#71EACB">', '<span style="color:#71EACB">', '<span style="color:#A783ED">', '<span style="color:#A783ED">', '<span style="color:#FF8A78">', '<span style="color:#FF8A78">'
+                      endcapture
+                      assign letter = section.settings.heading | slice: i
+                      echo color
+                      echo letter
+                      echo '</span>'
+                    endfor
+                  -%}
+                </h3>
+                {% if subtitle != blank %}
+                  <div class="h-sub w-800 fs-13">{{ subtitle }}</div>
+                {% endif %}
+                {{ section.settings.description }}
+              </div>
+            </div>
+          </div>
+          {%- if button_show_more -%}
+            <div class="btn-showmore-wrap text-center mt-3">
+              <a href="{{ section.settings.button_url }}" class="btn {{ section.settings.button_color }} btn--showmore">{{ section.settings.button_text }}</a>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  {%- elsif section.settings.layout == 'layout_5' -%}
+    <div class="{% render 'section-container-class', layout: layout %}">
+      <div class="row gx-0 row--rounded text-with-bg-wrap {% if section.settings.reverse %}reversed{% endif %}">
+        <div class="col-md text-with-bg-column p-3 lazyload {{ section.settings.image_bg_behaviour }} {{ colorize_invert_style }}"
+            style="--col-text-max-width: {{ content_max_width }};{{ bg_color_style }}"
+            {{ background }}
+            data-sizes="auto">
+          <div class="text-{{ section.settings.description_aligment }}">
+            <h3 class="h-xl-style {% if subtitle != blank %}mb-15{% endif %}">{{ section.settings.heading }}</h3>
+            {% if subtitle != blank %}
+              <div class="h-sub w-800" style="font-size: {{ settings.font_heading_subtitle_font_size }}px;">{{ subtitle }}</div>
+            {% endif %}
+            {{ section.settings.description }}
+          </div>
+        </div>
+        <div class="col-md col-md-custom d-flex align-items-center position-relative" style="--col-width-md: {{ section.settings.image_column_width }}%">
+          {%- capture image_1 -%}
+            {% render 'image-container',
+              image: section.settings.image,
+              image_default: image_default,
+              padding_no_bg: 66.17,
+              hover_scale: false,
+              class_ic: 'image-bg-wrap-md ic--bg-cover w-100 z-index-over position-relative',
+              round: 0,
+              style: ic_style
+            %}
+          {%- endcapture -%}
+          {%- capture image_2 -%}
+            {% render 'image-container',
+              image: section.settings.image_2,
+              image_default: image_default,
+              padding_no_bg: 66.17,
+              hover_scale: false,
+              class_ic: 'image-bg-wrap-md ic--bg-cover w-100 z-index-over position-relative',
+              round: 0,
+              style: ic_style
+            %}
+          {%- endcapture -%}
+          {%- if section.settings.image_2 != blank -%}
+            <image-compare data-options='{"verticalMode": false,  "controlColor": "#fff", "showLabels": false, "labelOptions": {"before": "BEFORE","after": "AFTER"}}'>
+              <div class="image-compare">
+                {{ image_1 }}
+                {{ image_2 }}
+              </div>
+            </image-compare>
+          {%- else -%}
+            {{ image_1 }}
+          {%- endif -%}
+        </div>
+      </div>
+      {%- if button_show_more -%}
+        <div class="btn-showmore-wrap text-center mt-3">
+          <a href="{{ section.settings.button_url }}" class="btn {{ section.settings.button_color }} btn--showmore">{{ section.settings.button_text }}</a>
+        </div>
+      {%- endif -%}
+    </div>
+  {%- elsif section.settings.layout == 'layout_6' -%}
+    <div class="svg-mask svg-mask--cloud p-5 py-sm-7 mx-auto lazyload {{ section.settings.image_bg_behaviour }} {{ colorize_invert_style }} {% if bg_color_style == blank %}bg-alt{% endif %}"
+        style="--col-text-max-width: {{ content_max_width }};{{ bg_color_style }}"
+        {{ background }}
+        data-sizes="auto">
+      <div class="title-wrap text-{{ section.settings.description_aligment }}">
+        {% render 'section-heading' %}
+      </div>
+      <div class="text-{{ section.settings.description_aligment }}">
+        {{ section.settings.description }}
+      </div>
+      {%- if button_show_more -%}
+        <div class="btn-showmore-wrap text-{{ section.settings.description_aligment }} mt-3 mt-md-4">
+          <a href="{{ section.settings.button_url }}" class="btn {{ section.settings.button_color }} btn--showmore">{{ section.settings.button_text }}</a>
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</div>
+{% render 'section-wrapper' %}
+{% schema %}
+  {
+    "name": "Text with image",
+    "tag": "section",
+    "settings": [
+      {
+        "type": "header",
+        "content": "SECTION GENERAL"
+      },
+      {
+        "type": "checkbox",
+        "id": "section_animation",
+        "label": "Enable soft appearing of section",
+        "default": true,
+        "info": "Global sections animation disabling in Theme Settings / General / Sections. AUTODISABLED if section has top or bottom separator."
+      },
+      {
+        "type": "header",
+        "content": "Layout"
+      },
+      {
+        "type": "select",
+        "id": "layout",
+        "label": "Select design variant",
+        "options": [
+          {
+            "value": "layout_1",
+            "label": "Image above the text"
+          },
+          {
+            "value": "layout_2",
+            "label": "Centered with background"
+          },
+          {
+            "value": "layout_3",
+            "label": "Image on the left (has reverse)"
+          },
+          {
+            "value": "layout_4",
+            "label": "Image on the left with background (has reverse)"
+          },
+          {
+            "value": "layout_5",
+            "label": "Image on the right (has reverse)"
+          },
+          {
+            "value": "layout_6",
+            "label": "Text inside the cloud"
+          }
+        ],
+        "default": "layout_1"
+      },
+      {
+        "type": "checkbox",
+        "id": "side_spaces",
+        "label": "Side spaces",
+        "default": true,
+        "info": "only for layout 'Image on the right (has reverse)'"
+      },
+      {
+        "type": "radio",
+        "id": "heading_alignment",
+        "label": "Heading aligment",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          }
+        ],
+        "default": "center"
+      },
+      {
+        "type": "checkbox",
+        "id": "reverse",
+        "label": "Reverse layout",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Content"
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading",
+        "default": "Heading"
+      },
+      {
+        "type": "text",
+        "id": "subtitle",
+        "label": "Subtitle",
+        "default": "Subtitle"
+      },
+      {
+        "type": "richtext",
+        "id": "description",
+        "default": "<p>Our web company consists of web programmers and designers with extensive experience in the web market. Each of us worked as hired worker to create templates for Magento, Shopify, Wordpress and others. We decided to unite our forces and to do projects such as we would like them to be in accordance to our experience in customer support.</p>",
+        "label": "About us"
+      },
+      {
+        "type": "select",
+        "id": "description_aligment",
+        "label": "Text aligment",
+        "options": [
+          {
+            "value": "start",
+            "label": "Start"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "end",
+            "label": "Right"
+          }
+        ],
+        "default": "center",
+        "info": "does not work with all layouts"
+      },
+      {
+        "type": "checkbox",
+        "id": "invert_color",
+        "label": "Invert captions color",
+        "default": false,
+        "info": "Invert color you can set in Theme Settings / General / Colors - General"
+      },
+      {
+        "type": "checkbox",
+        "id": "text_column_max",
+        "label": "Limit the content width",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "text_column_max_width",
+        "min": 300,
+        "max": 1600,
+        "step": 20,
+        "unit": "px",
+        "label": "The content column's width",
+        "default": 460,
+        "info": "The content column's MAX width for Desktop and Layout 3,4,5,6 only"
+      },
+      {
+        "type": "header",
+        "content": "Image"
+      },
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image",
+        "info": "set empty if you want to use 'Image preset'"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_2",
+        "label": "Image 2",
+        "info": "if you need to set Before / After effect"
+      },
+      {
+        "type": "color",
+        "id": "color_placeholder",
+        "label": "Placeholder background loader",
+        "info": "Set the main color of the image (visually softens the appearance of the image)"
+      },
+      {
+        "type": "select",
+        "id": "image_preset",
+        "label": "Image preset",
+        "options": [
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "welcome.png",
+            "label": "Welcome image for Shoes"
+          },
+          {
+            "value": "welcome-pets.png",
+            "label": "Welcome image for Pets"
+          },
+          {
+            "value": "nutrition_girl.png",
+            "label": "Sport girl"
+          }
+        ],
+        "default": "none",
+        "info": "default from theme"
+      },
+      {
+        "type": "range",
+        "id": "image_column_width",
+        "min": 25,
+        "max": 75,
+        "step": 1,
+        "unit": "%",
+        "label": "The image column's width",
+        "default": 50,
+        "info": "The image column's width for Desktop and Layout 3,4,5 only"
+      },
+      {
+        "type": "header",
+        "content": "Background"
+      },
+      {
+        "type": "image_picker",
+        "id": "image_bg",
+        "label": "Background image",
+        "info": "set empty if you want to use 'Background preset'"
+      },
+      {
+        "type": "select",
+        "id": "image_bg_preset",
+        "label": "Background preset",
+        "options": [
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "bg-toys.png",
+            "label": "Background for Toys"
+          },
+          {
+            "value": "bg-welcome.png",
+            "label": "Background for Pets"
+          }
+        ],
+        "default": "none",
+        "info": "default from theme"
+      },
+      {
+        "type": "select",
+        "id": "image_bg_behaviour",
+        "label": "Background behavior",
+        "options": [
+          {
+            "value": "bg-cover",
+            "label": "Cover"
+          },
+          {
+            "value": "bg-contain",
+            "label": "Contain"
+          },
+          {
+            "value": "bg-repeat",
+            "label": "Repeat"
+          }
+        ],
+        "default": "bg-cover"
+      },
+      {
+        "type": "color",
+        "id": "image_bg_placeholder",
+        "label": "Placeholder background color",
+        "info": "Set the main color of the background image / does not work with all layouts"
+      },
+      {
+        "type": "header",
+        "content": "Button"
+      },
+      {
+        "type": "checkbox",
+        "id": "button",
+        "label": "Show",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "button_color",
+        "label": "Button color",
+        "options": [
+          {
+            "value": "btn--default",
+            "label": "Primary"
+          },
+          {
+            "value": "btn--invert",
+            "label": "Secondary"
+          },
+          {
+            "value": "btn--grey",
+            "label": "Third"
+          },
+          {
+            "value": "btn--white",
+            "label": "Fourth"
+          },
+          {
+            "value": "btn--fifth",
+            "label": "Fifth"
+          }
+        ],
+        "default": "btn--invert"
+      },
+      {
+        "type": "text",
+        "id": "button_text",
+        "label": "Caption",
+        "default": "Read more"
+      },
+      {
+        "type": "url",
+        "id": "button_url",
+        "label": "Link"
+      },
+      {
+        "type": "header",
+        "content": "SECTION WIDTH"
+      },
+      {
+        "type": "select",
+        "id": "section_width",
+        "label": "Select width source",
+        "options": [
+          {
+            "value": "global",
+            "label": "Use store width"
+          },
+          {
+            "value": "custom",
+            "label": "Custom width"
+          }
+        ],
+        "default": "global",
+        "info": "Store width you can set in Theme Settings / General"
+      },
+      {
+        "type": "range",
+        "id": "container_max_width",
+        "min": 1178,
+        "max": 1978,
+        "step": 8,
+        "unit": "px",
+        "label": "Custom width",
+        "default": 1178,
+        "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
+      },
+      {
+        "type": "header",
+        "content": "SECTION MARGIN"
+      },
+      {
+        "type": "range",
+        "id": "spacing_sections",
+        "min": 0,
+        "max": 200,
+        "step": 2,
+        "unit": "px",
+        "label": "Vertical space above the section on Desktop",
+        "default": 100
+      },
+      {
+        "type": "checkbox",
+        "id": "use_global_desktop_space",
+        "label": "Use global space on desktop",
+        "default": true,
+        "info": "from Theme Settings / General / Layout"
+      },
+      {
+        "type": "range",
+        "id": "spacing_sections_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Vertical space above the section on Mobile",
+        "default": 70
+      },
+      {
+        "type": "checkbox",
+        "id": "use_global_mobile_space",
+        "label": "Use global space on mobile",
+        "default": true,
+        "info": "from Theme Settings / General / Layout"
+      },
+      {
+        "type": "header",
+        "content": "SECTION PADDING",
+        "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+      },
+      {
+        "type": "range",
+        "id": "spacing_padding_sections",
+        "min": 0,
+        "max": 200,
+        "step": 2,
+        "unit": "px",
+        "label": "Vertical inner padding on Desktop",
+        "default": 100
+      },
+      {
+        "type": "checkbox",
+        "id": "use_global_desktop_space_padding",
+        "label": "Use global inner padding on desktop",
+        "default": true,
+        "info": "from Theme Settings / General / Layout"
+      },
+      {
+        "type": "range",
+        "id": "spacing_padding_sections_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Vertical inner padding on Mobile",
+        "default": 70
+      },
+      {
+        "type": "checkbox",
+        "id": "use_global_mobile_space_padding",
+        "label": "Use global inner padding on Mobile",
+        "default": true,
+        "info": "from Theme Settings / General / Layout"
+      },
+      {
+        "type": "header",
+        "content": "SECTION BACKGROUND"
+      },
+      {
+        "type": "checkbox",
+        "id": "background",
+        "label": "Enable background",
+        "default": false,
+        "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+      },
+      {
+        "type": "select",
+        "id": "background_preset",
+        "label": "Background image - preset",
+        "options": [
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "product-cosmetics-bg.png",
+            "label": "Leaves 1"
+          },
+          {
+            "value": "bottom-cosmetics-bg.png",
+            "label": "Leaves 2"
+          },
+          {
+            "value": "bg-makeup1.png,bg-makeup1-m.png",
+            "label": "Pink and Waves 1"
+          },
+          {
+            "value": "bg-makeup2.png,bg-makeup2-m.png",
+            "label": "Pink and Waves 2"
+          },
+          {
+            "value": "bg-makeup4.png,bg-makeup4-m.png",
+            "label": "Pink and Waves 3"
+          },
+          {
+            "value": "bg-makeup3.png,bg-makeup3-m.png",
+            "label": "Purple Splash"
+          },
+          {
+            "value": "bg-sweets1.png",
+            "label": "Blue Sun Rays"
+          }
+        ],
+        "default": "none",
+        "info": "default from theme"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image - custom on Desktop"
+      },
+      {
+        "type": "select",
+        "id": "background_behavior",
+        "label": "Background image behavior",
+        "options": [
+          {
+            "value": "bg-cover",
+            "label": "Cover"
+          },
+          {
+            "value": "bg-contain",
+            "label": "Contain"
+          },
+          {
+            "value": "bg-repeat",
+            "label": "Repeat"
+          }
+        ],
+        "default": "bg-cover"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image_mobile",
+        "label": "Background image - custom on Mobile",
+        "info": "only if Background image - custom on Desktop selected"
+      },
+      {
+        "type": "select",
+        "id": "background_image_placeholder_type",
+        "label": "Placeholder background color",
+        "options": [
+          {
+            "value": "color_global_primary_bg",
+            "label": "Primary background color"
+          },
+          {
+            "value": "color_global_secondary_bg",
+            "label": "Secondary background color"
+          },
+          {
+            "value": "custom",
+            "label": "Custom color"
+          }
+        ],
+        "default": "color_global_secondary_bg"
+      },
+      {
+        "type": "color",
+        "id": "background_image_placeholder",
+        "label": "Custom - Placeholder background color"
+      },
+      {
+        "type": "header",
+        "content": "SECTION SEPARATOR"
+      },
+      {
+        "type": "header",
+        "content": "Top separator"
+      },
+      {
+        "type": "select",
+        "id": "section_decoration_top",
+        "label": "Shape",
+        "options": [
+          {
+            "value": "global",
+            "label": "Use global separator"
+          },
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "grunge1",
+            "label": "Grunge 1"
+          },
+          {
+            "value": "grunge2",
+            "label": "Grunge 2"
+          },
+          {
+            "value": "grunge3",
+            "label": "Grunge 3"
+          },
+          {
+            "value": "paper",
+            "label": "Paper"
+          },
+          {
+            "value": "mountains",
+            "label": "Mountains"
+          },
+          {
+            "value": "ellipse1",
+            "label": "Ellipse 1"
+          },
+          {
+            "value": "ellipse2",
+            "label": "Ellipse 2"
+          },
+          {
+            "value": "wave1",
+            "label": "Wave 1"
+          },
+          {
+            "value": "wave2",
+            "label": "Wave 2"
+          },
+          {
+            "value": "wave3",
+            "label": "Wave 3"
+          },
+          {
+            "value": "wave4",
+            "label": "Wave 4"
+          },
+          {
+            "value": "wave5",
+            "label": "Wave 5"
+          },
+          {
+            "value": "triangle1",
+            "label": "Triangle 1"
+          },
+          {
+            "value": "triangle2",
+            "label": "Triangle 2"
+          },
+          {
+            "value": "triangle_assymetrical1",
+            "label": "Triangle assymetrical 1"
+          },
+          {
+            "value": "triangle_assymetrical1_flip",
+            "label": "Triangle assymetrical 1 flip"
+          },
+          {
+            "value": "triangle_assymetrical2",
+            "label": "Triangle assymetrical 2"
+          },
+          {
+            "value": "triangle_assymetrical2_flip",
+            "label": "Triangle assymetrical 2 flip"
+          },
+          {
+            "value": "tilt",
+            "label": "Tilt"
+          },
+          {
+            "value": "tilt_flip",
+            "label": "Tilt flip"
+          },
+          {
+            "value": "glaze",
+            "label": "Glaze"
+          }
+        ],
+        "default": "none"
+      },
+      {
+        "type": "select",
+        "id": "section_decoration_top_color_type",
+        "label": "Color",
+        "options": [
+          {
+            "value": "color_global_primary_bg",
+            "label": "Primary background color"
+          },
+          {
+            "value": "color_global_secondary_bg",
+            "label": "Secondary background color"
+          },
+          {
+            "value": "color_header_main_bg",
+            "label": "Header - Middle(main) part color"
+          },
+          {
+            "value": "custom",
+            "label": "Custom color"
+          }
+        ],
+        "default": "color_global_primary_bg"
+      },
+      {
+        "type": "color",
+        "id": "section_decoration_top_color",
+        "label": "Custom - top separator color"
+      },
+      {
+        "type": "header",
+        "content": "Bottom separator"
+      },
+      {
+        "type": "select",
+        "id": "section_decoration_bottom",
+        "label": "Shape",
+        "options": [
+          {
+            "value": "global",
+            "label": "Use global separator"
+          },
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "grunge1",
+            "label": "Grunge 1"
+          },
+          {
+            "value": "grunge2",
+            "label": "Grunge 2"
+          },
+          {
+            "value": "grunge3",
+            "label": "Grunge 3"
+          },
+          {
+            "value": "paper",
+            "label": "Paper"
+          },
+          {
+            "value": "mountains",
+            "label": "Mountains"
+          },
+          {
+            "value": "ellipse1",
+            "label": "Ellipse 1"
+          },
+          {
+            "value": "ellipse2",
+            "label": "Ellipse 2"
+          },
+          {
+            "value": "wave1",
+            "label": "Wave 1"
+          },
+          {
+            "value": "wave2",
+            "label": "Wave 2"
+          },
+          {
+            "value": "wave3",
+            "label": "Wave 3"
+          },
+          {
+            "value": "wave4",
+            "label": "Wave 4"
+          },
+          {
+            "value": "wave5",
+            "label": "Wave 5"
+          },
+          {
+            "value": "triangle1",
+            "label": "Triangle 1"
+          },
+          {
+            "value": "triangle2",
+            "label": "Triangle 2"
+          },
+          {
+            "value": "triangle_assymetrical1",
+            "label": "Triangle assymetrical 1"
+          },
+          {
+            "value": "triangle_assymetrical1_flip",
+            "label": "Triangle assymetrical 1 flip"
+          },
+          {
+            "value": "triangle_assymetrical2",
+            "label": "Triangle assymetrical 2"
+          },
+          {
+            "value": "triangle_assymetrical2_flip",
+            "label": "Triangle assymetrical 2 flip"
+          },
+          {
+            "value": "tilt",
+            "label": "Tilt"
+          },
+          {
+            "value": "tilt_flip",
+            "label": "Tilt flip"
+          },
+          {
+            "value": "glaze",
+            "label": "Glaze"
+          }
+        ],
+        "default": "none"
+      },
+      {
+        "type": "paragraph",
+        "content": "'Global separator' is set in Theme Settings / Separators / Global separator style"
+      },
+      {
+        "type": "select",
+        "id": "section_decoration_bottom_color_type",
+        "label": "Color",
+        "options": [
+          {
+            "value": "color_global_primary_bg",
+            "label": "Primary background color"
+          },
+          {
+            "value": "color_global_secondary_bg",
+            "label": "Secondary background color"
+          },
+          {
+            "value": "color_footer_top_bg",
+            "label": "Footer - Top part color"
+          },
+          {
+            "value": "custom",
+            "label": "Custom color"
+          }
+        ],
+        "default": "color_global_primary_bg"
+      },
+      {
+        "type": "color",
+        "id": "section_decoration_bottom_color",
+        "label": "Custom - bottom separator color"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Text with image / constructor"
+      },
+      {
+        "name": "Text with image / preset Shoes",
+        "settings": {
+          "layout": "layout_1",
+          "heading": "",
+          "subtitle": "",
+          "image_preset": "welcome.png"
+        }
+      },
+      {
+        "name": "Text with image / preset Toys",
+        "settings": {
+          "layout": "layout_2",
+          "subtitle": "",
+          "description": "<p>But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness.</p><p>Nor again is there anyone who loves or pursues or desires to obtain pain of itself, because it is pain, but because occasionally circumstances occur in. the master-builder.</p>",
+          "image_bg_preset": "bg-toys.png",
+          "image_bg_behaviour": "bg-contain"
+        }
+      },
+      {
+        "name": "Text with image / preset image on the left",
+        "settings": {
+          "layout": "layout_3",
+          "subtitle": ""
+        }
+      },
+      {
+        "name": "Text with image / preset Pets",
+        "settings": {
+          "layout": "layout_4",
+          "heading": "elcome",
+          "description": "<p><b>But I must explain to you how all this mistaken</b> idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder.</p>",
+          "image_preset": "welcome-pets.png",
+          "image_bg_preset": "bg-welcome.png",
+          "image_bg_behaviour": "bg-contain"
+        }
+      },
+      {
+        "name": "Text with image / preset image on the right",
+        "settings": {
+          "layout": "layout_5",
+          "image_preset": "nutrition_girl.png",
+          "invert_color": true
+        }
+      },
+      {
+        "name": "Text with image / preset image on the right (no spaces)",
+        "settings": {
+          "layout": "layout_5",
+          "image_preset": "nutrition_girl.png",
+          "invert_color": true,
+          "side_spaces": false
+        }
+      },
+      {
+        "name": "Text inside the cloud / preset Sweets",
+        "settings": {
+          "layout": "layout_6",
+          "text_column_max": true,
+          "text_column_max_width": 960
+        }
+      }
+    ]
+  }
+{% endschema %}

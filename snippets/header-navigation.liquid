@@ -1,0 +1,371 @@
+{% comment %}theme-check-disable ImgLazyLoading, DeprecateLazysizes, TemplateLength, NestedSnippet{% endcomment %}
+<div data-async-reload-css="header-megamenu">
+<mega-menu {% if show_dropdowns == false %}data-ajax="{{ request.path }}?section_id=megamenu&preview_theme_id={{ theme.id }}"{% endif %}>
+  {%- liquid
+    assign default_rgba = 'rgba(0,0,0,0)'
+
+    assign menu_0 = linklists['main-menu-0'].links
+    assign menu_1 = settings.menu.links
+    assign menu_2 = linklists['main-menu-2'].links
+    if menu_0.size > 0
+      assign settings_menu = menu_0
+    endif
+    if menu_1.size > 0
+      assign settings_menu = settings_menu | concat: menu_1
+    endif
+    if menu_2.size > 0
+      assign settings_menu = settings_menu | concat: menu_2
+    endif
+
+    if page.handle == 'intro' and linklists['intro'].links.size > 0
+      assign settings_menu = settings_menu | concat: linklists['intro'].links
+    endif
+
+    assign collections_column_title_style = settings.collections_column_title_style
+
+    if page.handle == 'intro'
+      assign collections_column_title_style = '1'
+    endif
+  -%}
+
+  {% if settings.menu != blank %}
+    {% if settings_menu.size > 0 %}
+      <ul class="mmenu mmenu-js {% if settings.align_center_menu %}text-center{% endif %} {% if section.settings.style == "5" %}first-level-uppercase{% endif %}">
+        {%- assign blocks = section.blocks | where: 'type', 'megamenu' -%}
+        {%- for link in settings_menu -%}
+          {%- liquid
+            assign item = blocks[forloop.index0].settings
+            assign active = false
+            if request.page_type == 'collection' and link.type == 'collection_link'
+              for i in (1..10)
+                assign catalog_handle = 'catalog_' | append: i
+                assign catalog_handle = settings[catalog_handle]
+                assign catalog_links = catalog_links | concat: linklists[catalog_handle].links
+              endfor
+              for link_check in catalog_links
+                assign match = link_check.links | where: 'url', collection.url | first
+                if match and link_check.url == link.url
+                  assign active = true
+                  break
+                endif
+              endfor
+            endif
+          -%}
+          {%- if item != blank and item.layout != 'default' -%}
+            {%- case item.layout -%}
+              {%- when 'fullwidth' -%}
+                <li class="mmenu-item--mega{% if link.current %} active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>
+                  {% render 'header-navigation-component-link', link: link, level: 1, span: true, show_image_icons: false, layout: 'megamenu' %}
+                  {%- if show_dropdowns != false and link.links.size > 0 -%}
+                    <div class="mmenu-submenu mmenu-submenu--fullboxed secondary-color">
+                    <div class="mmenu-submenu-inside">
+                      <div class="container-fluid">
+                        <div class="container">
+                          <div class="mmenu-cols column-2">
+                            {%- for childlink in link.links limit: 4 -%}
+                              <div class="mmenu-col">
+                                <h3 class="submenu-title column-caption-style-{{ collections_column_title_style }}">
+                                  {% render 'header-navigation-component-link', link: childlink, level: 2, show_image_icons: false, show_children: false, layout: 'megamenu-dropdown' %}
+                                </h3>
+                                {% if childlink.links != blank %}
+                                  <ul class="submenu-list">
+                                    {% for grandchildlink in childlink.links %}
+                                    <li>
+                                      {% render 'header-navigation-component-link', link: grandchildlink, level: 3, layout: 'megamenu-dropdown' %}
+                                    </li>
+                                    {% endfor %}
+                                  </ul>
+                                {% endif %}
+                              </div>
+                            {%- endfor -%}
+                          </div>
+                          {% for i in (1..2) %}
+                            {% capture preview %}image_{{ i }}_{{ item.layout }}{% endcapture %}
+                            {% capture color_placeholder %}color_placeholder_image_{{ i }}_{{ item.layout }}{% endcapture %}
+                            {%- liquid
+                              assign ic_style = ''
+                              if item[color_placeholder] != default_rgba and item[color_placeholder] != blank
+                                assign ic_style = '--placeholder-bg: ' | append: item[color_placeholder] | append: ';'
+                              endif
+                            -%}
+                            {% capture url %}image_{{ i }}_href_{{ item.layout }}{% endcapture %}
+                            {% capture caption_1 %}image_{{ i }}_caption_1_{{ item.layout }}{% endcapture %}
+                            {% capture caption_2 %}image_{{ i }}_caption_2_{{ item.layout }}{% endcapture %}
+                            {% capture invert %}image_{{ i }}_captions_invert_{{ item.layout }}{% endcapture %}
+                            <div class="mmenu-right width-25">
+                              <flow-type>
+                                <a {% if item[url] %}href="{{ item[url] }}"{% endif %} class="bnr to-center to-bottom text-center image-hover-scale {% if item[invert] %}colorize-invert{% endif %}" data-fontratio="2.63">
+                                  {% render 'image-container',
+                                    image: item[preview],
+                                    padding_no_bg: 156.65,
+                                    sizes: '235px',
+                                    class_ic: 'bnr-img',
+                                    width_times: 3,
+                                    style: ic_style
+                                  %}
+                                  <div class="bnr-caption" style="--padding: 18% 10%; --padding-mobile: 18% 10%; --caption-width: 100%; --caption-width-mobile: 80%;">
+                                    <div class="bnr-text" style="font-size: .12em; line-height: 1.4em; font-weight: {{ settings.font_weight_600 }};">{{ item[caption_1] }}</div>
+                                    <div class="bnr-text mt-xs" style="font-family: var(--heading-font-family); font-size: .25em; line-height: 1.4em; font-weight: {{ settings.font_weight_600 }}">{{ item[caption_2] }}</div>
+                                  </div>
+                                </a>
+                              </flow-type>
+                            </div>
+                          {%- endfor -%}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {%- endif -%}
+                </li>
+              {%- when 'columns' -%}
+                <li class="mmenu-item--mega{% if link.current %} active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>
+                  {% render 'header-navigation-component-link', link: link, level: 1, span: true, show_image_icons: false, layout: 'megamenu' %}
+                  {%- if show_dropdowns != false and link.links.size > 0 -%}
+                    <div class="mmenu-submenu mmenu-submenu--fullboxed secondary-color">
+                    <div class="mmenu-submenu-inside">
+                      <div class="container-fluid">
+                        <div class="container">
+                          <div class="mmenu-cols column-{{ item.columns_columns_count }}">
+                            {%- for childlink in link.links -%}
+                              <div class="mmenu-col">
+                                <h3 class="submenu-title column-caption-style-{{ collections_column_title_style }}">
+                                  {% render 'header-navigation-component-link', link: childlink, level: 2, show_image_icons: false, show_children: false, layout: 'megamenu-dropdown' %}
+                                </h3>
+                                {% if childlink.links != blank %}
+                                  <ul class="submenu-list">
+                                    {% for grandchildlink in childlink.links %}
+                                    <li>
+                                      {% render 'header-navigation-component-link', link: grandchildlink, level: 3, layout: 'megamenu-dropdown' %}
+                                    </li>
+                                    {% endfor %}
+                                  </ul>
+                                {% endif %}
+                              </div>
+                            {%- endfor -%}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {%- endif -%}
+                </li>
+              {%- when 'boxed' -%}
+                <li class="mmenu-item--mega{% if link.current %} active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>
+                  {% render 'header-navigation-component-link', link: link, level: 1, span: true, show_image_icons: false, layout: 'megamenu' %}
+                  {%- if show_dropdowns != false and link.links.size > 0 -%}
+                    <div class="mmenu-submenu mmenu-submenu--boxed secondary-color">
+                      <div class="mmenu-submenu-inside">
+                        <div class="container">
+                          <div class="mmenu-cols {% if item.boxed_columns_count < 4 -%}column-3 width-75{% else %}column-{{ item.boxed_columns_count }} w-100{% endif %}">
+                            {%- for childlink in link.links limit: item.boxed_columns_count -%}
+                              <div class="mmenu-col">
+                                <h3 class="submenu-title column-caption-style-{{ collections_column_title_style }}">
+                                  {% render 'header-navigation-component-link', link: childlink, level: 2, show_image_icons: false, show_children: false, layout: 'megamenu-dropdown' %}
+                                </h3>
+                                {% if childlink.links != blank %}
+                                  <ul class="submenu-list">
+                                    {% for grandchildlink in childlink.links %}
+                                      <li>
+                                        {% render 'header-navigation-component-link', link: grandchildlink, level: 3, layout: 'megamenu-dropdown' %}
+                                      </li>
+                                    {% endfor %}
+                                  </ul>
+                                {% endif %}
+                              </div>
+                            {%- endfor -%}
+                           {%- unless item.brands == 'no' -%}
+                            <div class="brands-col">
+                              {%- if item.brands == 'manual' -%}
+                                {% capture brands %}
+                                  {%- for i in (1..20) -%}
+                                    {% capture image %}brand_image_{{ i }}{% endcapture %}
+                                    {% capture url %}brand_url_{{ i }}{% endcapture %}
+                                    {%- if settings[image] -%}
+                                      <div class="swiper-slide">
+                                        {% render 'image-container',
+                                          image: settings[image],
+                                          sizes: '80px',
+                                          is_link: true,
+                                          href: settings[url],
+                                          cover: false,
+                                          round: 0,
+                                          bg: false
+                                        %}
+                                      </div>
+                                    {%- endif -%}
+                                  {%- endfor -%}
+                                {% endcapture %}
+                              {%- elsif item.brands == 'automatic' -%}
+                                {% capture brands %}
+                                  {% for product_vendor in shop.vendors limit: 30 %}
+                                    <div class="swiper-slide">
+                                      <a {% if product_vendor.size > 37 %}data-toggle="tooltip" data-tippy-content="{{ product_vendor | escape }}"{% endif %} href="{{ product_vendor | url_for_vendor }}"><span class="image-container ic--border ic--hover-text-border image-off"><span>{{ product_vendor | truncate: 37, '..' }}</span></span></a>
+                                    </div>
+                                  {% endfor %}
+                                {% endcapture %}
+                              {%- endif -%}
+                              {%- assign brands = brands | strip -%}
+                              {%- if brands.size > 0 -%}
+                                <h3 class="submenu-title column-caption-style-{{ collections_column_title_style }}">
+                                  {% if settings.btm_row_title_url %}
+                                    <a href="{{ settings.btm_row_title_url }}">
+                                  {% else %}
+                                    <span>
+                                  {% endif %}
+                                  {{ settings.btm_row_title }}
+                                  {% if settings.btm_row_title_url %}
+                                    </a>
+                                  {% else %}
+                                    </span>
+                                  {% endif %}
+                                </h3>
+
+                                <div class="brands-mmenu mt-2">
+                                  <swiper-carousel>
+                                    <div class="swiper-container">
+                                      <div class="swiper-wrapper">
+                                        {{ brands }}
+                                      </div>
+                                    </div>
+                                    <div class="swiper-pagination d-none"></div>
+                                    <div class="swiper-arrows-carousel swiper-arrows-carousel--visible">
+                                      <div class="swiper-button-next"></div>
+                                      <div class="swiper-button-prev"></div>
+                                    </div>
+                                    <script type="application/json">
+                                      {
+                                        "pagination": {
+                                          "el": ".brands-mmenu .swiper-pagination",
+                                          "clickable": true
+                                        },
+                                        "navigation": {
+                                          "nextEl": ".brands-mmenu .swiper-button-next",
+                                          "prevEl": ".brands-mmenu .swiper-button-prev"
+                                        },
+                                        "watchOverflow": true,
+                                        "slidesPerView": 6,
+                                        "spaceBetween": 20
+                                      }
+                                    </script>
+                                  </swiper-carousel>
+                                </div>
+                              {%- endif -%}
+                            </div>
+                           {%- endunless -%}
+                          </div>
+
+                          {%- if item.boxed_columns_count < 4 -%}
+                            {%- assign i = 1 -%}
+                            {% capture preview %}image_{{ i }}_{{ item.layout }}{% endcapture %}
+                            {% capture color_placeholder %}color_placeholder_image_{{ i }}_{{ item.layout }}{% endcapture %}
+                              {%- liquid
+                                assign ic_style = ''
+                                if item[color_placeholder] != default_rgba and item[color_placeholder] != blank
+                                  assign ic_style = '--placeholder-bg: ' | append: item[color_placeholder] | append: ';'
+                                endif
+                              -%}
+                            {% capture url %}image_{{ i }}_href_{{ item.layout }}{% endcapture %}
+                            {% capture caption_1 %}image_{{ i }}_caption_1_{{ item.layout }}{% endcapture %}
+                            {% capture caption_2 %}image_{{ i }}_caption_2_{{ item.layout }}{% endcapture %}
+                            {% capture invert %}image_{{ i }}_captions_invert_{{ item.layout }}{% endcapture %}
+                            <div class="mmenu-right width-25 has-bnr-h-100">
+                              <flow-type>
+                                <a {% if item[url] %}href="{{ item[url] }}"{% endif %}  class="bnr to-center to-bottom text-center image-hover-scale {% if item[invert] %}colorize-invert{% endif %}" data-fontratio="2.63">
+                                  {% render 'image-container',
+                                    image: item[preview],
+                                    padding_no_bg: 157,
+                                    sizes: '235px',
+                                    class_ic: 'bnr-img',
+                                    width_times: 3,
+                                    style: ic_style
+                                  %}
+                                  <div class="bnr-caption h-100" style="--padding: 18% 10%; --padding-mobile: 18% 10%; --caption-width: 100%; --caption-width-mobile: 80%;">
+                                    <div class="bnr-text" style="font-size: .12em; line-height: 1.4em; font-weight: {{ settings.font_weight_600 }};">{{ item[caption_1] }}</div>
+                                    <div class="bnr-text mt-xs" style="font-family: var(--heading-font-family); font-size: .25em; line-height: 1.4em; font-weight: {{ settings.font_weight_600 }}">{{ item[caption_2] }}</div>
+                                    {%- if item.button_text -%}
+                                      <div class="bnr-btn-wrap mt-auto">
+                                        <div class="btn">{{ item.button_text }}</div>
+                                      </div>
+                                    {%- endif -%}
+                                  </div>
+                                </a>
+                              </flow-type>
+                            </div>
+                          {%- endif -%}
+
+                        </div>
+                      </div>
+                    </div>
+                  {%- endif -%}
+                </li>
+                {%- when 'popup' -%}
+                  <li {{ block.shopify_attributes }}  class="mmenu-item--simple {% if link.current %} active{% endif %}">
+                    {%- liquid
+                      assign section_param= '?section_id=async-catalog-popup'
+                      if request.page_type == 'collection'
+                        assign question_mark = '?'
+                        assign collection_url_parts = collection.url | split: question_mark
+                        if collection_url_parts.size > 1
+                          assign collection_url = collection.url | append: section_param
+                          assign collection_url_parts = collection_url | split: question_mark
+                          assign collection_url = ''
+                          for part in collection_url_parts
+                            assign collection_url = collection_url | append: ampersand_mark | append: part | append: question_mark
+                            assign question_mark = ''
+                            if forloop.index > 1
+                              assign ampersand_mark = '&amp;'
+                            endif
+                          endfor
+                        else
+                          assign collection_url = collection.url | append: section_param
+                        endif
+                      else
+                        assign collection_url = routes.root_url | append: section_param
+                      endif
+                    -%}
+                    {% render 'header-navigation-component-link', link: link, span: true, popup: true, collection_url: collection_url, layout: 'megamenu' %}
+                  </li>
+              {%- endcase -%}
+            {%- else -%}
+              <li class="mmenu-item--simple{% if link.current or active %} active{% endif %}"{% if link.current %} aria-current="page"{% endif %}>
+                {% render 'header-navigation-component-link', link: link, level: 1, span: true, show_image_icons: false, layout: 'megamenu' %}
+                {%- if link.links != blank and show_dropdowns != false -%}
+                  <div class="mmenu-submenu">
+                    {% render 'header-navigation-component-subtitle', link: link, show_image_icons: false %}
+                    <ul class="submenu-list">
+                      {%- for childlink in link.links -%}
+                        <li>
+                          {% render 'header-navigation-component-link', link: childlink, fw: true, level: 2 %}
+                          {%- if childlink.links != blank -%}
+                            <div class="submenu-list-wrap">
+                              {% render 'header-navigation-component-subtitle', link: childlink %}
+                              <ul class="submenu-list">
+                                {%- for grandchildlink in childlink.links -%}
+                                  <li {% if grandchildlink.url == childlink.url %}class="has-parent-active"{% endif %}>
+                                    {% render 'header-navigation-component-link', link: grandchildlink, level: 3, layout: 'megamenu-dropdown' %}
+                                  </li>
+                                {%- endfor -%}
+                              </ul>
+                            </div>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </div>
+                {%- endif -%}
+            </li>
+          {%- endif -%}
+        {%- endfor -%}
+      </ul>
+    {% endif %}
+{% endif %}
+</mega-menu>
+</div>
+
+{%- if settings.header_navigation_popup_load_on_click -%}
+  <div class="modal-wrap mmenu js-modal-wrap-mmenu" style="display: none;" id="menuPopup01"><div data-load="loading"></div></div>
+{%- else -%}
+  <div class="modal-wrap mmenu dropdn-modal-slide" id="menuPopup01" style="display: none;">
+    {% render 'catalog-popup' %}
+  </div>
+{%- endif -%}

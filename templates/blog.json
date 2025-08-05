@@ -1,0 +1,34 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-blog",
+      "blocks": {},
+      "block_order": [
+        "66171bd6-2ff6-4239-8d1d-0e62ebbf5485",
+        "c472c4df-3554-435c-a7ad-ff64424c31e5",
+        "516dabd4-9822-43c7-a946-da04a5973845"
+      ],
+      "settings": {
+        "section_width": "global",
+        "container_max_width": 1178,
+        "spacing_sections": 46,
+        "use_global_desktop_space": false,
+        "spacing_sections_mobile": 20,
+        "use_global_mobile_space": false,
+        "spacing_padding_sections": 100,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "layout": "collage",
+        "sidebar": "left",
+        "show_image": true,
+        "infinite_scroll": true,
+        "show_date": true,
+        "show_author": false
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

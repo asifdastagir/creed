@@ -1,0 +1,1124 @@
+{% comment %}theme-check-disable UnusedAssign, SyntaxError{% endcomment %}
+{%- liquid
+  assign layout = 'index-gallery'
+  assign default_rgba = 'rgba(0,0,0,0)'
+
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+      assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+
+  assign columns = section.settings.columns
+
+  if columns == '6' and  store_width < 1701
+    assign columns = '5'
+  endif
+
+  if columns == '5' and  store_width < 1466
+    assign columns = '4'
+  endif
+
+  if store_width > 1178
+    assign image_k = store_width | divided_by: 1178.00 | round: 2
+  endif
+-%}
+{{ 'gallery' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{% capture style %}
+--column-count: {{ columns }}; {% if columns == "2" %}--column-count-md: 2;{% endif %}
+{% endcapture %}
+{%- liquid
+  case columns
+  when "4"
+    assign sizes_desktop = '(min-width: 1200px) 264px, (min-width: 1025px) 215px, (min-width: 768px) 162px'
+  when "3"
+    assign sizes_desktop = '(min-width: 1200px) 350px, (min-width: 1025px) 215px, (min-width: 768px) 226px'
+  else
+    assign sizes_desktop = '(min-width: 1200px) 540px, (min-width: 1025px) 215px, (min-width: 768px) 354px'
+  endcase
+
+  assign sizes_mobile = ', (min-width: 576px) 162px, (min-width: 321px) 130px, calc(100vw - 30px)'
+
+  assign sizes = sizes_desktop | append: sizes_mobile
+
+  assign columnsNum = columns | plus: 0
+
+  if section.settings.images_auto_height
+    assign padding_no_bg = section.settings.images_auto_height_padding
+    assign padding = padding_no_bg
+  else
+    assign padding_no_bg = 100
+    assign padding = false
+  endif
+
+-%}
+{% render 'section-wrapper', placement: 'top' %}
+
+<div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+  <div class="{% render 'section-container-class', layout: layout %}">
+    {% render 'section-heading', section: section %}
+
+    {%- if section.settings.ticker_mode and section.blocks.size > 5 -%}
+      {%- liquid
+        assign items_per_row = 6
+        assign item_sec = 3
+
+        assign count = section.blocks.size | divided_by: items_per_row
+        assign modulo = section.blocks.size | modulo: items_per_row
+
+        unless modulo == 0
+          assign extra = modulo | divided_by: count
+          assign items_per_row = items_per_row | plus: extra
+        endunless
+
+        assign ticker_section_speed_start = items_per_row | times: item_sec
+      -%}
+
+      {%- for i in (1..count) -%}
+        {%- liquid
+          assign offset = i | minus: 1 | times: items_per_row
+          assign ticker_section_speed = offset | plus: ticker_section_speed_start
+        -%}
+        <promo-ticker
+          class="promo-ticker promo-ticker--images promo-ticker--images--{{ section.settings.ticker_mode_size }} heading-font {% unless forloop.first %}mt-3{% endunless %}"
+          style="
+            --ticker-section-bg: none;
+            --ticker-section-color: #0E0D1A;
+            --ticker-section-link-color: var(--custom-color);
+            --ticker-section-link-color-hover: var(--ticker-section-link-color);
+            --ticker-section-font-size: 80px;
+            --ticker-section-font-size-mobile: 50px;
+            --ticker-section-font-weight: 900;
+            --ticker-section-y-padding: 0px;
+            --ticker-section-gap: 0;
+            --ticker-section-speed: {{ ticker_section_speed }}s;
+          "
+        >
+            <div class="ticker-scroll">
+              {%- capture items -%}
+                <div class="row flex-nowrap p-0 m-0 row-cols-5 ticker-item">
+                  {%- for block in section.blocks limit: items_per_row, offset: offset -%}
+                    <a {% if block.settings.link != blank %}href="{{ block.settings.link }}"{% endif %} class="col m-0" {{ block.shopify_attributes }}>
+                        {% render 'image-container',
+                          image: block.settings.image,
+                          padding_no_bg: padding_no_bg,
+                          padding: padding,
+                          sizes: '350px'
+                        %}
+                        {% if block.settings.title != blank and block.settings.link != blank %}
+                          <div class="ticker-item-hover">
+                              <h4 class="ticker-item-title">{{ block.settings.title }}</h4>
+                              {%- if block.settings.link -%}
+                                <span class="icon-wrap">{% render 'icon-link' %}</span>
+                              {%- endif -%}
+                          </div>
+                        {%- endif -%}
+                    </a>
+                  {%- endfor -%}
+                </div>
+              {%- endcapture -%}
+              {{ items }}
+              {{ items }}
+              {{ items }}
+            </div>
+        </promo-ticker>
+      {%- endfor -%}
+
+    {%- else -%}
+      <masonry-grid data-masonry-column='{{ columns }}' data-masonry-column-responsive='{"320":1,"575":2,"767":{% if columnsNum > 2 %}3{% else %}2{% endif %},"1024":{% if columnsNum > 3 %}4{% elsif columnsNum > 2 %}3{% else %}2{% endif %}, "1465":{{ columns }} {% if store_width > 1700 and columnsNum > 5 %},"1700":6{% else%}{% if store_width > 1465 and columnsNum > 4 %},"1700":5{% endif %}{% endif %}}' data-masonry-gutter='30'>
+        <div class="gallery-grid masonry-grid-container">
+        {%- for block in section.blocks -%}
+          <div class="gallery-grid-item" {{ block.shopify_attributes }}>
+            {%- liquid
+              assign lazyload = false
+              assign class_img_only = 'fade-up-none'
+              assign lazyload_pass = 10
+
+              if columns == "2"
+                assign lazyload_pass = 4
+              elsif columns == "3"
+                assign lazyload_pass = 8
+              endif
+
+              if forloop.index > lazyload_pass
+                assign lazyload = true
+                assign class_img_only = 'lazyload fade-up'
+              endif
+
+              assign ic_style = ''
+              assign color = block.settings.color_placeholder
+              if color != default_rgba and color != blank
+                assign ic_style = '--placeholder-bg: ' | append: color | append: ';'
+              endif
+            -%}
+            {% render 'image-container',
+              image: block.settings.image,
+              padding_no_bg: padding_no_bg,
+              padding: padding,
+              sizes: sizes,
+              class_img_only: class_img_only,
+              lazyload: lazyload,
+              style: ic_style,
+              image_k: image_k
+            %}
+            <div class="gallery-grid-item-caption">
+              <div class="gallery-grid-item-title">{{ block.settings.title }}</div>
+              <div class="gallery-grid-item-text">{{ block.settings.description }}</div>
+              <div class="gallery-grid-item-links">
+                {% if block.settings.image %}<a href="{{ block.settings.image | image_url: width: 1500 }}" class="gallery-fancybox-link" data-fancybox="gallery" data-caption="{{ block.settings.description }}">{% render 'icon-zoom2' %}</a>{%- endif -%}
+                {%- if block.settings.link -%}
+                  <a href="{{ block.settings.link }}">{% render 'icon-external' %}</a>
+                {%- endif -%}
+              </div>
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    </masonry-grid>
+
+    {%- endif -%}
+
+
+  </div>
+</div>
+{% render 'section-wrapper' %}
+<script src="{{ 'gallery.js' | asset_url }}" defer></script>
+{% schema %}
+{
+  "name": "Gallery",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_animation",
+      "label": "Enable soft appearing of section",
+      "default": true,
+      "info": "Global sections animation disabling in Theme Settings / General / Sections. AUTODISABLED if section has top or bottom separator."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "columns",
+      "label": "Photos per row",
+      "options": [
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "label": "5"
+        },
+        {
+          "value": "6",
+          "label": "6"
+        }
+      ],
+      "default": "4",
+      "info": "5 if store width > 1465 and 6 if store width > 1700"
+    },
+    {
+      "type": "checkbox",
+      "id": "images_auto_height",
+      "label": "Auto height for images",
+      "default": true,
+      "info": "Usefull if images have different dimensions."
+    },
+    {
+      "type": "range",
+      "id": "images_auto_height_padding",
+      "min": 40,
+      "max": 220,
+      "step": 2,
+      "unit": "%",
+      "label": "Aspect ratio for images height",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "ticker_mode",
+      "label": "Ticker mode",
+      "default": false,
+      "info": "Will only turn on if there are more than 5 photos"
+    },
+    {
+      "type": "select",
+      "id": "ticker_mode_size",
+      "label": "Ticker image size",
+      "options": [
+        {
+          "value": "sm",
+          "label": "Small"
+        },
+        {
+          "value": "md",
+          "label": "Middle"
+        },
+        {
+          "value": "lg",
+          "label": "Large"
+        }
+      ],
+      "default": "md"
+    },
+    {
+      "type": "radio",
+      "id": "heading_alignment",
+      "label": "Heading aligment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "default": "Subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "header",
+      "content": "SECTION WIDTH"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Select width source",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use store width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom width"
+        }
+      ],
+      "default": "global",
+      "info": "Store width you can set in Theme Settings / General"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 1178,
+      "max": 1978,
+      "step": 8,
+      "unit": "px",
+      "label": "Custom width",
+      "default": 1178,
+      "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable background",
+      "default": false,
+      "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+    },
+    {
+      "type": "select",
+      "id": "background_preset",
+      "label": "Background image - preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "product-cosmetics-bg.png",
+          "label": "Leaves 1"
+        },
+        {
+          "value": "bottom-cosmetics-bg.png",
+          "label": "Leaves 2"
+        },
+        {
+          "value": "bg-makeup1.png,bg-makeup1-m.png",
+          "label": "Pink and Waves 1"
+        },
+        {
+          "value": "bg-makeup2.png,bg-makeup2-m.png",
+          "label": "Pink and Waves 2"
+        },
+        {
+          "value": "bg-makeup4.png,bg-makeup4-m.png",
+          "label": "Pink and Waves 3"
+        },
+        {
+          "value": "bg-makeup3.png,bg-makeup3-m.png",
+          "label": "Purple Splash"
+        },
+        {
+          "value": "bg-sweets1.png",
+          "label": "Blue Sun Rays"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image - custom on Desktop"
+    },
+    {
+      "type": "select",
+      "id": "background_behavior",
+      "label": "Background image behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image - custom on Mobile",
+      "info": "only if Background image - custom on Desktop selected"
+    },
+    {
+      "type": "select",
+      "id": "background_image_placeholder_type",
+      "label": "Placeholder background color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_secondary_bg"
+    },
+    {
+      "type": "color",
+      "id": "background_image_placeholder",
+      "label": "Custom - Placeholder background color"
+    },
+    {
+      "type": "header",
+      "content": "SECTION SEPARATOR"
+    },
+    {
+      "type": "header",
+      "content": "Top separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_header_main_bg",
+          "label": "Header - Middle(main) part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_top_color",
+      "label": "Custom - top separator color"
+    },
+    {
+      "type": "header",
+      "content": "Bottom separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "paragraph",
+      "content": "'Global separator' is set in Theme Settings / Separators / Global separator style"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_footer_top_bg",
+          "label": "Footer - Top part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_bottom_color",
+      "label": "Custom - bottom separator color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "color",
+          "id": "color_placeholder",
+          "label": "Placeholder background loader",
+          "info": "Set the main color of the image (visually softens the appearance of the image)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gallery",
+      "blocks": [
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image1",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image2",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image3",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image4",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image5",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image6",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image7",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image8",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image9",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image10",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image11",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image12",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gallery - Ticker",
+      "settings": {
+        "ticker_mode": true,
+        "images_auto_height_padding": 48
+      },
+      "blocks": [
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image1",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image2",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image3",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image4",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image5",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image6",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image7",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image8",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image9",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image10",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image11",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image12",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gallery - Ticker - Small",
+      "settings": {
+        "ticker_mode": true,
+        "ticker_mode_size": "sm",
+        "images_auto_height_padding": 100
+      },
+      "blocks": [
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image1",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image2",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image3",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image4",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image5",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image6",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image7",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image8",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image9",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image10",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image11",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "title": "#image12",
+            "description": "Lorem ipsum dolor sit adipiscing elit, sed"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

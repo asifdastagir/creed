@@ -1,0 +1,21 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+<div id="fbt_inner-list"  class="mt-product-global">
+  <h3 class="prd-block-desc-title">{{ 'theme.general.frequently_bought_together' | t }}</h3>
+  {%- if settings.fbt_source == 'collection' -%}
+    <p class="m-0">{{ 'theme.general.fbt_description_before' | t }} <button-animated data-pause="10000" data-delay-start="5000" data-delay-after-stop="0" data-style="swing"><span class="icon-animated-wrap">{% render 'icon-gift' %}</span></button-animated></p>
+  {%- endif -%}
+  <div class="mt-2">
+    <product-form data-multiple data-after-render-events>
+      {%- form 'cart', cart, id: product_form_id, novalidate: 'novalidate', action: routes.cart_update_url -%}
+        {% render 'frequently-bought-together-view-inner-body',
+          layout: layout,
+          prd_collection: prd_collection,
+          section: section,
+          product_form_id: product_form_id,
+          counter: counter,
+          block: block
+        %}
+      {%- endform -%}
+    </product-form>
+  </div>
+</div>

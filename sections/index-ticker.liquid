@@ -1,0 +1,595 @@
+{%- liquid
+  assign layout = 'index-ticker'
+
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign count = 0
+
+  if section.settings.text != blank
+    assign count = count | plus: 1
+    assign text = section.settings.text
+  endif
+
+  if section.settings.text_2 != blank
+    assign count = count | plus: 1
+    assign text = section.settings.text_2
+  endif
+
+  if count == 2
+    assign text = section.settings.text
+    assign text_2 = section.settings.text_2
+  endif
+
+  assign ticker_section_color = ''
+  assign color_text = section.settings.color_text
+
+  if color_text != blank and color_text != 'rgba(0,0,0,0)'
+    assign ticker_section_color = '--ticker-section-color:' | append: color_text | append: ';'
+  endif
+
+  assign ticker_section2_color = ''
+  assign color_text = section.settings.color_text2
+
+  if color_text != blank and color_text != 'rgba(0,0,0,0)'
+    assign ticker_section2_color = '--ticker-section-color:'| append: color_text | append: ';'
+  endif
+
+  assign image_bg_preset = section.settings.image_bg_preset
+
+  if image_bg_preset == 'none'
+    assign image_bg_preset = false
+  endif
+
+-%}
+
+{%- if count == 1 -%}
+    <div class="holder mt-global  position-relative {% render 'section-class', section: section, layout: layout %}" {% render 'section-style', section: section, layout: layout %} {% if section.settings.under_slider %}data-slider-under{% endif %}>
+        {%- if section.settings.layout == 'large' -%}
+          <div class="container position-absolute full-absolute">
+              <div class="image-container image-bg-wrap ic--bg-cover"{%- if section.settings.background -%} style="z-index:0"{%- endif -%}>
+                  {% render 'image-container',
+                    image: section.settings.image_bg,
+                    image_default: image_bg_preset,
+                    class_img: 'w-100',
+                    cover: false,
+                    hover_scale: false,
+                    bg: false
+                  %}
+              </div>
+          </div>
+        {%- endif -%}
+
+        <div class="container-fluid px-0 {% if section.settings.layout == 'large' -%}position-relative {% if section.settings.image_bg != blank or image_bg_preset != false -%}py-global{% endif %}{% endif %}">
+            {%- if section.settings.layout == 'default' -%}
+              <promo-ticker class="promo-ticker {% if rtl != blank %}reversed{% endif %}" style="
+                  --ticker-section-speed: {{ section.settings.badge_sale_ticker_speed }}s;
+                  {{ ticker_section_color }};
+                  ">
+                  <div class="ticker-scroll">
+                      {%- for i in (0..6) -%}
+                          <div class="ticker-item">{% if section.settings.megaphone %}<div class="icon-wrap-lg">{% render 'icon-megaphone' %}</div> {% endif %}{{ text }}</div>
+                      {%- endfor -%}
+                  </div>
+              </promo-ticker>
+
+            {%- else -%}
+              <promo-ticker
+                class="promo-ticker promo-ticker--style3 heading-font {% if rtl != blank %}reversed{% endif %}"
+                style="
+                  --ticker-section-bg: none;
+                  {{ ticker_section_color }}
+                  --ticker-section-font-size: {{ section.settings.font_size_desktop }}px;
+                  --ticker-section-font-size-mobile: {{ section.settings.font_size_mobile }}px;
+                  --ticker-section-font-weight: {{ section.settings.font_weight }};
+                  --ticker-section-y-padding: 0px;
+                  --ticker-section-gap: 35px;
+                  --ticker-section-speed: {{ section.settings.badge_sale_ticker_speed }}s;
+                ">
+                <div class="ticker-scroll">
+                  {%- for i in (0..6) -%}
+                      <div class="ticker-item">{% if section.settings.megaphone %}<div class="icon-wrap-lg">{% render 'icon-megaphone' %}</div> {% endif %}{{ text }}</div>
+                  {%- endfor -%}
+                </div>
+              </promo-ticker>
+
+              {%- if section.settings.countdown -%}
+                <div class="text-center heading-font mt-5 mt-first-0">
+                  {%- if section.settings.countdown_period != 'none' -%}
+                    <count-down class="single-countdown hide-sec-mobile px-2 py-15 px-sm-5 py-sm-3 mx-auto" style="--text-color: #fff; --single-countdown-bg: #0E0D1A" data-time-expire="{{ section.settings.countdown_period }}"><div>{{ 'theme.general.day' | t }}<div data-days></div></div><div>{{ 'theme.general.hrs' | t }}<div data-hours></div></div><div>{{ 'theme.general.min' | t }}<div data-minutes></div></div><div>{{ 'theme.general.sec' | t }}<div data-seconds></div></div></count-down>
+                  {%- endif -%}
+
+                  {%- if section.settings.countdown_text != blank -%}
+                    <div class="single-countdown-info mt-15" {% if section.settings.color_countdown_text != blank and section.settings.color_countdown_text != 'rgba(0,0,0,0)' %}style="color: {{ section.settings.color_countdown_text }}"{% endif %}>{{ section.settings.countdown_text }}</div>
+                  {%- endif -%}
+
+                  {%- if section.settings.button -%}
+                    <div class="mt-3 mt-lg-5">
+                      <a href="{{ section.settings.button_url }}" class="btn {{ section.settings.button_color }}">{{ section.settings.button_text }}</a>
+                    </div>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+            {%- endif -%}
+        </div>
+    </div>
+
+{%- elsif count == 2 -%}
+  <div class="holder mt-global" {% render 'section-style', section: section %}>
+    <div class="container-fluid px-0 show-on-scroll">
+        <div class="promo-ticker-double">
+            <promo-ticker class="promo-ticker" style="--ticker-section-speed: {{ section.settings.badge_sale_ticker_speed }}s; {{ ticker_section_color }}">
+                <div class="ticker-scroll">
+                  {%- for i in (0..6) -%}
+                    <div class="ticker-item">{% if section.settings.megaphone %}<div class="icon-wrap-lg">{% render 'icon-megaphone' %}</div> {% endif %}{{ text }}</div>
+                  {%- endfor -%}
+                </div>
+            </promo-ticker>
+            <promo-ticker class="promo-ticker promo-ticker--style2 reverse" style="--ticker-section-speed: {{ section.settings.badge_sale_ticker_speed }}s; {{ ticker_section2_color }}">
+                <div class="ticker-scroll">
+                  {%- for i in (0..6) -%}
+                    <div class="ticker-item">{% if section.settings.megaphone %}<div class="icon-wrap-lg">{% render 'icon-megaphone' %}</div> {% endif %}{{ text_2 }}</div>
+                  {%- endfor -%}
+                </div>
+            </promo-ticker>
+        </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Ticker",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Select design variant for single ticker text line",
+      "options": [
+        {
+          "value": "default",
+          "label": "Default"
+        },
+        {
+          "value": "large",
+          "label": "Large"
+        }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text",
+      "label": "Ticker text",
+      "default": "Lorem ipsum dolor sit amet, consectetur adipisicing."
+    },
+    {
+      "type": "color",
+      "id": "color_text",
+      "label": "'Ticker text' color"
+    },
+    {
+      "type": "inline_richtext",
+      "id": "text_2",
+      "label": "Ticker text 2"
+    },
+    {
+      "type": "color",
+      "id": "color_text2",
+      "label": "'Ticker text 2' color"
+    },
+    {
+      "type": "checkbox",
+      "id": "megaphone",
+      "label": "Show megaphone",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "badge_sale_ticker_speed",
+      "min": 1,
+      "max": 20,
+      "step": 1,
+      "unit": "sec",
+      "label": "Ticker text speed",
+      "default": 6
+    },
+    {
+      "type": "checkbox",
+      "id": "under_slider",
+      "label": "Sew under the slider",
+      "default": false,
+      "info": "Slideshow must be fullheight and first in the order, Icons section has to be the second in order. Only for single ticker line (not double)"
+    },
+    {
+      "type": "header",
+      "content": "IF LARGE TICKER TEXT"
+    },
+    {
+      "type": "range",
+      "id": "font_size_desktop",
+      "min": 16,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size on Desktop",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "min": 14,
+      "max": 80,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size on Mobile",
+      "default": 60
+    },
+    {
+      "type": "select",
+      "id": "font_weight",
+      "label": "Font weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "300"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        },
+        {
+          "value": "800",
+          "label": "800"
+        },
+        {
+          "value": "900",
+          "label": "900"
+        }
+      ],
+      "default": "900"
+    },
+    {
+      "type": "checkbox",
+      "id": "countdown",
+      "label": "Show countdown",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "countdown_period",
+      "label": "Countdown",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "halfhour",
+          "label": "by the end of current half an hour"
+        },
+        {
+          "value": "hour",
+          "label": "by the end of current hour"
+        },
+        {
+          "value": "day",
+          "label": "by the end of current day"
+        },
+        {
+          "value": "week",
+          "label": "by the end of current week"
+        },
+        {
+          "value": "month",
+          "label": "by the end of current month"
+        },
+        {
+          "value": "year",
+          "label": "by the end of current year"
+        }
+      ],
+      "default": "week",
+      "info": "counter automatically continues from the beginning after completion"
+    },
+    {
+      "type": "text",
+      "id": "countdown_text",
+      "label": "Countdown description",
+      "default": "** Use Cupone Code  <span class=\"theme-color\">CYBER</span>"
+    },
+    {
+      "type": "color",
+      "id": "color_countdown_text",
+      "label": "'Countdown description' color"
+    },
+    {
+      "type": "header",
+      "content": "Button",
+      "info": "only if Heading layout set 'Left' or checked the Banner for carousel"
+    },
+    {
+      "type": "checkbox",
+      "id": "button",
+      "label": "Show",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Caption",
+      "default": "View all sales"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Link"
+    },
+    {
+      "type": "select",
+      "id": "button_color",
+      "label": "Button color",
+      "options": [
+        {
+          "value": "btn--default",
+          "label": "Primary"
+        },
+        {
+          "value": "btn--invert",
+          "label": "Secondary"
+        },
+        {
+          "value": "btn--grey",
+          "label": "Third"
+        },
+        {
+          "value": "btn--white",
+          "label": "Fourth"
+        },
+        {
+          "value": "btn--fifth",
+          "label": "Fifth"
+        }
+      ],
+      "default": "btn--invert"
+    },
+    {
+      "type": "header",
+      "content": "Background"
+    },
+    {
+      "type": "select",
+      "id": "image_bg_preset",
+      "label": "Background preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "counter-bg.png",
+          "label": "Electric"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_bg",
+      "label": "Background",
+      "info": "set empty if you want to use 'Background preset'"
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable background",
+      "default": false,
+      "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image - custom on Dekstop"
+    },
+    {
+      "type": "select",
+      "id": "background_behavior",
+      "label": "Background image behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image - custom on Mobile",
+      "info": "only if Background image - custom on Dekstop selected"
+    },
+    {
+      "type": "select",
+      "id": "background_image_placeholder_type",
+      "label": "Placeholder background color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_secondary_bg"
+    },
+    {
+      "type": "color",
+      "id": "background_image_placeholder",
+      "label": "Custom - Placeholder background color"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Ticker",
+      "settings": {
+        "text": "<a href=\"https://shopify.pxf.io/c/2245513/1061744/13624\" target=\"_blank\" title=\"https://shopify.pxf.io/c/2245513/1061744/13624\"><strong>Start your free trial</strong> and enjoy 1 months of Shopify for <strong>$1</strong>/month on select plans.</a>"
+      }
+    },
+    {
+      "name": "Ticker - Double",
+      "settings": {
+        "text": "<a href=\"https://shopify.pxf.io/c/2245513/1061744/13624\" target=\"_blank\" title=\"https://shopify.pxf.io/c/2245513/1061744/13624\"><strong>Start your free trial</strong> and enjoy 1 months of Shopify for <strong>$1</strong>/month on select plans.</a>",
+        "text_2": "<a href=\"https://shopify.pxf.io/c/2245513/1061744/13624\" target=\"_blank\" title=\"https://shopify.pxf.io/c/2245513/1061744/13624\"><strong>Start your free trial</strong> and enjoy 1 months of Shopify for <strong>$1</strong>/month on select plans.</a>",
+        "megaphone": true,
+        "badge_sale_ticker_speed": 10
+      }
+    },
+    {
+      "name": "Ticker - Large",
+      "settings": {
+        "layout": "large",
+        "text": "LAST CHANCE FOR <a href=\"/collections/gamers\" title=\"Gamers\">UP TO  60%</a>",
+        "text_2": "",
+        "megaphone": true,
+        "badge_sale_ticker_speed": 20,
+        "under_slider": false
+      }
+    },
+    {
+      "name": "Ticker - Large + Countdown",
+      "settings": {
+        "layout": "large",
+        "text": "❅   CHRISTMAS <a href=\"https://shopify.pxf.io/c/2245513/1061744/13624\" target=\"_blank\" title=\"https://shopify.pxf.io/c/2245513/1061744/13624\">SALE</a>   ❅",
+        "color_text": "rgba(0,0,0,0)",
+        "text_2": "",
+        "megaphone": false,
+        "badge_sale_ticker_speed": 18,
+        "countdown": true,
+        "countdown_period": "year",
+        "countdown_text": "** Use Cupone Code  <span class=\"theme-color\">2024</span>",
+        "color_countdown_text": "#ffffff",
+        "button": true,
+        "button_text": "View all sales",
+        "button_url": "#",
+        "button_color": "btn--default",
+        "image_bg_preset": "counter-bg.png"
+      }
+    }
+  ]
+}
+{% endschema %}

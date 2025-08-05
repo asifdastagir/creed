@@ -1,0 +1,33 @@
+{%- if settings.header_cart_fbt -%}
+  {%- liquid assign product_form_id = 'header-cart-' -%}
+  <h3 class="minicart-drop-title">{{ 'theme.general.frequently_bought_together' | t }}</h3>
+  <product-form data-multiple data-after-render-events>
+    {%- form 'cart', cart, class: 'form-bought-with', id: product_form_id, novalidate: 'novalidate', action: routes.cart_update_url -%}
+      <div class="minicart-drop-content js-dropdn-content-scroll">
+        {%- if prd_collection -%}
+          {%- for product in prd_collection.products -%}
+            {% render 'product-card-compact'
+              product_id: product.id,
+              product: product,
+              section: section,
+              product_form_id: product_form_id,
+              counter: counter,
+              form_id_prefix_from_section: 'header-cart-'
+            %}
+          {%- endfor -%}
+        {%- endif -%}
+      </div>
+      <div class="minicart-drop-fixed">
+        {% render 'error' %}
+        {% render 'frequently-bought-together-component-add-to-cart', counter: counter, class: 'w-100' %}
+        <div class="row align-items-center mt-1">
+          <div class="col text-end">
+            <div class="custom-form cf--reverse">
+              {% render 'frequently-bought-together-component-select-checkbox' product_form_id: product_form_id, counter: counter %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {%- endform -%}
+  </product-form>
+{%- endif -%}

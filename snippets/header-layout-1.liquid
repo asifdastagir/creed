@@ -1,0 +1,77 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- liquid
+  if settings.mobile_bottom_navigation_account == 'header' and settings.mobile_bottom_navigation_wishlist == 'header' and settings.mobile_bottom_navigation_cart == 'header'
+    assign class = class | append: ' icons-compact-mobile'
+  endif
+
+  render 'header-sticky', section: section
+-%}
+<div class="hdr {{ class }}">
+  <div class="hdr-content">
+    <div class="container">
+      <div class="row justify-content-between">
+        <div class="hdr-logo col-auto" id="Header-logo-{{ section.id }}">
+          {% render 'logo',
+            header_transparent: header_transparent,
+            logo: logo,
+            svg_logo: svg_logo,
+            svg_logo_name: svg_logo_name,
+            logo_transparent: logo_transparent,
+            svg_logo_transparent: svg_logo_transparent,
+            svg_logo_name_transparent: svg_logo_name_transparent,
+            logo_width: section.settings.logo_width,
+            logo_width_mobile: section.settings.logo_width_mobile,
+            prefix: 'Header-logo-',
+            id: section.id,
+            class: 'logo'
+          %}
+        </div>
+        <div class="hdr-nav hide-mobile nav-holder text-center col" role="navigation">
+          {% render 'header-navigation', show_dropdowns: false, section: section %}
+        </div>
+        <div class="hdr-links-wrap col-auto ms-lg-auto">
+          <div class="hdr-inline-link hide-mobile">
+            {%- liquid
+              render 'header-settings', id1: 'languages', id2: 'currencies'
+              render 'header-get-help'
+              render 'header-search'
+              render 'header-account'
+              render 'header-wishlist'
+              render 'header-cart'
+            -%}
+          </div>
+          <div class="hdr-inline-link show-mobile">
+            {% render 'header-get-help' %}
+            {%- if settings.phone != blank -%}
+              <a href="tel:{{ settings.phone }}" title="tel:{{ settings.phone }}" class="dropdn-link">
+                <span class="icon-wrap">{% render 'icon-phone' %}</span>
+              </a>
+            {%- endif -%}
+            {%- liquid
+              render 'header-search-mobile-toggle'
+
+              if settings.mobile_bottom_navigation_account == 'header'
+                render 'header-account-icon', position: 'bottom'
+              endif
+
+              if settings.mobile_bottom_navigation_wishlist == 'header'
+                render 'header-wishlist-icon'
+              endif
+
+              if request.page_type == 'cart'
+                assign tag = 'shipping-calculator-cart'
+              endif
+
+              if settings.mobile_bottom_navigation_cart == 'header'
+                render 'header-cart-icon', tag: tag
+              endif
+
+              render 'header-burger'
+            -%}
+          </div>
+        </div>
+      </div>
+      {% render 'header-search-disclosed', class: "hdr-open-search-form" %}
+    </div>
+  </div>
+</div>

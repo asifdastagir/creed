@@ -1,0 +1,14 @@
+{%- for i in (1..5) -%}
+    {% capture image %}payment_image_{{ i }}{% endcapture %}
+    {%- if settings[image] != blank -%}
+    <div class="col-auto">
+        {% render 'image-container',
+            image: settings[image],
+            sizes: '84px',
+            cover: false,
+            bg: false,
+            hover_scale: false
+        %}
+    </div>
+    {%- endif -%}
+{%- endfor -%}

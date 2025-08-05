@@ -1,0 +1,54 @@
+{%- unless settings.catalog_mode -%}
+  {%- if shop.customer_accounts_enabled -%}
+    <div {%  if settings.enable_account_popup %}class="dropdn dropdn_account"{% endif %}>
+      {%- if customer -%}
+        {%- if position == 'bottom' -%}
+          <a href="{{ routes.account_url }}" class="dropdn-link" data-tippy-content="{{ 'customer.account_fallback' | t | escape }}" data-tippy-placement="top">
+            <span class="icon-wrap">{% render 'icon-user' %}</span>
+            <span class="dropdn-link-sm-text">{{ 'theme.general.account' | t }}</span>
+          </a>
+        {%- else -%}
+          <a href="{{ routes.account_url }}" class="dropdn-link" data-tippy-content="{{ 'customer.account_fallback' | t | escape }}" data-tippy-placement="top">
+            {%- if icon != false -%}
+              <span class="icon-wrap">{% render 'icon-user' %}</span>
+              <span class="visually-hidden">{{ 'theme.general.my_account' | t }}</span>
+            {%- else -%}
+              <span class="dropdn-link-sm-text">{{ 'theme.general.my_account' | t }}</span>
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+      {% else -%}
+        {%- if position != 'bottom' and settings.enable_account_popup -%}
+          <account-popup data-ajax='{{ routes.root_url }}?section_id=async-account-login' data-selector="#loginModal" data-animation-effect="material-out">
+        {%- endif -%}
+          <a href="{{ routes.account_url }}" class="dropdn-link" data-tippy-content="{{ 'customer.log_in' | t | escape }}" data-tippy-placement="top">
+            {%- if icon != false -%}
+              <span class="icon-wrap">{% render 'icon-user' %}</span>
+              <span class="visually-hidden">{{ 'theme.general.my_account' | t }}</span>
+            {%- endif -%}
+            {%- if icon == false or position == 'bottom' -%}
+              <span class="dropdn-link-sm-text">
+                {%- if position == 'bottom' -%}
+                  {{ 'theme.general.account' | t }}
+                {%- else -%}
+                  {{ 'theme.general.my_account' | t }}
+                {%- endif -%}
+              </span>
+            {%- endif -%}
+          </a>
+        {%- if position != 'bottom' and settings.enable_account_popup -%}
+          </account-popup>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+
+    {%- if customer and position == 'bottom' -%}
+      <div {%  if settings.enable_account_popup %}class="dropdn dropdn_account"{% endif %}>
+        <a href="{{ routes.account_logout_url }}" class="dropdn-link" data-tippy-content="{{ 'customer.account_fallback' | t | escape }}" data-tippy-placement="top">
+          <span class="icon-wrap">{% render 'icon-logout' %}</span>
+          <span class="dropdn-link-sm-text">{{ 'customer.log_out' | t }}</span>
+        </a>
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+{%- endunless -%}

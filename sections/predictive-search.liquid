@@ -1,0 +1,186 @@
+{%- if predictive_search.performed -%}
+  {%- liquid
+    assign show_quick_tags = false
+    assign quick_search_tags = settings.predictive_search_quick_tags | strip_html | split: ','
+
+    if predictive_search.resources.queries.size > 0
+        assign query_text = predictive_search.terms | handleize
+
+        for tag in quick_search_tags
+          assign tag_text = tag | handleize
+
+          if tag_text == query_text
+            assign show_quick_tags = true
+
+            break
+          endif
+        endfor
+    endif
+
+    assign aspect_ratio = settings.product_image_aspect_ratio
+
+    if aspect_ratio == 'custom'
+      assign aspect_ratio = settings.product_height_ratio | times: 100 | divided_by: settings.product_width_ratio
+    endif
+  -%}
+
+  <div class="quick-search" data-render-predictive-search="quick-tags">
+    {%- if predictive_search.resources.queries.size > 0 and show_quick_tags == false -%}
+      <span><b>{{ 'theme.general.suggestions' | t }}:</b></span>
+      <ul>
+        {%- for query in predictive_search.resources.queries -%}
+          <li><span class="primary-link-strict quick-search-tag">{{ query.styled_text }}</span></li>
+        {%- endfor -%}
+      </ul>
+    {%- else -%}
+      {% render 'predictive-search-quick-tags' %}
+    {%- endif -%}
+  </div>
+
+  {%- liquid assign layout = 'predictive-search' -%}
+  <div id="predictive-search-results">
+    <div class="searchmodal-bottom">
+      {%- assign  search_results_count =  predictive_search.resources.products.size | plus: predictive_search.resources.articles.size | plus: predictive_search.resources.pages.size -%}
+      {%- if search_results_count == 0 -%}
+        <h2 id="predictive-search-products" class="h2-style heading-font text-center d-none d-sm-block">{{ 'theme.general.found_nothing' | t }}</h2>
+        <div class="category-empty text-center">
+          <div class="category-empty-text fw-light">{{ 'templates.search.no_results' | t: terms: predictive_search.terms }}</div>
+          <div class="mt-3">
+            <a href="{{ routes.search_url }}" class="btn btn--showmore" >{{ 'theme.general.advanced_search_popup' | t }}</a>
+          </div>
+        </div>
+      {%- else -%}
+        <h2 id="predictive-search-products" class="h2-style heading-font text-center d-none d-sm-block ">{{ 'theme.general.we_found' | t }}</h2>
+        <div class="position-relative">
+          <swiper-carousel data-center-arrows>
+            <div class="swiper-container swiper-container-prd-carousel">
+              <div class="swiper-wrapper">
+                {%- if predictive_search.types contains 'product' -%}
+                  {%- for product in predictive_search.resources.products -%}
+                    {%- liquid
+                      assign show = true
+
+                      if settings.collection_out_of_stock_hide and product.selected_or_first_available_variant.available == false
+                        assign show = false
+                      endif
+                    -%}
+                    {%- if show -%}
+                      <div class="swiper-slide" role="option" aria-selected="false">
+                        {% render 'product-card-search', product: product %}
+                      </div>
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
+                {%- unless settings.predictive_search_only_product -%}
+                  {%- for type in predictive_search.types -%}
+                    {%- case type -%}
+                      {%- when 'article' -%}
+                        {%- for item in predictive_search.resources.articles -%}
+                          <div class="swiper-slide" role="option" aria-selected="false">
+                            <div class="post-search">
+                              <a href="{{ item.url }}" class="post-search-image p-0">
+                                <span class="post-search-date">
+                                  <span>{{ item.published_at | date: "%y" }}</span>
+                                  <span>{{ item.published_at | date: "%b" }}</span>
+                                </span>
+                                {% render 'image-container',
+                                  image: item.image,
+                                  product_aspect_ratio: true,
+                                  padding_no_bg: 120,
+                                  sizes: '380px',
+                                  layout: layout
+                                %}
+                              </a>
+                              <div class="post-search-bot">
+                                <h3 class="post-search-name"><a href="{{ item.url }}">{{ item.title | escape | highlight: predictive_search.terms }}</a></h3>
+                              </div>
+                            </div>
+                          </div>
+                        {%- endfor -%}
+                        {%- when 'page' -%}
+                        {%- for item in predictive_search.resources.pages -%}
+                          <div class="swiper-slide" role="option" aria-selected="false">
+                            <div class="page-search">
+                              <a class="page-icon" href="{{ item.url }}">
+                                <div class="image-container ic--bg" style="padding-bottom: {{ aspect_ratio }}%">
+                                  {% render 'icon-article' %}
+                                </div>
+                              </a>
+                              <div class="page-search-bot">
+                                <h3 class="page-search-name"><a href="{{ item.url }}">{{ item.title | escape | highlight: predictive_search.terms }}</a></h3>
+                              </div>
+                            </div>
+                          </div>
+                        {%- endfor -%}
+                    {%- endcase -%}
+                  {%- endfor -%}
+                {%- endunless -%}
+              </div>
+              <div class="swiper-pagination position-relative mt-3"></div>
+              <div class="swiper-arrows-carousel container">
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+              </div>
+            </div>
+            <div class="predictive-search__loading-state loading-overlay-full" aria-hidden="true">
+              <div data-load="loading"></div>
+            </div>
+            <script type="application/json">
+              {
+                "pagination": {
+                  "el": ".swiper-pagination",
+                  "clickable": true
+                },
+                "navigation": {
+                  "nextEl": ".swiper-button-next",
+                  "prevEl": ".swiper-button-prev"
+                },
+                "slidesPerColumnFill": "row",
+                "watchOverflow": true,
+                "slidesPerView": 2,
+                "spaceBetween": 15,
+                "breakpoints": {
+                  "575": {
+                    "slidesPerView": 3,
+                    "spaceBetween": 15
+                  },
+                  "768": {
+                    "slidesPerView": 5,
+                    "spaceBetween": 20
+                  },
+                  "1200": {
+                    "slidesPerView": 6,
+                    "spaceBetween": 20
+                  }
+                }
+              }
+            </script>
+          </swiper-carousel>
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="predictive-search-info d-none d-md-none keyboard-control">* {{ 'theme.general.keys_description' | t }}</div>
+    <button data-close-predictive type="button" class="fancybox-button fancybox-close-small" title="{{ 'theme.general.close_cap' | t }}"><svg xmlns="http://www.w3.org/2000/svg" version="1" viewBox="0 0 24 24"><path d="M13 12l5-5-1-1-5 5-5-5-1 1 5 5-5 5 1 1 5-5 5 5 1-1z"></path></svg></button>
+  </div>
+
+  <span class="hidden" data-predictive-search-live-region-count-value>
+    {%- if search.results_count == 0 -%}
+      {{ 'templates.search.no_results' | t: terms: predictive_search.terms }}
+    {%- else -%}
+      {{ 'templates.search.results_with_count' | t: terms: predictive_search.terms, count: predictive_search.resources.products.size }}
+    {%- endif -%}
+  </span>
+{%- endif -%}
+{% schema %}
+{
+  "name": "predictive-search",
+  "settings": [
+    {
+      "type": "text",
+      "id": "label_sale_style",
+      "label": "label_sale_style",
+      "default": "text"
+    }
+  ]
+}
+{% endschema %}

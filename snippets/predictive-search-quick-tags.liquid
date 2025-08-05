@@ -1,0 +1,11 @@
+{%- if settings.predictive_search_show_quick_tags and settings.predictive_search_quick_tags != blank -%}
+  <div class="quick-search" data-render-predictive-search="quick-tags">
+    {%- liquid assign quick_search_tags = settings.predictive_search_quick_tags | strip_html | split: ',' -%}
+    <span><b>{{ 'theme.general.quick_search_html' | t }}</b></span>
+    <ul>
+      {%- for tag in quick_search_tags -%}
+        <li><span class="primary-link-strict quick-search-tag">{{ tag | strip }}</span></li>
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endif -%}

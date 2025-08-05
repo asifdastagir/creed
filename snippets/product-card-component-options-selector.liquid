@@ -1,0 +1,26 @@
+{%- if product.has_only_default_variant -%}
+  <input type="hidden" name="id" value="{{ current_variant.id | default: product.variants.first.id }}">
+{%- else -%}
+  <variant-select class="{% if product.variants.size == 1 and settings.product_card_single_option == false %}hidden{% endif %}" data-request-page-type="{{ request.page_type }}" data-section-id="{{ section_id }}"  data-url="{{ product.url | split: '?' | first }}"  data-section-layout="{{ layout }}" data-old-value="{{ current_variant.id }}" data-handle="{{ product.handle }}" data-variant-id="{{ current_variant.id }}">
+    <div class="form-control-wrap form-control-wrap--select">
+      <select class="form-select form-control form-control--rounded" name="id" {% if layout == 'product-card-horizontal' %}form="{{ product_form_id }}"{% endif %}>
+        {%- for variant in product.variants -%}
+          <option value="{{ variant.id }}" {% if current_variant.id == variant.id %}selected{% endif %} {% unless variant.available %}disabled{% endunless %}>{{ variant.title }} {% if variant.compare_at_price > variant.price %}-{{ variant.compare_at_price | minus: variant.price | times: 100.0 | divided_by: variant.compare_at_price | times: 100 | divided_by: 100 | floor }}% ({{ 'theme.general.only_today' | t }}){% endif %} {% if variant.selling_plan_allocations.size > 0 %}& {% if variant.requires_selling_plan %}{{ 'theme.general.subscribe_only' | t | capitalize }}{% else %}{{ 'theme.general.has_subscription' | t }}{% endif %}{% endif %}</option>
+        {%- endfor -%}
+      </select>
+    </div>
+    <script type="application/json">{{ product.variants | json }}</script>
+  </variant-select>
+  <div class="form-control-wrap form-control-wrap--select" data-render="selling-plan-selector-{{ product_form_id }}">
+    {%- if current_variant.selling_plan_allocations.size > 0 -%}
+      <select class="form-select form-control form-control--rounded" name="selling_plan" {% if layout == 'product-card-horizontal' %}form="{{ product_form_id }}"{% endif %}>
+        {%- unless current_variant.requires_selling_plan -%}
+          <option value="">{{ 'theme.general.one_time_purchase' | t }} {{ product.selected_or_first_available_variant.price | money }}</option>
+        {%- endunless -%}
+        {%- for spa in current_variant.selling_plan_allocations -%}
+          <option value="{{ spa.selling_plan.id }}">{{ spa.selling_plan.name }} {% if spa.price < spa.compare_at_price %}{{ spa.price | money }} instead of {{ spa.compare_at_price | money }}{% endif %}</option>
+        {%- endfor -%}
+      </select>
+    {%- endif -%}
+  </div>
+{%- endif -%}

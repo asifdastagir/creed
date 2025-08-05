@@ -1,0 +1,10 @@
+{%- comment -%}
+To add custom fonts to website use @fontface.
+All font files need to be uploaded on the Files page of your Shopify admin.
+Here’s a code example:
+@font-face {
+    font-family: "MyFont";
+    src: url('{{ "myfont.woff2" | file_url }}') format("woff2"),
+    url('{{ "myfont.woff" | file_url }}') format("woff");
+}
+{%- endcomment -%}

@@ -1,0 +1,6 @@
+{%- if section.settings.header_search -%}
+  {% render 'header-search-icon' %}
+  <div class="modal-wrap searchmodal {% unless settings.search_collection_show %}h-auto pb-5{% endunless %}" style="display: none;" id="searchModal">
+    <div data-load="loading"></div>
+  </div>
+{%- endif -%}

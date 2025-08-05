@@ -1,0 +1,87 @@
+{%- # theme-check-disable UnclosedHTMLElement -%}
+
+{%- liquid
+  if request.design_mode
+    assign infinite_scroll = false
+  endif
+-%}
+{%- if paginate.parts.size > 0 -%}
+  {%- if infinite_scroll -%}
+    <pagination-infinite  data-container="{{ container }}" data-item="{{ item }}" {% if section.settings.update_url %}data-update-url{% endif %} data-margin="0px 0px 400px 0px" data-async-reload-css="pagination-other">
+  {%- endif -%}
+      {%- if blog -%}
+      <div class="pagination-wrap d-flex justify-content-center mt-4 mt-lg-6">
+        <ul class="pagination mt-0">
+      {%- else -%}
+      <div class="filter-row mt-4 mb-0 p-0 order-4">
+        <div class="row flex-nowrap align-items-center">
+          <div class="col-12 col-md-auto ms-auto" role="navigation" aria-label="{{ 'general.pagination.label' | t }}">
+            <ul class="pagination justify-content-center justify-content-md-end" role="list">
+      {%- endif -%}
+
+        {%- if paginate.previous -%}
+          <li>
+            <a class="page-link-prev pager" href="{{ paginate.previous.url }}{{ anchor }}" aria-label="{{ 'general.pagination.previous' | t }}"><span>{% render 'icon-arrow-left' %}</span><span>{{ 'general.pagination.previous' | t }}</span></a>
+          </li>
+        {%- endif -%}
+          {%- for part in paginate.parts -%}
+            <li {% if part.title == paginate.current_page %}class="active"{% endif %}>
+              {%- if part.is_link -%}
+                <a href="{{ part.url }}{{ anchor }}" class="pagination__item link pager" aria-label="{{ 'general.pagination.page' | t: number: part.title }}">{{ part.title }}</a>
+              {%- else -%}
+                {%- if part.title == paginate.current_page -%}
+                  <span class="pagination__item pagination__item--current" aria-current="page" aria-label="{{ 'general.pagination.page' | t: number: part.title }}">{{ part.title }}</span>
+                {%- else -%}
+                  <span class="pagination__item">{{ part.title }}</span>
+                {%- endif -%}
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        {%- if paginate.next -%}
+          <li>
+          {%- liquid
+            if infinite_scroll
+              if section_id
+                assign url = paginate.next.url | append: '&section_id=' | append: section_id
+              else
+                assign url = paginate.next.url | append: '&view=async-main-collection-product-grid'
+              endif
+            else
+              assign url = paginate.next.url | append: anchor
+            endif
+          -%}
+            <a class="page-link-next {% if infinite_scroll %}hidden{% endif %}" href="{{ url }}" aria-label="{{ 'general.pagination.next' | t }}"><span>{{ 'general.pagination.next' | t }}</span><span>{% render 'icon-arrow-right' %}</span></a>
+          </li>
+        {%- endif -%}
+
+      {%- if blog -%}
+          </ul>
+        </div>
+      {%- else -%}
+              </ul>
+            </div>
+          </div>
+
+          {%- unless request.page_type == 'customers/account' -%}
+            <div class="filter-row-info text-end hide-filter-mobile ProductCountDesktop" {%- if infinite_scroll and paginate.pages != paginate.current_page -%}data-loading-text{% endif %}>
+              {%- if infinite_scroll and paginate.pages != paginate.current_page -%}
+                <span class="hidden loading-text">{{ 'theme.general.loading' | t }}</span>
+              {%- endif -%}
+              <span>
+                {%- if results.results_count -%}
+                  {{ 'templates.search.results_with_count' | t: terms: results.terms, count: results.results_count }}
+                  {%- elsif results.products_count == results.all_products_count -%}
+                  {{ 'products.facets.product_count_simple' | t: count: results.products_count }}
+                {%- else -%}
+                  {{ 'products.facets.product_count' | t: product_count: results.products_count, count: results.all_products_count }}
+                {%- endif -%}
+              </span>
+            </div>
+          {%- endunless -%}
+
+        </div>
+    {%- if infinite_scroll -%}
+      </pagination-infinite>
+    {%- endif -%}
+  {%- endif -%}
+{%- endif -%}

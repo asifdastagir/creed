@@ -1,0 +1,35 @@
+<products-card-compact {% unless layout contains 'list' %}data-grid{% endunless %}>
+  <div class="products-card-compact">
+    {% if layout contains 'list' %}
+      <scroll-items
+        data-mode="items"
+        data-count="3"
+        data-element=".minicart-prd">
+      {% endif %}
+      {%- if prd_collection -%}
+        {% for product in prd_collection.products limit: settings.recommendations_limit %}
+          {% render 'product-card-compact',
+            product_id: product.id,
+            product: product,
+            section: section,
+            product_form_id: product_form_id,
+            counter: counter
+        %}
+        {% endfor %}
+      {%- endif -%}
+      {% if layout contains 'list' %}
+      </scroll-items>
+    {% endif %}
+  </div>
+</products-card-compact>
+{% render 'error' %}
+<div class="bought-with-actions row align-items-center mt-0 gx-3 gy-2">
+  <div class="col-auto">
+    {% render 'frequently-bought-together-component-add-to-cart', counter: counter %}
+  </div>
+  <div class="col-auto">
+    <div class="custom-form cf--reverse">
+      {% render 'frequently-bought-together-component-select-checkbox' product_form_id: product_form_id, counter: counter %}
+    </div>
+  </div>
+</div>

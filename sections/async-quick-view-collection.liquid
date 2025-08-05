@@ -1,0 +1,33 @@
+{%- liquid
+    assign limit = 12
+-%}
+{%- paginate collection.products by limit -%}
+<div class="modal-wrap-scroll js-dropdn-content-scroll">
+    <div class="title-wrap text-center">
+        <h2 class="h1-style">{{ collection.title | escape }}</h2>
+        <div class="h-sub w-800 d-none d-md-block">{{ 'theme.general.quick_view_collection_subtitle' | t }}</div>
+    </div>
+    <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 justify-content-center gx-3 gy-4">
+        {%- for product in collection.products limit: limit -%}
+        {%- liquid
+            assign show = true
+
+            if settings.collection_out_of_stock_hide and product.selected_or_first_available_variant.available == false
+                assign show = false
+            endif
+        -%}
+        {%- if show -%}
+            <div class="col">
+                {% render 'product-card-search', product: product, collection: collection, data_tippy_placement_qv: 'top' %}
+            </div>
+        {%- endif -%}
+        {%- endfor -%}
+    </div>
+    <div class="text-center mt-3">
+        {%- if collection.all_products_count > limit -%}
+            <a href="{{ collection.url }}" class="btn btn--showmore">{{ 'theme.general.view_all' | t }} ({{ collection.all_products_count }})</a>
+        {%- endif -%}
+    </div>
+</div>
+{%- endpaginate -%}
+<button type="button" data-fancybox-close="" class="fancybox-button fancybox-close-small" title="{{ 'theme.general.close_cap' | t }}"><svg xmlns="http://www.w3.org/2000/svg" version="1" viewBox="0 0 24 24"><path d="M13 12l5-5-1-1-5 5-5-5-1 1 5 5-5 5 1 1 5-5 5 5 1-1z"></path></svg></button>

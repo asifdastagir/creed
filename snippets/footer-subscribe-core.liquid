@@ -1,0 +1,37 @@
+{%- liquid
+  if section.settings.input_style == 'shadow'
+    assign class = 'form-control--shadow border-0'
+  elsif section.settings.input_style == 'stroke'
+    assign class = 'shadow-none'
+  elsif section.settings.input_style or settings.input_alt_border == 'border-0'
+    assign class = 'border-0'
+  endif
+-%}
+<input
+  type="email"
+  name="contact[email]"
+  class="form-control form-control--bg form-control--rounded {{ class }}"
+  value="{% if customer %}{{ customer.email }}{% endif %}"
+  aria-required="true"
+  autocorrect="off"
+  autocapitalize="off"
+  autocomplete="email"
+  {% if form.errors %}
+    autofocus
+    aria-invalid="true"
+    aria-describedby="ContactFooter-error"
+    {% elsif form.posted_successfully? %}
+    aria-describedby="ContactFooter-success"
+  {% endif %}
+  placeholder="{{ 'theme.general.enter_your_email_here' | t }}"
+  required
+>
+<button class="btn btn--subscribe {{ section.settings.button_color }}" type="submit" name="commit" aria-label="{{ 'newsletter.button_label' | t }}"><span class="btn-text">{{ 'newsletter.button_label' | t }}</span><span class="btn-icon">{% render 'icon-submit' %}</span></button>
+{%- if form.errors -%}
+  <div tabindex="-1" autofocus>
+    {%- liquid
+      assign message = form.errors.translated_fields['email'] | capitalize | append : ' ' | append: form.errors.messages['email']
+      render 'error', message: message
+    -%}
+  </div>
+{%- endif -%}

@@ -1,0 +1,119 @@
+{% comment %}theme-check-disable NestedSnippet, UnusedAssign{% endcomment %}
+{%- liquid
+  assign layout = 'catalog-popup'
+  assign padding = settings.images_auto_height_padding
+  assign collections_column_title_style = collections_column_title_style
+-%}
+
+<div class="modal-wrap-inside d-flex flex-column">
+  <catalog-section class="catalog-section">
+    <div class="modal-wrap-title {% if settings.catalog_popup_filter %}has-search{% endif %}">
+      <h2 class="h1-style mb-0"><span>{{ 'theme.general.our_catalog' | t }}</span>
+        {%- if settings.show_hide and settings.show_images -%}
+          <span class="modal-toggle-images"><span>{{ 'theme.general.hide_previews' | t }}</span><span>{{ 'theme.general.show_previews' | t }}</span></span>
+        {%- endif -%}
+      </h2>
+
+      {%- if settings.catalog_popup_filter -%}
+        <div class="input-group-wrap">
+          <form class="input-group js-catalog-search-form">
+            <input type="text" class="form-control js-catalog-input" placeholder="{{ 'theme.general.filter_by_category' | t }}">
+            <button class="icon-btn" type="submit" aria-label="Search">{% render 'icon-search' %}</button>
+          </form>
+          <small class="form-message form-message--success d-none">
+            {{ 'theme.general.found' | t }}&nbsp;<b></b>&nbsp;<span class="single">{{ 'theme.general.match' | t }}</span><span class="plural">{{ 'theme.general.matches' | t }}</span>
+          </small>
+          <small class="form-message form-message--error d-none">
+            {{ 'theme.general.search_no_matches' | t }}
+          </small>
+        </div>
+      {%- endif -%}
+
+    </div>
+    <div class="mmenu-item--mega modal-wrap-scroll js-dropdn-content-scroll" data-visible="6">
+      <div class="mmenu-submenu mmenu-submenu--full position-static" style="pointer-events: all">
+        <div class="container-fluid px-0">
+          {%- if settings.catalog_popup_filter -%}
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-5 gy-5 search-result d-none"></div>
+          {%- endif -%}
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-5 gy-5 tabs-content">
+            {%- liquid
+              assign catalog_handle = settings['catalog_1']
+              assign catalog = linklists[catalog_handle]
+            -%}
+            {%- if catalog != blank and catalog.links.size > 0 -%}
+              {%- for link in catalog.links -%}
+                <div class="col">
+                  <div class="mmenu-item-row row mx-0 gy-3 flex-column-reverse">
+                    <div class="col-12">
+                      <h3 class="submenu-title column-caption-style-{{ collections_column_title_style }}">
+                        {% render 'header-navigation-component-link', link: link, span: false, level: 2, layout: layout, show_children: false %}
+                      </h3>
+                      {%- if link.links != blank -%}
+                        <submenu-list>
+                          <ul class="submenu-list">
+                            {%- for childlink in link.links -%}
+                              <li>
+                                {% render 'header-navigation-component-link', link: childlink, span: false, fw: true, layout: layout, level: 3 %}
+                                {% if childlink.links != blank %}
+                                  <div class="submenu-list-wrap">
+                                    {% render 'header-navigation-component-subtitle', link: childlink, layout: 'header-layout-2' %}
+                                    <ul>
+                                      {% for grandchildlink in childlink.links %}
+                                      <li>
+                                        {% render 'header-navigation-component-link', link: grandchildlink, layout: 'megamenu-dropdown', span: false, fw: true, level: 3 %}
+                                      </li>
+                                      {% endfor %}
+                                    </ul>
+                                  </div>
+                                {% endif %}
+
+                              </li>
+                            {%- endfor -%}
+                          </ul>
+
+                          <a href="#" class="submenu-view-more js-submenu-view-more"><span><i class="icon-wrap">{% render 'icon-arrow-left' %}</i>{{ 'theme.general.view_more' | t }}</span><span><i class="icon-wrap">{% render 'icon-arrow-left' %}</i>{{ 'theme.general.view_less' | t }}</span></a>
+                        </submenu-list>
+                      {%- endif -%}
+                    </div>
+                    {%- liquid
+                      assign collectionImage = link.object.image
+                    -%}
+                    {%- if collectionImage != blank and settings.show_images -%}
+                      <div class="col-12">
+                        <a href="{{ link.url | default: '#' }}" class="submenu-img">
+                          {% render 'image-container',
+                            image: collectionImage,
+                            padding_no_bg: padding,
+                            padding: padding,
+                            sizes: '(min-width: 1025px) 276px, (min-width: 576px) 152px, calc(100vw - 30px)'
+                            widths: '319,374,389,551,639,749,949,1109',
+                            hover_scale: false,
+                            bg: false,
+                          %}
+                        </a>
+                      </div>
+                    {%- endif -%}
+                  </div>
+                </div>
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+          <div class="mt-3 mt-lg-6 text-center d-none d-lg-block">
+            <a href="{{ routes.all_products_collection_url }}" class="btn btn--showmore">{{ 'theme.general.view_all' | t }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </catalog-section>
+</div>
+<div class="showmore-fixed-mobile text-center d-lg-none">
+    <a href="{{ routes.all_products_collection_url }}" class="btn btn--showmore">{{ 'theme.general.view_all' | t }}</a>
+</div>
+<div class="mmenu-scroll-down js-mmenu-scroll-down" style="display: none;">
+  <div class="mmenu-scroll-down-arrow d-none d-lg-block">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+      <path d="M12,18c-0.256,0-0.512-0.098-0.707-0.293L0.586,7L2,5.586l10,10l10-10L23.414,7L12.707,17.707C12.512,17.902,12.256,18,12,18z"></path>
+    </svg>
+  </div>
+</div>

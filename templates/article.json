@@ -1,0 +1,62 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-article",
+      "blocks": {
+        "featured_image": {
+          "type": "featured_image",
+          "settings": {}
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "blog_show_date": true,
+            "blog_show_author": true,
+            "excerpt": true,
+            "show_social": true
+          }
+        },
+        "share": {
+          "type": "share",
+          "settings": {
+            "share_label": "Share"
+          }
+        },
+        "content": {
+          "type": "content",
+          "settings": {
+            "tags": true,
+            "show_social": true
+          }
+        }
+      },
+      "block_order": [
+        "featured_image",
+        "title",
+        "share",
+        "content",
+        "b81e7cab-8082-46d4-9093-58fb052277d6",
+        "76658842-2fd1-49ed-a0be-039234f435b2",
+        "54bf195a-826e-4f0e-8cfa-3658ede1accc",
+        "c7771715-7226-4ad3-b753-05e1e720dc7e",
+        "cd548599-1385-4f30-ae3b-651be61227b6"
+      ],
+      "settings": {
+        "section_width": "global",
+        "container_max_width": 1178,
+        "spacing_sections": 46,
+        "use_global_desktop_space": false,
+        "spacing_sections_mobile": 20,
+        "use_global_mobile_space": false,
+        "spacing_padding_sections": 100,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "background": false
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

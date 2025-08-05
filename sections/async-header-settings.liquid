@@ -1,0 +1,8 @@
+{% render 'header-languages', id: 'id1', class: 'mb-2' %}
+{% render 'header-currencies', id: 'id2', class: 'mb-2' %}
+{%- if settings.phone != blank -%}
+  <a href="tel:{{ settings.phone }}" title="tel:{{ settings.phone }}" class="btn w-100 mt-2 mt-first-0">{{ settings.phone }}</a>
+{%- endif -%}
+{%- if settings.mail_yes -%}
+  <a href="mailto:{{ settings.mail_to }}" class="btn btn--invert w-100 mt-1 mt-first-0 btn--wrap">{{ 'theme.general.mail_us' | t }}</a>
+{%- endif -%}

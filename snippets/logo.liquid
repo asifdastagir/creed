@@ -1,0 +1,48 @@
+{% comment %}theme-check-disable ImgWidthAndHeight, ImgLazyLoading{% endcomment %}
+{%- liquid
+  if logo
+    assign logo_aspect_ratio = logo.aspect_ratio
+  endif
+
+  if svg_logo
+    assign logo = true
+    assign logo_aspect_ratio = 2.9
+  endif
+
+  if logo_transparent
+    assign logo_aspect_ratio_transparent = logo_transparent.aspect_ratio
+  endif
+
+  if svg_logo_transparent
+    assign logo_transparent = true
+    assign logo_aspect_ratio_transparent = 2.9
+  endif
+
+  assign alt = shop.name
+  assign href = href | default: routes.root_url
+
+-%}
+<a href="{{ href }}" class="{{ class }}" title="{{ shop.name }}" data-async-reload-css="{{ prefix }}-logo" style="--logo-max-width:{{ logo_width }}px;--logo-max-width-mobile: {{ logo_width_mobile }}px;">
+  {% render 'logo-core',
+    header_transparent: header_transparent,
+    logo: logo,
+    logo_aspect_ratio: logo_aspect_ratio,
+    svg_logo: svg_logo,
+    svg_logo_name: svg_logo_name,
+    alt: alt,
+    lazyload: lazyload
+  %}
+  {%- if header_transparent -%}
+    {% render 'logo-core',
+      type: 'transparent',
+      header_transparent: header_transparent,
+      logo: logo_transparent,
+      logo_aspect_ratio: logo_aspect_ratio_transparent,
+      svg_logo: svg_logo_transparent,
+      svg_logo_name: svg_logo_name_transparent,
+      alt: alt,
+      lazyload: lazyload
+    %}
+  {%- endif -%}
+  
+</a>

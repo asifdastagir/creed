@@ -1,0 +1,18 @@
+{%- if settings.enable_country_selector and localization.available_countries.size > 1 -%}
+  {%- form 'localization', name: 'CountryForm', id: id -%}
+    <input type="hidden" name="return_to" value="{{ request.path }}" />
+    {%- if divider == true -%}
+      <div class="dropdn-content-divider my-2"></div>
+    {%- endif -%}
+    <div class="dropdn_settings_title {{ class }}">{{ 'localization.country_label' | t }}</div>
+    <div class="form-select-wrap form-control-wrap--select">
+      <select class="form-select" name="country_code" onchange="this.form.submit()">
+        {%- for country in localization.available_countries -%}
+          <option value="{{ country.iso_code }}" {%- if country.iso_code == localization.country.iso_code %} selected{% endif %}>
+            {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+          </option>
+        {%- endfor -%}
+      </select>
+    </div>
+  {% endform %}
+{%- endif -%}

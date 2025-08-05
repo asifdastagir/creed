@@ -1,0 +1,4 @@
+<div class="product-form__success-message-wrapper mb-3 {{ class }} {% if large == 1 %}error-lg{% endif %}" role="alert" {% if message == blank or message == true %}hidden{% endif %}>
+  {% render 'icon-success' %}
+  <span class="product-form__success-message">{% if message != blank and message != true %}{{ message }}{% endif %}</span>
+</div>

@@ -1,0 +1,59 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- liquid
+    assign compact_phone = false
+
+    if settings.mobile_bottom_navigation_account == 'header' or settings.mobile_bottom_navigation_wishlist == 'header' or settings.mobile_bottom_navigation_cart == 'header'
+    assign compact_phone = true
+    endif
+-%}
+{% render 'header-search-disclosed', class: "hdr-open-search-form" %}
+<div class="hdr-links-wrap col-auto ms-lg-auto">
+    <div class="hdr-inline-link hide-mobile">
+    {%- liquid
+        render 'header-get-help'
+        render 'header-account'
+
+        if mode == 'sticky'
+            render 'header-wishlist-icon'
+            render 'header-cart-icon'
+        else
+            render 'header-wishlist'
+            render 'header-cart'
+        endif
+    -%}
+    </div>
+    <div class="hdr-inline-link show-mobile">
+    {%- if settings.phone != blank -%}
+        <a href="tel:{{ settings.phone }}" title="tel:{{ settings.phone }}" class="dropdn-link">
+        <span class="icon-wrap">{% render 'icon-phone' %}</span>
+        {%- unless compact_phone -%}
+            <span class="dropdn-link-txt">{{ settings.phone }}</span>
+        {%- endunless -%}
+        </a>
+    {%- endif -%}
+
+    {%- liquid
+        render 'header-get-help'
+
+        render 'header-search-mobile-toggle'
+
+        if settings.mobile_bottom_navigation_account == 'header'
+        render 'header-account-icon', position: 'bottom'
+        endif
+
+        if settings.mobile_bottom_navigation_wishlist == 'header'
+        render 'header-wishlist-icon'
+        endif
+
+        if request.page_type == 'cart'
+        assign tag = 'shipping-calculator-cart'
+        endif
+
+        if settings.mobile_bottom_navigation_cart == 'header'
+        render 'header-cart-icon', tag: tag
+        endif
+
+        render 'header-burger'
+    -%}
+    </div>
+</div>

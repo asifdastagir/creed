@@ -1,0 +1,162 @@
+{%- liquid
+  if use_variant
+    assign target = product.selected_or_first_available_variant
+  else
+    assign target = product
+  endif
+
+  if current_variant != blank
+    assign target = current_variant
+  endif
+
+  assign compare_at_price = target.compare_at_price
+  assign price = target.price | default: 1999
+  assign money_price = price | money
+
+  assign product_card_style_1 = product_card_style_1 | default: false, allow_false: true
+
+  assign show_price_old = true
+  if request.page_type == 'search' or request.page_type == 'collection' or only_simple_add_to_cart == 1
+    if search.sort_by contains 'price' or collection.sort_by contains 'price' or only_simple_add_to_cart == 1
+      if product.price_varies
+        assign price = product.price | default: 1999
+        assign money_price = price | money
+
+        assign show_price_old = false
+      endif
+    endif
+  endif
+
+  assign tippy_placement_right = false
+
+  if layout == 'product' or layout == 'quick-options' or layout == 'quick-view'
+    assign tippy_placement_right = true
+  endif
+
+  assign product_card_price_currency_info = settings.product_card_price_currency_info
+-%}
+
+
+<div class="prd-price {{ class }}" role="status" {% if render %}data-render="price-{{ product_form_id }}"{% endif %} {% if tippy_placement_right and product_card_price_currency_info %}data-tippy-content="{{ localization.country.currency.name }} ({{ localization.country.currency.iso_code }})" data-tippy-placement="right"{% endif %}>
+
+  {% capture size %}{{ price }}{% endcapture %}
+
+  <div class="prd-price-regular " {% if target.selling_plan_allocations.size > 0 and target.requires_selling_plan == false %}data-tippy-content="{{ 'theme.general.price_for_one_time_purchase' | t | escape }}"{% elsif tippy_placement_right == false and product_card_price_currency_info %}data-tippy-content="{{ localization.country.currency.name }} ({{ localization.country.currency.iso_code }})"{% endif %}>
+    {%- liquid
+      if product_card_style_1 != true
+        assign price = target.price | default: 1999
+        assign money_price = price | money_without_trailing_zeros
+
+      else
+        if product_card_style_1 == true
+          if size.size > 5
+            assign price = target.price | default: 1999
+            assign money_price = price | money_without_trailing_zeros
+          endif
+        endif
+
+        if hide_zero == 1
+          assign money_price = price | money_without_trailing_zeros
+        endif
+
+        assign currency_code = localization.country.currency.iso_code
+
+        if money_price contains ' ' and currency_code != 'SEK' and currency_code != 'TRY'
+          unless money_price contains 'money'
+            if currency_code != 'USD' and currency_code != 'EUR' and currency_code != 'GBP'
+              assign money_price = price | money_without_trailing_zeros
+            endif
+
+            assign parts = money_price | split: ' '
+            assign part_1 = money_price | split: ' ' | first
+            assign part_2 = money_price | split: ' ' | last
+            assign part_1_new = part_1 | plus: 1
+
+            if part_1_new == 1
+              assign currency_code_wrapped = '<span style="font-weight: var(--font-weight-600);">' | append: part_1 | append: '</span>'
+
+              unless currency_code_wrapped contains part_2
+                assign money_price = currency_code_wrapped | append: ' ' | append: part_2
+              endunless
+
+              if parts.size == 3
+                assign money_price = currency_code_wrapped | append: ' ' | append: parts[1] | append: ' ' | append: part_2
+              endif
+
+
+            else
+              assign currency_code_wrapped = '<span style="font-weight: var(--font-weight-600);">' | append: part_2 | append: '</span>'
+
+              assign money_price = part_1 | append: ' ' | append: currency_code_wrapped
+            endif
+          endunless
+        endif
+
+      endif
+
+      echo money_price
+    -%}
+  </div>
+
+  {%- if compare_at_price > price -%}
+    {% capture size %}{{ compare_at_price }}{% endcapture %}
+    <div class="prd-price-old {% unless show_price_old %}hidden{% endunless %}">
+      {% comment %} {%- if product_card_style_1 == true -%}
+        {%- if settings.product_card_vendor == false or size.size < 6 -%}
+          {{ compare_at_price | money_without_trailing_zeros }}
+        {%- elsif product_card_style_1 == true and size.size > 5 -%}
+
+        {%- else -%}
+          {{ compare_at_price | money }}
+        {%- endif -%}
+      {%- else -%}
+        {{ compare_at_price | money }}
+      {%- endif -%} {% endcomment %}
+      {{ compare_at_price | money_without_trailing_zeros }}
+    </div>
+  {%- endif -%}
+
+
+  {%- liquid
+    assign price = target.price | default: 1999
+    assign money_price = price | money_without_trailing_zeros
+
+    if product_card and settings.product_card_price_from
+      assign min_price = product.variants[0].price
+      assign same_price = true
+
+      for variant in product.variants
+        if variant.price < min_price
+          assign min_price = variant.price
+        endif
+        if variant.price != min_price
+          assign same_price = false
+        endif
+      endfor
+
+      assign money_price_min = min_price | money_without_trailing_zeros
+
+      if same_price != true
+        if money_price_min == money_price
+        else
+          echo '<span class="other_from">other from ' | append: money_price_min | append: '</span>'
+        endif
+      endif
+    endif
+  -%}
+
+  {%- if target.unit_price_measurement and product_card_style_1 != true -%}
+    <span class="flex-break"></span>
+    <small class="unit-price caption">
+      <span>{{- target.unit_price | money -}}</span>
+      <span aria-hidden="true">/</span>
+      <span class="visually-hidden">&nbsp;{{ 'accessibility.unit_price_separator' | t }}&nbsp;</span>
+      <span>
+        {%- if target.unit_price_measurement.reference_value != 1 -%}
+          {{ target.unit_price_measurement.reference_value }}
+        {%- endif -%}
+        {{ target.unit_price_measurement.reference_unit }}
+      </span>
+    </small>
+  {%- endif -%}
+</div>

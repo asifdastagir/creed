@@ -1,0 +1,8 @@
+{%- if current_tags.size > 0 -%}
+    <div class="h-sub w-800" style="font-size: {{ settings.font_heading_subtitle_font_size }}px;">
+        <span>{{ 'theme.general.filtered_by_tags' | t }}:</span>
+        {% for tag in current_tags -%}
+            <a href="{{ routes.all_products_collection_url }}" class="tags-sub"><b>{{ tag }}</b> <span class="tags-sub-close"></span>{% unless forloop.last %}, {% endunless %}</a>
+        {% endfor %}
+    </div>
+{%- endif -%}

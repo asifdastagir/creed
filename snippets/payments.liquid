@@ -1,0 +1,8 @@
+<div class="{{ class }} footer-payments-list" role="list" style="--footer-payments-icon-height: 28px">
+  <span class="visually-hidden">{{ 'theme-sections.sections.footer.payment' | t }}</span>
+  {%- for type in shop.enabled_payment_types -%}
+    <div class="col-auto" role="listitem">{{ type | payment_type_svg_tag: class: 'icon icon--full-color' | replace: 'id="', 'id="id_' }}</div>
+  {%- endfor -%}
+
+  {% render 'payments-custom' %}
+</div>

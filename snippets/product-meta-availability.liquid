@@ -1,0 +1,250 @@
+{% # theme-check-disable HtmlParsingError, LiquidHTMLSyntaxError, SyntaxError %}
+{%- comment -%}
+  theme-check-disable: HtmlParsingError, LiquidHTMLSyntaxError, SyntaxError
+{%- endcomment -%}
+
+{%- liquid
+  assign layout = 'availability'
+  assign output = section.settings.availability_output
+  assign status_low = section.settings.availability_status_low
+  assign status_low_custom_text = section.settings.availability_status_low_custom_text
+  assign status_low_default_text = section.settings.availability_status_low_default_text
+  assign status_many_custom_text = section.settings.availability_status_many_custom_text
+  assign status_many_default_text = section.settings.availability_status_many_default_text
+  assign status_variant_title = section.settings.availability_status_variant_title
+  assign availability_variants_map = section.settings.availability_variants_map
+
+  if product.has_only_default_variant or product.variants.size == 1
+    assign status_variant_title = false
+    assign availability_variants_map = false
+  endif
+
+  assign track_quantity = false
+
+  if current_variant.inventory_management != nil and current_variant.inventory_policy == 'deny'
+    assign track_quantity = true
+  endif
+
+  capture variant_title
+    if status_variant_title
+      echo ' '
+      echo 'accessibility.of' | t
+      echo ' '
+      echo '<b>'
+      echo current_variant.title
+      echo '</b>'
+    endif
+  endcapture
+
+  capture items
+    echo '<span class="dropdown-label label--items-count">'
+    echo 'theme-sections.sections.header.cart_count' | t: count: current_variant.inventory_quantity
+    echo '</span>'
+    echo variant_title
+  endcapture
+
+  assign low_text = status_low_custom_text
+
+  if status_low_default_text
+    assign low_text = 'theme.general.low_in_stock' | t
+  endif
+
+  assign many_text = status_many_custom_text
+
+  if status_many_default_text
+    assign many_text = 'theme.general.many_in_stock' | t
+  endif
+
+  assign many_text = '<span class="many-stock">' | append: many_text | append: '</span>' | append: variant_title
+-%}
+
+<dropdown-onclick>
+  <div
+    class="dropdown-link"
+    {% if availability_variants_map %}
+    data-dropdown-link{% endif %}>
+    <span>{{ 'theme.general.availability' | t }}:</span>
+    <span>
+      {% if current_variant.available -%}
+        {%- if output == 'quantity' and track_quantity -%}
+          {{ items }}
+
+        {%- elsif output == 'status' and track_quantity and current_variant.inventory_quantity < status_low -%}
+          {{ low_text | replace: '[X]', items }}
+
+        {%- else -%}
+          {{ many_text }}
+
+        {%- endif -%}
+
+      {%- else -%}
+        {{ 'products.product.sold_out' | t }}
+
+      {%- endif -%}
+    </span>
+  </div>
+  {%- if availability_variants_map -%}
+    <div
+      class="dropdown-content"
+      data-dropdown-content
+      style="--dropdown-content-width: {{ section.settings.availability_width }}px">
+      <div class="js-dropdn-content-scroll">
+        <ul class="list-unstyled">
+          {%- for variant in product.variants -%}
+            {%- liquid
+              assign track_quantity = false
+
+              if variant.inventory_management != nil and variant.inventory_policy == 'deny'
+                assign track_quantity = true
+              endif
+
+              capture items
+                echo 'theme.general.in_stock' | t
+                echo ' '
+                echo 'theme-sections.sections.header.cart_count' | t: count: variant.inventory_quantity
+              endcapture
+
+              assign many_text = status_many_custom_text
+
+              if status_many_default_text
+                capture many_text
+                  echo '<span class="many-stock">'
+                  echo 'theme.general.many_in_stock' | t
+                  echo '</span>'
+                endcapture
+              endif
+            -%}
+
+            <li class="dropdown-prd {% if variant.id == current_variant.id %}active{% endif %}" data-section-render>
+              {%- if section.settings.availability_variant_image -%}
+                <div class="dropdown-prd-img">
+                  {%- assign assign image = variant.featured_media | default: product.featured_image -%}
+                  {%- if image != blank -%}
+                    <a href="{{ variant.url }}" class="prd-prw-img">
+                      {% render 'image-container'
+                        , image: image
+                        , padding: 100
+                        , sizes: '85px'
+                      %}
+                    </a>
+                  {%- endif -%}
+                </div>
+              {%- endif -%}
+
+
+              {% if variant.id == current_variant.id %}
+                <div class="dropdown-prd-info">
+              {% else %}
+                <a href="{{ variant.url }}" class="dropdown-prd-info">
+              {% endif %}
+                <span>
+                  <b>{{ variant.title }}</b>
+                  -
+                  {% if variant.available -%}
+                    {%- if output == 'quantity' and track_quantity -%}
+                      {{ items }}
+                    {%- elsif output == 'status' and track_quantity and variant.inventory_quantity < status_low -%}
+                      {{ items }}
+                    {%- else -%}
+                      {{ many_text }}
+                    {%- endif -%}
+                  {%- else -%}
+                    <span class="prd-label prd-label--soldout">
+                      <span>{{ 'products.product.sold_out' | t }}</span>
+                    </span>
+                  {%- endif -%}
+                </span>
+
+                {%- render 'price'
+                  , render: false
+                  , product: product
+                  , current_variant: variant
+                  , use_variant: true
+                  , price_class: ''
+                  , product_form_id: product_form_id -%}
+
+                {%- if variant.compare_at_price > variant.price -%}
+                  <span class="prd-label prd-label--sale">
+                    {%- assign percent = variant.compare_at_price | minus: variant.price | times: 100.0 | divided_by: variant.compare_at_price | times: 100 | divided_by: 100 | floor -%}
+                    <span>-{{ percent }}%</span>
+                  </span>
+                {%- endif -%}
+
+                {% if variant.id == current_variant.id %}
+                    </div>
+                {% else %}
+                    </a>
+                {% endif %}
+
+              {% render 'product-card-component-icons-bar'
+                , current_variant: variant
+                , product_form_id: product_form_id
+                , product: product
+                , quick_view_disable: true
+                , layout: layout %}
+
+              {%- if variant.available and section.settings.availability_add_to_cart and settings.catalog_mode == false -%}
+                {%- if variant.selling_plan_allocations.size > 0 -%}
+                  <product-form>
+                    <quickview-popup
+                      data-handle="{{ variant.product.handle }}"
+                      data-gallery="off"
+                      class="min-height-off"
+                      data-ajax="{{ variant.url }}&section_id=quick-options"
+                      data-selector="#quickView">
+                      {%- form 'product'
+                        , product
+                        , id: product_form_id
+                        , data-available: data_available -%}
+                        <a
+                          href="#"
+                          class="icon-wrap iw--alt icon-edit position-relative"
+                          data-tippy-content="{{ 'products.product.add_to_cart' | t | escape }}"
+                          data-tippy-placement="left">
+                          {% render 'icon-cart3' %}
+                        </a>
+                      {%- endform -%}
+                    </quickview-popup>
+                  </product-form>
+                {%- else -%}
+                  <product-form>
+                    {%- form 'product'
+                      , product
+                      , id: product_form_id
+                      , data-available: data_available -%}
+                      <input
+                        type="hidden"
+                        name="id"
+                        value="{{ variant.id | default: product.variants.first.id }}">
+                      <button
+                        type="submit"
+                        class="icon-wrap iw--alt icon-edit position-relative"
+                        data-tippy-content="{{ 'products.product.add_to_cart' | t | escape }}"
+                        data-tippy-placement="left">
+                        {% render 'icon-cart3' %}
+                        <div class="loading-overlay__spinner hidden">
+                          <div data-load="loading"></div>
+                        </div>
+                      </button>
+                      {% comment %} {% render 'error' %} {% endcomment %}
+                    {%- endform -%}
+                  </product-form>
+                {%- endif -%}
+              {%- endif -%}
+
+              <div
+                class="product-form__error-message-wrapper"
+                role="alert"
+                hidden>
+                {% render 'icon-error' %}
+                <span class="product-form__error-message"></span>
+              </div>
+            </li>
+
+
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  {%- endif -%}
+</dropdown-onclick>

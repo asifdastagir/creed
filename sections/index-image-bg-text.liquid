@@ -1,0 +1,389 @@
+
+{{ 'slider.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign layout = 'index-image-bg-text'
+  assign sizes = ''
+  assign widths = '319,374,389,767,991,1365,1535,1919,2559,3455'
+-%}
+<div class="{% render 'section-class', layout: layout %}" {% render 'section-style', section: section, layout: layout %} id="{{ section.id }}">
+  {%- if section.settings.layout == 'style-1' -%}
+    {%- liquid
+      assign image_mb = section.settings.image_mb
+    -%}
+    <div class="container-fluid ic--ignore-global-round position-relative px-0 show-on-scroll">
+      <div class="text-bg-wrap"  style="--min-height-mobile: 155vw; --min-height: 39vw;">
+        <div class="text-over-bg align-items-start justify-content-center">
+          <div class="container d-flex justify-content-center">
+            <div class="text-over-bg-content text-center mx-auto py-2 my-4 my-sm-6 {% if section.settings.invert_color %}colorize-invert{% endif %}" style="max-width: 770px; --bg-color: #fff; --bg-opacity: .65;">
+              {% render 'section-heading', section: section %}
+              {{ section.settings.text }}
+            </div>
+          </div>
+        </div>
+        {% render 'image-container',
+          image: section.settings.image,
+          padding_no_bg: 38.86,
+          sizes: sizes,
+          widths: widths,
+          class_ic: 'image-bg-wrap ic--bg-cover d-none d-md-block',
+          class_img: 'w-100',
+          cover: false,
+          hover_scale: false,
+        %}
+        {%- if image_mb != blank -%}
+          {% render 'image-container',
+            image: image_mb,
+            padding_no_bg: 144,
+            sizes: sizes,
+            widths: widths,
+            class_ic: 'image-bg-wrap ic--bg-cover d-md-none',
+            class_img: 'w-100',
+            cover: false,
+            hover_scale: false,
+          %}
+        {%- endif -%}
+      </div>
+    </div>
+  {%- else -%}
+    {%- liquid
+      assign image_mb = section.settings.image_mb | default: section.settings.image
+    -%}
+    <main-slider>
+      <div class="swiper-slider-container swiper-container">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            {%- liquid
+              if section.settings.image_mb != blank
+                assign after_img_mobile = '<div data-load="loading"></div>'
+              endif
+              if section.settings.image != blank
+                assign after_img_desktop = '<div data-load="loading"></div>'
+              endif
+            -%}
+            {% render 'image-container',
+              image: image_mb,
+              padding_no_bg: 62.14,
+              sizes: sizes,
+              widths: widths,
+              class_ic: 'swiper-slide-img swiper-slide-img-m',
+              class_img: 'w-100',
+              cover: false,
+              hover_scale: false,
+              round: 0,
+              class_img_only: 'fade-up',
+              after_img: after_img_mobile
+            %}
+            {% render 'image-container',
+              image: section.settings.image,
+              padding_no_bg: 33.3,
+              sizes: sizes,
+              widths: widths,
+              class_ic: 'swiper-slide-img',
+              class_img: 'w-100',
+              cover: false,
+              hover_scale: false,
+              round: 0,
+              class_img_only: 'fade-up',
+              after_img: after_img_desktop
+            %}
+            <flow-type>
+              <div class="container" data-fontratio=11.78 data-fontratio-mobile=10>
+                <div class="swiper-slide-caption to-top to-center text-center {% if section.settings.invert_color %}colorize-invert{% endif %}" style="--padding: 3%; --padding-mobile: 3%; --caption-width: 50%; --caption-width-mobile: 80%;">
+                  <div class="swiper-slide-text heading-font" data-swiper-animation="animate__fadeInDown" data-duration=".5s" data-delay="0" style="--offset-top: 0;--font-size: 61%;--font-weight: {{ settings.font_weight_400 }};--line-height: 1.1em;">{{ section.settings.text }}</div>
+                </div>
+              </div>
+            </flow-type>
+          </div>
+        </div>
+        <div class="swiper-pagination"></div>
+      </div>
+    </main-slider>
+  {%- endif -%}
+
+</div>
+{% schema %}
+{
+  "name": "Fullwidth image with text",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "radio",
+      "id": "layout",
+      "label": "Select design variant",
+      "options": [
+        {
+          "value": "style-1",
+          "label": "Style 1"
+        },
+        {
+          "value": "style-2",
+          "label": "Style 2"
+        }
+      ],
+      "default": "style-1"
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading aligment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "default": "Subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "<p>In publishing and graphic design, Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. Lorem ipsum may be used as a placeholder before final copy is available.</p>",
+      "label": "Subtitle"
+    },
+    {
+      "type": "checkbox",
+      "id": "invert_color",
+      "label": "Invert captions color",
+      "default": true,
+      "info": "Only for layout 'Style-2'. Invert color you can set in Theme Settings / General / Colors - General"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image for desktop",
+      "info": "recommended size for retina displays is 2830x1100px"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mb",
+      "label": "Background image for mobile",
+      "info": "recommended size for retina displays is 1032x955px"
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable background",
+      "default": false,
+      "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+    },
+    {
+      "type": "select",
+      "id": "background_preset",
+      "label": "Background image - preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "product-cosmetics-bg.png",
+          "label": "Leaves 1"
+        },
+        {
+          "value": "bottom-cosmetics-bg.png",
+          "label": "Leaves 2"
+        },
+        {
+          "value": "bg-makeup1.png,bg-makeup1-m.png",
+          "label": "Pink and Waves 1"
+        },
+        {
+          "value": "bg-makeup2.png,bg-makeup2-m.png",
+          "label": "Pink and Waves 2"
+        },
+        {
+          "value": "bg-makeup4.png,bg-makeup4-m.png",
+          "label": "Pink and Waves 3"
+        },
+        {
+          "value": "bg-makeup3.png,bg-makeup3-m.png",
+          "label": "Purple Splash"
+        },
+        {
+          "value": "bg-sweets1.png",
+          "label": "Blue Sun Rays"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image - custom on Desktop"
+    },
+    {
+      "type": "select",
+      "id": "background_behavior",
+      "label": "Background image behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image - custom on Mobile",
+      "info": "only if Background image - custom on Desktop selected"
+    },
+    {
+      "type": "select",
+      "id": "background_image_placeholder_type",
+      "label": "Placeholder background color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_secondary_bg"
+    },
+    {
+      "type": "color",
+      "id": "background_image_placeholder",
+      "label": "Custom - Placeholder background color"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Text with image / preset Cars in footer"
+    },
+    {
+      "name": "Text with image / preset Cars in header",
+      "settings": {
+        "layout": "style-2",
+        "text": "<p>Only $300.<br>Headlight & Tire</p>"
+      }
+    }
+  ]
+}
+{% endschema %}

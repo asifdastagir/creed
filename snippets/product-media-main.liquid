@@ -1,0 +1,290 @@
+{%- liquid
+  assign layout = 'product-media-main'
+  assign store_width = settings.container_max_width
+
+  assign section_width = section.settings.section_width
+  assign thumbs_position = section.settings.thumbs_position
+  assign pjpg = section.settings.pjpg
+
+  if suffix == 'QW'
+    assign section_width = settings.container_max_width
+    assign thumbs_position = 'bottom'
+    assign pjpg = settings.qv_pjpg
+    assign grid = false
+  endif
+
+  if section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  unless layout == 'quick-view'
+    if template.suffix contains 'store-width-'
+      assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+    endif
+  endunless
+
+  assign breakpoints = sizes | split: ','
+  assign widths = ''
+  for i in (1..2)
+    assign k = i
+
+    if i == 1
+      assign k = 1.4
+    endif
+
+    if store_width > 1178
+      assign image_k = store_width | divided_by: 1178.00 | round: 2
+      assign k = k | times: image_k
+    endif
+
+    for breakpoint in breakpoints
+      unless forloop.last
+        assign breakpoint_ = breakpoint | split: 'px) ' | last | split: 'px' | first | plus: 0
+        assign width_ = breakpoint_ | times: k
+        assign widths = widths | append: width_ | append: ','
+      endunless
+    endfor
+  endfor
+  assign width_ = product.media.first.preview_image.width
+  assign widths = widths | append: width_
+
+  assign target = product.selected_variant | default: product
+  assign target_featured_image = target.featured_media
+  assign single_zoom_media_url = '#'
+
+  if media_count == 1 and target_featured_image
+    assign single_zoom_media_url = target_featured_image | image_url: width: target_featured_image.width
+  endif
+
+  assign aspect_ratio = settings.product_image_aspect_ratio
+
+  if aspect_ratio == 'custom'
+    assign aspect_ratio = settings.product_height_ratio | times: 100 | divided_by: settings.product_width_ratio
+  endif
+
+  assign video_autoplay = true
+
+  if grid
+    assign video_autoplay = false
+  endif
+
+-%}
+<div class="swiper-container prd-block-gallery-main js-product-main-carousel swiper-init quick-view" id="prdMainImage{{ suffix }}">
+  <div class="swiper-wrapper">
+    {%- for media in product.media limit: 60 -%}
+      <div
+          {% if media.media_type == 'image' %}
+            class="swiper-slide {% if grid %}{% if colorSelected != blank %}swiper-slide--hidden{% endif %} lazyload{% endif %}" data-media-id="{{ section.id }}-{{ media.id }}"
+          {% else -%}
+            class="swiper-slide {% if grid %}{% if colorSelected != blank %}swiper-slide--hidden{% endif %} lazyload{% endif %} swiper-slide--video" {% if media.media_type != 'model' %}data-video="{{ media.host | default: 'mp4' }}"{% endif %} data-media-id="{{ section.id }}-{{ media.id }}"
+          {%- endif -%}
+      >
+        {% comment %}theme-check-disable UnusedAssign{% endcomment %}
+        <div class="image-container ic--{{ product_media_main_fill_color }} {% if media.aspect_ratio < 1 %}ic--vert{% else %}ic--hor{% endif %}" style="padding-bottom: {{ aspect_ratio }}%">
+
+          {%- liquid
+            assign media_url = ''
+
+            assign media_preview_image_width = settings.product_media_zoom_custom | plus: 0
+
+            if settings.product_media_zoom == 'original' or settings.product_media_gallery_main_cover
+              assign media_preview_image_width = media.preview_image.width
+            endif
+
+            if settings.product_media_gallery_main_cover
+              assign calc_width_container = store_width | divided_by: 100.0 | times: 41.66 | minus: 30 | round
+
+              if thumbs_position != 'bottom'
+                assign calc_width_container = store_width | divided_by: 2 | minus: 132 | round
+              endif
+
+              assign calc_height_container = calc_width_container | times: aspect_ratio | divided_by: 100
+
+              assign times_zoom = media_preview_image_width | divided_by: calc_width_container
+
+              if aspect_ratio >= 1
+                assign times_zoom = media.preview_image.height | divided_by: calc_height_container
+              endif
+
+              assign calc_width_image = calc_width_container | times: times_zoom
+              assign calc_height_image = calc_width_image | times: aspect_ratio | divided_by: 100
+
+              if calc_height_image > media.preview_image.height
+                assign calc_height_image = media.preview_image.height
+                assign calc_width_image = calc_height_image | times: 100 | divided_by: aspect_ratio
+              endif
+
+              comment
+                echo '<hr/>media_preview_image_width: ' | append: media_preview_image_width
+                echo '<hr/>calc_width_container: ' | append: calc_width_container
+                echo '<hr/>calc_height_container: ' | append: calc_height_container
+                echo '<hr/>aspect_ratio: ' | append: aspect_ratio
+                echo '<hr/>calc_width_image: ' | append: calc_width_image
+                echo '<hr/>calc_height_image: ' | append: calc_height_image
+                echo '<hr/>times_zoom: ' | append: times_zoom
+              endcomment
+
+              if media.preview_image.width > 471
+                if pjpg
+                  assign media_url = media | image_url: width: calc_width_image, height: calc_height_image, format: 'pjpg'
+                else
+                  assign media_url = media | image_url: width: calc_width_image, height: calc_height_image
+                endif
+              endif
+
+            else
+              if media.preview_image.width > 471
+                if pjpg
+                  assign media_url = media | image_url: width: media_preview_image_width, format: 'pjpg'
+                else
+                  assign media_url = media | image_url: width: media_preview_image_width
+                endif
+              endif
+
+            endif
+
+            if pjpg
+              assign media_url_fancybox = media | image_url: width: media.preview_image.width, format: 'pjpg'
+            else
+              assign media_url_fancybox = media | image_url: width: media.preview_image.width
+            endif
+
+            assign class = ''
+            assign data_src = 'src'
+
+            if forloop.index > 1
+              assign data_src = 'data-src'
+            endif
+
+            if settings.product_media_gallery_main_cover and calc_width_image > 0 and calc_height_image > 0
+              assign poster_no_zoom = media | image_url: width: calc_width_image, height: calc_height_image | image_tag: class: class, srcset: nil, data-fancybox-image: media_url_fancybox | replace: 'src', data_src
+              assign poster = poster_no_zoom
+
+              if media_url != blank and settings.product_media_zoom != 'none'
+                assign poster = media | image_url: width: calc_width_image, height: calc_height_image | image_tag: class: class, srcset: nil, fetchpriority: 'high', data-zoom-image: media_url, data-fancybox-image: media_url_fancybox, data-image-width: calc_width_image | replace: 'src', data_src
+              endif
+            else
+              assign poster_no_zoom = media | image_url: width: media_preview_image_width | image_tag: class: class, widths: widths, sizes: sizes, data-fancybox-image: media_url_fancybox | replace: 'src', data_src
+              assign poster = poster_no_zoom
+
+              if media_url != blank and settings.product_media_zoom != 'none'
+                assign poster = media | image_url: width: media_preview_image_width | image_tag: class: class, widths: widths, sizes: sizes, fetchpriority: 'high', data-zoom-image: media_url, data-fancybox-image: media_url_fancybox, data-image-width: media_preview_image_width | replace: 'src', data_src
+              endif
+            endif
+
+
+
+          -%}
+          {%- if media.media_type == 'image' -%}
+            {{ poster }}
+          {%- else -%}
+            {%- case media.media_type -%}
+              {%- when 'external_video' -%}
+                <div class="inner-video js-inner-video">
+                  <div data-load="loading"></div>
+                  <template>
+                    {%- liquid
+                      assign video_class = 'embed-player slide-media js-' | append: media.host
+                      if media.host == 'youtube'
+                        echo media | external_video_url: autoplay: video_autoplay, loop: loop, playlist: media.external_id | external_video_tag: class: video_class, width: media.preview_image.width, height: media.preview_image.height
+                      else
+                        echo media | external_video_url: autoplay: video_autoplay, loop: loop | external_video_tag: class: video_class, width: media.preview_image.width, height: media.preview_image.height
+                      endif
+                    -%}
+                  </template>
+                </div>
+
+              {%- when 'video' -%}
+                <div class="inner-video js-inner-video">
+                  <div data-load="loading"></div>
+                  <template>
+                    {{ media | media_tag: image_size: "2048x", class: 'swiper-lazy w-100', autoplay: true, loop: loop, controls: true, preload: "none" }}
+                  </template>
+                </div>
+
+              {%- when 'model' -%}
+                {%- liquid
+                  assign model_viewer = media | media_tag: image_size: "2048x", variant-name: model_variant_name, toggleable: true, style: "--progress-bar-color:var(--custom-color); --progress-bar-height: var(--progress-bar-height-global)"
+                -%}
+                <product-model {% if media_count == 1 or forloop.first %}data-load-shopify-feature{% endif %} class="deferred-media media media--transparent global-media-settings global-media-settings--no-shadow" style="padding-bottom: {{ aspect_ratio }}%">
+                  {%- if media_count == 1 or forloop.first -%}
+                    {{ model_viewer }}
+                  {%- else -%}
+                    <button id="Deferred-Poster-Modal-{{ media.id }}" class="deferred-media__poster" type="button">
+                      <span class="visually-hidden">{{ 'theme.general.deferred_media' | t }}</span>
+                      <span class="deferred-media__poster-button motion-reduce">
+                        {%- liquid
+                          if media.media_type == 'model'
+                            render 'icon-3d-model'
+                          endif
+                        -%}
+                      </span>
+                      <div class="image-container ic--{{ product_media_main_fill_color }} {% if media.aspect_ratio < 1 %}ic--vert{% else %}ic--hor{% endif %}" style="padding-bottom: {{ aspect_ratio }}%">
+                        {{ poster_no_zoom }}
+                      </div>
+                    </button>
+                    <template>
+                      {{ model_viewer }}
+                    </template>
+                  {%- endif -%}
+                </product-model>
+            {%- endcase -%}
+
+          {%- endif -%}
+
+          {%- if forloop.index > 1 -%}
+            <div data-load="loading"></div>
+          {%- endif -%}
+        </div>
+        {% comment %}theme-check-enable UnusedAssign{% endcomment %}
+
+        {%- if grid -%}
+          <a href="{{ single_zoom_media_url }}" class="prd-zoom-link js-prd-zoom-link">
+            <span class="visually-hidden">{{ 'theme.general.zoom' | t }}</span>
+            {% render 'icon-zoom' %}
+          </a>
+        {%- endif -%}
+
+      </div>
+      {% comment %} {% break %} {% endcomment %}
+    {%- endfor -%}
+    {%- if grid -%}
+      {% comment %}{% render 'demo-content', content: 'video-vimeo-main-grid' %}{% endcomment %}
+    {%- else -%}
+      
+    {%- endif -%}
+  </div>
+  {%- if media_count > 1 -%}
+    <div class="swiper-arrows-carousel">
+      <div class="swiper-button-next"></div>
+      <div class="swiper-button-prev"></div>
+    </div>
+  {%- endif -%}
+
+  {%- if grid == false -%}
+    <a href="{{ single_zoom_media_url }}" class="prd-zoom-link js-prd-zoom-link">
+      <span class="visually-hidden">{{ 'theme.general.zoom' | t }}</span>
+      {% render 'icon-zoom' %}
+    </a>
+  {%- endif -%}
+  {%- if grid == false or grid == true and media_count == 1 -%}
+    {% render 'product-badges-ticker', render: true, section: section, product: product, product_form_id: product_form_id, layout: layout %}
+    {% render 'product-card-badges', render: true, section: section, product: product, product_form_id: product_form_id %}
+    {% render 'product-countdown', render: true, section: section, product: product, product_form_id: product_form_id %}
+  {%- endif -%}
+</div>
+{% comment %} {%- assign first_3d_model = product.media | where: "media_type", "model" | first -%}
+{%- if first_3d_model -%}
+  <button
+    class="btn btn--invert w-100 product__xr-button"
+    type="button"
+    aria-label="{{ 'products.product.xr_button_label' | t }}"
+    data-shopify-xr
+    data-shopify-model3d-id="{{ first_3d_model.id }}"
+    data-shopify-title="{{ product.title | escape }}"
+    data-shopify-xr-hidden
+  >
+    {% render 'icon-3d-model' %}
+    <span>{{ 'products.product.xr_button' | t }}</span>
+  </button>
+{%- endif -%} {% endcomment %}

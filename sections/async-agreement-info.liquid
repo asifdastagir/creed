@@ -1,0 +1,31 @@
+<div class="modal-wrap-scroll js-dropdn-content-scroll">
+  {%- if shop.policies.size > 0 -%}
+    {% for policy in shop.policies %}
+      {%- liquid
+        if policy.url == '/policies/subscription-policy'
+        continue
+        endif
+      -%}
+      <div class="title-wrap text-center {% unless forloop.first %}mt-8{% endunless %}">
+        <h2 class="h1-style">{{ policy.title }}</h2>
+        {%- if forloop.first -%}
+          <div class="h-sub w-800 d-none d-sm-block">{{ 'theme.general.agree_to_the_terms_subheading' | t }}</div>
+        {%- endif -%}
+      </div>
+      <div class="rte">
+        {{ policy.body }}
+      </div>
+    {% endfor %}
+  {%- else -%}
+    <div class="title-wrap text-center">
+      <h2 class="h1-style">Store policies</h2>
+      <div class="h-sub w-800 d-none d-sm-block">{{ 'theme.general.agree_to_the_terms_subheading' | t }}</div>
+    </div>
+    <div class="rte">
+      {{ 'theme.general.policies_placeholder_html' | t }}
+    </div>
+  {%- endif -%}
+  <div class="mt-3 text-center">
+    <div class="btn js-agreement-modal" data-button=".shopify-payment-agree">{{ 'theme.general.agree_to_the_terms' | t }}</div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+{%- liquid
+  assign subtitle = link.title | escape | split: 'subtitle:'
+
+  if subtitle.size > 1
+    assign subtitle = subtitle | last | split: '|' | first
+  else
+    assign subtitle = ''
+  endif
+
+  if layout == 'header-layout-2'
+    assign subtitle = link.title | escape | split: '|' | first
+  endif
+
+  assign collections_column_title_style = settings.collections_column_title_style
+
+  if page.handle == 'intro'
+    assign collections_column_title_style = '1'
+  endif
+-%}
+
+{%- if subtitle != blank -%}
+  <div class="submenu-list-title column-caption-style-{{ collections_column_title_style }}">{{ subtitle }}</div>
+{%- endif -%}

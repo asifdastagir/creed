@@ -1,0 +1,18 @@
+{%- liquid
+    assign layout = 'product-card'
+    assign section_id = 'product-card-rv'
+    assign product_form_suffix = '-rv'
+    assign product_form_id = 'product-form-' | append: product_form_suffix | append: section_id | append: '-' | append: product.id
+-%}
+{% render 'variant_picker',
+    product: product,
+    picker_type: settings.product_card_picker_type,
+    section: section,
+    section_id: section_id
+    layout: layout,
+    product_form_id: product_form_id,
+    use_pics: settings.product_card_use_pics,
+    use_variants_media: settings.product_card_use_variants_media,
+    color_options_name: settings.product_card_color_options_name,
+    swatches_width: settings.product_swatches_color_min_width
+%}

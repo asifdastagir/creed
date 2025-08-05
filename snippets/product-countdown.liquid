@@ -1,0 +1,27 @@
+{%- liquid
+  assign countdown = product.selected_or_first_available_variant.metafields.custom.countdown | default: product.metafields.custom.countdown
+-%}
+{%- if countdown != blank -%}
+  {%- liquid
+    case countdown
+      when 1
+        assign countdown = 'halfhour'
+      when 2
+        assign countdown = 'hour'
+      when 3
+        assign countdown = 'day'
+      when 4
+        assign countdown = 'week'
+      when 5
+        assign countdown = 'month'
+      when 6
+        assign countdown = 'year'
+    endcase
+  -%}
+  <div {% if render %}data-render="countdown"{% endif %}>
+    {%- comment -%} data-time='{{ countdown }}' {%- endcomment -%}
+    <count-down class="prd-countdown{{ class }} hide-on-hover" data-time-expire="{{ countdown }}">
+      <div>{{ 'theme.general.day' | t }}<div data-days></div></div><div>{{ 'theme.general.hrs' | t }}<div data-hours></div></div><div>{{ 'theme.general.min' | t }}<div data-minutes></div></div><div>{{ 'theme.general.sec' | t }}<div data-seconds></div></div>
+    </count-down>
+  </div>
+{%- endif -%}

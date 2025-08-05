@@ -1,0 +1,142 @@
+{%- liquid
+  if "ar he he-IL hi" contains localization.language.iso_code
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+    assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+
+  for i in (1..10)
+    assign catalog_handle = 'catalog_' | append: i
+    assign catalog_handle = settings[catalog_handle]
+    assign catalog = catalog | concat: settings[catalog_handle]
+    assign catalog_links = catalog_links | concat: linklists[catalog_handle].links
+  endfor
+
+  if collection.handle == 'all'
+    assign match = linklists.catalog
+  else
+    assign match = catalog_links | where: 'url', collection.url | first
+    unless match
+      for link in catalog_links
+        assign match = link.links | where: 'url', collection.url | first
+        if match
+          assign match = catalog_links | where: 'handle', link.handle | first
+          break
+        endif
+      endfor
+    endunless
+  endif
+
+  assign collection_description = collection.description
+
+  unless settings.collection_description
+    assign collection_description = blank
+  endunless
+-%}
+{%- if subcollection_vendor == 'subcollection_outer' -%}
+  {%- if collection_description != blank or match != blank -%}
+    <div class="category-page-description order-0 order-lg-1 mb-0 mb-lg-3">
+      <async-reload data-reload="elements" data-url-update>
+        <swiper-carousel data-center-arrows>
+          <div class="swiper-container swiper-container--center" id="categoryPageCarousel">
+            <div class="card-categories swiper-wrapper row flex-nowrap row-cols-2 row-cols-xs-3 row-cols-md-6 g-0">
+              {%- for link in match.links -%}
+                <div class="swiper-slide">
+                  {% capture img_title_alt %}
+                    <h4 class="card-category-md-name">{{ link.title | escape | split: '|' | first | truncate: 46, '..' }}</h4>
+                  {% endcapture %}
+                  {%- liquid
+                      assign link_url = link.url
+
+                      if template.suffix contains 'store-width-'
+                        unless link_url contains '?'
+                          assign link_url = link_url | append: '?'
+                        endunless
+
+                        assign link_url = link_url | append: '&view=' | append: template.suffix
+                      endif
+                    -%}
+                    <a href="{{ link_url }}" {% if link.title.size > 29 %}title="{{ link.title | escape }}"{% endif %} class="card-category-md text-center {% if link.current %}active{% endif %}">
+                    {% render 'image-container',
+                      image: link.object.image,
+                      padding_no_bg: 100,
+                      padding: 100,
+                      sizes: '(min-width: 1200px) 166px, (min-width: 992px) 130px, (min-width: 768px) 220px, (min-width: 576px) 160px, calc((100vw - 30px-10px)/2)',
+                      class_ic: 'card-category-md-img',
+                      class_img: 'w-100',
+                      bg_alt: true
+                      bg_border: true,
+                      img_title_alt: img_title_alt
+                    %}
+                    <h4 class="card-category-md-name">
+                      {%- if link.object.image != blank -%}
+                        {{ link.title | escape | truncate: 29, '..' }}
+                      {%- endif -%}
+                    </h4>
+                  </a>
+                </div>
+              {%- endfor -%}
+            </div>
+            <div class="swiper-scrollbar position-relative mt-1 d-md-none"></div>
+            {% comment %} <div class="swiper-pagination position-relative mt-3 d-none d-md-flex"></div> {% endcomment %}
+            <div class="swiper-arrows-carousel d-none d-md-block">
+              <div class="swiper-button-next"></div>
+              <div class="swiper-button-prev"></div>
+            </div>
+          </div>
+          <script type="application/json">
+            {
+              "centerInsufficientSlides": true,
+              "scrollbar": {
+                "el": ".swiper-scrollbar",
+                "draggable": true
+              },
+              "navigation": {
+                "nextEl": ".swiper-button-next",
+                "prevEl": ".swiper-button-prev"
+              },
+              "pagination": {
+                "el": ".swiper-pagination",
+                "clickable": true
+              },
+              "watchOverflow": true,
+              "slidesPerView": 2,
+              "spaceBetween": 10,
+              "breakpoints": {
+                "575": {
+                  "slidesPerView": 3,
+                  "spaceBetween": 15
+                },
+                "992": {
+                  "slidesPerView": 6,
+                  "spaceBetween": 30
+                }{% if store_width > 1465 %},
+                "1466": {
+                  "slidesPerView": 7,
+                  "spaceBetween": 30
+                }{%- endif -%}{% if store_width > 1700 %},
+                "1700": {
+                  "slidesPerView": 8,
+                  "spaceBetween": 30
+                }{%- endif -%}
+              }
+            }
+          </script>
+        </swiper-carousel>
+      </async-reload>
+      {%- if collection_description -%}
+        <div class="category-page-description-text-md text-center mt-7" data-async-reload="collection-description">
+          {{ collection_description }}
+        </div>
+      {%- endif -%}
+    </div>
+    <div class="line-divider line-divider--sm mt-4 mb-5"></div>
+  {%- endif -%}
+{%- endif -%}

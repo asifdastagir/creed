@@ -1,0 +1,23 @@
+{%- unless settings.catalog_mode -%}
+  {%- if settings.wishlist -%}
+    <div class="dropdn minicart">
+      <wishlist-popup data-selector="#dropdnWishlistPopup" data-tippy-content="{{ 'theme.general.wishlist' | t | escape }}" data-tippy-placement="top">
+        <a href="#" class="dropdn-link">
+          {%- if icon != false -%}
+            <span class="icon-wrap">{% render 'icon-heart' %}<wishlist-count class="minicart-qty"></wishlist-count></span>
+            <span class="visually-hidden">{{ 'theme.general.wishlist' | t }}</span>
+          {%- endif -%}
+          {%- if icon == false or position == 'bottom' -%}
+            <span class="dropdn-link-sm-text">
+              {%- if position == 'bottom' -%}
+                {{ 'theme.general.wishlist' | t }}
+              {%- else -%}
+                {{ 'theme.general.wishlist' | t | upcase }} <wishlist-count></wishlist-count>
+              {%- endif -%}
+            </span>
+          {%- endif -%}
+        </a>
+      </wishlist-popup>
+    </div>
+  {%- endif -%}
+{%- endunless -%}

@@ -1,0 +1,1097 @@
+{% comment %}theme-check-disable UnusedAssign, UndefinedObject{% endcomment %}
+{%- liquid
+  assign layout = section.settings.layout
+  assign default_rgba = 'rgba(0,0,0,0)'
+
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign style_size = section.settings.style
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+      assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+
+  if store_width > 1178
+    assign image_k = store_width | divided_by: 1178.00 | round: 2
+  endif
+
+  assign button_show_more = false
+
+  assign show_button = false
+  assign button_center = false
+  assign button_left = false
+
+  if button_show_more and section.settings.layout != 'mini_horizontal_banner'
+    assign show_button = true
+  endif
+
+  if show_button and section.settings.heading_alignment == 'center'
+    assign button_center = true
+  endif
+
+  if show_button and section.settings.heading_alignment == 'left' and section.settings.button_bottom_on_mobile
+    assign button_left = true
+  endif
+
+  assign autoload = section.settings.autoload
+  assign source = section.blocks
+  assign count = source.size
+
+  if autoload
+    assign source = section.settings.collection_list
+    assign count = source.count
+  endif
+
+  assign base_width = 5
+
+  case count
+    when 1
+      assign base_width = 1
+    when 2
+      assign base_width = 1.5
+    when 3
+      assign base_width = 2
+    when 4
+      assign base_width = 2
+    when 5
+      assign base_width = 3
+    when 6
+      assign base_width = 3
+    when 7
+      assign base_width = 3.5
+    when 8
+      assign base_width = 3.5
+    when 9
+      assign base_width = 4
+    when 10
+      assign base_width = 4
+    when 11
+      assign base_width = 4.5
+  endcase
+
+-%}
+
+{% capture sizes %}'(min-width: 1200px) {{ 1200 | divided_by: base_width }}px, (min-width: 768px) 768px, (min-width: 360px) 360px, (min-width: 320px) 320px, calc(100vw - 40px - 10px)'{% endcapture %}
+
+{{ 'categories-accordion' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{% render 'section-wrapper', placement: 'top' %}
+
+<div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+  <div class="{% render 'section-container-class', layout: layout %}">
+    {% render 'section-heading', section: section %}
+
+    {%- liquid
+
+        assign padding_no_bg = section.settings.images_auto_height_padding
+        assign padding = padding_no_bg
+        assign padding_no_bg_mobile = section.settings.images_auto_height_padding_mobile
+        assign padding_mobile = padding_no_bg_mobile
+
+    -%}
+
+    <images-accordion>
+      <div class="categories-accordion {% if section.settings.layout == 'layout_2' %}style2{% endif %}" style="--title-font-size: {{ section.settings.title_font_size }}px">
+        <div class="row gallery-wrap categories-accordion-row {% unless section.settings.inner_space %}g-0 rounded-card-0{% endunless %}" style="--basic-items-per-row: {{ base_width }};--total-items: {{ count }}">
+        {%- for item_block in source -%}
+          {%- liquid
+            if autoload
+              assign item = item_block
+              assign title = item.title
+              assign invert_color = section.settings.invert_color_autoload
+
+              assign button_enable = section.settings.button
+              assign button_text = section.settings.button_text
+
+              if button_text == blank
+                assign button_text = 'theme.general.shop_now' | t
+              endif
+
+              assign button_color = section.settings.button_color
+
+              assign description = ''
+
+              if section.settings.description
+                assign description = item.description | strip_html | truncatewords: 50, '..'
+              endif
+
+            else
+              assign item = item_block.settings
+
+              assign invert_color = item.invert_color
+              assign color = item.color_placeholder
+
+              if color != 'rgba(0,0,0,0)' and color != blank
+                assign ic_style = '--placeholder-bg: ' | append: color | append: ';'
+              endif
+
+              assign color_title = item.color_title
+
+              if color_title != default_rgba and color_title != blank
+                assign color_title = 'color:' | append: color_title | append: ';'
+              else
+                assign color_title = ''
+              endif
+
+              assign title = item.title
+
+              assign button_enable = item_block.settings.button
+              assign button_text = item_block.settings.button_text
+
+              if button_text == blank
+                assign button_text = 'theme.general.shop_now' | t
+              endif
+
+              assign button_color = item_block.settings.button_color
+
+              assign description = item_block.settings.description
+
+            endif
+
+            assign image = item.image
+            assign image_mobile = item.image_mobile
+            assign href = item.url | default: '#'
+
+          -%}
+
+          <div class="col {% if forloop.first %}is-opened{% endif %}">
+            {%- if section.settings.layout == 'layout_1' -%}
+              <a href="{{ href }}" class="card-category {% if invert_color %}colorize-invert{% endif %}">
+                <div class="card-category-img">
+                  {% if image_mobile %}
+                    {% render 'image-container',
+                      image: image_mobile,
+                      padding_no_bg: padding_no_bg_mobile,
+                      padding: padding_mobile,
+                      sizes: sizes,
+                      class_ic: 'ic--bg ic--m',
+                      class_img: 'w-100',
+                      style: ic_style,
+                      image_k: image_k
+                    %}
+                  {% endif %}
+                  {% render 'image-container',
+                    image: image,
+                    padding_no_bg: padding_no_bg,
+                    padding: padding,
+                    sizes: sizes,
+                    class_ic: 'ic--bg',
+                    class_img: 'w-100',
+                    style: ic_style,
+                    image_k: image_k
+                  %}
+                  <h4 class="card-category-name" style="{{ color_title }}">{{ title }}</h4>
+                </div>
+              </a>
+              <h4 class="col-category-name" style="{{ color_title }}">{{ title }}</h4>
+            {%- else -%}
+              <div class="card-category row d-flex mx-0">
+                <div class="col-6 overflow-hidden px-0 {% if invert_color %}colorize-invert{% endif %}">
+                  <a href="{{ href }}">
+                    {% if image_mobile %}
+                      {% render 'image-container',
+                          image: image_mobile,
+                          padding_no_bg: padding_no_bg_mobile,
+                          padding: padding_mobile,
+                          sizes: sizes,
+                          class_ic: 'ic--bg ic--m',
+                          class_img: 'w-100',
+                          style: ic_style,
+                          image_k: image_k
+                      %}
+                    {% endif %}
+                    {% render 'image-container',
+                        image: image,
+                        padding_no_bg: padding_no_bg,
+                        padding: padding,
+                        sizes: sizes,
+                        class_ic: 'ic--bg',
+                        class_img: 'w-100',
+                        style: ic_style,
+                        image_k: image_k
+                    %}
+                  </a>
+                  <h4 class="col-category-name heading-font {% if count < 5 %}off-transform{% endif %}" style="{{ color_title }}">{{ title }}</h4>
+                </div>
+                <div class="col-6 col-6 d-flex align-items-center px-0">
+                  <div class="py-3 py-sm-1 px-3">
+                    <h3 class="card-category-heading heading-font mb-0" style="{{ color_title }}">{{ title }}</h3>
+                    {%- if description != blank -%}
+                      <div class="card-category-description mt-2">{{ description }}</div>
+                    {%- endif -%}
+                    {%- if button_enable -%}
+                      <a href="{{ href }}" class="btn mt-3 {{ button_color }}" {% if block.settings.button_target_blank %}target="_blank"{% endif %} {{ btn_attributes }}>
+                          {{ button_text }}
+                      </a>
+                    {%- endif -%}
+                  </div>
+                </div>
+              </div>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+        </div>
+      </div>
+    </images-accordion>
+</div>
+</div>
+{% render 'section-wrapper' %}
+{% schema %}
+{
+  "name": "Categories Accordion",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_animation",
+      "label": "Enable soft appearing of section",
+      "default": true,
+      "info": "Global sections animation disabling in Theme Settings / General / Sections. AUTODISABLED if section has top or bottom separator."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Select design variant",
+      "options": [
+        {
+          "value": "layout_1",
+          "label": "Image only"
+        },
+        {
+          "value": "layout_2",
+          "label": "Image with the text"
+        }
+      ],
+      "default": "layout_1"
+    },
+    {
+      "type": "checkbox",
+      "id": "inner_space",
+      "label": "Inner space",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "min": 12,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Title font size",
+      "default": 23
+    },
+    {
+      "type": "range",
+      "id": "images_auto_height_padding",
+      "min": 100,
+      "max": 250,
+      "step": 2,
+      "unit": "%",
+      "label": "Aspect ratio for images height on desktop",
+      "default": 126
+    },
+    {
+      "type": "range",
+      "id": "images_auto_height_padding_mobile",
+      "min": 100,
+      "max": 250,
+      "step": 2,
+      "unit": "%",
+      "label": "Aspect ratio for images height on mobile",
+      "default": 126
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading aligment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Heading",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "header",
+      "content": "Autoloader",
+      "info": "fill collection previews, title, url automatically instead of manual (by 'Add banner')"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoload",
+      "label": "Fill section from collections",
+      "default": false,
+      "info": "instead of manual 'Add banner'"
+    },
+    {
+      "type": "collection_list",
+      "id": "collection_list",
+      "label": "Select collections",
+      "limit": 12
+    },
+    {
+      "type": "checkbox",
+      "id": "invert_color_autoload",
+      "label": "Invert captions color for autoloaded collections",
+      "default": true,
+      "info": "Invert color you can set in Theme Settings / General / Colors - Banners"
+    },
+    {
+      "type": "header",
+      "content": "-> if selected 'Image with text'",
+    },
+    {
+      "type": "checkbox",
+      "id": "description",
+      "label": "Show description",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "button",
+      "label": "Show",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Caption",
+      "default": "View all"
+    },
+    {
+      "type": "select",
+      "id": "button_color",
+      "label": "Button color",
+      "options": [
+        {
+          "value": "btn--default",
+          "label": "Primary"
+        },
+        {
+          "value": "btn--invert",
+          "label": "Secondary"
+        },
+        {
+          "value": "btn--grey",
+          "label": "Third"
+        },
+        {
+          "value": "btn--white",
+          "label": "Fourth"
+        },
+        {
+          "value": "btn--fifth",
+          "label": "Fifth"
+        }
+      ],
+      "default": "btn--invert"
+    },
+    {
+      "type": "header",
+      "content": "SECTION WIDTH"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Select width source",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use store width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom width"
+        }
+      ],
+      "default": "global",
+      "info": "Store width you can set in Theme Settings / General"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 1178,
+      "max": 1978,
+      "step": 8,
+      "unit": "px",
+      "label": "Custom width",
+      "default": 1178,
+      "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable background",
+      "default": false,
+      "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+    },
+    {
+      "type": "select",
+      "id": "background_preset",
+      "label": "Background image - preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "product-cosmetics-bg.png",
+          "label": "Leaves 1"
+        },
+        {
+          "value": "bottom-cosmetics-bg.png",
+          "label": "Leaves 2"
+        },
+        {
+          "value": "bg-makeup1.png,bg-makeup1-m.png",
+          "label": "Pink and Waves 1"
+        },
+        {
+          "value": "bg-makeup2.png,bg-makeup2-m.png",
+          "label": "Pink and Waves 2"
+        },
+        {
+          "value": "bg-makeup4.png,bg-makeup4-m.png",
+          "label": "Pink and Waves 3"
+        },
+        {
+          "value": "bg-makeup3.png,bg-makeup3-m.png",
+          "label": "Purple Splash"
+        },
+        {
+          "value": "bg-sweets1.png",
+          "label": "Blue Sun Rays"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image - custom on Desktop"
+    },
+    {
+      "type": "select",
+      "id": "background_behavior",
+      "label": "Background image behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image - custom on Mobile",
+      "info": "only if Background image - custom on Desktop selected"
+    },
+    {
+      "type": "select",
+      "id": "background_image_placeholder_type",
+      "label": "Placeholder background color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_secondary_bg"
+    },
+    {
+      "type": "color",
+      "id": "background_image_placeholder",
+      "label": "Custom - Placeholder background color"
+    },
+    {
+      "type": "header",
+      "content": "SECTION SEPARATOR"
+    },
+    {
+      "type": "header",
+      "content": "Top separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_header_main_bg",
+          "label": "Header - Middle(main) part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_top_color",
+      "label": "Custom - top separator color"
+    },
+    {
+      "type": "header",
+      "content": "Bottom separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "paragraph",
+      "content": "'Global separator' is set in Theme Settings / Separators / Global separator style"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_footer_top_bg",
+          "label": "Footer - Top part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_bottom_color",
+      "label": "Custom - bottom separator color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "limit": 12,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Womens"
+        },
+        {
+          "type": "checkbox",
+          "id": "invert_color",
+          "label": "Invert captions color",
+          "default": true,
+          "info": "Invert color you can set in Theme Settings / General / Colors - General"
+        },
+        {
+          "type": "paragraph",
+          "content": "Captions colorization. Instead of default banners colorization from Theme settings / Colors - Banners"
+        },
+        {
+          "type": "color",
+          "id": "color_title",
+          "label": "Caption"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Preview",
+          "info": "recommended size for retina displays is 510x510px"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Image for mobile",
+          "info": "recommended size for retina displays is 510x510px"
+        },
+        {
+          "type": "color",
+          "id": "color_placeholder",
+          "label": "Placeholder background loader",
+          "info": "Set the main color of the image (visually softens the appearance of the image)"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        },
+        {
+          "type": "header",
+          "content": "-> if selected 'Image with text'",
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "default": "There are many variations of passages of Lorem Ipsum available, but the majority have suffered alt",
+          "label": "Description"
+        },
+        {
+          "type": "header",
+          "content": "Button"
+        },
+        {
+          "type": "checkbox",
+          "id": "button",
+          "label": "Show",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Caption",
+          "default": "View all"
+        },
+        {
+          "type": "select",
+          "id": "button_color",
+          "label": "Button color",
+          "options": [
+            {
+              "value": "btn--default",
+              "label": "Primary"
+            },
+            {
+              "value": "btn--invert",
+              "label": "Secondary"
+            },
+            {
+              "value": "btn--grey",
+              "label": "Third"
+            },
+            {
+              "value": "btn--white",
+              "label": "Fourth"
+            },
+            {
+              "value": "btn--fifth",
+              "label": "Fifth"
+            }
+          ],
+          "default": "btn--invert"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Categories Accordion / constructor",
+      "blocks": [
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        }
+      ]
+    },
+    {
+      "name": "Categories Accordion / preset Default",
+      "blocks": [
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        }
+      ]
+    },
+    {
+      "name": "Categories Accordion / preset Horizontal",
+      "settings": {
+        "layout": "layout_2"
+      },
+      "blocks": [
+        {
+          "type": "category",
+          "settings": {
+            "invert_color": "false"
+          },
+        },
+        {
+          "type": "category",
+          "settings": {
+            "invert_color": "false"
+          },
+        },
+        {
+          "type": "category",
+          "settings": {
+            "invert_color": "false"
+          },
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,30 @@
+<div class="prd-top {% if settings.product_card_vendor == false %}d-flex{% endif %}">
+  {%- if settings.product_card_vendor -%}
+    <a class="prd-category" href="{{ product.vendor | url_for_vendor }}"  data-tippy-content="{{ 'theme.general.show_all_products_from_vendor' | t | escape }}" data-tippy-placement="right">{{ product.vendor | upcase | truncate: 15, '..' }}</a>
+  {%- else -%}
+<h3 class="prd-name {% if settings.product_card_vendor == false %}mb-0{% endif %}"><a class="" href="{{ product_url_collection }}" data-url>
+      {%- if product.variants.size > 1 and settings.product_card_show_variants -%}
+        {{ product.title | escape | truncate: settings.product_card_hover_title_short_truncate, '..' }}
+      {%- else -%}
+        {{ product.title | escape | truncate: settings.product_card_hover_title_truncate, '..' }}
+      {%- endif -%}
+    </a></h3>
+  {%- endif -%}
+  {%- render 'price', product: product, use_variant: true, render: true, product_form_id: product_form_id -%}
+</div>
+{%- if settings.product_card_vendor -%}
+  <h3 class="prd-name"><a class="" href="{{ product_url_collection }}" data-url>
+    {%- if product.variants.size > 1 and settings.product_card_show_variants -%}
+      {{ product.title | escape | truncate: settings.product_card_hover_title_short_truncate, '..' }}
+    {%- else -%}
+      {{ product.title | escape | truncate: settings.product_card_hover_title_truncate, '..' }}
+    {%- endif -%}
+  </a></h3>
+{%- endif -%}
+{%- if settings.product_card_show_description -%}
+  {%- if settings.product_card_description_source == 'description' -%}
+    <div class="prd-description ">{{ product.description | strip_html | truncatewords: 50, '..' }}</div>
+  {%- else -%}
+    <div class="prd-description ">{{ product.metafields.custom.short_description }}</div>
+  {%- endif -%}
+{%- endif -%}

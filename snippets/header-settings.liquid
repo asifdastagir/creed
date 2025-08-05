@@ -1,0 +1,57 @@
+{%- liquid
+  assign show_tooltip = false
+  assign show_language = false
+  assign show_country = false
+
+  if settings.enable_language_selector and localization.available_languages.size > 1
+    assign show_language = true
+  endif
+
+  if settings.enable_country_selector and localization.available_countries.size > 1
+    assign show_country = true
+  endif
+
+  if show_language or show_country
+    assign show_tooltip = true
+  endif
+
+
+  assign icon = settings.header_settings_icon
+
+  if icon == 'auto'
+    assign icon = 'icon-settings2'
+
+    unless show_tooltip
+      if settings.mail_yes and settings.phone != blank
+        assign icon = 'icon-support4'
+      endif
+
+      unless settings.mail_yes
+        assign icon = 'icon-phone'
+      endunless
+
+      if settings.phone == blank
+        assign icon = 'icon-mail3'
+      endif
+    endunless
+  endif
+-%}
+{%- if settings.header_settings and show_tooltip or settings.mail_yes or settings.phone != blank -%}
+  <settings-dropdown data-ajax="{{ request.path }}?section_id=async-header-settings">
+    <div class="dropdn_settings hide-mobile">
+        <div class="dropdn dropdn_settings">
+            <a href="{{ routes.root_url }}" class="dropdn-link js-dropdn-link" {% if show_tooltip %}data-tippy-content="{% if show_language %}{{ localization.language.endonym_name | capitalize }}{% endif %}{% if show_language and show_country %}, {% endif %}{% if show_country %}{{ localization.country.currency.iso_code }} {{ localization.country.currency.symbol }}{% endif %}" data-tippy-placement="top"{% endif %}>
+              <span class="icon-wrap">
+                {% render 'icon', icon: icon %}
+              </span>
+              <span class="visually-hidden">{{ 'theme.general.settings' | t }}</span>
+            </a>
+            <div class="dropdn-content">
+              <div class="dropdn-content-scroll js-dropdn-content-scroll" data-ajax-container>
+                  <div data-load="loading"></div>
+              </div>
+          </div>
+        </div>
+    </div>
+  </settings-dropdown>
+{%- endif -%}

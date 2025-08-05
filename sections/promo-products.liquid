@@ -1,0 +1,190 @@
+{% comment %}theme-check-disable ImgLazyLoading, RemoteAsset{% endcomment %}
+{%- liquid
+  assign product_list = section.settings.product_list
+  assign promo_collection = product_list | where: 'available'
+
+  assign aspect_ratio = settings.product_image_aspect_ratio
+
+  if aspect_ratio == 'custom'
+    assign aspect_ratio = settings.product_height_ratio | times: 100 | divided_by: settings.product_width_ratio
+  endif
+-%}
+{% if section.settings.enable and promo_collection.size > 0 %}
+  <div class="payment-notification-wrap" data-gallery="{{ settings.qv_show_media }}">
+    <div
+      class="payment-notification js-pn"
+      {% comment %}
+      data-expires="{{ section.settings.popup_expires }}"
+      {% endcomment %}
+      data-close="false"
+      data-visible-time="{{ section.settings.visible_time | times: 1000 }}"
+      data-hidden-time="{{ section.settings.hidden_time | times: 1000 }}"
+      data-delay="{{ section.settings.delay | times: 1000 }}"
+      data-from="{{ section.settings.from }}"></div>
+    <template id="promo-popup">
+      <div class="payment-notification-container row gx-3">
+        <div class="col-auto">
+          <a href="#" class="payment-notification-image js-pn-link">
+            <div class="image-hover-scale image-container {% if settings.product_card_cover %}ic--cover{% endif %} ic--bg" style="padding-bottom: {{ aspect_ratio }}%">
+                {% comment %}theme-check-disable ImgWidthAndHeight{% endcomment %}
+              <img
+                src="data:,"
+                class="js-pn-image"
+                alt>
+              {% comment %}theme-check-enable ImgWidthAndHeight{% endcomment %}
+            </div>
+          </a>
+        </div>
+        <div class="payment-notification-content-wrapper col">
+          <div class="payment-notification-content">
+            <div class="payment-labels">
+              <div class="payment-label payment-label--sale  text-uppercase">{{ 'products.product.on_sale' | t }}</div>
+              <div class="payment-label payment-label--new  text-uppercase">{{ 'theme.general.new' | t }}</div>
+            </div>
+            <h3 class="payment-notification-name">
+              <a
+                href=""
+                class="js-pn-name js-pn-link"
+                data-truncate={{ section.settings.product_title_truncate }}></a>
+            </h3>
+            <div class="payment-notification-text">{{ 'theme.general.someone_purchased' | t }}</div>
+            <div class="payment-notification-when">
+              {%- if localization.language.iso_code == 'es' -%}
+                {{ 'theme.general.min_ago_1' | t }}
+                <span class="js-pn-time"></span>
+                {{ 'theme.general.min_ago_2' | t }}
+              {%- else -%}
+                <span class="js-pn-time"></span>
+                {{ 'theme.general.min_ago' | t }}
+              {%- endif -%}
+            </div>
+            <div class="payment-notification-from">{{ 'theme.general.from' | t }}
+              <span class="js-pn-from"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="payment-notification-icons">
+        <a href="#" class="prd-icon payment-notification-close js-payment-notification-close">{% render 'icon-close4' %}<span class="visually-hidden">{{ 'theme.general.close_cap' | t }}</span>
+        </a>
+        {%- if settings.quick_view -%}
+          <quickview-popup
+            data-ajax
+            data-selector="#quickView"
+            data-gallery='off'
+            data-tippy-content="{{ 'theme.general.quick_view' | t | escape }}"
+            data-tippy-placement="left">
+            <a href="#" class="prd-icon">{% render 'icon-eye' %}<span class="visually-hidden">{{ 'theme.general.quick_view' | t }}</span>
+            </a>
+          </quickview-popup>
+        {%- endif -%}
+      </div>
+    </template>
+
+    {%- if product_list != blank -%}
+      <script type="application/json">
+        {% liquid
+          assign promo_collection = product_list | where: 'available' -%}
+        {
+          "title": {{ promo_collection | map: 'title' | json }},
+          "url": {{ promo_collection | map: 'url' | json }},
+          "image": {{ promo_collection | map: 'featured_media' | json }},
+          "images": {{ promo_collection | map: 'images' | json }},
+          "tags": {{ promo_collection | map: 'tags' | json }},
+          "price": {{ promo_collection | map: 'price' | json }},
+          "price_old": {{ promo_collection | map: 'compare_at_price' | json }},
+          "handle": {{ promo_collection | map: 'handle' | json }}
+        }
+      </script>
+    {%- endif -%}
+  </div>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Products promotion",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable",
+        "label": "Enable",
+        "default": false
+      },
+      {
+        "type": "product_list",
+        "id": "product_list",
+        "label": "Collection",
+        "info": "Choose the promo products collection",
+        "limit": 15
+      },
+      {
+        "type": "checkbox",
+        "id": "popup_close",
+        "label": "Don't show popup after close",
+        "default": false
+      },
+      {
+        "type": "range",
+        "id": "popup_expires",
+        "min": 0,
+        "max": 30,
+        "step": 1,
+        "unit": "day",
+        "label": "Days expired (cookie) if closed",
+        "default": 1
+      },
+      {
+        "type": "textarea",
+        "id": "from",
+        "label": "Cities",
+        "default": "Aberdeen, Abilene, Akron, Albany, Albuquerque, Alexandria, Allentown, Amarillo, Anaheim, Anchorage, Ann Arbor, Antioch, Apple Valley, Appleton, Arlington, Arvada, Asheville, Athens, Atlanta, Atlantic City, Augusta, Aurora, Austin, Bakersfield, Baltimore, Barnstable, Baton Rouge, Beaumont, Bel Air, Bellevue, Berkeley, Bethlehem, Billings, Birmingham, Bloomington, Boise, Boise City, Bonita Springs, Boston, Boulder, Bradenton, Bremerton, Bridgeport, Brighton, Brownsville, Bryan, Buffalo, Burbank, Burlington, Cambridge, Canton, Cape Coral, Carrollton, Cary, Cathedral City, Cedar Rapids, Champaign, Chandler, Charleston, Charlotte, Chattanooga, Chesapeake, Chicago, Chula Vista, Cincinnati, Clarke County, Clarksville, Clearwater, Cleveland, College Station, Colorado Springs, Columbia, Columbus, Concord, Coral Springs, Corona, Corpus Christi, Costa Mesa, Dallas, Daly City, Danbury, Davenport, Davidson County, Dayton, Daytona Beach, Deltona, Denton, Denver, Des Moines, Detroit, Downey, Duluth, Durham, El Monte, El Paso, Elizabeth, Elk Grove, Elkhart, Erie, Escondido, Eugene, Evansville, Fairfield, Fargo, Fayetteville, Fitchburg, Flint, Fontana, Fort Collins, Fort Lauderdale, Fort Smith, Fort Walton Beach, Fort Wayne, Fort Worth, Frederick, Fremont, Fresno, Fullerton, Gainesville, Garden Grove, Garland, Gastonia, Gilbert, Glendale, Grand Prairie, Grand Rapids, Grayslake, Green Bay, GreenBay, Greensboro, Greenville, Gulfport-Biloxi, Hagerstown, Hampton, Harlingen, Harrisburg, Hartford, Havre de Grace, Hayward, Hemet, Henderson, Hesperia, Hialeah, Hickory, High Point, Hollywood, Honolulu, Houma, Houston, Howell, Huntington, Huntington Beach, Huntsville, Independence, Indianapolis, Inglewood, Irvine, Irving, Jackson, Jacksonville, Jefferson, Jersey City, Johnson City, Joliet, Kailua, Kalamazoo, Kaneohe, Kansas City, Kennewick, Kenosha, Killeen, Kissimmee, Knoxville, Lacey, Lafayette, Lake Charles, Lakeland, Lakewood, Lancaster, Lansing, Laredo, Las Cruces, Las Vegas, Layton, Leominster, Lewisville, Lexington, Lincoln, Little Rock, Long Beach, Lorain, Los Angeles, Louisville, Lowell, Lubbock, Macon, Madison, Manchester, Marina, Marysville, McAllen, McHenry, Medford, Melbourne, Memphis, Merced, Mesa, Mesquite, Miami, Milwaukee, Minneapolis, Miramar, Mission Viejo, Mobile, Modesto, Monroe, Monterey, Montgomery, Moreno Valley, Murfreesboro, Murrieta, Muskegon, Myrtle Beach, Naperville, Naples, Nashua, Nashville, New Bedford, New Haven, New London, New Orleans, New York, New York City, Newark, Newburgh, Newport News, Norfolk, Normal, Norman, North Charleston, North Las Vegas, North Port, Norwalk, Norwich, Oakland, Ocala, Oceanside, Odessa, Ogden, Oklahoma City, Olathe, Olympia, Omaha, Ontario, Orange, Orem, Orlando, Overland Park, Oxnard, Palm Bay, Palm Springs, Palmdale, Panama City, Pasadena, Paterson, Pembroke Pines, Pensacola, Peoria, Philadelphia, Phoenix, Pittsburgh, Plano, Pomona, Pompano Beach, Port Arthur, Port Orange, Port Saint Lucie, Port St. Lucie, Portland, Portsmouth, Poughkeepsie, Providence, Provo, Pueblo, Punta Gorda, Racine, Raleigh, Rancho Cucamonga, Reading, Redding, Reno, Richland, Richmond, Richmond County, Riverside, Roanoke, Rochester, Rockford, Roseville, Round Lake Beach, Sacramento, Saginaw, Saint Louis, Saint Paul, Saint Petersburg, Salem, Salinas, Salt Lake City, San Antonio, San Bernardino, San Buenaventura, San Diego, San Francisco, San Jose, Santa Ana, Santa Barbara, Santa Clara, Santa Clarita, Santa Cruz, Santa Maria, Santa Rosa, Sarasota, Savannah, Scottsdale, Scranton, Seaside, Seattle, Sebastian, Shreveport, Simi Valley, Sioux City, Sioux Falls, South Bend, South Lyon, Spartanburg, Spokane, Springdale, Springfield, St. Louis, St. Paul, St. Petersburg, Stamford, Sterling Heights, Stockton, Sunnyvale, Syracuse, Tacoma, Tallahassee, Tampa, Temecula, Tempe, Thornton, Thousand Oaks, Toledo, Topeka, Torrance, Trenton, Tucson, Tulsa, Tuscaloosa, Tyler, Utica, Vallejo, Vancouver, Vero Beach, Victorville, Virginia Beach, Visalia, Waco, Warren, Washington, Waterbury, Waterloo, West Covina, West Valley City, Westminster, Wichita, Wilmington, Winston, Winter Haven, Worcester, Yakima, Yonkers, York, Youngstown",
+        "info": "Available cities for title 'Someone purchased in the city':"
+      },
+      {
+        "type": "range",
+        "id": "delay",
+        "min": 5,
+        "max": 30,
+        "step": 1,
+        "unit": "sec",
+        "label": "Delay",
+        "default": 12,
+        "info": "Delay before first appearance"
+      },
+      {
+        "type": "range",
+        "id": "hidden_time",
+        "min": 5,
+        "max": 20,
+        "step": 1,
+        "unit": "sec",
+        "label": "Time between appearances of purchased products",
+        "default": 15
+      },
+      {
+        "type": "range",
+        "id": "visible_time",
+        "min": 5,
+        "max": 20,
+        "step": 1,
+        "unit": "sec",
+        "label": "Visibility Time of purchased product",
+        "default": 12
+      },
+      {
+        "type": "header",
+        "content": "Truncate title"
+      },
+      {
+        "type": "range",
+        "id": "product_title_truncate",
+        "min": 16,
+        "max": 200,
+        "step": 2,
+        "label": "after:",
+        "default": 20,
+        "info": "letters"
+      }
+    ]
+  }
+{% endschema %}

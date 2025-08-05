@@ -1,0 +1,64 @@
+<div class="holder mt-global-negative" {% render 'section-style', section: section %}></div>
+{% schema %}
+{
+  "name": "Negative space for footer",
+  "tag": "section",
+  "class": "section-negative-margin",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "The section is needed in order to glue the last section and the footer. It is recommended to use only the last section in order."
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 0
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Negative space for footer"
+    },
+    {
+      "name": "Negative space"
+    }
+  ]
+}
+{% endschema %}

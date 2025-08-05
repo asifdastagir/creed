@@ -1,0 +1,447 @@
+/* Base */
+:root {
+    --button-font-family: var(--body-font-family);
+    --button-font-weight: 600;
+    --button-font-weight-less: 700;
+    --button-font-weight-lg: 500;
+
+    --heading-lg-size: 36px;
+    --heading-md-size: 28px;
+    --heading-sm-size: 18px;
+}
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+a:empty,
+ul:empty,
+dl:empty,
+div:empty,
+section:empty,
+article:empty,
+p:empty,
+h1:empty,
+h2:empty,
+h3:empty,
+h4:empty,
+h5:empty,
+h6:empty {
+    display: none;
+}
+
+html {
+    box-sizing: border-box;
+    height: 100%;
+}
+
+body {
+    font-family: var(--body-font-family);
+    font-size: 12px;
+    line-height: 16px;
+    color: var(--text-color);
+    background-color: var(--body-bg);
+
+}
+
+@media only screen and (min-width: 750px) {
+    body {
+        padding: 0 5rem;
+    }
+}
+
+::selection {
+    background-color: rgba(var(--text-color), 0.2);
+}
+
+h1,
+.h1,
+h2,
+.h2 {
+    font-family: var(--heading-font-family);
+    font-size: var(--heading-lg-size);
+    font-weight: var(--heading-lg-weight);
+    line-height: 1.2em;
+
+    position: relative;
+    z-index: 1;
+
+    margin: 0 0 45px;
+    padding: 0;
+
+    color: var(--heading-color);
+}
+
+h2,
+.h2 {
+    font-size: var(--heading-sm-size);
+}
+
+
+.skip-to-content-link:focus {
+    z-index: 9999;
+    position: inherit;
+    overflow: auto;
+    width: auto;
+    height: auto;
+    clip: auto;
+}
+
+.link {
+    cursor: pointer;
+    display: inline-block;
+    border: none;
+    box-shadow: none;
+    background-color: transparent;
+    font-size: 15px;
+    line-height: 1.2em;
+    text-decoration: underline;
+    color: var(--text-color);
+}
+
+.link:hover {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.gift-card {
+    padding-bottom: 35px;
+}
+
+.gift-card__title {
+    text-align: center;
+    word-break: break-word;
+    padding: 35px 0 20px;
+}
+
+@media only screen and (min-width: 990px) {
+    .gift-card__title {
+        padding: 60px 0 20px;
+    }
+}
+
+.gift-card__image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin-bottom: 10px;
+    margin: 0 auto;
+}
+
+@media only screen and (min-width: 750px) {
+    .gift-card__image-wrapper {
+        margin-bottom: 0;
+        width: 400px;
+    }
+}
+
+.gift-card__image {
+    max-width: 100%;
+    padding: 0 20px;
+    height: auto;
+}
+
+@media only screen and (min-width: 750px) {
+    .gift-card__image {
+        padding: 0;
+    }
+}
+
+.gift-card__heading {
+    font-weight: 400;
+    margin: 15px 0 3px
+}
+
+@media only screen and (min-width: 750px) {
+    .gift-card__heading {
+        margin: 25px 0 10px;
+    }
+}
+
+.gift-card__price {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--heading-md-size);
+    font-weight: 400;
+    line-height: 1.2em;
+}
+
+.gift-card__price > p:first-child {
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+@media only screen and (min-width: 750px) {
+    .gift-card__price {
+        font-size: var(--heading-md-size);
+    }
+}
+
+.gift-card__label:not(.badge) {
+    font-weight: 400;
+    opacity: 0.7;
+}
+
+.gift-card__number {
+    background-color: transparent;
+    border: none;
+    color: var(--text-color);
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.2em;
+    width: 100%;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+@media only screen and (min-width: 750px) {
+    .gift-card__number {
+        font-size: var(--heading-lg-size);
+    }
+}
+
+.gift-card__text {
+    margin-bottom: 40px;
+    opacity: 0.7;
+}
+
+.gift-card__information {
+    text-align: center;
+    margin-top: 20px;
+}
+
+@media only screen and (min-width: 750px) {
+    .gift-card__information {
+        margin-top: 25px;
+    }
+}
+
+.gift-card__label {
+    font-size: 1em;
+    font-weight: 500;
+    display: inline;
+    margin-left: 10px;
+}
+
+.badge {
+    border: 1px solid transparent;
+    margin: 15px 0 10px 10px;
+    border-radius: 4rem;
+    display: inline-block;
+    font-size: 1em;
+    letter-spacing: 0.1em;
+    line-height: 1em;
+    padding: 6px 12px;
+    text-align: center;
+    background-color: var(--body-bg);
+    border-color: rgba(var(--text-color), 0.04);
+    color: rgb(var(--text-color));
+}
+
+.badge--inverse {
+    background-color: rgb(var(--text-color));
+    border-color: rgb(var(--text-color));
+    color: var(--body-bg);
+}
+
+.caption-large {
+    font-size: 1.2em;
+    line-height: 1.2em;
+    letter-spacing: 0.04em;
+}
+
+.gift-card__copy-code {
+    margin-bottom: 20px;
+}
+
+.gift-card__qr-code {
+    margin-top: 30px;
+    text-align: center;
+}
+
+@media only screen and (min-width: 750px) {
+    .gift-card__qr-code {
+        margin-top: 35px;
+    }
+}
+
+.gift-card__qr-code img {
+    margin: 0 auto;
+}
+
+.gift_card__apple-wallet {
+    line-height: 0;
+    display: block;
+    margin-bottom: 5rem;
+}
+
+.gift-card__buttons {
+    display: flex;
+    flex-direction: column;
+    max-width: 100%;
+    flex-wrap: wrap;
+    margin: 40px auto 0;
+    justify-content: center;
+    align-items: center;
+}
+.gift-card__buttons > .button {
+    min-width: 200px;
+}
+
+.gift-card__buttons > .button:first-child {
+    display: block;
+    margin-bottom: 15px;
+}
+
+@media only screen and (min-width: 750px) {
+    .gift-card__buttons {
+        flex-direction: row;
+        margin: 50px auto 0;
+    }
+    .gift-card__buttons > .button:first-child {
+        margin-bottom: 0;
+        margin-right: 15px;
+    }
+}
+
+/*
+  Focus ring - default (with offset)
+*/
+
+/* Fallback - for browsers that don't support :focus-visible, a fallback is set for :focus */
+*:focus {
+    outline: 0;
+    box-shadow: none;
+}
+
+*:focus-visible {
+    outline: 0.2rem solid rgba(var(--text-color), 0.5);
+    outline-offset: 0.3rem;
+    box-shadow: 0 0 0 0.3rem rgb(var(--color-base-background-1)),
+    0 0 0.5rem 0.4rem rgba(var(--text-color), 0.3);
+}
+
+/* Fallback - for browsers that don't support :focus-visible, a fallback is set for :focus */
+.focused, .no-js *:focus {
+    outline: 0.2rem solid rgba(var(--color-foreground), 0.5);
+    outline-offset: 0.3rem;
+    box-shadow: 0 0 0 0.3rem rgb(var(--color-background)),
+    0 0 0.5rem 0.4rem rgba(var(--color-foreground), 0.3);
+}
+
+/* Negate the fallback side-effect for browsers that support :focus-visible */
+.no-js *:focus:not(:focus-visible) {
+    outline: 0;
+    box-shadow: none;
+}
+
+.form__message {
+    align-items: center;
+    display: flex;
+    font-size: 12px;
+    line-height: 1;
+    margin-top: 10px;
+    justify-content: center;
+}
+
+.form__message .icon {
+    position: relative;
+    top: -1px;
+    flex-shrink: 0;
+    height: 15px;
+    margin-right: 8px;
+    width: 15px;
+}
+
+@media print {
+    .no-print {
+        display: none;
+    }
+}
+
+.button
+{
+    font-family: var(--button-font-family);
+    font-size: 12px;
+    font-weight: var(--button-font-weight);
+    line-height: 24px;
+
+    position: relative;
+
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    overflow: hidden;
+
+    height: 40px;
+    padding: 8px 30px;
+
+    cursor: pointer;
+    white-space: nowrap;
+
+    border-width: var(--button-border-width, 0) !important;
+    border-style: solid;
+    border-color: var(--button-border-color);
+    border-radius: var(--button-border-radius, 9999px);
+
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+
+    text-transform: uppercase;
+}
+.button,
+.button:active,
+.button:active:focus,
+.button:visited,
+.button:focus
+{
+    text-decoration: none;
+    color: var(--button-color);
+    outline: none;
+    background-color: var(--button-bg);
+    box-shadow: none;
+}
+
+@media not all and (hover: none)
+{
+    .button:hover,
+    .button:active:hover,
+    .button:focus:hover
+    {
+        transition: background .2s ease;
+        color: var(--button-hover-color);
+        border-color: var(--button-hover-border-color);
+        outline: 0;
+        background-color: var(--button-hover-bg);
+    }
+}
+
+.button--secondary,
+.button--secondary:active,
+.button--secondary:active:focus,
+.button--secondary:visited,
+.button--secondary:focus
+{
+    color: var(--button-color-grey);
+    border-width: var(--button-border-width-grey, 0) !important;
+    border-color: var(--button-border-color-grey);
+    background-color: var(--button-bg-grey);
+}
+
+@media not all and (hover: none)
+{
+    .button--secondary:hover,
+    .button--secondary:active:hover,
+    .button--secondary:focus:hover
+    {
+        color: var(--button-hover-color-grey);
+        border-color: var(--button-hover-border-color-grey);
+        background-color: var(--button-hover-bg-grey);
+    }
+}

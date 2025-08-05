@@ -1,0 +1,382 @@
+{% comment %}theme-check-disable NestedSnippet, LiquidTag{% endcomment %}
+{%- liquid
+  assign layout = 'product-card'
+  assign section_id = section_id | default: 'product-card'
+  assign product_form_id = 'product-form-' | append: product_form_suffix | append: section_id | append: '-' | append: product.id
+
+  if settings.catalog_mode and product.has_only_default_variant == true
+    assign hide_hover = true
+    endif
+
+  if settings.product_card_disable_hover
+    assign hide_hover = true
+  endif
+
+  assign current_variant = product.selected_or_first_available_variant
+  assign target = product.selected_variant | default: product
+  assign image = product.selected_variant.featured_media | default: product.featured_media
+
+  assign aspect_ratio = settings.product_image_aspect_ratio
+
+  if aspect_ratio == 'custom'
+    assign aspect_ratio = settings.product_height_ratio | times: 100 | divided_by: settings.product_width_ratio
+  endif
+
+  assign show_price_old = true
+  if request.page_type == 'search' or request.page_type == 'collection'
+    if search.sort_by contains 'price' or collection.sort_by contains 'price'
+      if product.price_varies
+        assign show_price_old = false
+      endif
+    endif
+  endif
+
+  assign in_collection = product.collections | where: 'handle', collection.handle | first
+
+  if collection == null or collection.handle == 'all' or in_collection == nil
+    assign all_products_count = 0
+    for c in product.collections
+      if c.handle != 'all' and c.handle != 'frontpage' and all_products_count < c.all_products_count
+        assign collection = c
+        assign all_products_count = c.all_products_count
+      endif
+    endfor
+  endif
+
+  for i in (1..10)
+    assign catalog_handle = 'catalog_' | append: i
+    assign catalog_handle = settings[catalog_handle]
+    assign catalog_links = catalog_links | concat: linklists[catalog_handle].links
+  endfor
+
+  for link in catalog_links
+    assign lvl_2 = link.links | where: 'url', collection.url | first
+    unless lvl_2 == nil
+      assign lvl_1 = link
+      break
+    endunless
+  endfor
+  if lvl_1 == nil
+    assign lvl_1 = catalog_links | where: 'url', collection.url | first
+  endif
+
+  if lvl_2 == blank and lvl_1 == blank
+    for tag in product.tags
+      if tag contains 'collection-'
+        assign collection_handle = tag | replace: 'collection-', ''
+        assign collection = collections[collection_handle]
+      elsif tag contains 'collections-'
+        assign collection_handle = tag | replace: 'collections-', ''
+        assign collection = collections[collection_handle]
+      endif
+    endfor
+  endif
+
+  assign bg_class = 'ic--bg'
+  if image != blank and settings.product_card_cover == false
+    assign bg_class = 'ic--bg' | append: '-alt'
+  endif
+
+  assign product_url = current_variant.url
+
+  unless product_url contains '?'
+    assign product_url = product_url | append: '?'
+  endunless
+
+  assign swatches_lazy = swatches_lazy | default: true, allow_false: true
+
+  if target.has_only_default_variant
+    assign swatches_lazy = false
+  endif
+
+  if request.design_mode
+    assign swatches_lazy = false
+  endif
+
+  assign media_size = product.media | where: 'media_type', 'image' | size
+
+  assign picker_type =  settings.product_card_picker_type
+  assign use_pics =  settings.product_card_use_pics
+  assign use_variants_media = settings.product_card_use_variants_media
+  assign swatches_width = settings.product_swatches_color_min_width
+  assign product_card_countdown = product.metafields.custom.product_card_countdown | default: settings.product_card_countdown, allow_false: true
+  assign product_card_quick_options = product.metafields.custom.product_card_quick_options | default: settings.product_card_quick_options
+
+  assign show_variant_picker = true
+
+
+
+  assign hide_quantity = 1
+
+  if settings.product_inventory_quantity and settings.product_inventory_quantity_on_product_card
+    assign hide_quantity = 0
+  endif
+
+  if hide_hover
+    assign product_card_quick_options = 'none'
+  endif
+
+  assign product_url_collection = product.url
+
+  if settings.product_card_url_within_collection
+    assign product_url_collection = product.url | within: collection
+  endif
+-%}
+<product-card class="prd {% if hide_hover %}prd--hover-off{% endif %} {% if settings.product_card_layout == '3' %}prd--style1{% endif %} prd--style{{ settings.product_card_layout }} {% if settings.product_card_image_mobile_rounded_image %}mobile-rounded-on{% endif %} {% unless settings.product_card_vendor %}prd-off-vendor{% endunless %} {% if swatches_lazy %}lazyload{% endif %}" {% if swatches_lazy %}data-ajax="{{ product_url }}&section_id=async-product-card-variant-picker{{ product_form_suffix }}" data-expand="-50"{% endif %} data-section-render data-available="{% if product.available %}true{% else %}false{% endif %}">
+  {%- if settings.product_card_layout == '1' -%}
+    <div class="prd-top">
+      {%- if settings.product_card_vendor and show_price_old == true -%}
+        <a class="prd-category" href="{{ product.vendor | url_for_vendor }}" data-tippy-content="{{ 'theme.general.show_all_products_from_vendor' | t | escape }}" data-tippy-placement="top">
+          {{ product.vendor | upcase | truncate: 15, '..' }}
+        </a>
+      {%- endif -%}
+      <h3 class="prd-name"><a href="{{ product_url_collection }}" class="" data-url>{{ product.title | escape | truncate: settings.product_card_title_truncate, '..' }}</a></h3>
+      {%- render 'price', product: product, use_variant: true, render: true, product_card_style_1: true, product_form_id: product_form_id, product_card: true -%}
+    </div>
+    <div class="prd-image-wrap image-container ic--ignore-global-round {% if media_size == 1 %}image-hover-scale{% endif %} {% if settings.product_card_cover %}ic--cover{% endif %} {% if settings.product_card_image_rounded == "1" %}ic--rd ic--img-r{% endif %} {{ bg_class }} {% if settings.product_card_image_padding == "0" %} no-gutter{% endif %}" style="--product-aspect-ratio: {{ aspect_ratio }}%;--aspect-ratio: {{ aspect_ratio }}" >
+      {% render 'product-card-media',
+        product: product,
+        image: image,
+        collection: collection,
+        lazyload: lazyload,
+        class_img_only: class_img_only,
+        widths: widths,
+        sizes: sizes,
+        product_form_suffix: product_form_suffix,
+        fetchpriority: fetchpriority,
+        product_url_collection: product_url_collection
+      %}
+      {% render 'product-card-badges', render: true, section: section, product: product, product_form_id: product_form_id %}
+      {% render 'product-card-component-icons-bar', current_variant: current_variant, target: target, product_form_id: product_form_id, product: product %}
+      {% render 'product-badges-ticker', render: true, section: section, product: product, product_form_id: product_form_id, layout: layout %}
+      {%- if product_card_countdown -%}
+        {% render 'product-countdown', render: true, section: section, product: product, class: ' hide-on-hover', product_form_id: product_form_id %}
+      {%- endif -%}
+    </div>
+      <div class="prd-bot hide-on-hover">
+       {%- if settings.product_card_show_variants and product_card_quick_options != 'none' and show_variant_picker -%}
+          {% render 'variant_picker',
+            product: product,
+            picker_type: picker_type,
+            section: section,
+            section_id: section_id
+            layout: layout,
+            product_form_id: product_form_id,
+            use_pics: use_pics,
+            use_variants_media: use_variants_media,
+            color_options_name: settings.product_card_color_options_name,
+            swatches_width: swatches_width,
+            product_form_suffix: product_form_suffix,
+            quick_options: true
+          %}
+        {%- endif -%}
+        <h3 class="prd-name"><a href="{{ product_url_collection }}" class="" data-url>{{ product.title | escape | truncate: settings.product_card_title_truncate, '..' }}</a></h3>
+        {%- if settings.product_card_rating -%}
+          <div class="prd-rating">
+            {% render 'rating', product: product %}
+          </div>
+        {%- endif -%}
+      </div>
+     {%- unless hide_hover -%}
+        <div class="prd-hover">
+          {% render 'product-card-list-description', product: product, collection: collection, product_url_collection: product_url_collection %}
+          {%- if settings.product_card_show_variants and show_variant_picker -%}
+            {%- if  swatches_lazy -%}
+              <div class="ajax-container"></div>
+            {%- else -%}
+              {% render 'variant_picker',
+                product: product,
+                picker_type: picker_type,
+                section: section,
+                section_id: section_id
+                layout: layout,
+                product_form_id: product_form_id,
+                use_pics: use_pics,
+                use_variants_media: use_variants_media,
+                color_options_name: settings.product_card_color_options_name,
+                swatches_width: swatches_width,
+                product_form_suffix: product_form_suffix,
+              %}
+            {%- endif -%}
+          {%- endif -%}
+          {% render 'product-card-action'
+            product: product,
+            product_form_id: product_form_id,
+            show_variants: settings.product_card_show_variants,
+            product_direct: settings.product_direct,
+            layout: layout,
+            hide_quantity: hide_quantity,
+            current_variant: current_variant
+          %}
+        </div>
+      {%- endunless -%}
+  {%- elsif settings.product_card_layout == '2' -%}
+    <div class="prd-image-wrap image-container ic--ignore-global-round {% if media_size == 1 %}image-hover-scale{% endif %} {% if settings.product_card_cover %}ic--cover{% endif %} {% if settings.product_card_image_rounded == "1" %}ic--rd ic--img-r{% endif %} {{ bg_class }} {% if swatches_lazy %}lazyload{% endif %}" {% if swatches_lazy %}data-ajax="{{ product_url }}&section_id=async-product-card-variant-picker" data-expand="-50"{% endif %}  style="--product-aspect-ratio: {{ aspect_ratio }}%;--aspect-ratio: {{ aspect_ratio }}">
+      {% render 'product-card-media',
+        product: product,
+        image: image,
+        collection: collection,
+        lazyload: lazyload,
+        class_img_only: class_img_only,
+        widths: widths,
+        sizes: sizes,
+        product_form_suffix: product_form_suffix,
+        fetchpriority: fetchpriority,
+        product_url_collection: product_url_collection
+      %}
+      {% render 'product-card-badges', render: true, section: section, product: product, product_form_id: product_form_id %}
+      {% render 'product-card-component-icons-bar', current_variant: current_variant, target: target, product_form_id: product_form_id, product: product %}
+      {% render 'product-badges-ticker', render: true, section: section, product: product, product_form_id: product_form_id, layout: layout %}
+      {%- if product_card_countdown -%}
+        {% render 'product-countdown', render: true, section: section, product: product, class: ' hide-on-hover', product_form_id: product_form_id %}
+      {%- endif -%}
+    </div>
+    <div class="prd-bot hide-on-hover">
+      {%- if settings.product_card_show_variants  and product_card_quick_options != 'none' and show_variant_picker -%}
+        {% render 'variant_picker',
+          product: product,
+          picker_type: picker_type,
+          section: section,
+          section_id: section_id
+          layout: layout,
+          product_form_id: product_form_id,
+          use_pics: use_pics,
+          use_variants_media: use_variants_media,
+          color_options_name: settings.product_card_color_options_name,
+          swatches_width: swatches_width,
+          show_colors_only: true,
+          product_form_suffix: product_form_suffix,
+          quick_options: true
+        %}
+      {%- endif -%}
+      {%- if settings.product_card_vendor -%}
+        <a class="prd-category" href="{{ product.vendor | url_for_vendor }}"  data-tippy-content="{{ 'theme.general.show_all_products_from_vendor' | t | escape }}" data-tippy-placement="top">
+          {{ product.vendor | upcase | truncate: 15, '..' }}
+        </a>
+      {%- endif -%}
+      <h3 class="prd-name"><a href="{{ product_url_collection }}" class="" data-url>{{ product.title | escape | truncate: settings.product_card_title_truncate, '..' }}</a></h3>
+      {%- if settings.product_card_rating -%}
+        <div class="prd-rating">
+          {% render 'rating', product: product %}
+        </div>
+      {%- endif -%}
+      {%- render 'price', product: product, use_variant: true, render: true, product_card_style_1: false, product_form_id: product_form_id, product_card: true -%}
+    </div>
+    <div class="prd-hover">
+      {% render 'product-card-list-description', product: product, collection: collection, product_url_collection: product_url_collection %}
+      {%- if settings.product_card_show_variants and show_variant_picker -%}
+        {%- if  swatches_lazy -%}
+          <div class="ajax-container"></div>
+        {%- else -%}
+          {% render 'variant_picker',
+            product: product,
+            picker_type: picker_type,
+            section: section,
+            section_id: section_id
+            layout: layout,
+            product_form_id: product_form_id,
+            use_pics: use_pics,
+            use_variants_media: use_variants_media,
+            color_options_name: settings.product_card_color_options_name,
+            swatches_width: swatches_width,
+            product_form_suffix: product_form_suffix,
+          %}
+        {%- endif -%}
+      {%- endif -%}
+      {%- render 'price', product: product, use_variant: true, render: true, product_card_style_1: false, class: 'justify-content-center', product_form_id: product_form_id, product_card: true -%}
+      {% render 'product-card-action'
+        product: product,
+        product_form_id: product_form_id,
+        show_variants: settings.product_card_show_variants,
+        product_direct: settings.product_direct,
+        layout: layout,
+        hide_quantity: hide_quantity,
+        current_variant: current_variant
+      %}
+    </div>
+  {%- else -%}
+    <div class="prd-image-wrap image-container ic--ignore-global-round {% if media_size == 1 %}image-hover-scale{% endif %} {% if settings.product_card_cover %}ic--cover{% endif %} {% if settings.product_card_image_rounded == "1" %}ic--rd ic--img-r{% endif %} {{ bg_class }} {% if settings.product_card_image_padding == "0" %} no-gutter{% endif %}" style="--product-aspect-ratio: {{ aspect_ratio }}%;--aspect-ratio: {{ aspect_ratio }}" >
+      {% render 'product-card-media',
+        product: product,
+        image: image,
+        collection: collection,
+        lazyload: lazyload,
+        class_img_only: class_img_only,
+        widths: widths,
+        sizes: sizes,
+        product_form_suffix: product_form_suffix,
+        fetchpriority: fetchpriority,
+        product_url_collection: product_url_collection
+      %}
+      {% render 'product-card-badges', render: true, section: section, product: product, product_form_id: product_form_id %}
+      {% render 'product-card-component-icons-bar', current_variant: current_variant, target: target, product_form_id: product_form_id, product: product %}
+      {% render 'product-badges-ticker', render: true, section: section, product: product, product_form_id: product_form_id, layout: layout %}
+      {%- if product_card_countdown -%}
+        {% render 'product-countdown', render: true, section: section, product: product, class: ' hide-on-hover', product_form_id: product_form_id %}
+      {%- endif -%}
+    </div>
+    <div class="prd-bot hide-on-hover">
+      {%- if settings.product_card_show_variants  and product_card_quick_options != 'none' and show_variant_picker -%}
+        {% render 'variant_picker',
+          product: product,
+          picker_type: picker_type,
+          section: section,
+          section_id: section_id
+          layout: layout,
+          product_form_id: product_form_id,
+          use_pics: use_pics,
+          use_variants_media: use_variants_media,
+          color_options_name: settings.product_card_color_options_name,
+          swatches_width: swatches_width,
+          show_colors_only: true,
+          product_form_suffix: product_form_suffix,
+          quick_options: true
+        %}
+      {%- endif -%}
+      {%- if settings.product_card_vendor -%}
+        <a class="prd-category" href="{{ product.vendor | url_for_vendor }}"  data-tippy-content="{{ 'theme.general.show_all_products_from_vendor' | t | escape }}" data-tippy-placement="top">
+          {{ product.vendor | upcase | truncate: 15, '..' }}
+        </a>
+      {%- endif -%}
+      <h3 class="prd-name"><a href="{{ product_url_collection }}" class="" data-url>{{ product.title | escape | truncate: settings.product_card_title_truncate, '..' }}</a></h3>
+      {%- if settings.product_card_rating -%}
+        <div class="prd-rating">
+          {% render 'rating', product: product %}
+        </div>
+      {%- endif -%}
+      {%- render 'price', product: product, use_variant: true, render: true, product_card_style_1: false, product_form_id: product_form_id, product_card: true -%}
+    </div>
+    <div class="prd-hover">
+      {% render 'product-card-list-description', product: product, collection: collection, product_url_collection: product_url_collection %}
+      {%- if settings.product_card_show_variants and show_variant_picker -%}
+        {%- if  swatches_lazy -%}
+          <div class="ajax-container"></div>
+        {%- else -%}
+          {% render 'variant_picker',
+            product: product,
+            picker_type: picker_type,
+            section: section,
+            section_id: section_id
+            layout: layout,
+            product_form_id: product_form_id,
+            use_pics: use_pics,
+            use_variants_media: use_variants_media,
+            color_options_name: settings.product_card_color_options_name,
+            swatches_width: swatches_width,
+            product_form_suffix: product_form_suffix,
+          %}
+        {%- endif -%}
+      {%- endif -%}
+      {%- render 'price', product: product, use_variant: true, render: true, product_card_style_1: false, product_form_id: product_form_id, product_card: true -%}
+      {% render 'product-card-action'
+        product: product,
+        product_form_id: product_form_id,
+        show_variants: settings.product_card_show_variants,
+        product_direct: settings.product_direct,
+        layout: layout,
+        hide_quantity: hide_quantity,
+        current_variant: current_variant
+      %}
+    </div>
+  {%- endif -%}
+</product-card>

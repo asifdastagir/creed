@@ -1,0 +1,10 @@
+<form class="search-input-group{{ suffix }} js-faq-search-form">
+  <input type="text" class="form-control form-control--bg shadow-none {% if settings.input_alt_border == "1" or section.settings.search_bg %}border-0{% endif %} form-control--rounded js-faq-input" placeholder="{{ 'theme.general.faq_search_placeholder' | t }}">
+  {% comment %}<button class="btn {% if section.settings.search_bg %}btn--invert{% endif %}" type="submit">{% render 'icon-search' %}</button>{% endcomment %}
+</form>
+<small class="form-message form-message--success d-none p-0 mt-1">
+  {{ 'theme.general.found' | t }}&nbsp;<b></b>&nbsp;<span class="single">{{ 'theme.general.match' | t }}</span><span class="plural">{{ 'theme.general.matches' | t }}</span>
+</small>
+<small class="form-message form-message--error d-none p-0 mt-1">
+  {{ 'theme.general.search_no_matches' | t }}
+</small>

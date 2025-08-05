@@ -1,0 +1,134 @@
+{% comment %}theme-check-disable UnusedAssign{% endcomment %}
+{%- liquid
+  assign layout = 'customers-activate-account'
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+-%}
+
+<div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+  <div class="{% render 'section-container-class', layout: layout %}">
+    <div class="container">
+      <div class="w-370">
+        <div class="row align-items-center">
+          <div class="col mt-5 mt-md-0 ms-auto">
+            <div class="title-wrap text-center">
+              <h1 class="h1-style">{{ 'customer.activate_account.title' | t }}</h1>
+              <div class="h-sub">{{ 'customer.activate_account.subtext' | t }}</div>
+            </div>
+            {%- form 'activate_customer_password', class: 'mt-5 login-form login-form--max' -%}
+              {%- if form.errors -%}
+                <div tabindex="-1" autofocus>
+                  {%- liquid
+                    for field in form.errors
+                      render 'error', message: form.errors.messages[field]
+                    endfor
+                  -%}
+                </div>
+              {%- endif -%}
+              <div class="form-group">
+                <label for="password">
+                  {{ 'customer.activate_account.password' | t }}
+                </label>
+                <div class="form-control-wrap">
+                  <input
+                      type="password"
+                      name="customer[password]"
+                      id="password"
+                      autocomplete="new-password"
+                      placeholder="{{ 'theme.general.password' | t }}"
+                      {% if form.errors contains 'password' %}
+                        aria-invalid="true"
+                        aria-describedby="password-error"
+                      {% endif %}
+                      class="form-control"
+                      required
+                      minlength="5"
+                  >
+                  {% render 'input-check' %}
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="password">
+                  {{ 'customer.activate_account.password_confirm' | t }}
+                </label>
+                <div class="form-control-wrap">
+                  <input
+                      type="password"
+                      name="customer[password_confirmation]"
+                      id="password_confirmation"
+                      autocomplete="new-password"
+                      placeholder="{{ 'theme.general.password' | t }}"
+                      {% if form.errors contains 'password' %}
+                        aria-invalid="true"
+                        aria-describedby="password_confirmation-error"
+                      {% endif %}
+                      class="form-control"
+                      required
+                      minlength="5"
+                  >
+                </div>
+              </div>
+              <div class="row mt-2 g-2 justify-content-center">
+                <div class="col-auto">
+                  <button class="btn">{{ 'customer.activate_account.submit' | t }}</button>
+                </div>
+                <div class="col-auto">
+                  <button class="btn btn--grey" name="decline">{{ 'customer.activate_account.cancel' | t }}</button>
+                </div>
+              </div>
+            {%- endform -%}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Main activate account",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 46
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": false,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 20
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": false,
+      "info": "from Theme Settings / General / Layout"
+    }
+  ]
+}
+{% endschema %}

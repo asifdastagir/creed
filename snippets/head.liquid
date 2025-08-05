@@ -1,0 +1,132 @@
+{% comment %}theme-check-disable AssetPreload, ImgWidthAndHeight, RemoteAsset{% endcomment %}
+{%- liquid
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+    assign rtl_mode = true
+  endif
+
+  assign product_url_collection = product.url
+
+  if settings.product_card_url_within_collection
+    assign product_url_collection = product.url | within: collection
+  endif
+-%}
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5">
+<meta name="theme-color" content="">
+{% if template contains 'product' %}
+<link rel="canonical" href="{{ product_url_collection }}" />
+{% elsif template == 'collection' %}
+<link rel="canonical" href="{{ collection.url }}" />
+{% elsif template == 'page' %}
+<link rel="canonical" href="{{ page.url }}" />
+{% else %}
+<link rel="canonical" href="{{ canonical_url }}">
+{% endif %}
+<link rel="prefetch" as="document" href="{{ request.origin }}">
+{%- unless settings.font_type_header.system? and settings.font_type_body.system? -%}
+  <link rel="preconnect" href="//fonts.shopifycdn.com">
+{%- endunless -%}
+{%- if settings.font_source == '2' or settings.font_source_headings == '2' -%}
+  <link rel="preconnect" href="//fonts.googleapis.com" crossorigin>
+  <link rel="dns-prefetch" href="//fonts.googleapis.com">
+{%- endif -%}
+<link rel="dns-prefetch" href="//productreviews.shopifycdn.com">
+<link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<title>
+  {{ page_title }}
+  {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+  {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
+  {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
+</title>
+{% if page_description %}
+  <meta name="description" content="{{ page_description | escape }}">
+{% endif %}
+{% render 'meta-tags' %}
+
+{%- if settings.favicon != blank -%}
+  <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+{%- endif -%}
+
+<script>document.getElementsByTagName('html')[0].style.setProperty('--vhStart',  window.innerHeight * 0.01 + 'px');</script>
+
+{%- liquid render 'head-fonts-colors' -%}
+
+{%- if settings.use_bundles -%}
+  {{ 'bundle-head' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{%- else -%}
+  {{ 'bootstrap.min.css' | asset_url | stylesheet_tag }}
+  {{ 'swiper-bundle.min.css' | asset_url | stylesheet_tag }}
+  {{ 'jquery.fancybox.min.css' | asset_url | stylesheet_tag }}
+  {{ 'header' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+  {{ 'minicart' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+  {{ 'menu' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+  {{ 'style' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+  {%- if rtl_mode -%}
+    {{ 'style-add-rtl.css' | asset_url | stylesheet_tag }}
+  {%- endif -%}
+  {{ 'banners.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+{%- if settings.demo -%}
+  {{ 'custom.css' | asset_url | stylesheet_tag }}
+{%- endif -%}
+{%- if settings.theme_custom_css != blank -%}
+  <style>
+    {{ settings.theme_custom_css }}
+  </style>
+{%- endif -%}
+
+{%- if settings.use_bundles -%}
+  <script src="{{ 'bundle-head.js' | asset_url }}" defer></script>
+{%- else -%}
+  <script src="{{ 'jquery.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'popper.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'tippy-bundle.umd.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'swiper-animation.umd.js' | asset_url }}" defer></script>
+  <script src="{{ 'swiper-bundle.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'lazysizes.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'ls.aspectratio.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'ls.bgset.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'bodyScrollLock.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'list.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'noframework.waypoints.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'smooth-scrollbar.js' | asset_url }}" defer></script>
+  <script src="{{ 'jquery.fancybox.min.js' | asset_url }}" defer></script>
+  <script src="{{ 'jquery.ez-plus.js' | asset_url }}" defer></script>
+  <script src="{{ 'instafeed.min.js' | asset_url }}" defer></script>
+
+  <script src="{{ 'super.js' | asset_url }}" defer></script>
+  <script src="{{ 'app.js' | asset_url }}" defer></script>
+  <script src="{{ 'header.js' | asset_url }}" defer></script>
+  <script src="{{ 'back-to-top.js' | asset_url }}" defer></script>
+  <script src="{{ 'popup-info-subscribe.js' | asset_url }}" defer></script>
+  <script src="{{ 'buy-now-popup.js' | asset_url }}" defer></script>
+  <script src="{{ 'footer.js' | asset_url }}" defer></script>
+  <script src="{{ 'promo-topline.js' | asset_url }}" defer></script>
+
+  <script src="{{ 'global.js' | asset_url }}" defer></script>
+  <script src="{{ 'product-form.js' | asset_url }}" defer></script>
+  <script src="{{ 'cart.js' | asset_url }}" defer></script>
+  <script src="{{ 'pickup-availability.js' | asset_url }}" defer></script>
+  <script src="{{ 'pagination-infinite-scroll.js' | asset_url }}" defer></script>
+  <script src="{{ 'storage-object.js' | asset_url }}" defer></script>
+  {%- if settings.selling_plans_enable -%}
+    <script src="{{ 'selling-selector.js' | asset_url }}" defer></script>
+  {%- endif -%}
+  {%- if settings.wishlist -%}
+    <script src="{{ 'wishlist-shopify.js' | asset_url }}" defer></script>
+  {%- endif -%}
+  {%- if settings.predictive_search_enabled -%}
+    <script src="{{ 'predictive-search.js' | asset_url }}" defer></script>
+  {%- endif -%}
+  <script src="{{ 'product-model.js' | asset_url }}" defer></script>
+  <script src="{{ 'shipping-calculator.js' | asset_url }}" defer></script>
+  <script src="{{ 'index-recently-viewed.js' | asset_url }}" defer></script>
+  <script src="{{ 'intersection-observer.js' | asset_url }}" defer></script>
+{%- endif -%}
+{%- if request.design_mode -%}
+  <script src="{{ 'theme-editor.js' | asset_url }}" defer="defer"></script>
+{%- endif -%}

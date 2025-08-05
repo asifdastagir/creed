@@ -1,0 +1,1452 @@
+{% comment %}theme-check-disable UnusedAssign{% endcomment %}
+{%- liquid
+  assign layout = 'index-brands-carousel'
+
+  if section.settings.style == 'circle'
+    assign padding = 100
+    assign padding_no_bg = padding
+    assign style_suffix = '-circle'
+  else
+    assign padding_no_bg = 35.18
+    if section.settings.show_brands_auto
+      assign padding = padding_no_bg
+    else
+    endif
+
+  if section.settings.images_auto_height
+        assign padding_no_bg = section.settings.images_auto_height_padding
+        assign padding = padding_no_bg
+    endif
+  endif
+
+
+  assign bg_alt = false
+  assign bg = true
+  if section.settings.bg == "bg-none"
+    assign bg = false
+  elsif section.settings.bg == "bg-alt"
+    assign bg_alt = true
+  endif
+
+  assign style_suffix  = 'brands-grid-item' | append: style_suffix
+  unless bg == false
+    if section.settings.border == 'shadow'
+      assign style_suffix  = 'ic--shadow ' | append: style_suffix
+    endif
+  endunless
+
+  if section.settings.border == 'thin'
+    assign style_suffix = style_suffix | append: ' ic--border'
+  endif
+
+  assign style_suffix = style_suffix | append: ' ic--' | append: section.settings.bg
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+      assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+
+  assign button_show_more = false
+  if section.settings.button
+    if section.settings.heading_alignment == 'left'
+      assign button_show_more = true
+    elsif section.settings.layout != 'mini_horizontal_banner'
+      assign button_show_more = true
+    endif
+  endif
+
+  assign show_button = false
+  assign button_center = false
+  assign button_left = false
+
+  if button_show_more and section.settings.layout != 'mini_horizontal_banner'
+    assign show_button = true
+  endif
+
+  if show_button and section.settings.heading_alignment == 'center'
+    assign button_center = true
+  endif
+
+  if show_button and section.settings.heading_alignment == 'left' and section.settings.button_bottom_on_mobile
+    assign button_left = true
+  endif
+
+  assign slides_per_view = section.settings.slides_per_view
+
+  if store_width < 1466 and slides_per_view == '7' or slides_per_view == '8'
+    assign slides_per_view = '6'
+  endif
+
+  assign background = section.settings.background
+
+  case settings.section_decoration
+    when "1"
+      assign section_decoration = "none"
+    when "2"
+      assign section_decoration = "grunge1"
+    when "3"
+      assign section_decoration = "grunge2"
+    when "4"
+      assign section_decoration = "grunge3"
+    when "5"
+      assign section_decoration = "paper"
+    when "6"
+      assign section_decoration = "mountains"
+    when "7"
+      assign section_decoration = "ellipse1"
+    when "8"
+      assign section_decoration = "ellipse2"
+    when "9"
+      assign section_decoration = "wave1"
+    when "10"
+      assign section_decoration = "wave2"
+    when "11"
+      assign section_decoration = "wave3"
+    when "21"
+      assign section_decoration = "wave4"
+    when "22"
+      assign section_decoration = "wave5"
+    when "12"
+      assign section_decoration = "triangle1"
+    when "13"
+      assign section_decoration = "triangle2"
+    when "14"
+      assign section_decoration = "triangle_assymetrical1"
+    when "15"
+      assign section_decoration = "triangle_assymetrical1_flip"
+    when "16"
+      assign section_decoration = "triangle_assymetrical2"
+    when "17"
+      assign section_decoration = "triangle_assymetrical2_flip"
+    when "18"
+      assign section_decoration = "tilt"
+    when "19"
+      assign section_decoration = "tilt_flip"
+    when "20"
+      assign section_decoration = "glaze"
+  endcase
+
+  assign section_decoration_top = section.settings.section_decoration_top
+  assign section_decoration_bottom = section.settings.section_decoration_bottom
+
+  if section_decoration_top != 'none' or section_decoration_bottom != 'none'
+      assign show = true
+
+      if section_decoration_top != 'global'
+          assign section_decoration = section_decoration_top
+      endif
+  endif
+
+  if section_decoration_bottom != 'none'
+      assign show = true
+
+      if section_decoration_bottom != 'global'
+          assign section_decoration = section_decoration_bottom
+      endif
+  endif
+
+  assign loop_count = 1
+
+-%}
+{{ 'brands.css' | asset_url | stylesheet_tag }}
+
+{% render 'section-wrapper', placement: 'top' %}
+<div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+  <div class="{% render 'section-container-class', layout: layout %}">
+    {% render 'section-heading', section: section %}
+
+    {% if section.settings.layout == 'grid_carousel' %}
+      <swiper-carousel data-destroy>
+        <div class="swiper-container brands-grid-container swiper-container-center">
+          <div class="swiper-wrapper brands-grid {% if section.settings.border == 'thick' %}brands-grid--bordered{% endif %} ">
+    {% elsif section.settings.layout == 'grid' %}
+      <smart-row>
+        <div class="brands-grid-container">
+          <div class="brands-grid {% if section.settings.border == 'thick' %}brands-grid--bordered{% endif %} row justify-content-center row-cols-{{ section.settings.slides_per_view_mobile }} row-cols-sm-{{ slides_per_view | at_most: 3 }} row-cols-lg-{{ slides_per_view | at_most: 4 }} row-cols-xl-{{ slides_per_view | at_most: 6 }} row-cols-xxl-{{ section.settings.slides_per_view }} g-3">
+    {% else %}
+        {%- liquid
+
+          assign brands_count = section.blocks.size
+
+          if section.settings.show_brands_auto
+            assign brands_count = shop.vendors.size
+          endif
+
+          if brands_count > section.settings.brands_auto_limit
+            assign brands_count = section.settings.brands_auto_limit
+          endif
+
+          assign brands_count_float = brands_count | times: 1.0
+
+          assign loop_count = 12 | divided_by: brands_count_float | ceil
+
+          if loop_count < 2
+            assign loop_count = 2
+          endif
+
+          assign background_color_enable = false
+          assign background_image_placeholder = section.settings.background_image_placeholder
+
+          if background_image_placeholder != 'rgba(0,0,0,0)' and background_image_placeholder != blank
+            assign background_color_enable = true
+          endif
+
+          if section.settings.background
+            assign background_image_placeholder_type = section.settings.background_image_placeholder_type
+            assign background_color = 'var(--body-bg-secondary)'
+            assign background_color_rgb = 'var(--body-bg-secondary-rgb)'
+
+            if background_image_placeholder_type == 'color_global_primary_bg'
+              assign background_color = 'var(--body-bg)'
+              assign background_color_rgb = 'var(--body-bg-rgb)'
+            elsif background_image_placeholder_type == 'custom'
+              if background_color_enable
+                assign background_color = section.settings.background_image_placeholder
+                assign color_string = background_color | color_to_rgb | split: 'rgb(' | last | split: ')' | first
+                assign rgb_values = color_string | split: ', '
+                assign background_color_rgb = rgb_values[0] | append: ', ' | append: rgb_values[1] | append: ', ' | append: rgb_values[2]
+              endif
+            endif
+
+          endif
+
+        -%}
+
+        <style>
+          section#shopify-section-{{ section.id }} .promo-ticker-wrap.fade-edge:before {
+            background: {{ background_color }};
+            background: linear-gradient(-90deg,rgba({{ background_color_rgb }},0) 0,rgba({{ background_color_rgb }},1) 100%)
+          }
+
+          section#shopify-section-{{ section.id }} .promo-ticker-wrap.fade-edge:after {
+            background: {{ background_color }};
+            background: linear-gradient(90deg,rgba({{ background_color_rgb }},0) 0,rgba({{ background_color_rgb }},1) 100%)
+          }
+        </style>
+        <div class="promo-ticker-wrap fade-edge {% if section.settings.border == 'thick' %}brands-grid--bordered{% endif %}">
+            <promo-ticker class="promo-ticker promo-ticker--images promo-ticker--brands" style="
+              --ticker-section-bg: transparent;
+              --ticker-section-y-padding: 0px;
+              --ticker-section-gap: 0;
+              --ticker-section-speed: {{ section.settings.ticker_speed }}s;">
+              <div>
+                <div class="ticker-scroll">
+    {% endif %}
+
+            {%- for i in (1..loop_count) -%}
+            {%- if section.settings.layout == 'ticker' -%}<div class="row flex-nowrap p-0 m-0 row-cols-5 ticker-item gx-3">{%- endif -%}
+
+            {%- if section.settings.show_brands_auto -%}
+              {% for product_vendor in shop.vendors limit: section.settings.brands_auto_limit %}
+                <div class="{%- if section.settings.layout == 'grid_carousel' -%}swiper-slide{%- else -%}col{% endif %}">
+                  <a {% if product_vendor.size > 40 %}data-toggle="tooltip" data-tippy-content="{{ product_vendor | escape }}"{% endif %} href="{{ product_vendor | url_for_vendor }}"  class="{{ style_suffix }} image-container ic--bg-alt ic--border ic--bg ic--hover-text-border" style="padding-bottom: {{ padding }}%;">
+                    <span>{{ product_vendor | truncate: 40, '..' }}</span>
+                  </a>
+                </div>
+              {% if section.settings.layout == 'grid' %}<div class='line-break'></div>{% endif %}
+              {% endfor %}
+            {%- else -%}
+              {%- for block in section.blocks -%}
+                {%- liquid
+                  assign ic_style = ''
+                  assign color = block.settings.color_placeholder
+                  if color != 'rgba(0,0,0,0)' and color != blank
+                    assign ic_style = '--placeholder-bg: ' | append: color | append: ';'
+                  endif
+                -%}
+                <div class="{%- if section.settings.layout == 'grid_carousel' -%}swiper-slide{%- else -%}col{% endif %}" {{ block.shopify_attributes }}>
+                  {% render 'image-container',
+                    sizes: '(min-width: 1200px) 255px, (min-width: 992px) 217px, calc(100vw - 50px) / 2',
+                    image: block.settings.image,
+                    padding_no_bg: padding_no_bg,
+                    padding: padding,
+                    class_ic: style_suffix,
+                    class_img: 'w-100',
+                    cover: false,
+                    is_link: true
+                    href: block.settings.url,
+                    bg: bg,
+                    bg_alt: bg_alt,
+                    bg_alt_secondary: 1,
+                    style: ic_style
+                  %}
+                </div>
+                {% if section.settings.layout == 'grid' %}<div class='line-break'></div>{% endif %}
+              {%- endfor -%}
+            {%- endif -%}
+
+            {%- if section.settings.layout == 'ticker' -%}</div>{%- endif -%}
+            {% endfor %}
+          </div>
+
+          {% if section.settings.layout == 'grid_carousel' %}<div class="swiper-pagination position-relative mt-4 mt-md-5"></div>{% endif %}
+        </div>
+
+
+
+        {% if section.settings.layout == 'grid_carousel' %}
+        <script type="application/json">
+          {
+            "pagination": {
+              "el": ".swiper-pagination",
+              "clickable": true
+            },
+            "slidesPerColumnFill": "row",
+            "watchOverflow": true,
+            "slidesPerView": 1,
+            "slidesPerColumn": 2,
+            "spaceBetween": 20,
+            "breakpoints": {
+              "320": {
+                "slidesPerView": {{ section.settings.slides_per_view_mobile }},
+                "slidesPerColumn": {{ section.settings.slides_per_column_mobile }},
+                "spaceBetween": 20
+              },
+              "575": {
+                "slidesPerView": {{ slides_per_view | at_most: 3 }},
+                "slidesPerColumn": {{ section.settings.slides_per_column_mobile }},
+                "spaceBetween": 20
+              },
+              "992": {
+                "slidesPerView": {{ slides_per_view | at_most: 4 }},
+                "slidesPerColumn": {{ section.settings.slides_per_column }},
+                "spaceBetween": 20
+              },
+              "1200": {
+                "slidesPerView": {{ slides_per_view | at_most: 6 }},
+                "slidesPerColumn": {{ section.settings.slides_per_column }},
+                "spaceBetween": 20
+              },
+              "1465": {
+                "slidesPerView": {{ section.settings.slides_per_view }},
+                "slidesPerColumn": {{ section.settings.slides_per_column }},
+                "spaceBetween": 20
+              }
+            }
+          }
+        </script>
+      </swiper-carousel>
+    {% elsif section.settings.layout == 'grid' %}
+      </smart-row>
+     {% else %}
+  </promo-ticker>
+    </div>
+    {% endif %}
+    {%- if button_center or button_left -%}
+      <div class="btn-showmore-wrap text-center mt-3 mt-lg-6  {% if button_left %}show-mobile-sm{% endif %}">
+        <a href="{{ section.settings.button_url }}" class="btn btn--invert btn--showmore">{{ section.settings.button_text }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+{% render 'section-wrapper' %}
+{% schema %}
+{
+  "name": "Brands",
+  "tag": "section",
+  "class": "theme-editor-init-swiper-carousel",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_animation",
+      "label": "Enable soft appearing of section",
+      "default": true,
+      "info": "Global sections animation disabling in Theme Settings / General / Sections. AUTODISABLED if section has top or bottom separator."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Show as",
+      "options": [
+        {
+          "value": "grid_carousel",
+          "label": "Carousel of Grids"
+        },
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "ticker",
+          "label": "Ticker"
+        }
+      ],
+      "default": "grid_carousel"
+    },
+    {
+      "type": "range",
+      "id": "ticker_speed",
+      "min": 2,
+      "max": 80,
+      "step": 1,
+      "unit": "sec",
+      "label": "Ticker speed",
+      "default": 20
+    },
+    {
+      "type": "radio",
+      "id": "style",
+      "label": "Select brands design variant",
+      "options": [
+        {
+          "value": "quadrangular",
+          "label": "Quadrangular"
+        },
+        {
+          "value": "circle",
+          "label": "Circle"
+        }
+      ],
+      "default": "quadrangular",
+      "info": "Circle layout needs square images"
+    },
+    {
+      "type": "checkbox",
+      "id": "images_auto_height",
+      "label": "Auto height for images",
+      "default": true,
+      "info": "Only for Quadrangular design. Usefull if images have different dimensions."
+    },
+    {
+      "type": "range",
+      "id": "images_auto_height_padding",
+      "min": 20,
+      "max": 200,
+      "step": 2,
+      "unit": "%",
+      "label": "Aspect ratio for auto height",
+      "default": 36,
+      "info": "only for Quadrangular design"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_brands_auto",
+      "label": "Automatic adding store vendors",
+      "default": false,
+      "info": "disables manual adding"
+    },
+    {
+      "type": "range",
+      "id": "brands_auto_limit",
+      "min": 4,
+      "max": 400,
+      "step": 4,
+      "label": "Limit for auto brands",
+      "default": 100
+    },
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Fill background color for items",
+      "options": [
+        {
+          "value": "bg-none",
+          "label": "None"
+        },
+        {
+          "value": "bg",
+          "label": "Placeholders color from color settings"
+        },
+        {
+          "value": "bg-alt",
+          "label": "Secondary background from color settings"
+        },
+        {
+          "value": "bg-white",
+          "label": "Background white"
+        }
+      ],
+      "default": "bg-alt"
+    },
+    {
+      "type": "radio",
+      "id": "border",
+      "label": "Bordered by",
+      "options": [
+        {
+          "value": "shadow",
+          "label": "Shadow"
+        },
+        {
+          "value": "thin",
+          "label": "Thin stroke"
+        },
+        {
+          "value": "thick",
+          "label": "Thick stroke"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        }
+      ],
+      "default": "shadow"
+    },
+    {
+      "type": "select",
+      "id": "slides_per_view",
+      "label": "Slides per row on Desktop",
+      "options": [
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "label": "5"
+        },
+        {
+          "value": "6",
+          "label": "6"
+        },
+        {
+          "value": "7",
+          "label": "7"
+        },
+        {
+          "value": "8",
+          "label": "8"
+        }
+      ],
+      "default": "4",
+      "info": "7 and 8 if store width > 1465"
+    },
+    {
+      "type": "select",
+      "id": "slides_per_column",
+      "label": "Slides per column on Desktop",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        }
+      ],
+      "default": "1",
+      "info": "Only if it's shown as Carousel"
+    },
+    {
+      "type": "select",
+      "id": "slides_per_view_mobile",
+      "label": "Slides per row on Mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "slides_per_column_mobile",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "label": "Slides per column on Mobile",
+      "default": 2,
+      "info": "Only if it's shown as Carousel"
+    },
+    {
+      "type": "radio",
+      "id": "heading_alignment",
+      "label": "Heading aligment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Brands"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "default": "Subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "button",
+      "label": "Show",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "button_bottom_on_mobile",
+      "label": "Show at bottom on mobile in case when Heading layout is 'Left'",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Caption",
+      "default": "View all"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "SECTION WIDTH"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Select width source",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use store width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom width"
+        }
+      ],
+      "default": "global",
+      "info": "Store width you can set in Theme Settings / General"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 1178,
+      "max": 1978,
+      "step": 8,
+      "unit": "px",
+      "label": "Custom width",
+      "default": 1178,
+      "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable background",
+      "default": false,
+      "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+    },
+    {
+      "type": "select",
+      "id": "background_preset",
+      "label": "Background image - preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "product-cosmetics-bg.png",
+          "label": "Leaves 1"
+        },
+        {
+          "value": "bottom-cosmetics-bg.png",
+          "label": "Leaves 2"
+        },
+        {
+          "value": "bg-makeup1.png,bg-makeup1-m.png",
+          "label": "Pink and Waves 1"
+        },
+        {
+          "value": "bg-makeup2.png,bg-makeup2-m.png",
+          "label": "Pink and Waves 2"
+        },
+        {
+          "value": "bg-makeup4.png,bg-makeup4-m.png",
+          "label": "Pink and Waves 3"
+        },
+        {
+          "value": "bg-makeup3.png,bg-makeup3-m.png",
+          "label": "Purple Splash"
+        },
+        {
+          "value": "bg-sweets1.png",
+          "label": "Blue Sun Rays"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image - custom on Desktop"
+    },
+    {
+      "type": "select",
+      "id": "background_behavior",
+      "label": "Background image behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image - custom on Mobile",
+      "info": "only if Background image - custom on Desktop selected"
+    },
+    {
+      "type": "select",
+      "id": "background_image_placeholder_type",
+      "label": "Placeholder background color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_secondary_bg"
+    },
+    {
+      "type": "color",
+      "id": "background_image_placeholder",
+      "label": "Custom - Placeholder background color"
+    },
+    {
+      "type": "header",
+      "content": "SECTION SEPARATOR"
+    },
+    {
+      "type": "header",
+      "content": "Top separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_header_main_bg",
+          "label": "Header - Middle(main) part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_top_color",
+      "label": "Custom - top separator color"
+    },
+    {
+      "type": "header",
+      "content": "Bottom separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "paragraph",
+      "content": "'Global separator' is set in Theme Settings / Separators / Global separator style"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_footer_top_bg",
+          "label": "Footer - Top part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_bottom_color",
+      "label": "Custom - bottom separator color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "brand",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Title",
+          "label": "Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Preview",
+          "info": "recommended size for retina displays is 528x186px"
+        },
+        {
+          "type": "color",
+          "id": "color_placeholder",
+          "label": "Placeholder background loader",
+          "info": "Set the main color of the image (visually softens the appearance of the image)"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brands / constructor",
+      "blocks": [
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        }
+      ]
+    },
+    {
+      "name": "Brands / preset Default",
+      "blocks": [
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        }
+      ]
+    },
+    {
+      "name": "Brands / preset 1 (4x3 grid-carousel)",
+      "settings": {
+        "slides_per_column": "3"
+      },
+      "blocks": [
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        }
+      ]
+    },
+    {
+      "name": "Brands / preset 2 (6x1 carousel of circles)",
+      "settings": {
+        "style": "circle",
+        "slides_per_view": "6",
+        "images_auto_height": false
+      },
+      "blocks": [
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        }
+      ]
+    },
+    {
+      "name": "Brands / preset 3 (6x1 carousel of rectangles)",
+      "settings": {
+        "slides_per_view": "6"
+      },
+      "blocks": [
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        }
+      ]
+    },
+    {
+      "name": "Brands / preset 4 (6x1 carousel of bordered circles)",
+      "settings": {
+        "slides_per_view": "6",
+        "style": "circle",
+        "heading": "",
+        "subtitle": "",
+        "border": "thick"
+      },
+      "blocks": [
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        }
+      ]
+    },
+    {
+      "name": "Brands / preset 5 (6x1 large - ex. fish skin)",
+      "settings": {
+        "heading": "",
+        "subtitle": "",
+        "border": "none"
+      },
+      "blocks": [
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        }
+      ]
+    },
+    {
+      "name": "Brands / preset 6 (Ticker)",
+      "settings": {
+        "layout": "ticker",
+        "ticker_speed": 40,
+        "bg": "bg-white",
+        "border": "none",
+        "images_auto_height_padding": 34,
+        "section_width": "custom",
+        "container_max_width": 1978
+      },
+      "blocks": [
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        },
+        {
+          "type": "brand"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,53 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- liquid
+  assign section_id = 'product-card-horizontal-sm'
+  assign product_form_id = 'product-form-' | append: product_form_suffix | append: section_id | append: '-' | append: product.id
+  if settings.catalog_mode and product.has_only_default_variant == true
+  endif
+  assign image = product.selected_or_first_available_variant.featured_media | default: product.featured_media
+
+  assign in_collection = product.collections | where: 'handle', collection.handle | first
+  if collection == null or collection.handle == 'all' or in_collection == nil
+  assign all_products_count = 0
+  for c in product.collections
+  if c.handle != 'all' and c.handle != 'frontpage' and all_products_count < c.all_products_count
+  assign collection = c
+  assign all_products_count = c.all_products_count
+  endif
+  endfor
+  endif
+
+  assign title_truncate = 32
+  assign title = product.title | escape | truncate: title_truncate, '..'
+
+  assign product_url_collection = product.url
+
+  if settings.product_card_url_within_collection
+    assign product_url_collection = product.url | within: collection
+  endif
+-%}
+<div class="prd-hor-sm">
+  <div class="prd-hor-inside">
+    <div class="prd-image-wrap">
+      {% render 'image-container',
+        image: image,
+        product_aspect_ratio: true,
+        sizes: '(min-width: 1400px) 120px, (min-width: 768px) 100px, 150px',
+        is_link: true,
+        href: product_url_collection,
+        product_object: product,
+        bg: settings.product_card_image_placeholder
+      %}
+      {% render 'product-card-badges', render: true, section: section, product: product, product_form_id: product_form_id %}
+    </div>
+    <div class="prd-info">
+      <h3 class="prd-name"><a href="{{ product_url_collection }}">{{ title }}</a></h3>
+      {%- render 'price', product: product, use_variant: true, render: true, product_card_style_1: false, product_form_id: product_form_id -%}
+      {%- if settings.product_card_rating -%}
+        <div class="prd-prw-rating prd-rating">
+          {% render 'rating', product: product %}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>

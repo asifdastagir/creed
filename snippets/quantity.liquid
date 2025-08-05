@@ -1,0 +1,88 @@
+{%- liquid
+  if product.requires_selling_plan == true and layout == 'product-card' or layout == 'product-sticky'
+    assign show = false
+  else
+    assign show = true
+  endif
+
+
+  assign current_variant = current_variant | default: false, allow_false: true
+  assign max = false
+  assign border = false
+  assign status_line = false
+
+  if current_variant != false and settings.product_inventory_max_quantity
+    assign inventory_quantity = current_variant.inventory_quantity
+
+    if inventory_quantity > 0
+      assign max = true
+    endif
+  endif
+
+  assign status_line = false
+
+  if status_line == false
+    assign border = false
+  else
+    assign border = true
+  endif
+
+  if layout == 'product' or layout == 'quick-view' or layout == 'quick-options'
+    assign border = true
+  endif
+
+  assign border = false
+
+  if current_variant != false and current_variant.available != true
+    assign value = 0
+  endif
+-%}
+{%- if show -%}
+  {%- if hide_quantity == 1 and layout == 'product-card' -%}
+    <div class="mt-15"></div>
+  {%- endif -%}
+  <div data-render="qty-{{ product_form_id }}">
+    <quantity-input
+      class="prd-quantity {% if hide_quantity == 1 %}hidden{% endif %} {% unless current_variant.available %}prd-quantity--disabled{% endunless %}"
+      data-inventory-status="{{ settings.product_swatches_inventory_status }}"
+      data-inventory-many-in-stock-from="{{ settings.product_swatches_inventory_many_in_stock_from }}"
+      data-inventory-low-in-stock-less-than="{{ settings.product_swatches_inventory_low_in_stock_less_than }}"
+      data-inventory-management="{{ current_variant.inventory_management }}"
+      data-inventory-policy="{{ current_variant.inventory_policy }}"
+    >
+      <div class="prd-quantity">
+        <input class="form-control {% unless border %}border-0{% endunless %} {% if status_line %}focus-off{% endif %}"
+              type="number"
+              name="{{ name }}"
+              value="{{ value }}"
+              min="{{ min }}"
+
+              {%- if max -%}
+                max="{{ inventory_quantity }}"
+              {%- endif -%}
+
+              {% if product_form_id %}form="{{ product_form_id }}"{% endif %}
+              aria-label="{{ 'products.product.quantity.input_label' | t: product: product_title | escape }}"
+          {%- if in_cart -%}
+            id="Quantity-{{ item.index | plus: 1 }}"
+            data-index="{{ item.index | plus: 1 }}"
+          {% endif %}
+          {% if form != blank %}form="{{ form }}"{% endif %}
+        >
+
+          <div class="quantity-status"></div>
+
+        <div class="prd-quantity-nav">
+          <button class="prd-quantity-btn prd-quantity-up" name="plus">
+            <span class="visually-hidden">{{ 'products.product.quantity.increase' | t: product: product_title | escape }}</span>
+            {% render 'icon-plus' %}
+          </button>
+          <button class="prd-quantity-btn prd-quantity-down" name="minus">
+            <span class="visually-hidden">{{ 'products.product.quantity.increase' | t: product: product_title | escape }}</span>
+            {% render 'icon-minus' %}
+          </button>
+        </div>
+      </div>
+    </quantity-input>
+  </div>
+{%- endif -%}

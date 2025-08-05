@@ -1,0 +1,183 @@
+{%- if settings.selling_plans_enable -%}
+  {%- liquid
+    assign current_variant = product.selected_or_first_available_variant | default: product.variants.first
+    assign current_selling_plan_allocation = current_variant.selected_selling_plan_allocation
+  -%}
+  <div {% if render %}data-render="selling-plan-selector-{{ product_form_id }}"{% endif %} data-async-reload-css="selling-selector">
+    {%- if current_variant.selling_plan_allocations.size > 0 -%}
+      <selling-plan-selector  data-section-layout="{{ layout }}" data-section="{{ section.id }}" data-request-page-type="{{ request.page_type }}" data-section-id="{{ section_id }}" data-url="{{ product.url }}">
+        <div id="selling-selector" class="prd-block-subscription mt-3">
+          {% unless product.requires_selling_plan %}
+            <div class="form-group-tab {% if current_selling_plan_allocation != nil %}closed{% else %}opened{% endif %}">
+              <div class="form-group-tab-title">
+                <div class="form-group">
+                  <fieldset class="d-flex custom-form">
+                    <input type="radio" name="selling_group" id="{{ product_form_id }}-selling-group-{{ product.id }}-0" {% if current_selling_plan_allocation == nil %}checked{% endif %}>
+                    <label for="{{ product_form_id }}-selling-group-{{ product.id }}-0">{{ 'theme.general.one_time_purchase' | t }}</label>
+                  </fieldset>
+                </div>
+                <div class="form-group-tab-price">
+                  <small>{{ 'theme.general.each' | t }}</small>{%- render 'price', product: product, use_variant: true, product_form_id: product_form_id -%}
+                </div>
+              </div>
+            </div>
+          {%- endunless -%}
+
+          {%- for selling_plan_group in product.selling_plan_groups -%}
+            {%- liquid
+              assign plans_to_group = current_variant.selling_plan_allocations | map: 'selling_plan_group_id' | where: selling_plan_group.id | size
+
+              if plans_to_group == 0
+                continue
+              endif
+
+              assign group_first = forloop.first
+              assign group_checked = false
+
+              if selling_plan_group.selling_plan_selected or product.requires_selling_plan and current_selling_plan_allocation == nil and forloop.first
+                assign group_checked = true
+              endif
+            -%}
+            <div class="form-group-tab {% if group_checked %}opened{% else %}closed{% endif %}">
+              <div class="form-group-tab-title">
+                <div class="form-group">
+                  <fieldset class="d-flex custom-form">
+                    <input type="radio" name="selling_group" id="{{ product_form_id }}-selling-group-{{ product.id }}-{{ selling_plan_group.id }}" value="{{ selling_plan_group.id }}" {% if group_checked %}checked{% endif %}>
+                    <label for="{{ product_form_id }}-selling-group-{{ product.id }}-{{ selling_plan_group.id }}">
+                      {%- liquid
+                        if selling_plan_group.name == product.title
+                          echo 'theme.general.subscribe_and_save' | t
+                        else
+                          echo selling_plan_group.name
+                        endif
+
+                        assign spa = current_variant.selling_plan_allocations | where: 'selling_plan_group_id', selling_plan_group.id | last
+                        assign spa_price = spa.per_delivery_price
+                      -%}
+                      {%- if spa_price < current_variant.price -%}
+                        <button-animated data-pause="8000" data-delay-start="3000" data-delay-after-stop="0" data-style="swing"><span class="label-badge">{{ 'theme.general.best_offer' | t }}</span></button-animated>
+                      {%- endif -%}
+                    </label>
+                  </fieldset>
+                </div>
+                <div class="form-group-tab-price">
+                  <small>{{ 'theme.general.each' | t }}</small>
+                  <div data-group-best-price class="hidden">
+                      {%- liquid
+                        assign spa = current_variant.selling_plan_allocations | where: 'selling_plan_group_id', selling_plan_group.id | last
+                        assign spa_price = spa.per_delivery_price
+                      -%}
+                      <div class="loading-overlay hidden">
+                        <div data-load="loading"></div>
+                      </div>
+                      <span class="prd-price-regular ">{{ spa_price | money }}</span>
+                      {%- if spa_price < current_variant.price -%}
+                        <span class="prd-price-old">{{ current_variant.price | money }}</span>
+                      {%- endif -%}
+                  </div>
+                  <div class="prd-price position-relative" data-render-selling-plans="price-{{ selling_plan_group.id }}">
+                    {%- liquid
+                        if selling_plan_group.selling_plan_selected
+                          assign spa_price = current_selling_plan_allocation.per_delivery_price
+                        else
+                          assign spa = current_variant.selling_plan_allocations | where: 'selling_plan_group_id', selling_plan_group.id | last
+                          assign spa_price = spa.per_delivery_price
+                        endif
+                      -%}
+                      <div class="loading-overlay hidden">
+                        <div data-load="loading"></div>
+                      </div>
+                      <span class="prd-price-regular ">{{ spa_price | money }}</span>
+                      {%- if spa_price < current_variant.price -%}
+                        <span class="prd-price-old">{{ current_variant.price | money }}</span>
+                      {%- endif -%}
+                  </div>
+                </div>
+              </div>
+              <div class="form-group-tab-content js-set-height">
+                <div class="form-group-tab-content-inside">
+                  <div class="form-group-tab-content-form">
+                    <h6>
+                      {%- liquid
+                        if selling_plan_group.name == product.title
+                          echo 'theme.general.deliver_every' | t
+                        else
+                          echo selling_plan_group.selling_plans[0].options[0].name
+                        endif
+                      -%}
+                    </h6>
+                    <fieldset class="d-flex custom-form">
+                      {%- for selling_plan in selling_plan_group.selling_plans -%}
+                        {%- liquid
+                          assign continue = true
+
+                          for sa in current_variant.selling_plan_allocations
+                            if selling_plan.id == sa.selling_plan.id
+                              assign continue = false
+
+                              break
+                            endif
+                          endfor
+
+                          if continue
+                            continue
+                          endif
+
+                          assign parent_forloop = forloop
+                        -%}
+                        {%- for option in selling_plan.options -%}
+                          <input type="radio" id="{{ product_form_id }}-selling_plan-{{ product.id }}-{{ selling_plan.id }}" name="selling_plan" data-group-id="{{ selling_plan.group_id }}" value="{{ selling_plan.id }}" {% if selling_plan.selected or product.requires_selling_plan and current_selling_plan_allocation == nil and group_first %}checked{% endif %} />
+                          <label for="{{ product_form_id }}-selling_plan-{{ product.id }}-{{ selling_plan.id }}">
+                            {{ option.value }}
+                            {%- liquid
+                              if selling_plan_group.name == product.title and selling_plan.price_adjustments[0].value_type == 'percentage'
+                                if selling_plan.price_adjustments[0].value > 0 and selling_plan.price_adjustments[0].value < 100
+                                  assign save_txt = 'theme.general.save' | t | append: ' '
+                                  echo ' (' | append: save_txt | append: selling_plan.price_adjustments[0].value | append: '%)'
+                                endif
+                              endif
+                            -%}
+                            {%- if parent_forloop.last and selling_plan.price_adjustments[0].value > 0 -%}
+                              <span class="label-badge">{{ 'theme.general.best_offer' | t }}</span>
+                            {%- endif -%}
+                          </label>
+                        {%- endfor -%}
+                      {%- endfor -%}
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {%- endfor -%}
+        </div>
+        <div class="prd-block-desc my-2" data-render-selling-plans="description">
+          {%- liquid
+            if current_selling_plan_allocation == nil and product.requires_selling_plan
+              assign current_selling_plan_allocation = current_variant.selling_plan_allocations.last
+            endif
+          -%}
+          {%- if current_selling_plan_allocation != nil -%}
+            <b>{%- liquid
+                assign current_variant_group = product.selling_plan_groups | where: 'id', current_selling_plan_allocation.selling_plan_group_id | first
+
+                if current_variant_group.name == product.title
+                  echo current_selling_plan_allocation.selling_plan.name
+                else
+                    assign description_raw = current_selling_plan_allocation.selling_plan.description
+                  
+                    if description_raw contains 'mainDescription'
+                      assign main_description = description_raw | replace: '{"mainDescription":"', '' | replace: '"}', ''
+                      echo main_description
+                    else
+                      echo description_raw
+                    endif
+                endif
+              -%}</b>
+            <div>{{ 'theme.general.auto_renews' | t }}</div>
+            <info-popup data-selector="#modal-subscription-policy" data-ajax="/?section_id=async-subscription-policy"><a href="#" class="modal-info-link">{{ 'theme.general.view_subscription_policy' | t }}</a></info-popup>
+          {%- endif -%}
+        </div>
+      </selling-plan-selector>
+    {%- endif -%}
+  </div>
+{%- endif -%}

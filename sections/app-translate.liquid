@@ -1,0 +1,180 @@
+{%- liquid
+    assign list_linkslists = "catalog,catalog-nutrition,catalog-cars,footer,footer-menu-2,footer-menu-3,main-menu,main-menu-0,main-menu-2" | split: ','
+    comment
+    assign list_blogs = "news" | split: ','
+    assign list_pages = "gallery,about-us,faq,contact-us" | split: ','
+    endcomment
+-%}
+<script>
+    const data = {
+        "locales": {
+            {%- for language in localization.available_languages -%}
+                "{{ language.iso_code }}": "{{ language.name | capitalize }}",
+            {%- endfor -%}
+        },
+        {% comment %} "Blog posts": {
+            {% for name in list_blogs %}
+                {% for article in blogs[name].articles %}
+                    {{ article.title | json }}: {
+                        "Title": {{ article.title | json }},
+                        {%- comment -%} "Excerpt": {{ article.excerpt | json }}, {%- endcomment -%}
+                        {%- comment -%} "Content": {{ article.content | json }} {%- endcomment -%}
+                    },
+                {% endfor %}
+            {% endfor %}
+        },
+        "Blog titles": {
+            {% for name in list_blogs %}
+                "{{ blogs[name].title }}": {
+                    "title": {{ blogs[name].title | json }}
+                },
+            {% endfor %}
+        }, {% endcomment %}
+        {% comment %} "Collections": {
+            {% for collection in collections %}
+            "{{ collection.title }}": {
+                "Title": {{ collection.title | json }},
+                {%- comment -%} "Description": {{ collection.description | json }} {%- endcomment -%}
+            },
+            {% endfor %}
+        }, {% endcomment %}
+        "Navigation": {
+            {% for name in list_linkslists %}
+                "{{ linklists[name].title }}": {
+                    "Title": {{ linklists[name].title | json }},
+                    "Menu itemLink values": {
+                        {% for link in linklists[name].links %}
+                            "{{ link.title }}": {
+                                {%- liquid
+                                    assign options = link.title | split: '|'
+                                    assign title = options | first
+                                -%}
+                                "{{ title }}": {{ title | json }},
+                                {%- for option in options -%}
+                                    {%- liquid
+                                        assign value = option | split: ':' | last
+
+                                        if value contains "blank" or value contains 'icon-'
+                                            continue
+                                        endif
+                                    -%}
+                                    "{{ value }}": {{ value | json }},
+                                {%- endfor -%}
+                             },
+                            {%- for childlink in link.links -%}
+                                "{{ childlink.title }}": {
+                                    {%- liquid
+                                        assign options = childlink.title | split: '|'
+                                        assign title = options | first
+                                    -%}
+                                    "{{ title }}": {{ title | json }},
+                                    {%- for option in options -%}
+                                        {%- liquid
+                                            if option contains '//'
+                                            endif
+
+                                            assign value = option | split: ':' | last
+
+                                            if value contains "blank" or value contains 'icon-'
+                                                continue
+                                            endif
+                                        -%}
+                                        "{{ value }}": {{ value | json }},
+                                    {%- endfor -%}
+                                 },
+                                {%- for grandchildlink in childlink.links -%}
+                                    "{{ grandchildlink.title }}": {
+                                        {%- liquid
+                                            assign options = grandchildlink.title | split: '|'
+                                            assign title = options | first
+                                        -%}
+                                        "{{ title }}": {{ title | json }},
+                                        {%- for option in options -%}
+                                            {%- liquid
+                                                if option contains '//'
+                                                endif
+
+                                                assign value = option | split: ':' | last
+
+                                                if value contains "blank" or value contains 'icon-'
+                                                    continue
+                                                endif
+                                            -%}
+                                            "{{ value }}": {{ value | json }},
+                                        {%- endfor -%}
+                                     },
+                                    {%- for grandgrandchildlink in grandchildlink.links -%}
+                                        "{{ grandgrandchildlink.title }}": {
+                                            {%- liquid
+                                                assign options = grandgrandchildlink.title | split: '|'
+                                                assign title = options | first
+                                            -%}
+                                            "{{ title }}": {{ title | json }},
+                                            {%- for option in options -%}
+                                                {%- liquid
+                                                    if option contains '//'
+                                                    endif
+
+                                                    assign value = option | split: ':' | last
+
+                                                    if value contains "blank" or value contains 'icon-'
+                                                        continue
+                                                    endif
+                                                -%}
+                                                "{{ value }}": {{ value | json }},
+                                            {%- endfor -%}
+                                         },
+                                    {% endfor %}
+                                {% endfor %}
+                            {% endfor %}
+                        {% endfor %}
+                    }
+                },
+            {% endfor %}
+        },
+        {% comment %} "Pages": {
+            {% for name in list_pages %}
+            "{{ pages[name].title }}": {
+                "Title": {{ pages[name].title | json }},
+                {%- comment -%} "Content": {{ pages[name].content | json }}, {%- endcomment -%}
+            },
+            {% endfor %}
+        }, {% endcomment %}
+        {% comment %} "Products": {
+            {% paginate collections.all.products by 50 %}
+                {% for product in collections.all.products %}
+                    "{{ product.title }}": {
+                        "Title": {{ product.title | json }},
+                        {%- comment -%} "Description": {{ product.description | json }}, {%- endcomment -%}
+                        {%- comment -%} "Short Description": {{ product.metafields.custom.short_description | json }}, {%- endcomment -%}
+                        {% for option in product.options_with_values %}
+                            "{{ option.name }}Option values": {
+                                "Option name": {{ option.name | json }},
+                                {% for value in option.values %}
+                                    "{{ value }}": {{ value | json }},
+                                {% endfor %}
+                            },
+                        {% endfor %}
+
+
+                    },
+                {% endfor %}
+            {% endpaginate %}
+        }, {% endcomment %}
+    }
+</script>
+
+
+<script>
+    (function(a,b){if("function"==typeof define&&define.amd)define([],b);else if("undefined"!=typeof exports)b();else{b(),a.FileSaver={exports:{}}.exports}})(this,function(){"use strict";function b(a,b){return"undefined"==typeof b?b={autoBom:!1}:"object"!=typeof b&&(console.warn("Deprecated: Expected third argument to be a object"),b={autoBom:!b}),b.autoBom&&/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(a.type)?new Blob(["\uFEFF",a],{type:a.type}):a}function c(a,b,c){var d=new XMLHttpRequest;d.open("GET",a),d.responseType="blob",d.onload=function(){g(d.response,b,c)},d.onerror=function(){console.error("could not download file")},d.send()}function d(a){var b=new XMLHttpRequest;b.open("HEAD",a,!1);try{b.send()}catch(a){}return 200<=b.status&&299>=b.status}function e(a){try{a.dispatchEvent(new MouseEvent("click"))}catch(c){var b=document.createEvent("MouseEvents");b.initMouseEvent("click",!0,!0,window,0,0,0,80,20,!1,!1,!1,!1,0,null),a.dispatchEvent(b)}}var f="object"==typeof window&&window.window===window?window:"object"==typeof self&&self.self===self?self:"object"==typeof global&&global.global===global?global:void 0,a=/Macintosh/.test(navigator.userAgent)&&/AppleWebKit/.test(navigator.userAgent)&&!/Safari/.test(navigator.userAgent),g=f.saveAs||("object"!=typeof window||window!==f?function(){}:"download"in HTMLAnchorElement.prototype&&!a?function(b,g,h){var i=f.URL||f.webkitURL,j=document.createElement("a");g=g||b.name||"download",j.download=g,j.rel="noopener","string"==typeof b?(j.href=b,j.origin===location.origin?e(j):d(j.href)?c(b,g,h):e(j,j.target="_blank")):(j.href=i.createObjectURL(b),setTimeout(function(){i.revokeObjectURL(j.href)},4E4),setTimeout(function(){e(j)},0))}:"msSaveOrOpenBlob"in navigator?function(f,g,h){if(g=g||f.name||"download","string"!=typeof f)navigator.msSaveOrOpenBlob(b(f,h),g);else if(d(f))c(f,g,h);else{var i=document.createElement("a");i.href=f,i.target="_blank",setTimeout(function(){e(i)})}}:function(b,d,e,g){if(g=g||open("","_blank"),g&&(g.document.title=g.document.body.innerText="downloading..."),"string"==typeof b)return c(b,d,e);var h="application/octet-stream"===b.type,i=/constructor/i.test(f.HTMLElement)||f.safari,j=/CriOS\/[\d]+/.test(navigator.userAgent);if((j||h&&i||a)&&"undefined"!=typeof FileReader){var k=new FileReader;k.onloadend=function(){var a=k.result;a=j?a:a.replace(/^data:[^;]*;/,"data:attachment/file;"),g?g.location.href=a:location=a,g=null},k.readAsDataURL(b)}else{var l=f.URL||f.webkitURL,m=l.createObjectURL(b);g?g.location=m:location.href=m,g=null,setTimeout(function(){l.revokeObjectURL(m)},4E4)}});f.saveAs=g.saveAs=g,"undefined"!=typeof module&&(module.exports=g)});
+
+
+
+    // Create a blob of the data
+    const fileToSave = new Blob([JSON.stringify(data)], {
+        type: 'application/json'
+    });
+
+    // Save the file
+    saveAs(fileToSave, 'export-to-translate.json');
+</script>

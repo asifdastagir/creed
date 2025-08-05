@@ -1,0 +1,77 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- liquid
+  assign infinite_scroll = settings.infinite_scroll
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+    assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+-%}
+{%- if infinite_scroll and collection.all_products_count > 4 -%}
+  {% render 'async-collection-product-related', collection: collection, section: section, infinite_scroll: infinite_scroll %}
+{%- else -%}
+  <swiper-carousel>
+    <div class="swiper-container swiper-container-prd-carousel">
+      <div class="swiper-wrapper justify-content-center">
+        {%- for product in collection.products limit: settings.limit -%}
+          <div class="swiper-slide">
+            {% render 'product-card',
+              product: product,
+              collection: collection
+            %}
+          </div>
+        {%- endfor -%}
+      </div>
+      <div class="swiper-pagination position-relative mt-4 mt-md-5"></div>
+      <div class="swiper-arrows-carousel container">
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+      </div>
+    </div>
+    <script type="application/json">
+      {
+        "pagination": {
+          "el": ".swiper-pagination",
+          "clickable": true
+        },
+        "navigation": {
+          "nextEl": ".swiper-button-next",
+          "prevEl": ".swiper-button-prev"
+        },
+        "slidesPerColumnFill": "row",
+        "watchOverflow": true,
+        "slidesPerView": 1,
+        "spaceBetween": 10,
+        "breakpoints": {
+          "{{ settings.product_card_one_in_row_width }}": {
+            "slidesPerView": 2,
+            "spaceBetween": 20
+          },
+          "768": {
+            "slidesPerView": 3,
+            "spaceBetween": 20
+          },
+          "1200": {
+            "slidesPerView": 4,
+            "spaceBetween": 20
+          }{% if store_width > 1465 %},
+          "1466": {
+            "slidesPerView": 5,
+            "spaceBetween": 20
+          }
+          {%- endif -%}{% if store_width > 1700 %},
+          "1700": {
+            "slidesPerView": 6,
+            "spaceBetween": 20
+          }
+          {%- endif -%}
+        }
+      }
+    </script>
+  </swiper-carousel>
+{%- endif -%}

@@ -1,0 +1,92 @@
+{%- liquid
+    assign current_active_values_count = false
+
+    for filter in results.filters
+        if filter.active_values.size > 0
+            assign current_active_values_count =  true
+            break
+        endif
+
+        if filter.type == "price_range"
+            if filter.min_value.value > 0 or filter.max_value.value < filter.range_max
+                assign current_active_values_count =  true
+            endif
+        endif
+    endfor
+
+    if results.url
+        assign results_url = results.url
+    else
+        assign terms = results.terms | escape
+        assign results_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+    endif
+
+    assign filter_by = 'theme.general.filter_by' | t
+    assign title = results.title | escape | default: filter_by
+
+    if request.page_type == 'collection' and collection.handle == 'all'
+        assign title =  'theme.general.all_products_title' | t
+
+        if current_tags.size == 1 and current_tags contains 'sale'
+            assign title =  'theme.general.our_sales' | t
+        endif
+    endif
+
+    if settings.filter_layout == 'outer'
+        assign title = filter_by
+    endif
+-%}
+<div class="dropdn-modal-slide secondary-color filter-mobile-content {% if settings.filter_layout == 'outer' %}filter-desktop-slide{% endif %}" style="display: block;" id="dropdnFilterPopup" data-filter>
+    <div class="dropdn-content-block">
+
+            <div class="category-page-title" data-render-facets="mobile-popup-title" data-async-reload-required="mobile-popup-title">
+                <h2 class="h1-style">{{- title -}}</h2>
+                <div class="category-page-items-count ProductCountDesktop">
+                {%- if results.results_count -%}
+                    {{ 'templates.search.results_with_count' | t: terms: results.terms, count: results.results_count }}
+                    {%- elsif results.products_count == results.all_products_count -%}
+                    {{ 'products.facets.product_count_simple' | t: count: results.products_count }}
+                {%- else -%}
+                    {{ 'products.facets.product_count' | t: product_count: results.products_count, count: results.all_products_count }}
+                {%- endif -%}
+                {%- if collection.current_vendor -%}
+                    {{ 'theme.general.from_vendor' | t }}
+                {%- endif -%}
+                </div>
+            </div>
+
+            <div class="mt-2"></div>
+            <div class="filter-mobile-inner">
+                <div class="dropdn-content-scroll js-dropdn-content-scroll js-filter-mobile-wrap" data-slot="mobile-popup-content">
+
+                </div>
+
+                <div data-render-facets="mobile-popup-button" data-async-reload-required="mobile-popup-button" data-mobile-popup-button class="minicart-drop-fixed">
+                    {%- if current_active_values_count -%}
+                        <button type="button" class="btn btn--md w-100" data-button-apply>
+                            <div class="loading-overlay__spinner hidden"><div data-load="loading"></div></div>
+                            <span>{{ 'theme.general.done' | t }}
+                                <span>
+                                    {%- if results.results_count -%}
+                                        {{ 'templates.search.results_with_count' | t: terms: results.terms, count: results.results_count }}
+                                        {%- elsif results.products_count == results.all_products_count -%}
+                                        {{ 'products.facets.product_count_simple' | t: count: results.products_count }}
+                                    {%- else -%}
+                                        {{ 'products.facets.product_count' | t: product_count: results.products_count, count: results.all_products_count }}
+                                    {%- endif -%}
+                                </span>
+                            </span>
+                        </button>
+
+                        <div class="row align-items-center mt-1">
+                            <div class="col text-start">
+                                <facet-remove>
+                                    <a href="{{ results_url }}" class="clear-filters"><span class="icon-wrap">{% render 'icon-remove2' %}</span><span>{{ 'theme.general.clear_filters' | t }}</span></a>
+                                </facet-remove>
+                            </div>
+                        </div>
+                    {%- endif -%}
+                </div>
+            </div>
+    </div>
+</div>

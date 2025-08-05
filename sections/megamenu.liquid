@@ -1,0 +1,255 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{% render 'header-navigation', show_dropdowns: true, section: section %}
+{% schema %}
+{
+  "name": "Navigation dropdowns",
+  "tag": "section",
+  "class": "hidden",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "upcase",
+      "label": "Set second level uppercase",
+      "info": "for desktop only",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "megamenu",
+      "name": "Navigation item dropdown",
+      "settings": [
+        {
+          "type": "select",
+          "id": "layout",
+          "label": "Layout",
+          "options": [
+            {
+              "value": "default",
+              "label": "Default dropdown"
+            },
+            {
+              "value": "fullwidth",
+              "label": "Fullwidth"
+            },
+            {
+              "value": "boxed",
+              "label": "Boxed"
+            },
+            {
+              "value": "popup",
+              "label": "Popup"
+            },
+            {
+              "value": "columns",
+              "label": "Only column links"
+            }
+          ],
+          "default": "default",
+          "info": "Use [nested navigation](https://help.shopify.com/en/manual/online-store/menus-and-links/drop-down-menus) to see columns with links"
+        },
+        {
+          "type": "header",
+          "content": "-> if selected 'Boxed'",
+          "info": "Boxed layout shows 3 link columns + 1 banner + brands carousel"
+        },
+        {
+          "type": "range",
+          "id": "boxed_columns_count",
+          "min": 3,
+          "max": 5,
+          "step": 1,
+          "label": "Columns",
+          "default": 3,
+          "info": "if you set more then 3 then image banner will be hidden automatically. Click Save to see changes!"
+        },
+        {
+          "type": "paragraph",
+          "content": "Banner"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1_boxed",
+          "label": "Banner",
+          "info": "recommended size for high-resolution screens is 588x930px"
+        },
+        {
+          "type": "color",
+          "id": "color_placeholder_image_1_boxed",
+          "label": "Placeholder background loader",
+          "info": "Set the main color of the image (visually softens the appearance of the image)"
+        },
+        {
+          "type": "url",
+          "id": "image_1_href_boxed",
+          "label": "Link the banner"
+        },
+        {
+          "type": "text",
+          "id": "image_1_caption_1_boxed",
+          "label": "Caption 1",
+          "default": "SELECTED SHIRTS"
+        },
+        {
+          "type": "text",
+          "id": "image_1_caption_2_boxed",
+          "label": "Caption 2",
+          "default": "Summer Sale"
+        },
+        {
+          "type": "checkbox",
+          "id": "image_1_captions_invert_boxed",
+          "label": "Invert captions color",
+          "default": false,
+          "info": "Invert color you can set in Theme Settings / General / Colors - General"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button text",
+          "default": "View all products"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button link"
+        },
+        {
+          "type": "paragraph",
+          "content": "Brands"
+        },
+        {
+          "type": "select",
+          "id": "brands",
+          "label": "Show Brands",
+          "options": [
+            {
+              "value": "no",
+              "label": "No"
+            },
+            {
+              "value": "manual",
+              "label": "Manual"
+            },
+            {
+              "value": "automatic",
+              "label": "Automatic (limited with 30 vendors)"
+            }
+          ],
+          "default": "automatic",
+          "info": "Manual adding brands in Theme settings / BRANDS FOR HEADER NAVIGATION."
+        },
+        {
+          "type": "header",
+          "content": "-> if selected 'Fullwidth'",
+          "info": "Fullwidth layout shows 4 link columns + 2 banners"
+        },
+        {
+          "type": "paragraph",
+          "content": "Banner 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_1_fullwidth",
+          "label": "Banner",
+          "info": "recommended size for high-resolution screens is 588x930px"
+        },
+        {
+          "type": "color",
+          "id": "color_placeholder_image_1_fullwidth",
+          "label": "Placeholder background loader",
+          "info": "Set the main color of the image (visually softens the appearance of the image)"
+        },
+        {
+          "type": "url",
+          "id": "image_1_href_fullwidth",
+          "label": "Link the banner"
+        },
+        {
+          "type": "text",
+          "id": "image_1_caption_1_fullwidth",
+          "label": "Caption 1",
+          "default": "SELECTED SHIRTS"
+        },
+        {
+          "type": "text",
+          "id": "image_1_caption_2_fullwidth",
+          "label": "Caption 2",
+          "default": "Summer Sale"
+        },
+        {
+          "type": "checkbox",
+          "id": "image_1_captions_invert_fullwidth",
+          "label": "Invert captions color",
+          "default": false,
+          "info": "Invert color you can set in Theme Settings / General / Colors - General"
+        },
+        {
+          "type": "paragraph",
+          "content": "Banner 2"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_2_fullwidth",
+          "label": "Banner",
+          "info": "recommended size for high-resolution screens is 588x930px"
+        },
+        {
+          "type": "color",
+          "id": "color_placeholder_image_2_fullwidth",
+          "label": "Placeholder background loader",
+          "info": "Set the main color of the image (visually softens the appearance of the image)"
+        },
+        {
+          "type": "url",
+          "id": "image_2_href_fullwidth",
+          "label": "Link the banner"
+        },
+        {
+          "type": "text",
+          "id": "image_2_caption_1_fullwidth",
+          "label": "Caption 1",
+          "default": "SELECTED SHIRTS"
+        },
+        {
+          "type": "text",
+          "id": "image_2_caption_2_fullwidth",
+          "label": "Caption 2",
+          "default": "Summer Sale"
+        },
+        {
+          "type": "checkbox",
+          "id": "image_2_captions_invert_fullwidth",
+          "label": "Invert captions color",
+          "default": false,
+          "info": "Invert color you can set in Theme Settings / General / Colors - General"
+        },
+        {
+          "type": "header",
+          "content": "-> if selected 'Only column links'",
+          "info": "all navigation of the second and third levels is displayed automatically"
+        },
+        {
+          "type": "range",
+          "id": "columns_columns_count",
+          "min": 2,
+          "max": 5,
+          "step": 1,
+          "label": "Columns",
+          "default": 4,
+          "info": "if you set more then 3 then image banner will be hidden automatically. Click Save to see changes!"
+        },
+        {
+          "type": "header",
+          "content": "-> if selected 'Popup'",
+          "info": "Shows selected navigation as map"
+        },
+        {
+          "type": "paragraph",
+          "content": "Popup  settings are in the Theme Settings / CATALOG POPUP"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

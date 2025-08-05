@@ -1,0 +1,326 @@
+.categories-accordion .categories-accordion-row {
+  --base-width: calc(var(--container-max-width) / var(--basic-items-per-row, 4))
+}
+@media (max-width:1024px) {
+  .categories-accordion .categories-accordion-row {
+    --base-width: calc((100vw - 30px) / var(--basic-items-per-row, 4))
+  }
+}
+@media (max-width:767px) {
+  .categories-accordion .categories-accordion-row {
+    -ms-flex-direction: column;
+    flex-direction: column
+  }
+}
+.categories-accordion .categories-accordion-row.rounded-card-0 .card-category {
+  --radius-md: 0;
+  --radius-ic: 0
+}
+.categories-accordion .categories-accordion-row.rounded-card-0 .col {
+  border-radius: 0!important
+}
+.categories-accordion .categories-accordion-row.rounded-0 .col {
+  border-radius: 0!important
+}
+.categories-accordion .categories-accordion-row:not(.rounded-card-0):not(.rounded-0) .col {
+  border-radius: var(--radius-md)
+}
+.categories-accordion .categories-accordion-row.g-0 {
+  overflow: hidden
+}
+.categories-accordion .categories-accordion-row.g-0:not(.rounded-0) {
+  border-radius: var(--radius-md)
+}
+.categories-accordion .categories-accordion-row.g-0 .card-category {
+  --radius-md: 0;
+  --radius-ic: 0
+}
+@media (min-width:768px) {
+  .categories-accordion .categories-accordion-row.g-0 .card-category {
+    width: var(--base-width)
+  }
+}
+.categories-accordion .categories-accordion-row.g-0 .col-category-name {
+  padding: 30px 0
+}
+.categories-accordion .categories-accordion-row:not(.g-0) {
+  --bs-gutter-x: 20px
+}
+@media (min-width:768px) {
+  .categories-accordion .categories-accordion-row:not(.g-0) {
+    margin-right: calc(-1 * var(--bs-gutter-x));
+    margin-left: 0
+  }
+  .categories-accordion .categories-accordion-row:not(.g-0) .col {
+    padding-right: calc(var(--bs-gutter-x));
+    padding-left: 0;
+    border-radius: var(--radius-md) 0 0 var(--radius-md)
+  }
+}
+@media (max-width:767px) {
+  .categories-accordion .categories-accordion-row:not(.g-0) {
+    margin: 0
+  }
+  .categories-accordion .categories-accordion-row:not(.g-0) .col {
+    padding: 0;
+    border-radius: var(--radius-md)
+  }
+  .categories-accordion .categories-accordion-row:not(.g-0) .col + .col {
+    margin-top: 15px
+  }
+}
+.categories-accordion .categories-accordion-row:not(.g-0) .col-category-name {
+  padding: 30px 0 30px var(--bs-gutter-x)
+}
+.categories-accordion .categories-accordion-row .col-category-name {
+  position: absolute;
+  z-index: 100;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -ms-flex-align: center;
+  align-items: center;
+  color: var(--text-color-banner);
+  font-size: var(--title-font-size,24px);
+  line-height: 1.2em;
+  font-weight: var(--font-weight-500);
+  transition: all .75s .3s cubic-bezier(0,1,.3,1);
+  pointer-events: none
+}
+@media (min-width:768px) {
+  .categories-accordion .categories-accordion-row .col-category-name {
+    -ms-writing-mode: tb-rl;
+    writing-mode: vertical-rl;
+    transform: rotate(-180deg)
+  }
+}
+@media (max-width:767px) {
+  .categories-accordion .categories-accordion-row .col-category-name {
+    height: 100%;
+    padding: 15px 30px!important
+  }
+}
+.categories-accordion .categories-accordion-row .card-category-name {
+  opacity: 0;
+  bottom: 25px;
+  padding: 0 15px;
+  transition: all .75s .1s cubic-bezier(0,1,.3,1);
+  font-size: var(--title-font-size,24px);
+  line-height: 1.2em;
+  font-weight: var(--font-weight-500);
+  color: var(--text-color-banner)
+}
+.categories-accordion .categories-accordion-row .card-category {
+  box-shadow: none
+}
+@media (min-width:768px) {
+  .categories-accordion .categories-accordion-row .card-category {
+    width: calc(var(--base-width) - var(--bs-gutter-x));
+    height: 100%
+  }
+}
+@media (hover:hover),
+(hover:none) and (min-width:1025px) {
+  .categories-accordion .categories-accordion-row .card-category:hover {
+    box-shadow: none
+  }
+  .categories-accordion .categories-accordion-row .card-category:hover .card-category-name {
+    transform: translateY(-15px)
+  }
+}
+.categories-accordion .categories-accordion-row .card-category-img {
+  height: 100%
+}
+.categories-accordion .categories-accordion-row .card-category-img .image-container {
+  height: 100%
+}
+.categories-accordion .categories-accordion-row .card-category-img .image-container > img {
+  object-fit: cover
+}
+@media (min-width:768px) {
+  .categories-accordion .categories-accordion-row .card-category-img .image-container.ic--m {
+    display: none
+  }
+}
+@media (max-width:767px) {
+  .categories-accordion .categories-accordion-row .card-category-img .image-container.ic--m {
+    display: block
+  }
+  .categories-accordion .categories-accordion-row .card-category-img .image-container.ic--m + .image-container {
+    display: none
+  }
+}
+.categories-accordion .categories-accordion-row .col {
+  position: relative;
+  -ms-flex: 1;
+  flex: 1;
+  overflow: hidden
+}
+@media (min-width:768px) {
+  .categories-accordion .categories-accordion-row .col {
+    min-width: calc((100% - var(--base-width))/ (var(--total-items) - 1));
+    height: auto;
+    transition: all .5s ease
+  }
+}
+@media (max-width:767px) {
+  .categories-accordion .categories-accordion-row .col {
+    -ms-flex: calc(var(--title-height,70px) + 30px);
+    flex: calc(var(--title-height,70px) + 30px);
+    min-height: 100px;
+    transition: all .35s ease
+  }
+}
+.categories-accordion .categories-accordion-row .col.is-opened {
+  min-width: var(--base-width)
+}
+@media (min-width:768px) {
+  .categories-accordion .categories-accordion-row .col.is-opened {
+    max-height: fit-content
+  }
+}
+@media (max-width:767px) {
+  .categories-accordion .categories-accordion-row .col.is-opened {
+    -ms-flex: var(--height,auto);
+    flex: var(--height,auto)
+  }
+}
+.categories-accordion .categories-accordion-row .col.is-opened .col-category-name {
+  left: -50%;
+  opacity: 0;
+  transition: all 0s
+}
+.categories-accordion .categories-accordion-row .col.is-opened .card-category-img {
+  height: auto
+}
+.categories-accordion .categories-accordion-row .col.is-opened .card-category-img .image-container {
+  height: 0
+}
+.categories-accordion .categories-accordion-row .col.is-opened .card-category-name {
+  opacity: 1
+}
+.categories-accordion .categories-accordion-row.images-hover-only .card-category-img img {
+  opacity: 0
+}
+.categories-accordion .categories-accordion-row.images-hover-only .col.is-opened .card-category-img img {
+  opacity: 1
+}
+.categories-accordion .categories-accordion-row .image-container.image-hover-scale:after {
+  display: none
+}
+.categories-accordion .card-category.colorize-invert + .col-category-name,
+.categories-accordion .card-category.colorize-invert .card-category-name {
+  color: var(--text-color-banner-invert)
+}
+.categories-accordion.post-prws-grid .post-prw > .row .post-prw-text .col {
+  height: auto;
+  padding: 0;
+  margin: 0;
+  min-height: 0
+}
+@media (min-width:768px) {
+  .categories-accordion.post-prws-grid .post-prw,
+  .categories-accordion.post-prws-grid .post-prw > .row {
+    height: 100%
+  }
+  .categories-accordion.post-prws-grid .post-prw > .row {
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -ms-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+    overflow: hidden
+  }
+  .categories-accordion.post-prws-grid .post-prw > .row .post-prw-text {
+    width: 50%;
+    padding: 30px;
+    margin: 0
+  }
+  .categories-accordion.post-prws-grid .post-prw-img {
+    width: 50%;
+    padding-left: 0
+  }
+  .categories-accordion.post-prws-grid .post-prw-img .image-container {
+    height: 100%;
+    padding-bottom: 0
+  }
+  .categories-accordion.post-prws-grid .categories-accordion-row:not(.gx-col-0) {
+    --bs-gutter-x: 30px
+  }
+  .categories-accordion.post-prws-grid .categories-accordion-row.gx-col-0 {
+    overflow: hidden;
+    border-radius: var(--radius-md)
+  }
+  .categories-accordion.post-prws-grid .categories-accordion-row.gx-col-0 .col {
+    padding-right: 0;
+    padding-left: 0
+  }
+  .categories-accordion.post-prws-grid .categories-accordion-row.gx-col-0 .col.is-opened .image-container {
+    border-radius: var(--radius-md) 0 0 var(--radius-md)
+  }
+  .categories-accordion.post-prws-grid .categories-accordion-row.gx-col-0 .col.is-opened + .col .image-container {
+    border-radius: 0 var(--radius-md) var(--radius-md) 0
+  }
+  .categories-accordion.post-prws-grid .categories-accordion-row.gx-col-0 .card-category {
+    width: var(--base-width);
+    border-radius: 0
+  }
+  .categories-accordion.post-prws-grid .categories-accordion-row.gx-col-0 .image-container,
+  .categories-accordion.post-prws-grid .categories-accordion-row.gx-col-0 .post-prw-img,
+  .categories-accordion.post-prws-grid .categories-accordion-row.gx-col-0:not(.rounded-card-0):not(.rounded-0) .col {
+    border-radius: 0
+  }
+  .categories-accordion.post-prws-grid .col:nth-child(even) product-card .image-container {
+    filter: brightness(.9)
+  }
+  .categories-accordion.post-prws-grid product-card {
+    padding: 0!important;
+    border-radius: 0
+  }
+  .categories-accordion.post-prws-grid product-card .image-container {
+    filter: brightness(.95);
+    padding-bottom: 100%!important
+  }
+}
+@media (max-width:767px) {
+  .categories-accordion.post-prws-grid .categories-accordion-row > .col {
+    -ms-flex: 100%;
+    flex: 100%
+  }
+  .categories-accordion.post-prws-grid .categories-accordion-row > .col + .col {
+    margin-top: 50px
+  }
+  .categories-accordion.post-prws-grid .post-prw .post-prw-text {
+    margin: 0;
+    padding: 30px
+  }
+}
+.categories-accordion.style2 .card-category-heading {
+  color: var(--heading-color);
+  font-size: var(--title-font-size);
+  line-height: 1.35
+}
+.categories-accordion.style2 .card-category-description {
+  color: var(--text-color)
+}
+.categories-accordion.style2 .card-category .col-6.colorize-invert .col-category-name {
+  color: var(--text-color-banner-invert)!important
+}
+@media (max-width:767px) {
+  .categories-accordion.style2 .categories-accordion-row .card-category.row > .col-6 {
+    width: 100%!important
+  }
+}
+@media (min-width:1200px) {
+  .categories-accordion.style2 .categories-accordion-row .col-category-name.off-transform {
+    -ms-writing-mode: inherit;
+    writing-mode: inherit;
+    top: 30px;
+    right: 50px;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    padding: 0!important
+  }
+}

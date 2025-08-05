@@ -1,0 +1,54 @@
+{%- comment -%}theme-check-disable ImgWidthAndHeight,ImgLazyLoading{%- endcomment -%}
+{%- if svg_logo -%}
+  <div class="image-svg-container {% if type == 'transparent' %}hide-mobile{% else %}{% if header_transparent %}show-mobile{% endif %}{% endif %}">
+    <img src="{{ svg_logo_name | file_url }}" alt="{{ alt }}">
+  </div>
+{%- else -%}
+{%- liquid
+  if logo == blank
+    assign padding = '42'
+  else
+    assign padding = 1 | divided_by: logo.aspect_ratio | times: 100
+  endif
+-%}
+<div class="image-container ic--ignore-global-round {% unless logo %}ic--bg{% endunless %} {% if type == 'transparent' %}hide-mobile{% else %}{% if header_transparent %}show-mobile{% endif %}{% endif %}" style="padding-bottom: {{ padding }}%;">
+      {%- liquid
+        if logo
+          assign alt = logo.alt | default: shop.name | escape
+
+          assign breakpoints = breakpoints | append: ',' | append: logo_max_width
+          assign sizes = sizes | append: logo_max_width | append: 'px'
+          assign breakpoints = breakpoints | split: ','
+
+          for i in (1..2)
+            assign k = i
+
+            if i == 1
+              assign k = 1.4
+            endif
+
+            for breakpoint in breakpoints
+              if breakpoint.size > 1
+                assign width = breakpoint | times: k
+                assign widths = widths | append: width
+
+                unless forloop.last
+                  assign widths = widths | append: ','
+                endunless
+              endif
+            endfor
+
+            unless forloop.last
+              assign widths = widths | append: ','
+            endunless
+          endfor
+
+          echo logo | image_url: width: logo.width | image_tag: class: '', widths: widths, sizes: sizes, alt: alt
+        endif
+      -%}
+
+      {%- unless logo -%}
+      <span>Logo</span>
+    {%- endunless -%}
+    </div>
+{%- endif -%}

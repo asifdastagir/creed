@@ -1,0 +1,11 @@
+{%- liquid
+  unless block.settings.use_global_blocks_desktop_space
+  assign style = style | append: '--margin-top-product-blocks:' | append: block.settings.spacing_blocks | append: 'px;'
+  endunless
+
+  if style != blank
+  assign style = 'style="' | append: style | append: '"'
+  endif
+
+  echo style
+-%}

@@ -1,0 +1,14 @@
+{
+  "layout": false,
+  "sections": {
+    "collection-product-cards-only": {
+      "type": "collection-product-cards-only",
+      "settings": {
+        "infinite_scroll": true
+      }
+    }
+  },
+  "order": [
+    "collection-product-cards-only"
+  ]
+}

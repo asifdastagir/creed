@@ -1,0 +1,1537 @@
+{% comment %}theme-check-disable NestedSnippet, DeprecateBgsizes, UnusedAssign, TemplateLength, UnclosedHTMLElement, UndefinedObject{% endcomment %}
+{%- liquid
+  assign layout = 'product-carousel'
+  assign section_id = section.id | default: 'product-card'
+  assign product_form_suffix = ''
+
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+    assign rtl_mode = true
+  endif
+
+  assign slides_per_view = section.settings.slides_per_view | plus: 0
+
+  if section.settings.banner and slides_per_view > 3
+    assign slides_per_view = 3
+  endif
+
+  assign background = false
+
+  if section.settings.image_bg != blank
+    assign background = section.settings.image_bg | image_url: width: section.settings.image_bg.width
+    assign background = "data-bgset=" | append: background | append: '"'
+  elsif section.settings.image_bg_preset != 'none'
+    assign background = section.settings.image_bg_preset | asset_img_url: 'master'
+    assign background = "data-bgset=" | append: background | append: '"'
+  endif
+
+  assign ic_style = ''
+  assign color = section.settings.color_placeholder
+
+  if color != 'rgba(0,0,0,0)' and color != blank
+    assign ic_style = '--placeholder-bg: ' | append: color | append: ';'
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+      assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+
+  assign button_show_more = false
+  if section.settings.button
+      if section.settings.heading_alignment == 'left'
+      assign button_show_more = true
+      elsif section.settings.layout != 'mini_horizontal_banner'
+      assign button_show_more = true
+      endif
+  endif
+
+  assign show_button = false
+  assign button_center = false
+  assign button_left = false
+
+  if button_show_more and section.settings.layout != 'mini_horizontal_banner'
+      assign show_button = true
+  endif
+
+  if show_button and section.settings.heading_alignment == 'center'
+      assign button_center = true
+  endif
+
+  if show_button and section.settings.heading_alignment == 'left' and section.settings.button_bottom_on_mobile
+      assign button_left = true
+  endif
+
+  if section.settings.banner and section.settings.layout == 'compact' or section.settings.layout == 'wide'
+    assign button_center = false
+    assign button_left = false
+  endif
+
+  assign show = true
+
+  if section.settings.collection == blank and section.settings.placeholder == false
+    assign show = false
+  endif
+
+
+  assign product_url_collection = product.url
+
+  if settings.product_card_url_within_collection
+    assign product_url_collection = product.url | within: collection
+  endif
+
+  assign decoration = false
+  case settings.section_decoration
+    when "1"
+      assign section_decoration_global = "none"
+    when "2"
+      assign section_decoration_global = "grunge1"
+    when "3"
+      assign section_decoration_global = "grunge2"
+    when "4"
+      assign section_decoration_global = "grunge3"
+    when "5"
+      assign section_decoration_global = "paper"
+    when "6"
+      assign section_decoration_global = "mountains"
+    when "7"
+      assign section_decoration_global = "ellipse1"
+    when "8"
+      assign section_decoration_global = "ellipse2"
+    when "9"
+      assign section_decoration_global = "wave1"
+    when "10"
+      assign section_decoration_global = "wave2"
+    when "11"
+      assign section_decoration_global = "wave3"
+    when "21"
+      assign section_decoration_global = "wave4"
+    when "22"
+      assign section_decoration_global = "wave5"
+    when "12"
+      assign section_decoration_global = "triangle1"
+    when "13"
+      assign section_decoration_global = "triangle2"
+    when "14"
+      assign section_decoration_global = "triangle_assymetrical1"
+    when "15"
+      assign section_decoration_global = "triangle_assymetrical1_flip"
+    when "16"
+      assign section_decoration_global = "triangle_assymetrical2"
+    when "17"
+      assign section_decoration_global = "triangle_assymetrical2_flip"
+    when "18"
+      assign section_decoration_global = "tilt"
+    when "19"
+      assign section_decoration_global = "tilt_flip"
+    when "20"
+      assign section_decoration_global = "glaze"
+  endcase
+
+  assign section_decoration_top = section.settings.section_decoration_top
+  assign section_decoration_bottom = section.settings.section_decoration_bottom
+
+  if section_decoration_top != 'none' and section_decoration_top != 'global' or section_decoration_global != 'none'
+    assign decoration = true
+  endif
+
+  if section_decoration_bottom != 'none' and section_decoration_bottom != 'global' or section_decoration_global != 'none'
+    assign decoration = true
+  endif
+-%}
+{%- if show -%}
+  {% render 'section-wrapper', placement: 'top' %}
+
+
+  <div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+    <div class="{% render 'section-container-class', layout: layout %}">
+
+      {%- if background != false -%}
+        <div class="lazyload bg-contain bg-top py-6" {{ background }} data-sizes="auto">
+          <div class="container">
+      {%- endif -%}
+
+      {% render 'section-heading' %}
+      {%- if section.settings.countdown != 'none' -%}
+        <div class="text-center mb-4">
+          <count-down class="single-countdown theme-color" data-time-expire="{{ section.settings.countdown }}"><div>{{ 'theme.general.day' | t }}<div data-days></div></div><div>{{ 'theme.general.hrs' | t }}<div data-hours></div></div><div>{{ 'theme.general.min' | t }}<div data-minutes></div></div><div>{{ 'theme.general.sec' | t }}<div data-seconds></div></div></count-down>
+        </div>
+      {%- endif -%}
+
+      {%- if slides_per_view == 1 -%}
+        <div class="product-single ps-carousel product-single--horizontal {% if section.settings.compact %}ps-carousel--compact{% endif %} {% if section.settings.reverse %}ps--invert{% endif %} row">
+          <div class="col ps-product-gallery">
+              <div class="row ps-product ps-product--bordered colorize-invert bg-cover lazyloaded p-0" style="--bg-color: #fff;">
+                  <div class="col">
+                    <div class="ps-main-gallery">
+                          <swiper-carousel class="">
+                              <div class="swiper-container">
+                                  <div class="swiper-wrapper">
+                                    {%- for product in collections[section.settings.collection].products limit: section.settings.limit -%}
+                                      {%- liquid
+                                        assign image = product.selected_variant.featured_media | default: product.featured_media
+                                        assign lazyload = false
+                                        assign class_img_only = 'fade-up-none'
+
+                                        if forloop.index > 1
+                                          assign lazyload = true
+                                          assign class_img_only = 'lazyload fade-up'
+                                        endif
+
+                                        assign in_collection = product.collections | where: 'handle', collection.handle | first
+
+                                        if collection == null or collection.handle == 'all' or in_collection == nil
+                                          assign all_products_count = 0
+                                          for c in product.collections
+                                            if c.handle != 'all' and c.handle != 'frontpage' and all_products_count < c.all_products_count
+                                              assign collection = c
+                                              assign all_products_count = c.all_products_count
+                                            endif
+                                          endfor
+                                        endif
+
+                                        for i in (1..10)
+                                          assign catalog_handle = 'catalog_' | append: i
+                                          assign catalog_handle = settings[catalog_handle]
+                                          assign catalog_links = catalog_links | concat: linklists[catalog_handle].links
+                                        endfor
+
+                                        for link in catalog_links
+                                          assign lvl_2 = link.links | where: 'url', collection.url | first
+                                          unless lvl_2 == nil
+                                            assign lvl_1 = link
+                                            break
+                                          endunless
+                                        endfor
+                                        if lvl_1 == nil
+                                          assign lvl_1 = catalog_links | where: 'url', collection.url | first
+                                        endif
+
+                                        if lvl_2 == blank and lvl_1 == blank
+                                          for tag in product.tags
+                                            if tag contains 'collection-'
+                                              assign collection_handle = tag | replace: 'collection-', ''
+                                              assign collection = collections[collection_handle]
+                                            elsif tag contains 'collections-'
+                                              assign collection_handle = tag | replace: 'collections-', ''
+                                              assign collection = collections[collection_handle]
+                                            endif
+                                          endfor
+                                        endif
+
+                                        assign href = product_url_collection
+                                      -%}
+                                      <div class="swiper-slide">
+                                        {% render 'image-container',
+                                          product_object: product,
+                                          image: image,
+                                          collection: section.settings.collection,
+                                          lazyload: lazyload,
+                                          class_img_only: class_img_only,
+                                          is_link: true,
+                                          href: href
+                                        %}
+                                      </div>
+                                    {%- else -%}
+                                      {%- for i in (1..section.settings.limit) -%}
+                                        {% render 'product-placeholder' %}
+                                      {%- endfor -%}
+                                    {%- endfor -%}
+                                  </div>
+                              </div>
+                              <script type="application/json">
+                                  {
+                                      "loop": false,
+                                      "slidesPerView": 1,
+                                      "mousewheel": false,
+                                      "effect": "fade",
+                                      "allowTouchMove": true
+                                  }
+                              </script>
+                          </swiper-carousel>
+                      </div>
+                  </div>
+              </div>
+              {%- if collections[section.settings.collection].products.size > 1 -%}
+                <custom-swiper-navigation>
+                    <div class="swiper-arrows-carousel swiper-arrows-carousel--visible d-md-none">
+                        <div class="swiper-button-next swiper-button-next--ps"></div>
+                        <div class="swiper-button-prev swiper-button-prev--ps"></div>
+                    </div>
+                </custom-swiper-navigation>
+              {%- endif -%}
+          </div>
+          <div class="col ps-product-info-right">
+
+              <swiper-carousel>
+                  <div class="swiper-container swiper-container-fade swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events">
+
+                      <div class="swiper-wrapper">
+
+                        {%- for product in collections[section.settings.collection].products limit: section.settings.limit -%}
+                          {%- liquid
+                          assign product_form_id = 'product-form-' | append: product_form_suffix | append: section_id | append: '-' | append: product.id
+                          assign current_variant = product.selected_or_first_available_variant
+                          assign in_collection = product.collections | where: 'handle', collection.handle | first
+
+                          if collection == null or collection.handle == 'all' or in_collection == nil
+                            assign all_products_count = 0
+                            for c in product.collections
+                              if c.handle != 'all' and c.handle != 'frontpage' and all_products_count < c.all_products_count
+                                assign collection = c
+                                assign all_products_count = c.all_products_count
+                              endif
+                            endfor
+                          endif
+
+                          for i in (1..10)
+                            assign catalog_handle = 'catalog_' | append: i
+                            assign catalog_handle = settings[catalog_handle]
+                            assign catalog_links = catalog_links | concat: linklists[catalog_handle].links
+                          endfor
+
+                          for link in catalog_links
+                            assign lvl_2 = link.links | where: 'url', collection.url | first
+                            unless lvl_2 == nil
+                              assign lvl_1 = link
+                              break
+                            endunless
+                          endfor
+                          if lvl_1 == nil
+                            assign lvl_1 = catalog_links | where: 'url', collection.url | first
+                          endif
+
+                          if lvl_2 == blank and lvl_1 == blank
+                            for tag in product.tags
+                              if tag contains 'collection-'
+                                assign collection_handle = tag | replace: 'collection-', ''
+                                assign collection = collections[collection_handle]
+                              elsif tag contains 'collections-'
+                                assign collection_handle = tag | replace: 'collections-', ''
+                                assign collection = collections[collection_handle]
+                              endif
+                            endfor
+                          endif
+
+                          assign product_url_collection = product.url
+
+                          if settings.product_card_url_within_collection
+                            assign product_url_collection = product.url | within: collection
+                          endif
+
+                          -%}
+                          <div class="swiper-slide">
+                              <div class="ps-text mt-first-0">
+                                  <div class="ps-product-description">{{ 'theme.general.product_of_the_day' | t }}</div>
+                                  <h2 class="ps-product-title h-xl-style">
+                                      <a href="{{ product_url_collection }}">{{ product.title | escape | truncate: 50, '..' }}</a>
+                                  </h2>
+                                  <div class="ps-rating">
+                                    {%- if settings.product_card_rating -%}
+                                      <div class="prd-rating">
+                                        {% render 'rating', product: product %}
+                                      </div>
+                                    {%- endif -%}
+                                  </div>
+                                  <div class="ps-product-description">
+                                    {%- if settings.product_card_show_description -%}
+                                      {%- if settings.product_card_description_source == 'description' -%}
+                                      {{ product.description | strip_html | truncatewords: 50, '..' }}
+                                      {%- else -%}
+                                      {{ product.metafields.custom.short_description | truncate: 400, '..' }}
+                                      {%- endif -%}
+                                    {%- endif -%}
+                                  </div>
+
+                                  <div class="ps-text-actions row align-items-center g-2">
+                                      <div class="col">
+                                        {%- render 'price',
+                                          product: product,
+                                          use_variant: true,
+                                          render: false,
+                                          product_card_style_1: false,
+                                          product_form_id: product_form_id,
+                                          only_simple_add_to_cart: 1,
+                                          layout: layout
+                                        -%}
+                                      </div>
+                                      <div class="col-auto">
+                                        {% render 'product-card-action'
+                                          product: product,
+                                          product_form_id: product_form_id,
+                                          show_variants: false,
+                                          layout: layout,
+                                          hide_quantity: 1,
+                                          current_variant: current_variant
+                                        %}
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                        {%- endfor -%}
+                      </div>
+                  </div>
+                  <script type="application/json">
+                      {
+                          "loop": false,
+                          "slidesPerView": 1,
+                          "mousewheel": false,
+                          "effect": "fade",
+                          "allowTouchMove": true
+                      }
+                  </script>
+              </swiper-carousel>
+          </div>
+          {%- if collections[section.settings.collection].products.size > 1 -%}
+            <custom-swiper-navigation>
+                <div class="swiper-arrows-carousel swiper-arrows-carousel--visible d-none d-md-block">
+                    <div class="swiper-button-next swiper-button-next--ps"></div>
+                    <div class="swiper-button-prev swiper-button-prev--ps"></div>
+                </div>
+            </custom-swiper-navigation>
+          {%- endif -%}
+        </div>
+
+        {%- if button_center or button_left -%}
+          <div class="btn-showmore-wrap text-center mt-3 mt-lg-6  {% if button_left %}show-mobile-sm{% endif %}">
+              <a href="{{ section.settings.button_url }}" class="btn {{ section.settings.button_color }} btn--showmore">{{ section.settings.button_text }}</a>
+          </div>
+        {%- endif -%}
+
+      {%- else -%}
+        <div class="row {% if section.settings.layout == 'wide' %}g-0{% else %}gy-4{% endif %} {{ section.settings.banner_position }}">
+          {%- if section.settings.banner -%}
+            {%- if section.settings.layout == 'compact' -%}
+              <div class="col-xs-6 col-md-4 col-lg-{% if slides_per_view == 2 %}4{% else %}3{% endif %}">
+                <flow-type>
+                  <a href="{{ section.settings.button_url }}" class="bnr-wrap">
+                    <div class="bnr to-center to-middle text-center image-hover-scale" data-fontratio="2.7">
+                      {% render 'image-container',
+                        image: section.settings.image,
+                        padding_no_bg: 168.88,
+                        padding: 168.88,
+                        sizes: '264px',
+                        class_ic: 'bnr-img',
+                        style: ic_style
+                      %}
+                      <div class="bnr-caption h-100 {% if section.settings.invert_color %}colorize-invert{% endif %}" style="--padding: 18% 0; --padding-mobile:  18% 0; --caption-width: 74%; --caption-width-mobile: 74%;">
+                        <div class="bnr-text" style="font-size: .3em; line-height: 1.2em; font-weight: {{ settings.font_weight_500 }};">{{ section.settings.banner_title }}</div>
+                        {%- if section.settings.button -%}
+                          <div class="bnr-btn-wrap mt-auto">
+                            <div class="btn w-100 {{ section.settings.button_color }}">{{ section.settings.button_text }}</div>
+                          </div>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  </a>
+                </flow-type>
+              </div>
+            {%- else -%}
+              <div class="col-lg-6">
+                <flow-type>
+                  <a href="{{ section.settings.button_url }}" class="bnr-wrap h-100 position-relative z-index-over">
+                    {%- liquid
+                      assign banner_text_position = 'to-right'
+                      if section.settings.banner_position == 'flex-row-reverse'
+                        assign banner_text_position = 'to-left'
+                      endif
+                    -%}
+                    <div class="bnr h-100 {{ banner_text_position }} to-middle text-start fontratio-calc" data-fontratio=9.59>
+                      {% render 'image-container',
+                        image: section.settings.image,
+                        padding_no_bg: 60.36,
+                        padding: 60.36,
+                        class_ic: 'bnr-img bnr-img-m',
+                        round: 0,
+                        style: ic_style
+                      %}
+                      {%- liquid assign mobile_image = section.settings.image_mobile | default: section.settings.image -%}
+                      {% render 'image-container',
+                        image: mobile_image,
+                        padding_no_bg: 62.26,
+                        padding: 62.26,
+                        class_ic: 'bnr-img image-bg-wrap ic--bg-cover',
+                        round: 0,
+                        style: ic_style
+                      %}
+                      <div class="bnr-caption {% if section.settings.invert_color %}colorize-invert{% endif %}" style="--padding: 5%; --padding-mobile: 5%; --caption-width: 57%; --caption-width-mobile: 57%;">
+                        <div class="bnr-text1 mt-0" style="font-size:.37em;line-height:1.3em;font-weight:{{ settings.font_weight_700 }};"><span style="{% if section.settings.banner_text_decor %}text-shadow:.15em .2em rgba(0,0,0,.15);letter-spacing:.6em;{% else %}letter-spacing:.2em;{% endif %}">{{ section.settings.banner_subtitle }}</span></div>
+                        <div class="bnr-text2 mt-sm{% if section.settings.banner_text_decor %} theme-color-strict{% endif %}" style="font-size:1.25em;line-height:1em;font-weight:{{ settings.font_weight_800 }};"><span{% if section.settings.banner_text_decor %} style="-webkit-text-stroke:0.01em #fff;"{% endif %}>{{ section.settings.banner_title }}</span></div>
+                        {%- if section.settings.button -%}
+                          <div class="bnr-btn-wrap mt-lg">
+                            <div class="btn {{ section.settings.button_color }}">{{ section.settings.button_text }}</div>
+                          </div>
+                        {%- endif -%}
+                      </div>
+                    </div>
+                  </a>
+                </flow-type>
+              </div>
+            {%- endif -%}
+          {%- endif -%}
+          {%- liquid
+            assign col = 'col-12'
+            assign inner_bg = section.settings.background_inner_type
+            if inner_bg == 'custom'
+              assign inner_bg_color = section.settings.background_inner_color
+              assign inner_bg_custom = ''
+              if inner_bg_color != 'rgba(0,0,0,0)' and inner_bg_color != blank
+                assign inner_bg_custom = 'background-color: ' | append: inner_bg_color | append: ';'
+              endif
+            endif
+            if section.settings.banner
+              if section.settings.layout == 'compact'
+                assign col = 'col-xs-6 col-md-8 col-lg-'
+                if slides_per_view == 2
+                  assign suffix = 8
+                else
+                  assign suffix = 9
+                endif
+                assign col = col | append: suffix
+              else
+                if decoration
+                  assign col = 'd-flex flex-column justify-content-center col-lg-6 px-3 px-md-5 py-global ' | append: section.settings.background_inner_type
+                  assign style = 'style="--padding-top-desktop: 200px;--padding-bottom-desktop: 200px;--padding-top-mobile:50px;' | append: inner_bg_custom | append: '"'
+                else
+                  assign col = 'd-flex flex-column justify-content-center col-lg-6 p-3 p-md-5 ' | append: section.settings.background_inner_type
+                  assign style = 'style="' | append: inner_bg_custom | append: '"'
+                endif
+              endif
+            endif
+
+          -%}
+          <div class="{{ col }}" {{ style }}>
+            <swiper-carousel data-center-arrows>
+              <div class="swiper-container swiper-container-prd-carousel swiper-container-center">
+                <div class="swiper-wrapper">
+                  {%- for product in collections[section.settings.collection].products limit: section.settings.limit -%}
+                    <div class="swiper-slide">{% render 'product-card', product: product, collection: section.settings.collection %}</div>
+                  {%- else -%}
+                    {%- for i in (1..section.settings.limit) -%}
+                      {% render 'product-placeholder' %}
+                    {%- endfor -%}
+                  {%- endfor -%}
+                </div>
+                <div class="swiper-pagination position-relative mt-4 mt-md-5{% if section.settings.pagination_invert_color %} colorize-invert-banner{% endif %}"></div>
+                <div class="swiper-arrows-carousel container">
+                  <div class="swiper-button-next"></div>
+                  <div class="swiper-button-prev"></div>
+                </div>
+              </div>
+              <script type="application/json">
+                {
+                  "pagination": {
+                    "el": ".swiper-pagination",
+                    "clickable": true
+                  },
+                  "navigation": {
+                    "nextEl": ".swiper-button-next",
+                    "prevEl": ".swiper-button-prev"
+                  },
+                  "slidesPerColumnFill": "row",
+                  "watchOverflow": true,
+                  "slidesPerView": 1,
+                  {% if section.settings.banner and section.settings.layout == 'wide' %}
+                    "spaceBetween": 20,
+                    "breakpoints": {
+                      "{{ settings.product_card_one_in_row_width }}": {
+                        "slidesPerView": 2,
+                        "spaceBetween": 20
+                      },
+                      "768": {
+                        "slidesPerView": 3,
+                        "spaceBetween": 20
+                      },
+                      "992": {
+                        "slidesPerView": {{ slides_per_view | at_most: 2 }},
+                        "spaceBetween": 20
+                      },
+                      "1200": {
+                        "slidesPerView": {{ slides_per_view | at_most: 2 }},
+                        "spaceBetween": 20
+                      },
+                      "1600": {
+                        "slidesPerView": {{ slides_per_view }},
+                        "spaceBetween": 20
+                      }
+                    }
+                  {% elsif section.settings.banner and section.settings.layout == 'compact' %}
+                    "spaceBetween": 20,
+                    "breakpointsBase": "container",
+                    "breakpoints": {
+                      "{{ settings.product_card_one_in_row_width }}": {
+                        "slidesPerView": 2,
+                        "spaceBetween": 20
+                      },
+                      "716": {
+                        "slidesPerView": 3,
+                        "spaceBetween": 20
+                      },
+                      "1120": {
+                        "slidesPerView": 4,
+                        "spaceBetween": 20
+                      },
+                      "1400": {
+                        "slidesPerView": 5,
+                        "spaceBetween": 20
+                      }
+                    }
+                  {% else %}
+                    "spaceBetween": 15,
+                    "breakpointsBase": "container",
+                    "breakpoints": {
+                      "{{ settings.product_card_one_in_row_width }}": {
+                        "slidesPerView": 2,
+                        "spaceBetween": 20
+                      },
+                      "992": {
+                        "slidesPerView": {{ slides_per_view | at_most: 4 }},
+                        "spaceBetween": 20
+                      },
+                      "1200": {
+                        "slidesPerView": {{ slides_per_view | at_most: 5 }},
+                        "spaceBetween": 30
+                      },
+                      "1466": {
+                        "slidesPerView": {{ slides_per_view }},
+                        "spaceBetween": 20
+                      }
+                    }
+                  {%- endif -%}
+                }
+              </script>
+            </swiper-carousel>
+
+            {%- if button_center or button_left -%}
+                <div class="btn-showmore-wrap text-center mt-3 mt-lg-6  {% if button_left %}show-mobile-sm{% endif %}">
+                    <a href="{{ section.settings.button_url }}" class="btn {{ section.settings.button_color }} btn--showmore">{{ section.settings.button_text }}</a>
+                </div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.image_bg != blank -%}
+          </div>
+        </div>
+      {%- endif -%}
+
+    </div>
+  </div>
+  {% render 'section-wrapper' %}
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Products carousel",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_animation",
+      "label": "Enable soft appearing of section",
+      "default": true,
+      "info": "Global sections animation disabling in Theme Settings / General / Sections. AUTODISABLED if section has top or bottom separator."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "min": 4,
+      "max": 10,
+      "step": 1,
+      "label": "Limit products",
+      "default": 6
+    },
+    {
+      "type": "select",
+      "id": "slides_per_view",
+      "label": "Slides per view",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "label": "5"
+        },
+        {
+          "value": "6",
+          "label": "6"
+        }
+      ],
+      "default": "4",
+      "info": "4 and 5 do not work if Banner is enabled; 6 if store width > 1465"
+    },
+    {
+      "type": "checkbox",
+      "id": "compact",
+      "label": "Compact mode If 1 slides per view",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "reverse",
+      "label": "Reverse mode If 1 slides per view",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "countdown",
+      "label": "Countdown",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "halfhour",
+          "label": "by the end of current half an hour"
+        },
+        {
+          "value": "hour",
+          "label": "by the end of current hour"
+        },
+        {
+          "value": "day",
+          "label": "by the end of current day"
+        },
+        {
+          "value": "week",
+          "label": "by the end of current week"
+        },
+        {
+          "value": "month",
+          "label": "by the end of current month"
+        },
+        {
+          "value": "year",
+          "label": "by the end of current year"
+        }
+      ],
+      "default": "none",
+      "info": "counter automatically continues from the beginning after completion"
+    },
+    {
+      "type": "radio",
+      "id": "heading_alignment",
+      "label": "Heading aligment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "default": "Subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "header",
+      "content": "Banner"
+    },
+    {
+      "type": "checkbox",
+      "id": "banner",
+      "label": "Show",
+      "default": false
+    },
+    {
+      "type": "select",
+      "id": "banner_position",
+      "label": "Banner position",
+      "options": [
+        {
+          "value": "flex-row-reverse",
+          "label": "Right"
+        },
+        {
+          "value": "flex-row",
+          "label": "Left"
+        }
+      ],
+      "default": "flex-row"
+    },
+    {
+      "type": "radio",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        {
+          "value": "compact",
+          "label": "Compact"
+        },
+        {
+          "value": "wide",
+          "label": "Wide"
+        }
+      ],
+      "default": "compact"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image",
+      "info": "recommended size for retina displays is 894x514px"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_mobile",
+      "label": "Image for mobile",
+      "info": "recommended size for retina displays is 750x370px"
+    },
+    {
+      "type": "color",
+      "id": "color_placeholder",
+      "label": "Placeholder background loader",
+      "info": "Set the main color of the image (visually softens the appearance of the image)"
+    },
+    {
+      "type": "text",
+      "id": "banner_title",
+      "default": "Best Offer",
+      "label": "Title"
+    },
+    {
+      "type": "text",
+      "id": "banner_subtitle",
+      "default": "DISCOUNT",
+      "label": "Subtitle"
+    },
+    {
+      "type": "checkbox",
+      "id": "invert_color",
+      "label": "Invert captions color",
+      "default": false,
+      "info": "Invert color you can set in Theme Settings / General / Colors - General"
+    },
+    {
+      "type": "checkbox",
+      "id": "banner_text_decor",
+      "label": "Captions decoration",
+      "default": true,
+      "info": "Apply a stroke to the title and a shadow for the subtitle"
+    },
+    {
+      "type": "header",
+      "content": "Button",
+      "info": "only if Heading layout set 'Left' or checked the Banner for carousel"
+    },
+    {
+      "type": "checkbox",
+      "id": "button",
+      "label": "Show",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "button_bottom_on_mobile",
+      "label": "Show at bottom on mobile in case when Heading layout is 'Left'",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Caption",
+      "default": "View all"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Link"
+    },
+    {
+      "type": "select",
+      "id": "button_color",
+      "label": "Button color",
+      "options": [
+        {
+          "value": "btn--default",
+          "label": "Primary"
+        },
+        {
+          "value": "btn--invert",
+          "label": "Secondary"
+        },
+        {
+          "value": "btn--grey",
+          "label": "Third"
+        },
+        {
+          "value": "btn--white",
+          "label": "Fourth"
+        },
+        {
+          "value": "btn--fifth",
+          "label": "Fifth"
+        }
+      ],
+      "default": "btn--invert"
+    },
+    {
+      "type": "header",
+      "content": "Background",
+      "info": "disables fluid mode"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_bg",
+      "label": "Inner block background",
+      "info": "set empty if you want to use 'Background preset'"
+    },
+    {
+      "type": "select",
+      "id": "image_bg_preset",
+      "label": "Background preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "single-countdown-bg.png",
+          "label": "Background for Nutrition"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+    {
+      "type": "checkbox",
+      "id": "pagination_invert_color",
+      "label": "Invert pagination color",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "If wide layout with banner"
+    },
+    {
+      "type": "select",
+      "id": "background_inner_type",
+      "label": "Inner block background color",
+      "options": [
+          {
+            "value": "bg-alt",
+            "label": "Primary background color"
+          },
+          {
+            "value": "bg-body",
+            "label": "Secondary background color"
+          },
+          {
+            "value": "custom",
+            "label": "Custom color"
+          }
+       ],
+      "default": "bg-alt"
+    },
+    {
+      "type": "color",
+      "id": "background_inner_color",
+      "label": "Custom - Inner block background color"
+    },
+    {
+      "type": "header",
+      "content": "Advanced"
+    },
+    {
+      "type": "checkbox",
+      "id": "placeholder",
+      "label": "Show placeholder if image is absent",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_on_mobile",
+      "label": "Hide on mobile",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "SECTION WIDTH"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Select width source",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use store width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom width"
+        }
+      ],
+      "default": "global",
+      "info": "Store width you can set in Theme Settings / General"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 1178,
+      "max": 1978,
+      "step": 8,
+      "unit": "px",
+      "label": "Custom width",
+      "default": 1178,
+      "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable background",
+      "default": false,
+      "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+    },
+    {
+      "type": "select",
+      "id": "background_preset",
+      "label": "Background image - preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "product-cosmetics-bg.png",
+          "label": "Leaves 1"
+        },
+        {
+          "value": "bottom-cosmetics-bg.png",
+          "label": "Leaves 2"
+        },
+        {
+          "value": "bg-makeup1.png,bg-makeup1-m.png",
+          "label": "Pink and Waves 1"
+        },
+        {
+          "value": "bg-makeup2.png,bg-makeup2-m.png",
+          "label": "Pink and Waves 2"
+        },
+        {
+          "value": "bg-makeup4.png,bg-makeup4-m.png",
+          "label": "Pink and Waves 3"
+        },
+        {
+          "value": "bg-makeup3.png,bg-makeup3-m.png",
+          "label": "Purple Splash"
+        },
+        {
+          "value": "bg-sweets1.png",
+          "label": "Blue Sun Rays"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image - custom on Desktop"
+    },
+    {
+      "type": "select",
+      "id": "background_behavior",
+      "label": "Background image behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image - custom on Mobile",
+      "info": "only if Background image - custom on Desktop selected"
+    },
+    {
+      "type": "select",
+      "id": "background_image_placeholder_type",
+      "label": "Placeholder background color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_secondary_bg"
+    },
+    {
+      "type": "color",
+      "id": "background_image_placeholder",
+      "label": "Custom - Placeholder background color"
+    },
+    {
+      "type": "header",
+      "content": "SECTION SEPARATOR"
+    },
+    {
+      "type": "header",
+      "content": "Top separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_header_main_bg",
+          "label": "Header - Middle(main) part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_top_color",
+      "label": "Custom - top separator color"
+    },
+    {
+      "type": "header",
+      "content": "Bottom separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "paragraph",
+      "content": "'Global separator' is set in Theme Settings / Separators / Global separator style"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_footer_top_bg",
+          "label": "Footer - Top part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_bottom_color",
+      "label": "Custom - bottom separator color"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Products carousel / constructor"
+    },
+    {
+      "name": "Products carousel / preset 1 Default"
+    },
+    {
+      "name": "Products carousel / preset 2 Small banner",
+      "settings": {
+        "banner": true,
+        "slides_per_view": "3",
+        "invert_color": true
+      }
+    },
+    {
+      "name": "Products carousel / preset 3 Wide banner",
+      "settings": {
+        "banner": true,
+        "layout": "wide",
+        "slides_per_view": "3",
+        "heading": "",
+        "subtitle": "",
+        "invert_color": true
+      }
+    },
+    {
+      "name": "Products carousel / preset 4 Countdown",
+      "settings": {
+        "slides_per_view": "3",
+        "countdown": "hour"
+      }
+    },
+    {
+      "name": "Products carousel / preset 5 Compact heading",
+      "settings": {
+        "heading_alignment": "left"
+      }
+    },
+    {
+      "name": "Products carousel / preset 6 Single product",
+      "settings": {
+        "slides_per_view": "1"
+      }
+    }
+  ]
+}
+{% endschema %}

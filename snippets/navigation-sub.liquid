@@ -1,0 +1,118 @@
+{% comment %}theme-check-disable NestedSnippet{% endcomment %}
+{%- if request.page_type == 'collection' -%}
+  {%- liquid
+    assign layout = 'header-subcollections'
+
+    for i in (1..10)
+      assign catalog_handle = 'catalog_' | append: i
+      assign catalog_handle = settings[catalog_handle]
+      assign catalog = catalog | concat: settings[catalog_handle]
+      assign catalog_links = catalog_links | concat: linklists[catalog_handle].links
+    endfor
+
+    assign hide_title = false
+
+    if collection.handle == 'all'
+      assign layout = 'header-subcollections-collections-all'
+      assign match = linklists.catalog
+      assign hide_title = settings.collection_previews_header_only_previews_collections_all
+    else
+      assign match = catalog_links | where: 'url', collection.url | first
+      unless match
+        for link in catalog_links
+          assign match = link.links | where: 'url', collection.url | first
+          if match
+            assign match = catalog_links | where: 'handle', link.handle | first
+            break
+          endif
+        endfor
+      endunless
+    endif
+
+    if request.page_type == 'collection'
+      assign subcollection_vendor = collection.metafields.custom.subcollection_vendor | default: settings.subcollection_vendor
+
+      if subcollection_vendor == 'subcollection_outer' or  subcollection_vendor == 'subcollection'
+        assign match = false
+      endif
+    endif
+  -%}
+  {%- if match.links.size > 0 -%}
+    <div class="hdr-second-nav {% if hide_title %}has-bordered-active{% endif %}">
+      <async-reload data-url-update>
+        <swiper-carousel class="container">
+          <div class="swiper-container py-2">
+            <div class="swiper-wrapper swiper-no-scroll">
+
+              {%- for link in match.links -%}
+                {%- liquid
+                  assign has_image_icon = false
+
+                  if link.object.image != blank and show_image_icons != false and link.object.url contains '/collections/'
+                    if layout == 'header-subcollections'
+                      assign has_image_icon = settings.collection_previews_header
+
+                    elsif layout == 'header-subcollections-collections-all'
+                      assign has_image_icon = settings.collection_previews_header_collections_all
+
+                    elsif layout == 'catalog-popup'
+                      assign has_image_icon = settings.collection_previews_header_catalog_popup
+
+                    elsif layout == 'header-layout-2'
+                      assign has_image_icon = settings.collection_previews_header_categories
+
+                    endif
+                  endif
+
+                  if has_image_icon == false and link.object.image == blank and hide_title == true
+                    continue
+                  endif
+                -%}
+                <div class="swiper-slide">
+                  {% render 'header-navigation-component-link',
+                    link: link,
+                    span: true,
+                    index: forloop.index,
+                    hide_title: hide_title,
+                    forloop: forloop,
+                    layout: layout
+                  %}
+                </div>
+              {%- endfor -%}
+            </div>
+          </div>
+          <div class="swiper-pagination d-none"></div>
+          <div class="hdr-second-nav-swiper-arrows">
+            <div class="swiper-button-prev-sm"></div>
+            <div class="swiper-button-next-sm"></div>
+          </div>
+          <script type="application/json">
+            {
+              "freeMode": true,
+              "watchOverflow": true,
+              "loop": false,
+              "slidesPerView": "auto",
+              "mousewheel": true,
+              "resistance": true,
+              "resistanceRatio": 0,
+              "touchRatio": 6,
+              "centerInsufficientSlides": true,
+              "navigation": {
+                "nextEl": ".hdr-second-nav .swiper-button-next-sm",
+                "prevEl": ".hdr-second-nav .swiper-button-prev-sm"
+              },
+              "pagination": {
+                "el": ".swiper-pagination"
+              }
+            }
+          </script>
+        </swiper-carousel>
+      </async-reload>
+      {%- if settings.header_decoration_style == '2' -%}
+        <div class="hdr-edge-bottom">
+          {% render 'edge-top-svg' %}
+        </div>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+{%- endif -%}

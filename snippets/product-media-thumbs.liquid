@@ -1,0 +1,87 @@
+{% comment %}theme-check-disable UnusedAssign{% endcomment %}
+{%- unless grid -%}
+  {%- liquid
+    assign thumbs_position = thumbs_position | default: section.settings.thumbs_position
+    assign product_aspect_ratio = true
+
+    assign aspect_ratio = settings.product_image_aspect_ratio
+
+    if aspect_ratio == 'custom'
+      assign aspect_ratio = settings.product_height_ratio | times: 100 | divided_by: settings.product_width_ratio
+    endif
+
+    if thumbs_position == 'bottom'
+      assign padding = false
+      assign product_aspect_ratio = true
+    endif
+
+    assign cover = section.settings.thumbs_cover
+
+    if suffix == 'QW'
+      assign cover = settings.qv_thumbs_cover
+    endif
+  -%}
+  <div class="prd-block-gallery-thumbs-wrap {% if thumbs_position == 'right' %}thumbs-to-right{% endif %}">
+    <div class="swiper-container prd-block-gallery-thumbs js-product-previews-carousel" data-destroy="1200">
+      <div class="swiper-wrapper">
+        {%- for media in product.media -%}
+          {%- liquid
+            assign hide = false
+
+            if hide_variants and variant_images contains media.src
+              assign hide = true
+            endif
+
+            assign image_ratio = ''
+
+            if media.media_type == 'video' or media.media_type == 'external_video'
+              assign image_ratio = 'landscape'
+            endif
+          -%}
+          {%- unless hide -%}
+            <div class="swiper-slide swiper-slide-thumb{% if media.media_type != 'image' %} swiper-slide--video-thumb {% endif %}{% if hide_variants and variant_images contains media.src %} product__media-item--variant{% endif %}" data-media-id="{{ section.id }}-{{ media.id }}" {% if media.media_type != 'image' %}data-tippy-placement="{% if thumbs_position == 'bottom' %}bottom{% else %}left{% endif %}" data-toggle="tooltip" {% if media.preview_image.alt != blank %}data-tippy-content="{{ media.preview_image.alt | escape }}"{% endif %} {%- endif -%} data-media-type="{{ media.media_type }}">
+              {%- liquid
+                assign class_ic = ' ic--' | append: product_media_main_fill_color
+
+                unless cover
+                  assign class_ic = class_ic | append: ' ic--contain'
+                endunless
+
+              -%}
+              {% render 'image-container',
+                image: media,
+                product_aspect_ratio: product_aspect_ratio,
+                padding_no_bg: aspect_ratio,
+                padding: aspect_ratio,
+                sizes: sizes,
+                class_img_only: 'lazyload-prepend'
+                bg_required: 1,
+                bg: false,
+                class_ic: class_ic,
+                image_ratio: image_ratio,
+                cover: cover
+              %}
+
+              {%- if media.media_type == 'video' or media.media_type == 'external_video' -%}
+                <div class="icon-wrap">{% render 'icon-video' %}</div>
+              {%- elsif media.media_type == 'model' -%}
+                <div class="icon-wrap">{% render 'icon-3d-model' %}</div>
+              {%- endif -%}
+            </div>
+          {%- endunless -%}
+        {%- endfor -%}
+        
+      </div>
+      <div class="swiper-scrollbar position-relative mt-1 d-lg-none"></div>
+    </div>
+    <div class="prd-block-gallery-pagination d-none"></div>
+    <div class="prd-block-gallery-nav d-none d-lg-flex">
+      <div class="swiper-button-prev">
+        {% render 'icon-arrow-up2' %}
+      </div>
+      <div class="swiper-button-next">
+        {% render 'icon-arrow-down2' %}
+      </div>
+    </div>
+  </div>
+{% endunless %}

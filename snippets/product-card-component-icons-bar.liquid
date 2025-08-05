@@ -1,0 +1,82 @@
+{%- liquid
+    assign data_tippy_placement = 'left'
+    assign rtl = false
+
+    if "ar he he-IL hi" contains localization.language.iso_code
+      assign data_tippy_placement = 'right'
+      assign rtl = true
+    endif
+
+    if layout == 'product-card-lookbook'
+      assign data_tippy_placement = 'left'
+
+      if rtl == false
+        assign data_tippy_placement = 'right'
+      endif
+    endif
+
+    assign data_tippy_placement_qv = data_tippy_placement_qv | default: data_tippy_placement
+
+    if layout == 'product-card-horizontal'
+      assign data_tippy_placement_qv = 'right'
+
+      if rtl == true
+        assign data_tippy_placement_qv = 'left'
+      endif
+    endif
+
+    if layout == 'availability'
+      assign data_tippy_placement = 'right'
+
+      if rtl == true
+        assign data_tippy_placement = 'left'
+      endif
+    endif
+
+    assign quick_view_disable = quick_view_disable | default: false, allow_false: true
+    assign wishlist_disable = wishlist_disable | default: false, allow_false: true
+
+    assign target = target | default: product
+-%}
+<div class="prd-icons" data-render="icons-{{ product_form_id }}">
+  {%- unless wishlist_disable -%}
+    {%- if settings.wishlist -%}
+      <wishlist-button data-variant-id="{{ current_variant.id }}" data-handle="{{ current_variant.product.handle }}"  {% unless product.has_only_default_variant %}data-variant-title="{{ current_variant.title }}"{% endunless %}><a href="#" class="prd-icon" data-tippy-content="{{ 'theme.general.add_to_wishlist_small' | t | escape }}" data-tippy-placement="{{ data_tippy_placement }}">
+        <span class="visually-hidden">{{ 'theme.general.add_to_wishlist_small' | t }} {{ product.title | escape }}</span>
+        {% render 'icon-heart2' %}
+      </a></wishlist-button>
+    {%- endif -%}
+  {%- endunless -%}
+  {%- if settings.quick_view -%}
+    {%- liquid
+      assign use_variant = false
+
+      if product.selected_variant.id != blank
+        assign use_variant = true
+        assign product_handle = target.product.handle
+      else
+        assign product_handle = target.handle
+      endif
+
+      if product_handle == blank or product_handle == ""
+        assign product_handle = current_variant.product.handle
+      endif
+
+      if request.page_type == 'search'
+        assign product_url = target.url | split: '?' | first | append: '?'
+      else
+        assign product_url = target.url
+        unless use_variant
+          assign product_url = product_url | append: '?'
+        endunless
+      endif
+      assign image = product.selected_variant.featured_media | default: product.featured_media
+    -%}
+    {%- unless quick_view_disable -%}
+      <quickview-popup data-handle="{{ product_handle }}" {% if image == blank or settings.qv_show_media == false %}data-gallery="off"{% endif %} data-ajax="{{ product_url }}&section_id=quick-view" data-selector="#quickView"><a href="#" class="prd-icon" data-tippy-content="{{ 'theme.general.quick_view' | t | escape }}" data-tippy-placement="{{ data_tippy_placement_qv }}">
+        <span class="visually-hidden">{{ 'theme.general.quick_view' | t }} {{ product.title | escape }}</span>
+        {% render 'icon-eye' %}
+      </a></quickview-popup>
+    {%- endunless -%}
+  {%- endif -%}
+</div>

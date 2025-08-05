@@ -1,0 +1,425 @@
+{% comment %}theme-check-disable UnusedAssign{% endcomment %}
+{%- liquid
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  if section.settings.layout == 'grid'
+    assign padding = 85
+    if section.blocks.size > 0
+      assign sizes = '(min-width: 1400px) 356px, (min-width: 1200px) 343px, (min-width: 992px) 280px, (min-width: 768px) 210px, calc(100vw - 30px)'
+    else
+      assign sizes = '(min-width: 1400px) 544px, (min-width: 1200px) 525px, (min-width: 992px) 451px, (min-width: 768px) 339px, (min-width: 576px) 258px, calc(100vw - 30px)'
+    endif
+
+  else
+    if section.blocks.size > 0
+      assign padding = 80
+      assign sizes = '(min-width: 1400px) 411px, (min-width: 1200px) 397px, (min-width: 992px) 342px, (min-width: 768px) 258px, (min-width: 576px) 258px, calc(100vw - 30px)'
+    else
+      assign padding = 57
+      assign sizes = '(min-width: 1400px) 478px, (min-width: 1200px) 462px, (min-width: 992px) 383px, (min-width: 768px) 290px, calc(100vw - 30px)'
+    endif
+  endif
+
+  assign padding_no_bg = padding
+  assign container = '.post-prws-listing'
+
+  assign infinite_scroll = section.settings.infinite_scroll
+
+  if section.settings.layout == 'grid'
+    assign infinite_scroll = false
+    assign container = '.post-prws-grid'
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+      assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+-%}
+{{ 'blog' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{%- paginate blog.articles by settings.blog_articles_per_page -%}
+  <div class="holder mt-global" {% render 'section-style', section: section %}>
+    <div class="container show-on-scroll">
+      <div class="page-title text-center">
+        <h1 class="h-lg-style">{{ blog.title | escape }}</h1>
+      </div>
+      <div class="row">
+        <div class="{% if section.blocks.size > 0 %}{% else %}col-md-12{% endif %} aside aside--content">
+          <div class="{% if section.settings.layout == 'grid' %}post-prws-grid row gx-4 gx-md-5 row-cols-1 row-cols-sm-2{% else %}post-prws-listing{% endif %}">
+            {%- for article in blog.articles -%}
+              {%- liquid
+                assign lazyload = false
+                assign class_img_only = 'fade-up-none'
+                assign lazyload_pass = 0
+
+                if forloop.index > lazyload_pass
+                  assign lazyload = true
+                  assign class_img_only = 'lazyload fade-up'
+                endif
+              -%}
+              {% if section.settings.layout == 'grid' %}<div class="col">{% endif %}
+                {%- render 'article-card',
+                  layout: section.settings.layout,
+                  article: article,
+                  show_image: section.settings.show_image,
+                  show_date: section.settings.show_date,
+                  show_author: section.settings.show_author,
+                  class: 'post-prw--full',
+                  lazyload: lazyload,
+                  class_img_only: class_img_only,
+                  padding: padding,
+                  padding_no_bg: padding_no_bg,
+                  product_aspect_ratio: false,
+                  sizes: sizes
+                -%}
+              {% if section.settings.layout == 'grid' %}</div>{% endif %}
+            {%- endfor -%}
+          </div>
+          {%- if paginate.pages > 1 -%}
+            {%- render 'pagination',
+              paginate: paginate,
+              blog: true,
+              container: container,
+              item: '.post-prw',
+              section_id: section.id,
+              infinite_scroll: infinite_scroll
+            -%}
+          {%- endif -%}
+        </div>
+        {%- if section.blocks.size > 0 -%}
+          <div class="aside aside--sidebar aside--{{ section.settings.sidebar }}">
+            <div class="aside-content">
+              {%- for block in section.blocks -%}
+                {%- case block.type -%}
+                {%- when 'tags' -%}
+                  {%- if blog.all_tags.size > 0 -%}
+                    <div class="aside-block" role="complementary" {{ block.shopify_attributes }}>
+                      <h2 class="aside-block-title heading-font">{{ block.settings.block_title }}</h2>
+                      <ul class="tags-list">
+                        {% for tag in blog.all_tags %}
+                          {% if current_tags contains tag %}
+                            <li class="active">{{ tag | link_to_remove_tag: tag }}</li>
+                          {% else %}
+                            <li>{{ tag | link_to_tag: tag }}</li>
+                          {% endif %}
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {%- endif -%}
+                {%- when 'featured_posts' -%}
+                  <div class="aside-block" {{ block.shopify_attributes }}>
+                    <h2 class="aside-block-title heading-font">{{ block.settings.title }}</h2>
+                    {%- for i in (1..4) -%}
+                      {% capture article %}article_{{ i }}{% endcapture %}
+                      {%- assign article = block.settings[article] -%}
+                      {%- if article != blank -%}
+                        <article class="post-prw-sm">
+                          <div class="row gx-3">
+                            {%- if article.image -%}
+                              <div class="col-auto">
+                                <a href="{{ article.url }}" class="post-prw-img">
+                                  {% render 'image-container',
+                                    image: article.image,
+                                    padding: 100,
+                                    sizes: '85px',
+                                    image_ratio: "landscape"
+                                  %}
+                                </a>
+                              </div>
+                            {%- endif -%}
+                            <div class="col d-flex flex-column align-self-center">
+                              <h4 class="post-prw-title heading-font"><a href="{{ article.url }}">{{ article.title | escape }}</a></h4>
+                              {%- if section.settings.show_date -%}
+                                <div class="post-prw-date">{{- article.published_at | time_tag: format: 'date' -}}</div>
+                              {%- endif -%}
+                            </div>
+                          </div>
+                        </article>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </div>
+                {%- when 'featured_products' -%}
+                  {%- if block.settings.collection != blank -%}
+                    <div class="aside-block" {{ block.shopify_attributes }}>
+                      <h2 class="aside-block-title heading-font">{{ block.settings.title }}</h2>
+                      {%- for product in collections[block.settings.collection].products limit: block.settings.limit -%}
+                        {% render 'product-card-horizontal-xs', product: product %}
+                      {%- endfor -%}
+                    </div>
+                  {%- endif -%}
+                {%- endcase -%}
+              {%- endfor -%}
+            </div>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+{%- endpaginate -%}
+{% schema %}
+{
+  "name": "Main blog",
+  "tag": "section",
+  "class": "spaced-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION WIDTH"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Select width source",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use store width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom width"
+        }
+      ],
+      "default": "global",
+      "info": "Store width you can set in Theme Settings / General"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 1178,
+      "max": 1978,
+      "step": 8,
+      "unit": "px",
+      "label": "Custom width",
+      "default": 1178,
+      "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "Blog post card"
+    },
+    {
+      "type": "radio",
+      "id": "layout",
+      "options": [
+        {
+          "value": "grid",
+          "label": "Grid"
+        },
+        {
+          "value": "list",
+          "label": "List"
+        }
+      ],
+      "default": "list",
+      "label": "Posts layout"
+    },
+    {
+      "type": "radio",
+      "id": "sidebar",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left",
+      "label": "Sidebar"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_image",
+      "default": true,
+      "label": "Show featured image"
+    },
+    {
+      "type": "checkbox",
+      "id": "infinite_scroll",
+      "label": "Infinite scroll",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_date",
+      "default": true,
+      "label": "Show date"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_author",
+      "default": true,
+      "label": "Show author"
+    },
+    {
+      "type": "paragraph",
+      "content": "Change excerpts by editing your blog posts. [Learn more](https://help.shopify.com/manual/online-store/blogs/writing-blogs#display-an-excerpt-from-a-blog-post)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tags",
+      "name": "Tags filter",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Tags filter",
+          "info": "Shows all tags of all articles of a blog"
+        },
+        {
+          "type": "text",
+          "id": "block_title",
+          "label": "Title",
+          "default": "Category"
+        }
+      ]
+    },
+    {
+      "type": "featured_posts",
+      "name": "Featured posts",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Featured Posts"
+        },
+        {
+          "type": "article",
+          "id": "article_1",
+          "label": "Post"
+        },
+        {
+          "type": "article",
+          "id": "article_2",
+          "label": "Post"
+        },
+        {
+          "type": "article",
+          "id": "article_3",
+          "label": "Post"
+        },
+        {
+          "type": "article",
+          "id": "article_4",
+          "label": "Post"
+        }
+      ]
+    },
+    {
+      "type": "featured_products",
+      "name": "Feature products",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Featured Products"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Featured collection"
+        },
+        {
+          "type": "range",
+          "id": "limit",
+          "min": 1,
+          "max": 8,
+          "step": 1,
+          "unit": "prd",
+          "label": "Limit",
+          "default": 4
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

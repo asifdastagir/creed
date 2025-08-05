@@ -1,0 +1,849 @@
+{% comment %}theme-check-disable DeprecateBgsizes, UnusedAssign{% endcomment %}
+{%- liquid
+  assign layout = 'index-video'
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign color = section.settings.color_placeholder
+
+  if color != 'rgba(0,0,0,0)' and color != blank
+    assign ic_style = '--placeholder-bg: ' | append: color | append: ';'
+  endif
+
+  assign video_id = section.settings.video.id | default: section.settings.video_url.id
+  assign poster = section.settings.cover_image | default: section.settings.video.preview_image
+
+  assign button_text = section.settings.button_text
+
+  if button_text == blank
+    assign button_text = 'theme.general.shop_now' | t
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+      assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+
+  assign decoration = false
+  case settings.section_decoration
+    when "1"
+      assign section_decoration_global = "none"
+    when "2"
+      assign section_decoration_global = "grunge1"
+    when "3"
+      assign section_decoration_global = "grunge2"
+    when "4"
+      assign section_decoration_global = "grunge3"
+    when "5"
+      assign section_decoration_global = "paper"
+    when "6"
+      assign section_decoration_global = "mountains"
+    when "7"
+      assign section_decoration_global = "ellipse1"
+    when "8"
+      assign section_decoration_global = "ellipse2"
+    when "9"
+      assign section_decoration_global = "wave1"
+    when "10"
+      assign section_decoration_global = "wave2"
+    when "11"
+      assign section_decoration_global = "wave3"
+    when "21"
+      assign section_decoration_global = "wave4"
+    when "22"
+      assign section_decoration_global = "wave5"
+    when "12"
+      assign section_decoration_global = "triangle1"
+    when "13"
+      assign section_decoration_global = "triangle2"
+    when "14"
+      assign section_decoration_global = "triangle_assymetrical1"
+    when "15"
+      assign section_decoration_global = "triangle_assymetrical1_flip"
+    when "16"
+      assign section_decoration_global = "triangle_assymetrical2"
+    when "17"
+      assign section_decoration_global = "triangle_assymetrical2_flip"
+    when "18"
+      assign section_decoration_global = "tilt"
+    when "19"
+      assign section_decoration_global = "tilt_flip"
+    when "20"
+      assign section_decoration_global = "glaze"
+  endcase
+  assign section_decoration_top = section.settings.section_decoration_top
+  assign section_decoration_bottom = section.settings.section_decoration_bottom
+
+  if section_decoration_bottom != 'none' and section_decoration_bottom != 'global' or section_decoration_global != 'none'
+    assign decoration = true
+  endif
+
+  assign controls = true
+
+  if decoration
+    assign controls = false
+  endif
+-%}
+{% capture button %}
+  {%- if section.settings.button -%}
+    <div class="video-button">
+      <a class="btn {{ section.settings.button_color }}" href="{{ section.settings.button_url | default: '#' }}" {% if section.settings.button_target_blank %}target="_blank"{% endif %}>{{ button_text }}</a>
+    </div>
+  {%- endif -%}
+{% endcapture %}
+
+{% capture video_template %}
+  {%- if section.settings.video == null and section.settings.video_url != null -%}
+    {%- if section.settings.video_url.type == 'youtube' -%}
+      <iframe src="https://www.youtube.com/embed/{{ video_id }}?enablejsapi=1{% if decoration %}&controls=0{% endif %}" class="js-youtube" allow="autoplay; encrypted-media" allowfullscreen title="{{ section.settings.description | escape }}"></iframe>
+    {%- else -%}
+      <iframe src="https://player.vimeo.com/video/{{ video_id }}" class="js-vimeo" allow="autoplay; encrypted-media" allowfullscreen title="{{ section.settings.description | escape }}"></iframe>
+    {%- endif -%}
+  {%- else -%}
+    {{
+      section.settings.video
+      | video_tag:
+        image_size: '1100x',
+        autoplay: section.settings.autoplay,
+        loop: section.settings.autoplay,
+        controls: controls,
+        muted: section.settings.autoplay
+    }}
+  {%- endif -%}
+{% endcapture %}
+{{ 'video' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{% render 'section-wrapper', placement: 'top' %}
+
+<div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+  <div class="{% render 'section-container-class', layout: layout %}">
+    {%- if section.settings.cover_image_off -%}
+      <div class="video-wrap">
+        {{ video_template }}
+        {{ button }}
+      </div>
+    {%- else -%}
+      <deferred-media {% if section.settings.autoplay %}data-autoplay{% endif %} data-media="{% if section.settings.video != null %}mp4{% else %}{% if section.settings.video_url.type == 'youtube' %}youtube{% else %}vimeo{% endif %}{% endif %}">
+        <div class="video-wrap-content w-100 js-video-wrap is-paused lazyload">
+          <div class="video-control visible">
+            <div class="video-play js-video-play">{% render 'icon-play' %}</div>
+            <div class="video-stop js-video-stop">{% render 'icon-pause' %}</div>
+          </div>
+          <div class="video-wrap-poster {% if poster == blank %}image-container-aspect-ratio ratio ratio-16x9{% endif %}" {% if poster == blank %}style="padding-bottom: {{ section.settings.padding }}%"{% endif %}>
+            {% render 'image-container',
+              image: poster,
+              sizes: '(min-width: 1200px) 1148px, (min-width: 992px) 930px, (min-width: 768px) 690px, (min-width: 576px) 510px, calc(100vw - 30px)',
+              padding_no_bg: section.settings.padding,
+              padding: section.settings.padding,
+              padding_mobile: section.settings.padding_mobile,
+              style: ic_style
+            %}
+          </div>
+          {{ button }}
+        </div>
+        <template>
+          {{ video_template }}
+        </template>
+      </deferred-media>
+    {%- endif -%}
+    {{ button | replace: 'video-button', 'video-button-mobile' }}
+  </div>
+</div>
+{% render 'section-wrapper' %}
+
+{% schema %}
+{
+  "name": "Video",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_animation",
+      "label": "Enable soft appearing of section",
+      "default": true,
+      "info": "Global sections animation disabling in Theme Settings / General / Sections. AUTODISABLED if section has top or bottom separator."
+    },
+    {
+      "type": "header",
+      "content": "Layout general"
+    },
+    {
+      "type": "checkbox",
+      "id": "fluid",
+      "label": "Fluid layout",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "inner_space",
+      "label": "Inner space",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Video",
+      "label": "Heading"
+    },
+    {
+      "type": "image_picker",
+      "id": "cover_image",
+      "label": "Cover image"
+    },
+    {
+      "type": "color",
+      "id": "color_placeholder",
+      "label": "Placeholder background loader",
+      "info": "Set the main color of the image (visually softens the appearance of the image)"
+    },
+    {
+      "type": "checkbox",
+      "id": "cover_image_off",
+      "label": "Show original video player without image cover",
+      "default": false,
+      "info": "not good for perfomance"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "min": 30,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Video aspect ratio no Desktop",
+      "default": 56,
+      "info": "16:9 = 56%"
+    },
+    {
+      "type": "range",
+      "id": "padding_mobile",
+      "min": 20,
+      "max": 200,
+      "step": 2,
+      "unit": "%",
+      "label": "Video aspect ratio on Mobile",
+      "default": 70,
+      "info": "Only for auto height banners. If the text goes beyond the slide then you need increase current value or decrease the 'Font size Scale'"
+    },
+    {
+      "type": "header",
+      "content": "SHOPIFY-HOSTED VIDEO"
+    },
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Video"
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Autoplay video",
+      "default": false,
+      "info": "Autoplaying videos only work if they are muted. This is because many web browsers have implemented autoplay restrictions to improve user experience and prevent intrusive or unwanted content from automatically playing with sound."
+    },
+    {
+      "type": "header",
+      "content": "OR EMBED VIDEO FROM URL"
+    },
+    {
+      "type": "paragraph",
+      "content": "Shows when no Shopify-hosted video is selected."
+    },
+    {
+      "type": "video_url",
+      "id": "video_url",
+      "accept": [
+        "youtube",
+        "vimeo"
+      ],
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+      "label": "URL",
+      "placeholder": "Use a YouTube or Vimeo URL",
+      "info": "Video plays in the page."
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "label": "Video alt text",
+      "info": "Describe the video to make it accessible for customers using screen readers."
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "button",
+      "label": "Button",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Custom text",
+      "default": "Shop now"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button link"
+    },
+    {
+      "type": "checkbox",
+      "id": "button_target_blank",
+      "label": "Target blank",
+      "default": false,
+      "info": "Opens link in new window tab"
+    },
+    {
+      "type": "select",
+      "id": "button_color",
+      "label": "Button color",
+      "options": [
+        {
+          "value": "btn--default",
+          "label": "Primary"
+        },
+        {
+          "value": "btn--invert",
+          "label": "Secondary"
+        },
+        {
+          "value": "btn--grey",
+          "label": "Third"
+        },
+        {
+          "value": "btn--white",
+          "label": "Fourth"
+        },
+        {
+          "value": "btn--fifth",
+          "label": "Fifth"
+        }
+      ],
+      "default": "btn--default"
+    },
+    {
+      "type": "header",
+      "content": "SECTION WIDTH"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Select width source",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use store width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom width"
+        }
+      ],
+      "default": "global",
+      "info": "Store width you can set in Theme Settings / General"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 1178,
+      "max": 1978,
+      "step": 8,
+      "unit": "px",
+      "label": "Custom width",
+      "default": 1178,
+      "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable background",
+      "default": false,
+      "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+    },
+    {
+      "type": "select",
+      "id": "background_preset",
+      "label": "Background image - preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "product-cosmetics-bg.png",
+          "label": "Leaves 1"
+        },
+        {
+          "value": "bottom-cosmetics-bg.png",
+          "label": "Leaves 2"
+        },
+        {
+          "value": "bg-makeup1.png,bg-makeup1-m.png",
+          "label": "Pink and Waves 1"
+        },
+        {
+          "value": "bg-makeup2.png,bg-makeup2-m.png",
+          "label": "Pink and Waves 2"
+        },
+        {
+          "value": "bg-makeup4.png,bg-makeup4-m.png",
+          "label": "Pink and Waves 3"
+        },
+        {
+          "value": "bg-makeup3.png,bg-makeup3-m.png",
+          "label": "Purple Splash"
+        },
+        {
+          "value": "bg-sweets1.png",
+          "label": "Blue Sun Rays"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image - custom on Desktop"
+    },
+    {
+      "type": "select",
+      "id": "background_behavior",
+      "label": "Background image behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image - custom on Mobile",
+      "info": "only if Background image - custom on Desktop selected"
+    },
+    {
+      "type": "select",
+      "id": "background_image_placeholder_type",
+      "label": "Placeholder background color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_secondary_bg"
+    },
+    {
+      "type": "color",
+      "id": "background_image_placeholder",
+      "label": "Custom - Placeholder background color"
+    },
+    {
+      "type": "header",
+      "content": "SECTION SEPARATOR"
+    },
+    {
+      "type": "header",
+      "content": "Top separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_header_main_bg",
+          "label": "Header - Middle(main) part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_top_color",
+      "label": "Custom - top separator color"
+    },
+    {
+      "type": "header",
+      "content": "Bottom separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "paragraph",
+      "content": "'Global separator' is set in Theme Settings / Separators / Global separator style"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_footer_top_bg",
+          "label": "Footer - Top part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_bottom_color",
+      "label": "Custom - bottom separator color"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video YouTube player",
+      "settings": {
+        "video_url": "https://www.youtube.com/watch?v=_9VUPq3SxOc"
+      }
+    },
+    {
+      "name": "Video Vimeo player",
+      "settings": {
+        "video_url": "https://vimeo.com/179929723"
+      }
+    },
+    {
+      "name": "Video Self-Hosted"
+    }
+  ]
+}
+{% endschema %}

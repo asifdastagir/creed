@@ -1,0 +1,28 @@
+{%- unless settings.catalog_mode -%}
+  {%- liquid
+    assign popup_tag = 'mini-cart-popup'
+
+    if tag != popup_tag and tag != true and tag != blank
+      assign popup_tag = tag
+    endif
+
+    assign show_icon = false
+
+    if settings.header_cart_show
+      assign show_icon = true
+    endif
+
+    if request.page_type == 'cart' and settings.shipping_calculator
+      assign show_icon = true
+    endif
+  -%}
+
+  <div class="dropdn minicart">
+  {% if show_icon %}<{{ popup_tag }} data-selector="#dropdnMinicartPopup" {% if settings.header_cart_collection != blank and request.page_type != 'cart' and request.design_mode == false %}data-carousel="{{ routes.root_url }}?section_id=async-header-cart-carousel"{% endif %}>{% endif %}
+  <a href="{{ routes.cart_url }}"  data-tippy-content="{{ 'theme.general.shopping_cart' | t | escape }}" data-tippy-placement="top" class="dropdn-link minicart-link js-minicart-link {% if request.page_type == 'cart' and settings.shipping_calculator == false %}hidden{% endif %}" data-src="#dropdnMinicartPopup">
+    {% render 'cart-icon-bubble' %}
+    <span class="visually-hidden">{{ 'theme.general.shopping_cart' | t | escape }}</span>
+  </a>
+  {% if show_icon %}</{{ popup_tag }}>{% endif %}
+  </div>
+{%- endunless -%}

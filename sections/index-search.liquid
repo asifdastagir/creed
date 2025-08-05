@@ -1,0 +1,1058 @@
+{% comment %}theme-check-disable UnusedAssign, NestedSnippet{% endcomment %}
+{%- liquid
+    assign layout = 'index-search'
+    assign default_rgba = 'rgba(0,0,0,0)'
+    assign fluid_bg = section.settings.fluid_bg
+    assign store_width = settings.container_max_width
+
+    if section.settings.section_width == 'custom'
+        assign store_width = section.settings.container_max_width
+    endif
+
+    if template.suffix contains 'store-width-'
+        assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+    endif
+
+    if template.suffix contains 'store-width-'
+        assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+    endif
+
+    assign predictive_search_enabled = section.settings.predictive_search_enabled
+
+    assign heading = section.settings.heading
+    assign heading_tag = section.settings.heading_tag
+    assign subtitle_tag = section.settings.subtitle_tag
+    assign subtitle = section.settings.subtitle
+    assign bg_image = section.settings.bg_image
+    assign bg_color = section.settings.bg_color
+    assign search_bg_color = section.settings.search_bg_color
+    assign search_text_color = section.settings.search_text_color
+    assign search_placeholder_color = section.settings.search_placeholder_color
+    assign search_border_color = section.settings.search_border_color
+    assign search_border_focus_color = section.settings.search_border_focus_color
+    assign search_button_color = section.settings.search_button_color
+    assign search_button_hover_color = section.settings.search_button_hover_color
+-%}
+{% render 'section-wrapper', placement: 'top' %}
+
+<div class="{% render 'section-class', layout: layout %} position-relative" {% render 'section-style', layout: layout %}>
+
+     {% if section.settings.background %}
+         <div class="{% render 'section-container-class', layout: layout %} position-relative py-6 py-lg-10">
+     {% else %}
+        <div class="{% render 'section-container-class', layout: layout %}">
+     {% endif %}
+    <div class="px-3 px-md-6">
+    {% if heading != blank or subtitle != blank %}
+        <div class="title-wrap text-{{ section.settings.global_alignment }} {% if section.settings.invert_color %}colorize-invert{% endif %}">
+            {% if heading != blank %}<{{ heading_tag }} class="h-custom-style fw-{{ section.settings.font_headings_weight }}-strict">{{ heading }}</{{ heading_tag }}>{% endif %}
+            {% if subtitle != blank %}<{{ subtitle_tag }} class="h-sub w-800 fw-{{ section.settings.font_subtitle_weight }}-strict">{{ subtitle }}</{{ subtitle_tag }}>{% endif %}
+        </div>
+    {% endif %}
+
+        {%- if predictive_search_enabled -%}
+            <search-page data-section-id="{{ section.id }}" data-submit-handler="false">
+        {%- endif -%}
+            <form
+            action="{{ routes.search_url }}"
+            method="get"
+            role="search"
+            class="search">
+            {%- if settings.predictive_search_only_product -%}
+                <input type="hidden" name="type" value="product,query" />
+            {%- endif -%}
+
+            <div class="field d-block">
+                <div class="search-input-group {% if heading != blank or subtitle != blank %}mt-3{% endif %}">
+                <input
+                    class="form-control form-control--bg form-control--rounded shadow-none"
+                    type="search"
+                    name="q"
+                    value="{{ search.terms | escape }}"
+                    placeholder="{{ section.settings.search_placeholder }}"
+                    {%- if predictive_search_enabled -%}
+                    role="combobox"
+                    aria-expanded="false"
+                    aria-owns="predictive-search-results-list"
+                    aria-controls="predictive-search-results-list"
+                    aria-haspopup="listbox"
+                    aria-autocomplete="list"
+                    autocorrect="off"
+                    autocomplete="off"
+                    autocapitalize="off"
+                    spellcheck="false"
+                    {%- endif -%}>
+                <input
+                    name="options[prefix]"
+                    type="hidden"
+                    value="last">
+                <button class="btn position-absolute" aria-label="{{ 'general.search.search' | t }}">
+                    <div class="loading-overlay__spinner hidden">
+                    <div data-load="loading"></div>
+                    </div>
+                    <span>{% render 'icon-search' %}</span>
+                </button>
+                </div>
+                {%- if predictive_search_enabled -%}
+                    {% render 'predictive-search-results', search_collection_show: false %}
+                {%- endif -%}
+            </div>
+            </form>
+            {%- if predictive_search_enabled -%}
+                </search-page>
+            {%- endif -%}
+        </div>
+    {% unless section.settings.background %}</div>{% endunless %}
+
+    {% if bg_image != blank or bg_color != blank %}
+        <div class="full-image-bg position-absolute overflow-hidden d-flex justify-content-center">
+        {% unless fluid_bg %}<div class="container position-relative overflow-hidden"><div class="border-radius-md position-relative h-100">{% endunless %}
+        {% render 'image-container',
+        image: bg_image,
+        padding_no_bg: 0,
+        class_ic: 'image-bg-wrap ic--bg-cover',
+        class_img: 'w-100',
+        cover: false,
+        hover_scale: false,
+        sizes: '(min-width: 1400px) 1147px, (min-width: 992px) 992px, (min-width: 768px) 768px, calc(100vw - 30px)'
+        %}
+        {% unless fluid_bg %}</div></div>{% endunless %}
+        </div>
+    {% endif %}
+
+    {% if section.settings.background %}</div>{% endif %}
+</div>
+{% render 'section-wrapper' %}
+<style>
+  .search-section .holder {
+    z-index: 14;
+  }
+  .search-section + .search-section .holder {
+    z-index: 12;
+  }
+  #shopify-section-{{ section.id }} .full-image-bg {
+    inset: 0;
+    pointer-events: none;
+  }
+
+  #shopify-section-{{ section.id }} .full-image-bg .image-bg-wrap {
+    {% if fluid_bg %}border-radius: 0;{% endif %}
+  }
+
+  #shopify-section-{{ section.id }} .full-image-bg .container {
+    border-radius: var(--radius-ic, 16px);
+  }
+
+  {% if section.settings.global_alignment == 'start' %}
+  #shopify-section-{{ section.id }} .search-input-group {
+    margin-left: 0;
+  }
+  {% elsif section.settings.global_alignment == 'end' %}
+  #shopify-section-{{ section.id }} .search-input-group {
+    margin-right: 0;
+  }
+  {% endif %}
+
+  #shopify-section-{{ section.id }} .title-wrap p {
+    margin: 0;
+ }
+  #shopify-section-{{ section.id }} .title-wrap > .h-custom-style {
+    --heading-md-size: {{ section.settings.font_heading_font_size_desktop }}px;
+    --heading-md-size-m: {{ section.settings.font_heading_font_size_mobile }}px;
+    --heading-color: {{ section.settings.font_headings_color }};
+    margin-bottom: .25em;
+    line-height: 1.2em;
+    font-family: var(--heading-font-family);
+    color: var(--heading-color);
+  }
+  #shopify-section-{{ section.id }} .title-wrap > .h-sub {
+    margin-bottom: 0;
+    --heading-sub-size: {{ section.settings.font_subtitle_font_size_desktop }}px;
+    --heading-sub-color: {{ section.settings.font_subtitle_color }};
+ }
+  #shopify-section-{{ section.id }} .title-wrap > .h-custom-style {
+     font-size: var(--heading-md-size);
+  }
+  @media only screen and (max-width: 575px) {
+     #shopify-section-{{ section.id }} .title-wrap > .h-custom-style {
+       font-size: var(--heading-md-size-m);
+    }
+    #shopify-section-{{ section.id }} .title-wrap > .h-sub {
+       --heading-sub-size: {{ section.settings.font_subtitle_font_size_mobile }}px
+    }
+  }
+  #shopify-section-{{ section.id }} .image-bg-wrap .image-container.ic--bg-contain,
+  #shopify-section-{{ section.id }} .image-bg-wrap.ic--bg-cover {
+    top: 50%;
+    height: 100%;
+    transform: translateY(-50%);
+    {% if bg_color != blank or bg_color != default_rgba %}background-color: {{ bg_color }}{% endif %}
+ }
+  #shopify-section-{{ section.id }} .search-input-group {
+    position: relative;
+
+    {% if search_bg_color != default_rgba and search_bg_color != blank %}--form-bg-alt: {{ search_bg_color }};{% endif %}
+    {% if search_text_color != default_rgba and search_text_color != blank %}--form-color-alt: {{ search_text_color }};{% endif %}
+    {% if search_placeholder_color != default_rgba and search_placeholder_color != blank %}--form-color-light-alt: {{ search_placeholder_color }};{% endif %}
+
+    {% if search_border_color != default_rgba and search_border_color != blank %}--form-border-color: {{ search_border_color }};{% endif %}
+    {% if search_border_focus_color != default_rgba and search_border_focus_color != blank %}--form-border-color-focus: {{ search_border_focus_color }};{% endif %}
+
+    width: {{ section.settings.search_width }}px;
+ }
+  #shopify-section-{{ section.id }} .search-input-group .btn {
+    z-index: 1;
+    right: 0;
+    border: 0;
+    {% if search_button_color != default_rgba and search_button_color != blank %}--button-color: {{ search_button_color }};{% else %}--button-color: var(--form-color-alt);{% endif %}
+    {% if search_button_hover_color != default_rgba and search_button_hover_color != blank %}--button-hover-color: {{ search_button_hover_color }};{% else %}--button-hover-color: var(--form-color-alt);{% endif %}
+    --button-bg: transparent !important;
+    --button-hover-bg: transparent !important;
+  }
+   #shopify-section-{{ section.id }} .search-input-group .form-control {
+      padding-left: 30px;
+      padding-right: 80px;
+      border-radius: var(--radius-max);
+  }
+
+  #shopify-section-{{ section.id }}  .predictive-search_ .quick-search {
+    display: flex !important;
+    }
+</style>
+{% schema %}
+{
+  "name": "Search",
+  "tag": "section",
+  "class": "search-section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_animation",
+      "label": "Enable soft appearing of section",
+      "default": true,
+      "info": "Global sections animation disabling in Theme Settings / General / Sections. AUTODISABLED if section has top or bottom separator."
+    },
+    {
+      "type": "header",
+      "content": "HEADING"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading text",
+      "default": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_tag",
+      "label": "Heading tag",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        },
+        {
+          "value": "p",
+          "label": "p"
+        }
+      ],
+      "default": "h2"
+    },
+    {
+      "type": "range",
+      "id": "font_heading_font_size_desktop",
+      "min": 20,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading font size desktop",
+      "default": 23
+    },
+    {
+      "type": "range",
+      "id": "font_heading_font_size_mobile",
+      "min": 20,
+      "max": 50,
+      "step": 1,
+      "unit": "px",
+      "label": "Heading font size mobile",
+      "default": 23
+    },
+    {
+      "type": "select",
+      "id": "font_headings_weight",
+      "label": "Heading font weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "300"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
+      ],
+      "default": "500"
+    },
+    {
+      "type": "color",
+      "id": "font_headings_color",
+      "label": "Heading color"
+    },
+    {
+      "type": "header",
+      "content": "SUBTITLE"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle text",
+      "default": "Subtitle"
+    },
+    {
+      "type": "select",
+      "id": "subtitle_tag",
+      "label": "Subtitle tag",
+      "options": [
+        {
+          "value": "h1",
+          "label": "H1"
+        },
+        {
+          "value": "h2",
+          "label": "H2"
+        },
+        {
+          "value": "h3",
+          "label": "H3"
+        },
+        {
+          "value": "h4",
+          "label": "H4"
+        },
+        {
+          "value": "h5",
+          "label": "H5"
+        },
+        {
+          "value": "h6",
+          "label": "H6"
+        },
+        {
+          "value": "p",
+          "label": "p"
+        }
+      ],
+      "default": "p"
+    },
+    {
+      "type": "range",
+      "id": "font_subtitle_font_size_desktop",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle font size desktop",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "font_subtitle_font_size_mobile",
+      "min": 10,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Subtitle font size mobile",
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "font_subtitle_weight",
+      "label": "Subtitle font weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "300"
+        },
+        {
+          "value": "400",
+          "label": "400"
+        },
+        {
+          "value": "500",
+          "label": "500"
+        },
+        {
+          "value": "700",
+          "label": "700"
+        }
+      ],
+      "default": "400"
+    },
+    {
+      "type": "color",
+      "id": "font_subtitle_color",
+      "label": "Subtitle color"
+    },
+    {
+      "type": "header",
+      "content": "SEARCH"
+    },
+    {
+      "type": "checkbox",
+      "id": "predictive_search_enabled",
+      "label": "Enable product suggestions",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "search_width",
+      "min": 200,
+      "max": 1000,
+      "step": 10,
+      "unit": "px",
+      "label": "Search input width",
+      "default": 520
+    },
+    {
+      "type": "image_picker",
+      "id": "bg_image",
+      "label": "Inner block background image"
+    },
+    {
+      "type": "color",
+      "id": "bg_color",
+      "label": "Inner block background color"
+    },
+    {
+      "type": "checkbox",
+      "id": "invert_color",
+      "label": "Invert captions color",
+      "default": false,
+      "info": "Invert color you can set in Theme Settings / General / Colors - General"
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Placeholder text",
+      "default": "search here"
+    },
+    {
+      "type": "color",
+      "id": "search_text_color",
+      "label": "Text color"
+    },
+    {
+      "type": "color",
+      "id": "search_placeholder_color",
+      "label": "Placeholder color"
+    },
+    {
+      "type": "color",
+      "id": "search_bg_color",
+      "label": "Background color"
+    },
+    {
+      "type": "color",
+      "id": "search_border_color",
+      "label": "Border color"
+    },
+    {
+      "type": "color",
+      "id": "search_border_focus_color",
+      "label": "Border focus color"
+    },
+    {
+      "type": "color",
+      "id": "search_button_color",
+      "label": "Icon color"
+    },
+    {
+      "type": "color",
+      "id": "search_button_hover_color",
+      "label": "Icon hover color"
+    },
+    {
+      "type": "header",
+      "content": "SECTION WIDTH"
+    },
+    {
+      "type": "select",
+      "id": "section_width",
+      "label": "Select width source",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use store width"
+        },
+        {
+          "value": "custom",
+          "label": "Custom width"
+        }
+      ],
+      "default": "global",
+      "info": "Store width you can set in Theme Settings / General"
+    },
+    {
+      "type": "range",
+      "id": "container_max_width",
+      "min": 1178,
+      "max": 1978,
+      "step": 8,
+      "unit": "px",
+      "label": "Custom width",
+      "default": 1178,
+      "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
+    },
+    {
+      "type": "checkbox",
+      "id": "fluid_bg",
+      "label": "Fluid background",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "select",
+      "id": "global_alignment",
+      "label": "Horizontal alignment",
+      "options": [
+        {
+          "value": "start",
+          "label": "Left"
+        },
+        {
+          "value": "end",
+          "label": "Right"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable background",
+      "default": false,
+      "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+    },
+    {
+    "type": "select",
+    "id": "background_preset",
+    "label": "Background image - preset",
+    "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+        "value": "product-cosmetics-bg.png",
+        "label": "Leaves 1"
+        },
+        {
+          "value": "bottom-cosmetics-bg.png",
+          "label": "Leaves 2"
+        },
+        {
+          "value": "bg-makeup1.png,bg-makeup1-m.png",
+          "label": "Pink and Waves 1"
+        },
+        {
+          "value": "bg-makeup2.png,bg-makeup2-m.png",
+          "label": "Pink and Waves 2"
+        },
+        {
+          "value": "bg-makeup4.png,bg-makeup4-m.png",
+          "label": "Pink and Waves 3"
+        },
+        {
+          "value": "bg-makeup3.png,bg-makeup3-m.png",
+          "label": "Purple Splash"
+        },
+        {
+          "value": "bg-sweets1.png",
+          "label": "Blue Sun Rays"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image - custom on Desktop"
+    },
+    {
+      "type": "select",
+      "id": "background_behavior",
+      "label": "Background image behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image - custom on Mobile",
+      "info": "only if Background image - custom on Desktop selected"
+    },
+    {
+      "type": "select",
+      "id": "background_image_placeholder_type",
+      "label": "Placeholder background color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_secondary_bg"
+    },
+    {
+      "type": "color",
+      "id": "background_image_placeholder",
+      "label": "Custom - Placeholder background color"
+    },
+    {
+      "type": "header",
+      "content": "SECTION SEPARATOR"
+    },
+    {
+      "type": "header",
+      "content": "Top separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_header_main_bg",
+          "label": "Header - Middle(main) part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_top_color",
+      "label": "Custom - top separator color"
+    },
+    {
+      "type": "header",
+      "content": "Bottom separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "paragraph",
+      "content": "'Global separator' is set in Theme Settings / Separators / Global separator style"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_footer_top_bg",
+          "label": "Footer - Top part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_bottom_color",
+      "label": "Custom - bottom separator color"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Search / Constructor",
+      "settings": {
+      }
+    },
+    {
+      "name": "Search / Boxed + background",
+      "settings": {
+        "fluid_bg": false,
+        "bg_color": "#282828"
+      }
+    },
+    {
+      "name": "Search / Fullwidth with background",
+      "settings": {
+        "fluid_bg": true,
+        "bg_color": "#282828"
+      }
+    },
+    {
+      "name": "Search / Boxed only input",
+      "settings": {
+        "heading": "",
+        "subtitle": "",
+        "fluid_bg": false,
+        "bg_color": "#282828",
+        "search_border_color": "#282828",
+        "invert_color": true
+      }
+    }
+  ]
+}
+{% endschema %}

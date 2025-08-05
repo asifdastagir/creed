@@ -1,0 +1,51 @@
+{%- liquid
+  assign product_url_collection = product.url
+
+  if settings.product_card_url_within_collection
+    assign product_url_collection = product.url | within: collection
+  endif
+
+  if request.page_type == 'article'
+    assign url = article.url
+  elsif request.page_type == 'product'
+    assign url = product_url_collection
+  endif
+-%}
+
+<share-button class="share-button {{ class }}" {{ block.shopify_attributes }}>
+  <button class="share-button__button hidden">
+    {% render 'icon-share' %}
+    {{ block.settings.share_label | escape }}
+  </button>
+  <details id="Details-{{ block.id }}-{{ section.id }}">
+    <summary class="share-button__button">
+      {% render 'icon-share' %}
+      {{ block.settings.share_label | escape }}
+    </summary>
+    <div id="Article-share-{{ section.id }}" class="share-button__fallback motion-reduce">
+      <div class="field">
+        <input type="text"
+               class="field__input form-control form-control--bg {% if settings.input_alt_border == "1" %}border-0{% endif %}"
+               id="url"
+               value="{{ request.origin | append: url }}"
+               placeholder="{{ 'general.share.share_url' | t }}"
+               onclick="this.select();"
+               readonly
+        >
+        <label class="field__label" for="url">
+          <span>{{ 'general.share.share_url' | t }}</span>
+          <span id="ShareMessage-{{ section.id }}" class="share-button__message hidden" role="status"></span>
+        </label>
+      </div>
+      <button class="share-button__close hidden no-js-hidden">
+        {% render 'icon-close3' %}
+        <span class="visually-hidden">{{ 'general.share.close' | t }}</span>
+      </button>
+      <button class="share-button__copy no-js-hidden">
+        {% render 'icon-clipboard' %}
+        <span class="visually-hidden">{{ 'general.share.copy_to_clipboard' | t }}</span>
+      </button>
+    </div>
+  </details>
+</share-button>
+<script src="{{ 'share.js' | asset_url }}" defer="defer"></script>

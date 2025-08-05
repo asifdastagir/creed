@@ -1,0 +1,90 @@
+.categories-list {
+  text-align: center
+}
+.categories-list ul {
+  margin: 0;
+  padding: 0;
+  list-style: none
+}
+.categories-list ul li > a {
+  display: inline-block
+}
+.categories-list ul li > .menu-item-wrap > a {
+  display: block
+}
+.categories-list ul a {
+  padding: 7px 0;
+  font-size: 15px;
+  line-height: 25px;
+  font-weight: var(--categories-list-weight,var(--font-weight-400));
+  color: var(--categories-list-color)
+}
+@media (hover:hover),
+(hover:none) and (min-width:1025px) {
+  .categories-list ul a:hover {
+    color: var(--categories-list-hover-color)
+  }
+}
+.categories-list ul .menu-item-actions {
+  top: 4px
+}
+.categories-list .image-container-aspect-ratio {
+  padding-bottom: 77%
+}
+.categories-list .image-container-aspect-ratio:not(:last-child) {
+  margin-bottom: 30px
+}
+.categories-list-name {
+  cursor: default
+}
+.categories-list-name:not(:last-child) {
+  margin-bottom: 15px
+}
+.categories-list-name .menu-item-actions {
+  top: -6px
+}
+.categories-list-name.column-caption-style-2 .menu-item-actions {
+  top: -5px
+}
+.categories-list-name.column-caption-style-3 .menu-item-actions {
+  top: -2px
+}
+.categories-list-name.column-caption-style-4 .menu-item-actions {
+  top: -3px
+}
+.categories-list .categories-list ul a,
+.categories-list-name a:not(.btn) {
+  padding-right: var(--label-width,0)
+}
+.categories-list ul a .menu-label,
+.categories-list-name a .menu-label {
+  position: absolute;
+  top: unset;
+  right: auto;
+  display: inline-block;
+  transform: translateZ(0)
+}
+.categories-list-name > .menu-item-wrap > a {
+  display: block
+}
+.categories-list ul a .menu-label {
+  margin-top: -2px;
+  margin-left: 5px
+}
+.categories-list-name a .menu-label {
+  margin-top: 0;
+  margin-left: 10px
+}
+.categories-list .menu-item-actions {
+  background: var(--body-bg);
+  background: linear-gradient(90deg,rgba(var(--body-bg-rgb),0) 0,rgba(var(--body-bg-rgb),1) 25%)
+}
+.categories-list collection-quickview-popup svg {
+  color: var(--categories-list-color)
+}
+@media (hover:hover),
+(hover:none) and (min-width:1025px) {
+  .categories-list collection-quickview-popup:hover svg {
+    color: var(--categories-list-hover-color)
+  }
+}

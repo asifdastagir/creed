@@ -1,0 +1,198 @@
+<style>
+  :root{
+    --promoline-height-desktop: {{ section.settings.height_desktop }}px;
+    --promoline-height-mobile: {{ section.settings.height_mobile }}px;
+    --promoline-fontsize-desktop: {{ section.settings.font_size_desktop }}px;
+    --promoline-fontsize-mobile: {{ section.settings.font_size_mobile }}px;
+  }
+</style>
+{%- if section.settings.enable -%}
+  <div class="hdr-promoline">
+    <div class="container">
+      <swiper-carousel class="promoline-text js-promoline-text-carousel">
+        <div class="swiper-container h-100">
+          <div class="swiper-wrapper">
+            {%- for block in section.blocks -%}
+              {%- case block.type -%}
+              {%- when 'discount' -%}
+                <div class="swiper-slide" {{ block.shopify_attributes }}>
+                  <div class="promoline-text-item">
+                    {%- if block.settings.title != blank -%}
+                      <span class="heading-font">{{ block.settings.title }}</span>
+                    {%- endif -%}
+                    {%- if block.settings.text_2 != blank -%}
+                      <span class="promoline-copy js-promoline-copy" style="font-size: .7em;" data-tippy-text="{{ block.settings.copied_text }}" data-copy-text="{{ block.settings.discount }}">{% if block.settings.text_2 != blank %}{{ block.settings.text_2 }}: {% endif %}<span>{{ block.settings.discount }}</span></span>
+                    {%- endif -%}
+                  </div>
+                </div>
+              {%- when 'link' -%}
+                <div class="swiper-slide" {{ block.shopify_attributes }}>
+                  <div class="promoline-text-item">
+                    {%- if block.settings.title != blank -%}
+                      <span class="heading-font">{{ block.settings.title }}</span>
+                    {%- endif -%}
+                    {%- if block.settings.text_2 != blank -%}
+                      <a class="promoline-copy" href="{{ block.settings.url | default: '#' }}" style="font-size: .7em;" {% if block.settings.button_target_blank %}target="_blank"{% endif %}>{{ block.settings.text_2 }}</a>
+                    {%- endif -%}
+                  </div>
+                </div>
+              {%- endcase -%}
+            {%- endfor -%}
+          </div>
+        </div>
+        <script type="application/json">
+          {
+            "spaceBetween": 50,
+            "paginationClickable": true,
+            "slidesPerView": 1,
+            "loop": {% if section.blocks.size > 1 %}true{% else %}false{% endif %},
+            {% unless section.blocks.size > 1 %}"allowTouchMove": false,{% endunless %}
+            "speed": 300,
+            "touchRatio": 6,
+            "autoplay": {
+              "delay": 5000
+            },
+            "navigation": {
+              "nextEl": ".promoline-text-swiper-arrows .swiper-button-prev-sm",
+              "prevEl": ".promoline-text-swiper-arrows .swiper-button-next-sm"
+            },
+            "breakpoints": {
+              "992": {
+                "speed": 600
+              }
+            }
+          }
+        </script>
+      </swiper-carousel>
+      {%- if section.blocks.size > 1 -%}
+        <div class="promoline-text-swiper-arrows container">
+          <div class="swiper-button-next-sm"></div>
+          <div class="swiper-button-prev-sm"></div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Announcements",
+  "tag": "section",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enable",
+      "label": "Enable",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "height_desktop",
+      "min": 20,
+      "max": 70,
+      "step": 1,
+      "unit": "px",
+      "label": "Height on Desktop",
+      "default": 53
+    },
+    {
+      "type": "range",
+      "id": "height_mobile",
+      "min": 20,
+      "max": 70,
+      "step": 1,
+      "unit": "px",
+      "label": "Height on Mobile",
+      "default": 46
+    },
+    {
+      "type": "range",
+      "id": "font_size_desktop",
+      "min": 10,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size on Desktop",
+      "default": 21
+    },
+    {
+      "type": "range",
+      "id": "font_size_mobile",
+      "min": 10,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size on Mobile",
+      "default": 13
+    },
+    {
+      "type": "header",
+      "content": "Colorization",
+      "info": "set in Theme Settings / Colors - Announcement bar"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link",
+      "name": "Text with link",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Welcome to our store",
+          "label": "Text"
+        },
+        {
+          "type": "text",
+          "id": "text_2",
+          "label": "Text 2",
+          "default": "Checkout our new arrivals"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Assign link"
+        },
+        {
+          "type": "checkbox",
+          "id": "button_target_blank",
+          "label": "Target blank",
+          "default": false,
+          "info": "Opens link in new window tab"
+        }
+      ]
+    },
+    {
+      "type": "discount",
+      "name": "Text with discount",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Save 30-70% Sitewide!!!",
+          "label": "Text"
+        },
+        {
+          "type": "text",
+          "id": "text_2",
+          "label": "Text 2",
+          "default": "Click And Copy Code"
+        },
+        {
+          "type": "text",
+          "id": "discount",
+          "label": "Discount code",
+          "default": "save70"
+        },
+        {
+          "type": "text",
+          "id": "copied_text",
+          "label": "Tooltip click text",
+          "default": "Code Copied!"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

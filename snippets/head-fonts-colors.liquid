@@ -1,0 +1,497 @@
+{%- comment -%}theme-check-disable AssetPreload,RemoteAsset{%- endcomment -%}
+{%- if settings.font_source == '3' or settings.font_source_headings == '3' -%}
+	<link href="{{ 'font.css' | asset_url }}" rel="stylesheet">
+{%- endif -%}
+{%- if settings.font_source == '3' -%}
+  {% style %}
+    :root {
+      --body-font-family: {{ settings.font_general_custom }};
+    }
+  {% endstyle %}
+{%- endif -%}
+{%- if settings.font_source_headings == '3' -%}
+  {% style %}
+    :root {
+      --heading-font-family: {{ settings.font_headings_custom }};
+    }
+  {% endstyle %}
+{%- endif -%}
+
+
+{%- if settings.font_source == '2' -%}
+  {%- liquid
+    case settings.font_general_google_preset
+      when "1"
+        assign font_general_google_preset = 'Open Sans'
+      when "2"
+        assign font_general_google_preset = 'Rubik'
+      when "3"
+        assign font_general_google_preset = 'Asap Condensed'
+      when "4"
+        assign font_general_google_preset = 'Poppins'
+      when "5"
+        assign font_general_google_preset = 'Quicksand'
+    endcase
+  -%}
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family={{ settings.font_general_google | default: font_general_google_preset }}:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap">
+  <link rel="stylesheet" media="print" onload="this.onload=null;this.removeAttribute('media');" href="https://fonts.googleapis.com/css2?family={{ settings.font_general_google | default: font_general_google_preset }}:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap">
+  <noscript>
+    <link rel="stylesheet" as="style" href="https://fonts.googleapis.com/css2?family={{ settings.font_general_google | default: font_general_google_preset }}:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap">
+  </noscript>
+  {% style %}
+    :root {
+      --body-font-family: {{ settings.font_general_google | default: font_general_google_preset }};
+    }
+  {% endstyle %}
+{%- endif -%}
+
+{%- if settings.font_source_headings == '2' -%}
+  {%- liquid
+    case settings.font_headings_google_preset
+      when "1"
+        assign font_headings_google_preset = 'Open Sans'
+      when "2"
+        assign font_headings_google_preset = 'Rubik'
+      when "3"
+        assign font_headings_google_preset = 'Asap Condensed'
+      when "4"
+        assign font_headings_google_preset = 'Poppins'
+      when "5"
+        assign font_headings_google_preset = 'Quicksand'
+    endcase
+  -%}
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family={{ settings.font_headings_google | default: font_headings_google_preset }}:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap">
+  <link rel="stylesheet" media="print" onload="this.onload=null;this.removeAttribute('media');" href="https://fonts.googleapis.com/css2?family={{ settings.font_headings_google | default: font_headings_google_preset }}:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap">
+  <noscript>
+    <link rel="stylesheet" as="style" href="https://fonts.googleapis.com/css2?family={{ settings.font_headings_google | default: font_headings_google_preset }}:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&display=swap">
+  </noscript>
+  {% style %}
+    :root {
+      --heading-font-family: {{ settings.font_headings_google | default: font_headings_google_preset }};
+    }
+  {% endstyle %}
+{%- endif -%}
+
+{%- liquid
+  assign font_weights = '300,400,500,600,700,800' | split: ','
+-%}
+{%- if settings.font_source == '1' -%}
+    {% style %}
+      {%- liquid
+        for font_weight in font_weights
+          echo settings.font_type_body | font_modify: 'weight', font_weight | font_face: font_display: 'swap'
+        endfor
+      -%}
+      :root {
+        --body-font-family: {{ settings.font_type_body.family }}, {{ settings.font_type_body.fallback_families }};
+      }
+    {% endstyle %}
+{%- endif -%}
+
+{%- if settings.font_source_headings == '1' and settings.font_type_header.family != settings.font_type_body.family -%}
+    {% style %}
+      {%- liquid
+        for font_weight in font_weights
+          echo settings.font_type_header | font_modify: 'weight', font_weight | font_face: font_display: 'swap'
+        endfor
+      -%}
+      :root {
+        --heading-font-family: {{ settings.font_type_header.family }}, {{ settings.font_type_header.fallback_families }};
+      }
+    {% endstyle %}
+{%- endif -%}
+
+
+<style data-async-reload-css="head-fonts-colors">
+  body.initial-hide .header,
+  body.initial-hide .category-page-block.has-filter-closed .filter-col-content,
+  body.initial-hide .mmenu-submenu {
+    visibility: hidden;
+  }
+  body.full-load-hide .payment-notification-wrap {
+    visibility: hidden;
+  }
+
+  {%- liquid
+    render '_css-variables-root.css'
+  -%}
+  :root {
+    --desktop-menu-font-family: var(--heading-font-family);
+    --transparent-default: #000;
+    --transparent-default-rgba: rgba(0,0,0,0);
+    --margin-top-desktop: {{ settings.spacing_sections }}px;
+    --margin-top-mobile: {{ settings.spacing_sections_mobile }}px;
+    --margin-top-product-blocks: {{ settings.spacing_margin_product_blocks }}px;
+    --padding-top-desktop: {{ settings.spacing_padding_sections }}px;
+    --padding-top-mobile: {{ settings.spacing_padding_sections_mobile }}px;
+
+    --submenu-list-min-width: {{ settings.navigation_4_level_width }}px;
+
+    --hdr-navline-py: {{ settings.header_bottom_padding }}px;
+    --header-logo-padding-top: {{ settings.header_main_padding_top }}px;
+    --header-logo-padding-bottom: {{ settings.header_main_padding_bottom }}px;
+    --header-logo-padding-m: {{ settings.header_main_padding_mobile }}px;
+
+    {%- liquid
+      assign store_width = settings.container_max_width
+
+      if template.suffix contains 'store-width-'
+        assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+      endif
+    -%}
+    --container-max-width: {{ store_width }}px;
+
+    {%- unless settings.font_headings_style == '1' -%}
+      {%- assign headings_decor_color = settings.color_global_headings_decor -%}
+
+      {%- if headings_decor_color != 'rgba(0,0,0,0)' and headings_decor_color != blank -%}
+      --heading-decor-color: {{ headings_decor_color }};
+      {%- endif -%}
+    {%- endunless -%}
+
+    {%- liquid
+      assign c = c | append: 'color_badge_text:--menu-label-color|'
+      assign c = c | append: 'color_badge_1:--menu-label-bg|'
+      assign c = c | append: 'color_badge_2:--menu-label-1-bg|'
+      assign c = c | append: 'color_badge_3:--menu-label-2-bg|'
+      assign c = c | append: 'color_badge_4:--menu-label-3-bg|'
+
+      comment
+        COLORS - GENERAL
+      endcomment
+      assign c = c | append: 'color_global_primary_bg:--body-bg|'
+      assign c = c | append: 'color_global_secondary_bg:--body-bg-secondary,--mobile-bottom-bg|'
+      assign c = c | append: 'color_global_third_bg:--third-bg-popups|'
+      assign c = c | append: 'color_global_primary_theme:--custom-color|'
+      assign c = c | append: 'color_global_text: --text-color,--form-control-check-color,--tag-light-text-color!alpha0.5, --text-color-light!alpha0.5,--sidebar-block-count-color!alpha0.5,--header-dropdown-settings-color!alpha0.5|'
+      assign c = c | append: 'color_text_invert:--text-color-invert|'
+      assign c = c | append: 'color_global_heading:--heading-color|'
+      assign c = c | append: 'color_global_subheading:--heading-sub-color|'
+      assign c = c | append: 'color_global_text_secondary:--text-color-secondary|'
+      assign c = c | append: 'color_global_primary_link:--body-link-color|'
+      assign c = c | append: 'color_global_primary_link_hover:--body-link-color-hover|'
+      assign c = c | append: 'color_global_secondary_link:--body-link-secondary-color|'
+      assign c = c | append: 'color_global_secondary_link_hover:--body-link-secondary-color-hover|'
+      assign c = c | append: 'color_global_review_rating:--product-rating-color|'
+      assign c = c | append: 'color_global_review_rating_fill:--product-rating-fill-color|'
+      assign c = c | append: 'color_product_card_icon_color:--product-card-icon-color|'
+      assign c = c | append: 'color_product_card_icon_hover_color:--product-card-icon-hover-color|'
+      assign c = c | append: 'color_product_card_icon_active_color:--product-card-icon-active-color|'
+
+      assign c = c | append: 'color_global_decorators:--contrast-grey,--sidebar-block-border-color,--decor-border-middle-color,--decor-border-dark-color,--scroll-drag-color,--decor-border-menu-color|'
+
+
+
+      assign c = c | append: 'color_swatch:--product-swatches-color,--header-dropdown-settings-color!var(--product-swatches-color)|'
+      assign c = c | append: 'color_swatch_bg:--product-swatches-bg|'
+
+      assign c = c | append: 'color_swatch_active:--product-swatches-active-color|'
+      assign c = c | append: 'color_swatch_active_bg:--product-swatches-active-bg|'
+
+      assign c = c | append: 'color_swatch_hover:--product-swatches-hover-color|'
+      assign c = c | append: 'color_swatch_bg_hover:--product-swatches-hover-bg|'
+
+      assign c = c | append: 'color_swatch_unavailable:--product-swatches-disabled-color|'
+      assign c = c | append: 'color_swatch_unavailable_bg:--product-swatches-disabled-bg|'
+
+      assign c = c | append: 'color_swatch_border:--product-swatches-border-color,--header-dropdown-settings-border-color!var(--product-swatches-border-color)|'
+      assign c = c | append: 'color_swatch_outer_border_hover:--product-swatches-border-active-color,--product-swatches-border-hover-color|'
+      assign c = c | append: 'color_swatch_inner_border_hover:--product-swatches-inner-border-color|'
+
+      comment
+      assign c = c | append: 'color_swatch_bg:--product-swatches-bg; --product-swatches-active-bg!var(--product-swatches-bg)|'
+      assign c = c | append: 'color_swatch_hover:--product-swatches-hover-color,--product-swatches-active-color!var(--product-swatches-hover-color),--header-dropdown-settings-hover-color!var(--product-swatches-hover-color),--header-dropdown-settings-border-hover-color!var(--header-dropdown-settings-hover-color)|'
+      assign c = c | append: 'color_swatch_inner_border_hover:--product-swatches-inner-border-color|'
+      endcomment
+
+
+      assign c = c | append: 'color_tooltip:--tooltip-color|'
+      assign c = c | append: 'color_tooltip_bg:--tooltip-bg|'
+      assign c = c | append: 'color_table_even_bg:--table-even-bg|'
+      assign c = c | append: 'color_table_odd_bg:--table-odd-bg|'
+      assign c = c | append: 'color_placeholder_bg:--placeholder-bg|'
+    -%}
+
+    {%- liquid
+      assign option = "product_card_swatch_inner_border_width"
+      assign option = product.metafields.custom[option] | default: settings[option]
+    -%}
+    --product-swatches-inner-border-width: {{ option }}px;
+
+    {%- liquid
+      if settings.card_shadow_opacity < 10
+        echo '--global-box-shadow: 0.0' | append: settings.card_shadow_opacity | append: ';'
+      else
+        echo '--global-box-shadow: 0.' | append: settings.card_shadow_opacity | append: ';'
+      endif
+
+      if settings.card_secondary_shadow_opacity < 10
+        echo '--secondary-box-shadow: 0.0' | append: settings.card_secondary_shadow_opacity | append: ';'
+      else
+        echo '--secondary-box-shadow: 0.' | append: settings.card_secondary_shadow_opacity | append: ';'
+      endif
+
+      if settings.card_shadow_opacity_hover < 10
+        echo '--global-box-shadow-darker: 0.0' | append: settings.card_shadow_opacity_hover | append: ';'
+      else
+        echo '--global-box-shadow-darker: 0.' | append: settings.card_shadow_opacity_hover | append: ';'
+      endif
+
+      assign c = c | append: 'color_fbt_totals_bg:--minicart-drop-total-bg|'
+
+      assign c = c | append: 'color_mobile_bottom_bg:--mobile-bottom-bg|'
+      assign c = c | append: 'color_mobile_bottom_link:--mobile-bottom-link-color|'
+
+
+      comment
+        COLORS - BUTTON
+      endcomment
+      assign c = c | append: 'color_global_button_text:--button-global-color|'
+      assign c = c | append: 'color_global_button_text_hover:--button-global-hover-color|'
+      assign c = c | append: 'color_global_button_bg:--button-global-bg|'
+      assign c = c | append: 'color_global_button_hover_bg:--button-global-hover-bg|'
+
+      assign c = c | append: 'color_primary_button_text:--button-color|'
+      assign c = c | append: 'color_primary_button_text_hover:--button-hover-color|'
+      assign c = c | append: 'color_primary_button_bg:--button-bg|'
+      assign c = c | append: 'color_primary_button_hover_bg:--button-hover-bg|'
+
+      assign c = c | append: 'color_secondary_button_text:--button-color-invert|'
+      assign c = c | append: 'color_secondary_button_text_hover:--button-hover-color-invert|'
+      assign c = c | append: 'color_secondary_button_bg:--button-bg-invert|'
+      assign c = c | append: 'color_secondary_button_hover_bg:--button-hover-bg-invert|'
+
+      assign c = c | append: 'color_third_button_text:--button-color-grey|'
+      assign c = c | append: 'color_third_button_text_hover:--button-hover-color-grey|'
+      assign c = c | append: 'color_third_button_bg:--button-bg-grey|'
+      assign c = c | append: 'color_third_button_hover_bg:--button-hover-bg-grey|'
+
+      assign c = c | append: 'color_fourth_button_text:--button-color-white|'
+      assign c = c | append: 'color_fourth_button_text_hover:--button-hover-color-white|'
+      assign c = c | append: 'color_fourth_button_bg:--button-bg-white|'
+      assign c = c | append: 'color_fourth_button_hover_bg:--button-hover-bg-white|'
+
+      assign c = c | append: 'color_fifth_button_text:--button-color-fifth|'
+      assign c = c | append: 'color_fifth_button_text_hover:--button-hover-color-fifth|'
+      assign c = c | append: 'color_fifth_button_bg:--button-bg-fifth|'
+      assign c = c | append: 'color_fifth_button_hover_bg:--button-hover-bg-fifth|'
+
+
+      assign c = c | append: 'color_buy_now_button_text:--button-color-buy-now|'
+      assign c = c | append: 'color_buy_now_button_text_hover:--button-hover-color-buy-now|'
+      assign c = c | append: 'color_buy_now_button_bg:--button-bg-buy-now|'
+      assign c = c | append: 'color_buy_now_button_hover_bg:--button-hover-bg-buy-now|'
+
+      comment
+        COLORS - BADGES
+      endcomment
+      assign c = c | append: 'color_badge_1_text:--label-1-color|'
+      assign c = c | append: 'color_badge_1_bg:--label-1-bg|'
+      assign c = c | append: 'color_badge_2_text:--label-2-color|'
+      assign c = c | append: 'color_badge_2_bg:--label-2-bg|'
+      assign c = c | append: 'color_badge_3_text:--label-3-color|'
+      assign c = c | append: 'color_badge_3_bg:--label-3-bg|'
+      assign c = c | append: 'color_badge_4_text:--label-4-color|'
+      assign c = c | append: 'color_badge_4_bg:--label-4-bg|'
+      assign c = c | append: 'color_badge_5_text:--label-5-color|'
+      assign c = c | append: 'color_badge_5_bg:--label-5-bg|'
+      assign c = c | append: 'color_badge_6_text:--label-6-color|'
+      assign c = c | append: 'color_badge_6_bg:--label-6-bg|'
+      assign c = c | append: 'color_badge_ticker_text:--ticker-color|'
+      assign c = c | append: 'color_badge_ticker_bg:--ticker-bg|'
+      assign c = c | append: 'color_badge_ticker_discount_text:--ticker-badge-color|'
+      assign c = c | append: 'color_badge_ticker_discount_bg:--ticker-badge-bg|'
+      assign c = c | append: 'color_badge_subscriptions-border:--subscription-border|'
+
+      comment
+        COLORS - PRODUCT CARD
+      endcomment
+      assign c = c | append: 'color_product_card_bg:--product-card-bg|'
+      assign c = c | append: 'color_product_card_bg:--product-horizontal-card-bg|'
+      assign c = c | append: 'color_product_card_only_bg:--product-only-card-bg|'
+      assign c = c | append: 'color_product_card_text:--product-card-text-color,--product-card-color-light!alpha0.5,--product-card-form-border-color!alpha0.23|'
+      assign c = c | append: 'color_product_card_description:--product-card-description-color|'
+      assign c = c | append: 'color_product_card_link:--product-card-link-color|'
+      assign c = c | append: 'color_product_card_link_hover:--product-card-link-hover-color|'
+      assign c = c | append: 'color_product_card_vendor:--product-card-vendor-color|'
+      assign c = c | append: 'color_product_card_vendor_hover:--product-card-vendor-hover-color|'
+
+
+      comment
+        COLORS - INTERFACE ELEMENTS
+      endcomment
+      assign c = c | append: 'color_loading_bar:--loading-bar-color|'
+      assign c = c | append: 'color_scroll_track:--scroll-color|'
+      assign c = c | append: 'color_scroll_drag:--scroll-drag-color|'
+      assign c = c | append: 'color_input_alt_bg:--form-bg-alt|'
+      assign c = c | append: 'color_input_alt:--form-color-alt|'
+      assign c = c | append: 'color_input_alt_placeholder:--form-color-light-alt|'
+      assign c = c | append: 'color_lookbook_popup_btn:--lookbook-popup-btn-color|'
+      assign c = c | append: 'color_banners_slideshow:--main-slider-pagination-color|'
+      assign c = c | append: 'color_menu_categories_bg:--menu-categories-bg|'
+      assign c = c | append: 'color_availability_many_in_stock:--many-in-stock-color|'
+      assign c = c | append: 'color_availability_left_count_text:--label-items-count-color|'
+      assign c = c | append: 'color_availability_left_count_bg:--label-items-count-bg|'
+      assign c = c | append: 'color_product_inventory_border_color:--qty-border-color|'
+      assign c = c | append: 'color_product_inventory_status_line_start_color:--qty-status-color-start|'
+      assign c = c | append: 'color_product_inventory_status_line_middle_color:--qty-status-color-middle|'
+      assign c = c | append: 'color_product_inventory_status_line_max_color:--qty-status-color-full|'
+
+      comment
+        COLORS - BANNERS
+      endcomment
+      assign c = c | append: 'color_banner_text:--text-color-banner|'
+      assign c = c | append: 'color_banner_invert:--text-color-banner-invert|'
+
+      comment
+        COLORS - HEADER PROMO
+      endcomment
+      assign c = c | append: 'color_announcement_bg:--header-promoline-bg|'
+      assign c = c | append: 'color_announcement_text:--header-promoline-text-color|'
+      assign c = c | append: 'color_announcement_link:--header-promoline-text-span-color|'
+
+      comment
+        COLORS - TICKER SECTION
+      endcomment
+      assign c = c | append: 'color_ticker_section_bg:--ticker-section-bg|'
+      assign c = c | append: 'color_ticker_section_text:--ticker-section-color|'
+      assign c = c | append: 'color_ticker_section_link:--ticker-section-link-color|'
+      assign c = c | append: 'color_ticker_section_link_hover:--ticker-section-link-color-hover!alpha0.65|'
+      assign c = c | append: 'color_ticker_section_bg_2:--ticker-section2-bg|'
+      assign c = c | append: 'color_ticker_section_text_2:--ticker-section2-color|'
+      assign c = c | append: 'color_ticker_section_link_2:--ticker-section2-link-color|'
+      assign c = c | append: 'color_ticker_section_link_hover_2:--ticker-section2-link-color-hover!alpha0.65|'
+      assign c = c | append: 'color_ticker_section_text_3:--ticker-section3-color|'
+      assign c = c | append: 'color_ticker_section_link_3:--ticker-section3-link-color|'
+      assign c = c | append: 'color_ticker_section_link_hover_3:--ticker-section3-link-color-hover|'
+
+      render 'css_vars', colors_map: c
+    -%}
+    --third-bg-popups-rgb: {{ settings.color_global_third_bg.red }}, {{ settings.color_global_third_bg.green }}, {{ settings.color_global_third_bg.blue }};
+    --body-bg-rgb: {{ settings.color_global_primary_bg.red }}, {{ settings.color_global_primary_bg.green }}, {{ settings.color_global_primary_bg.blue }};
+    --body-bg-secondary-rgb: {{ settings.color_global_secondary_bg.red }}, {{ settings.color_global_secondary_bg.green }}, {{ settings.color_global_secondary_bg.blue }};
+    --menu-categories-bg-rgb: {{ settings.color_menu_categories_bg.red }}, {{ settings.color_menu_categories_bg.green }}, {{ settings.color_menu_categories_bg.blue }};
+    --submenu-list-link-hover-bg-rgb: {{ settings.color_submenu_list_link_hover_bg.red }}, {{ settings.color_submenu_list_link_hover_bg.green }}, {{ settings.color_submenu_list_link_hover_bg.blue }};
+
+    {%- if settings.primary_button_stroke == "1" or settings.primary_button_stroke == "2" and settings.global_button_stroke == "1" -%}
+      --button-border-color: var(--button-color);
+      --button-border-width: 1px;
+    {%- endif -%}
+
+    {%- if settings.secondary_button_stroke == "1" or settings.secondary_button_stroke == "2" and settings.global_button_stroke == "1" -%}
+      --button-border-color-invert: var(--button-color-invert);
+      --button-border-width-invert: 1px;
+    {%- endif -%}
+    {%- if settings.third_button_stroke == "1" or settings.third_button_stroke == "2" and settings.global_button_stroke == "1" -%}
+      --button-border-color-grey: var(--button-color-grey);
+      --button-border-width-grey: 1px;
+    {%- endif -%}
+    {%- if settings.fourth_button_stroke == "1" or settings.fourth_button_stroke == "2" and settings.global_button_stroke == "1" -%}
+      --button-border-color-white: var(--button-color-white);
+      --button-border-width-white: 1px;
+    {%- endif -%}
+    {%- if settings.fifth_button_stroke == "1" or settings.fifth_button_stroke == "2" and settings.global_button_stroke == "1" -%}
+      --button-border-color-fifth: var(--button-color-fifth);
+      --button-border-width-fifth: 1px;
+    {%- endif -%}
+    {%- if settings.buy_now_button_stroke == "1" or settings.buy_now_button_stroke == "2" and settings.global_button_stroke == "1" -%}
+      --button-border-color-buy-now: var(--button-color-buy-now);
+      --button-border-width-buy-now: 1px;
+    {%- endif -%}
+
+    {%- if settings.button_ajax_opacity == "1" -%}
+      --button-loading-opacity: 1;
+    {%- endif -%}
+
+    --font-weight-800: {{ settings.font_weight_800 }};
+    --font-weight-700: {{ settings.font_weight_700 }};
+    --font-weight-600: {{ settings.font_weight_600 }};
+    --font-weight-500: {{ settings.font_weight_500 }};
+    --font-weight-400: {{ settings.font_weight_400 }};
+    --font-weight-300: {{ settings.font_weight_300 }};
+
+    --banner-font-weight-900: {{ settings.font_weight_banners_900 }};
+    --banner-font-weight-800: {{ settings.font_weight_banners_800 }};
+    --banner-font-weight-700: {{ settings.font_weight_banners_700 }};
+    --banner-font-weight-600: {{ settings.font_weight_banners_600 }};
+    --banner-font-weight-500: {{ settings.font_weight_banners_500 }};
+    --banner-font-weight-400: {{ settings.font_weight_banners_400 }};
+    --banner-font-weight-300: {{ settings.font_weight_banners_300 }};
+
+    --heading-global-weight: {{ settings.font_headings_weight }};
+
+    /* Other */
+    --preview-thumb-active-width: {{ settings.product_media_galley_thumbs_border_width }}px;
+
+    --desktop-menu-font-size: {{ settings.font_header_navigation_1_level_font_size_desktop }}px;
+    --mobile-menu-font-size: {{ settings.font_header_navigation_1_level_font_size_mobile }}px;
+
+    /* Product swatches */
+    --product-swatches-text-width: {{ settings.product_swatches_text_min_width }}px;
+    --product-swatches-text-height: {{ settings.product_swatches_text_min_height }}px;
+    --product-swatches-color-width: {{ settings.product_swatches_color_min_width }}px;
+    --product-swatches-text-px: {{ settings.product_swatches_text_horizontal_inner_space }}px;
+    --product-swatches-text-font-size: {{ settings.product_swatches_text_font_size }}px;
+    --product-swatches-text-font-weight: {{ settings.product_swatches_text_font_weight }};
+    --product-swatches-title-font-size: {{ settings.product_swatches_title_font_size }}px;
+    --product-swatches-title-mb: {{ settings.product_swatches_option_title_mb }}px;
+    --product-swatches-group-gy: {{ settings.product_swatches_options_gy }}px;
+    --product-swatches-text-gap: {{ settings.product_swatches_text_gx }}px;
+    --product-swatches-color-gap: {{ settings.product_swatches_color_gx }}px;
+    --product-swatches-text-border-width: 1.5px;
+    --product-swatches-color-border-width: 1.5px;
+
+    {%- unless settings.product_swatches_page_inherits_global -%}
+      .prd-block {
+        --product-swatches-text-width: {{ settings.product_swatches_page_text_min_width }}px;
+        --product-swatches-text-height: {{ settings.product_swatches_page_text_min_height }}px;
+        --product-swatches-color-width: {{ settings.product_swatches_page_color_min_width }}px;
+        --product-swatches-text-px: {{ settings.product_swatches_page_text_horizontal_inner_space }}px;
+        --product-swatches-text-font-size: {{ settings.product_swatches_page_text_font_size }}px;
+        --product-swatches-text-font-weight: {{ settings.product_swatches_page_text_font_weight }};
+        --product-swatches-title-font-size: {{ settings.product_swatches_page_title_font_size }}px;
+        --product-swatches-title-mb: {{ settings.product_swatches_page_option_title_mb }}px;
+        --product-swatches-group-gy: {{ settings.product_swatches_page_options_gy }}px;
+        --product-swatches-text-gap: {{ settings.product_swatches_page_text_gx }}px;
+        --product-swatches-color-gap: {{ settings.product_swatches_page_color_gx }}px;
+        --product-swatches-text-border-width: {{ settings.product_swatches_page_text_outer_border_width }}px;
+        --product-swatches-color-border-width: {{ settings.product_swatches_page_color_outer_border_width }}px;
+      }
+    {%- endunless -%}
+  }
+
+
+  /* Section Heading */
+  .shopify-section .title-wrap .h1-style, .shopify-section .title-wrap h1, h1.h-post-title,
+  .category-page-title.show-filter-closed h1 {
+    --heading-md-size: {{ settings.font_heading_font_size_desktop }}px;
+    --heading-md-size-m: {{ settings.font_heading_font_size_mobile }}px;
+  }
+
+  products-card-compact[data-grid] .products-card-compact:not(.bw--listing) .minicart-prd.mp--sm .minicart-prd-name {
+    -webkit-box-orient: vertical;
+  }
+
+  @media (max-width: {{ settings.product_card_one_in_row_width | minus: 1 }}px) {
+    .row.grid_2_sm > *,
+    .row.grid_3_sm > *
+    .prd-grid.row-cols-xxs-2>* {
+      flex: 0 0 auto !important;
+      width: 100% !important
+    }
+  }
+  @media (max-width: 375px) and (min-width: {{ settings.product_card_one_in_row_width }}px) {
+    .prd-grid.row-cols-xxs-1>.col {
+      width: 50% !important
+    }
+  }
+  @media (max-width: {{ settings.product_card_one_in_row_width | minus: 1 }}px) {
+    .filter-row view-mode {
+      display: none !important;
+    }
+    .col-view-mode {
+      display: none !important;
+    }
+  }
+}
+</style>

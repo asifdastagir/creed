@@ -1,0 +1,1240 @@
+{%- liquid
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+-%}
+{{ 'lookbook' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{%- liquid
+  assign layout = 'index-lookbook'
+  assign per_row = section.settings.per_row | plus: 0
+
+  if section.settings.fluid
+    assign container = '-fluid'
+    unless section.settings.inner_space
+      assign container = container | append: ' px-0'
+    endunless
+  endif
+
+  assign round = 0
+  assign inner_space = ' g-0'
+  if section.settings.inner_space
+    assign inner_space =' g-3 g-md-4'
+  assign round = 1
+  endif
+
+  assign row = 'row-cols-md-' | append: per_row | append: ' ' | append: inner_space
+
+  assign modulo = section.blocks.size | modulo: per_row
+  if per_row >= 2 and modulo > 0
+    assign modulo_index = section.blocks.size | minus: modulo
+    assign suffix = 12 | divided_by: modulo
+    assign col = 'col-' | append: suffix
+  endif
+
+  if section.settings.images_auto_height
+      assign padding = section.settings.images_auto_height_padding
+  else
+      assign padding = false
+  endif
+
+  assign button_show_more = false
+  if section.settings.button
+    if section.settings.heading_alignment == 'left'
+      assign button_show_more = true
+    elsif section.settings.layout != 'mini_horizontal_banner'
+      assign button_show_more = true
+    endif
+  endif
+
+  assign show_button = false
+  assign button_center = false
+  assign button_left = false
+
+  if button_show_more and section.settings.layout != 'mini_horizontal_banner'
+    assign show_button = true
+  endif
+
+  if show_button and section.settings.heading_alignment == 'center'
+    assign button_center = true
+  endif
+
+  if show_button and section.settings.heading_alignment == 'left' and section.settings.button_bottom_on_mobile
+    assign button_left = true
+  endif
+
+  assign sizes = '(min-width: 2600px) 836px, (min-width: 1920px) 609px, (min-width: 1600px) 503px, (min-width: 1400px) 436px, (min-width: 1200px) 370px, (min-width: 992px) 300px, (min-width: 768px) 226px, (min-width: 360px) 330px, calc(100vw - 50px) / 2'
+
+  if per_row == 1
+    assign sizes = '(min-width: 1400px) 1147px, (min-width: 992px) 992px, (min-width: 768px) 768px, calc(100vw - 30px)'
+
+    if section.settings.fluid
+      assign sizes = '(min-width: 1400px) 1920px, (min-width: 992px) 992px, (min-width: 768px) 768px, calc(100vw - 30px)'
+    endif
+  endif
+
+  if per_row == 2 and section.settings.fluid == false
+    assign sizes = '(min-width: 1400px) 559px, (min-width: 1200px) 540px, (min-width: 992px) 466px, (min-width: 768px) 354px, (min-width: 576px) 263px, calc(100vw - 50px) / 2'
+  endif
+-%}
+{% render 'section-wrapper', placement: 'top' %}
+
+<div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+  <div class="{% render 'section-container-class', layout: layout %}">
+    {% render 'section-heading' %}
+      <div class="lookbook-grid">
+        <div class="row justify-content-center row-cols-1 row-cols-sm-2 {{ row }}">
+          {%- for block in section.blocks -%}
+            {%- liquid
+              assign ic_style = ''
+              assign color = block.settings.color_placeholder
+              if color != 'rgba(0,0,0,0)' and color != blank
+                assign ic_style = '--placeholder-bg: ' | append: color | append: ';'
+              endif
+
+              assign widths = false
+              if modulo_index != blank and modulo_index < forloop.index
+                assign is_a_col = true
+                if col == 'col-12' and section.settings.fluid == true
+                  assign sizes = 'calc(100vw - 50px)'
+                  assign widths = '768,1024,1280,1366,1920,3840'
+                endif
+              endif
+
+              assign bg = true
+
+              if section.settings.background and section.settings.background_image != blank or section.settings.background_preset != 'none'
+                assign bg = false
+              endif
+            -%}
+            <div class="col lookbook-wrap image-hover-scale{% if is_a_col %}{{ col }}{% endif %}">
+              {% render 'image-container',
+                image: block.settings.image,
+                padding_no_bg: padding,
+                padding: padding,
+                sizes: sizes,
+                widths: widths,
+                round: round,
+                style: ic_style,
+                bg: bg
+              %}
+              {%- for i in (1..5) -%}
+                {%- liquid
+                  assign product = 'product_' | append: i
+                  assign product_block = block.settings[product]
+                  assign enable = 'enable_' | append: i
+                  assign enable = block.settings[enable]
+                  assign left = 'left_' | append: i
+                  assign left = block.settings[left]
+                  assign top = 'top_' | append: i
+                  assign top = block.settings[top]
+                  assign current_variant = product_block.selected_or_first_available_variant
+                -%}
+
+                  {%- if enable -%}
+                    {%- liquid
+                      if request.page_type == 'search'
+                        assign product_url = current_variant.url | split: '?' | first | append: '?'
+                      else
+                        assign product_url = current_variant.url
+                      endif
+                    -%}
+
+                    {%- if product_block != blank -%}
+                      <lookbook-button data-ajax="{{ product_url }}&section_id=async-product-card-lookbook"><div class="lookbook-popup-btn" style="left: {{ left }}%; top: {{ top }}%;"><div data-load></div></div></lookbook-button>
+                    {%- else -%}
+                      <div class="lookbook-popup-btn" style="left: {{ left }}%; top: {{ top }}%;"
+                          data-toggle="tooltip"
+                          data-tippy-theme="lookbook"
+                          data-tippy-allowHTML="true"
+                          data-tippy-trigger="click"
+                          data-tippy-content='<div class="prd prd-simple prd--style2 lookbook-prd"><div class="prd-image-wrap image-container ic--bg" style="--product-aspect-ratio: 120%"><span>PRODUCT</span></div></div>'>
+                      </div>
+                    {%- endif -%}
+                  {%- endif -%}
+              {%- endfor -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+      {%- if button_center or button_left -%}
+        <div class="btn-showmore-wrap text-center mt-4 mt-md-6 {% if button_left %}show-mobile-sm{% endif %}">
+          <a href="{{ section.settings.button_url }}" class="btn btn--invert btn--showmore">{{ section.settings.button_text }}</a>
+        </div>
+      {%- endif -%}
+  </div>
+</div>
+{% render 'section-wrapper' %}
+{% schema %}
+{
+  "name": "Lookbook",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_animation",
+      "label": "Enable soft appearing of section",
+      "default": true,
+      "info": "Global sections animation disabling in Theme Settings / General / Sections. AUTODISABLED if section has top or bottom separator."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "fluid",
+      "label": "Fluid layout",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "inner_space",
+      "label": "Inner space",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "per_row",
+      "label": "Items per row",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "label": "5"
+        }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "checkbox",
+      "id": "images_auto_height",
+      "label": "Auto height for banners",
+      "default": true,
+      "info": "usefull if banners have different dimensions"
+    },
+    {
+      "type": "range",
+      "id": "images_auto_height_padding",
+      "min": 20,
+      "max": 200,
+      "step": 2,
+      "unit": "%",
+      "label": "Aspect ratio for auto height",
+      "default": 78,
+      "info": "only for auto height banners"
+    },
+    {
+      "type": "radio",
+      "id": "heading_alignment",
+      "label": "Heading aligment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Our Lookbook"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "default": "Subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "header",
+      "content": "Button"
+    },
+    {
+      "type": "checkbox",
+      "id": "button",
+      "label": "Show",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "button_bottom_on_mobile",
+      "label": "Show at bottom on mobile in case when Heading layout is 'Left'",
+      "default": false
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Caption",
+      "default": "View all"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Link"
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable background",
+      "default": false,
+      "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+    },
+    {
+      "type": "select",
+      "id": "background_preset",
+      "label": "Background image - preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "product-cosmetics-bg.png",
+          "label": "Leaves 1"
+        },
+        {
+          "value": "bottom-cosmetics-bg.png",
+          "label": "Leaves 2"
+        },
+        {
+          "value": "bg-makeup1.png,bg-makeup1-m.png",
+          "label": "Pink and Waves 1"
+        },
+        {
+          "value": "bg-makeup2.png,bg-makeup2-m.png",
+          "label": "Pink and Waves 2"
+        },
+        {
+          "value": "bg-makeup4.png,bg-makeup4-m.png",
+          "label": "Pink and Waves 3"
+        },
+        {
+          "value": "bg-makeup3.png,bg-makeup3-m.png",
+          "label": "Purple Splash"
+        },
+        {
+          "value": "bg-sweets1.png",
+          "label": "Blue Sun Rays"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+     {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image - custom on Desktop"
+    },
+    {
+      "type": "select",
+      "id": "background_behavior",
+      "label": "Background image behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image - custom on Mobile",
+      "info": "only if Background image - custom on Desktop selected"
+    },
+    {
+      "type": "select",
+      "id": "background_image_placeholder_type",
+      "label": "Placeholder background color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_secondary_bg"
+    },
+    {
+      "type": "color",
+      "id": "background_image_placeholder",
+      "label": "Custom - Placeholder background color"
+    },
+    {
+      "type": "header",
+      "content": "SECTION SEPARATOR"
+    },
+    {
+      "type": "header",
+      "content": "Top separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_header_main_bg",
+          "label": "Header - Middle(main) part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_top_color",
+      "label": "Custom - top separator color"
+    },
+    {
+      "type": "header",
+      "content": "Bottom separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "paragraph",
+      "content": "'Global separator' is set in Theme Settings / Separators / Global separator style"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_footer_top_bg",
+          "label": "Footer - Top part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_bottom_color",
+      "label": "Custom - bottom separator color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "image",
+      "name": "image",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Title",
+          "label": "Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Preview",
+          "info": "recommended size for retina displays is 1336x1052px"
+        },
+        {
+          "type": "color",
+          "id": "color_placeholder",
+          "label": "Placeholder background loader",
+          "info": "Set the main color of the image (visually softens the appearance of the image)"
+        },
+        {
+          "type": "header",
+          "content": "Product 1"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_1",
+          "label": "Show",
+          "default": true
+        },
+        {
+          "type": "product",
+          "id": "product_1",
+          "label": "Product"
+        },
+        {
+          "type": "range",
+          "id": "left_1",
+          "min": 10,
+          "max": 90,
+          "step": 1,
+          "unit": "%",
+          "label": "Left position",
+          "default": 10
+        },
+        {
+          "type": "range",
+          "id": "top_1",
+          "min": 10,
+          "max": 90,
+          "step": 1,
+          "unit": "%",
+          "label": "Top position",
+          "default": 70
+        },
+        {
+          "type": "header",
+          "content": "Product 2"
+        },
+        {
+          "type": "product",
+          "id": "product_2",
+          "label": "Product"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_2",
+          "label": "Show",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "left_2",
+          "min": 10,
+          "max": 90,
+          "step": 1,
+          "unit": "%",
+          "label": "Left position",
+          "default": 40
+        },
+        {
+          "type": "range",
+          "id": "top_2",
+          "min": 10,
+          "max": 90,
+          "step": 1,
+          "unit": "%",
+          "label": "Top position",
+          "default": 30
+        },
+        {
+          "type": "header",
+          "content": "Product 3"
+        },
+        {
+          "type": "product",
+          "id": "product_3",
+          "label": "Product"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_3",
+          "label": "Show",
+          "default": true
+        },
+        {
+          "type": "range",
+          "id": "left_3",
+          "min": 10,
+          "max": 90,
+          "step": 1,
+          "unit": "%",
+          "label": "Left position",
+          "default": 70
+        },
+        {
+          "type": "range",
+          "id": "top_3",
+          "min": 10,
+          "max": 90,
+          "step": 1,
+          "unit": "%",
+          "label": "Top position",
+          "default": 20
+        },
+        {
+          "type": "header",
+          "content": "Product 4"
+        },
+        {
+          "type": "product",
+          "id": "product_4",
+          "label": "Product"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_4",
+          "label": "Show",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "left_4",
+          "min": 10,
+          "max": 90,
+          "step": 1,
+          "unit": "%",
+          "label": "Left position",
+          "default": 10
+        },
+        {
+          "type": "range",
+          "id": "top_4",
+          "min": 10,
+          "max": 90,
+          "step": 1,
+          "unit": "%",
+          "label": "Top position",
+          "default": 30
+        },
+        {
+          "type": "header",
+          "content": "Product 5"
+        },
+        {
+          "type": "product",
+          "id": "product_5",
+          "label": "Product"
+        },
+        {
+          "type": "checkbox",
+          "id": "enable_5",
+          "label": "Show",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "left_5",
+          "min": 10,
+          "max": 90,
+          "step": 1,
+          "unit": "%",
+          "label": "Left position",
+          "default": 30
+        },
+        {
+          "type": "range",
+          "id": "top_5",
+          "min": 10,
+          "max": 90,
+          "step": 1,
+          "unit": "%",
+          "label": "Top position",
+          "default": 70
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Lookbook / constructor",
+      "blocks": [
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 10,
+            "top_1": 70,
+            "left_2": 40,
+            "top_2": 30,
+            "left_3": 70,
+            "top_3": 20
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 77,
+            "top_1": 80,
+            "left_2": 17,
+            "top_2": 48,
+            "left_3": 50,
+            "top_3": 19
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 50,
+            "top_1": 50,
+            "left_2": 60,
+            "top_2": 20,
+            "left_3": 40,
+            "top_3": 80
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lookbook / preset 1 Fullwidth 3x1",
+      "blocks": [
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 10,
+            "top_1": 70,
+            "left_2": 40,
+            "top_2": 30,
+            "left_3": 70,
+            "top_3": 20
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 77,
+            "top_1": 80,
+            "left_2": 17,
+            "top_2": 48,
+            "left_3": 50,
+            "top_3": 19
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 50,
+            "top_1": 50,
+            "left_2": 60,
+            "top_2": 20,
+            "left_3": 40,
+            "top_3": 80
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lookbook / preset 2 Boxed 2x2",
+      "settings": {
+        "fluid": false,
+        "per_row": "2",
+        "images_auto_height_padding": 84
+      },
+      "blocks": [
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 10,
+            "top_1": 70,
+            "left_2": 40,
+            "top_2": 30,
+            "left_3": 70,
+            "top_3": 20
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 77,
+            "top_1": 80,
+            "left_2": 17,
+            "top_2": 48,
+            "left_3": 50,
+            "top_3": 19
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 50,
+            "top_1": 50,
+            "left_2": 60,
+            "top_2": 20,
+            "left_3": 40,
+            "top_3": 80
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 20,
+            "top_1": 40,
+            "left_2": 50,
+            "top_2": 50,
+            "left_3": 80,
+            "top_3": 60
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lookbook / preset 3 Boxed 3x1",
+      "settings": {
+        "fluid": false,
+        "per_row": "3",
+        "images_auto_height_padding": 132
+      },
+      "blocks": [
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 10,
+            "top_1": 70,
+            "left_2": 40,
+            "top_2": 30,
+            "left_3": 70,
+            "top_3": 20
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 77,
+            "top_1": 80,
+            "left_2": 17,
+            "top_2": 48,
+            "left_3": 50,
+            "top_3": 19
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 50,
+            "top_1": 50,
+            "left_2": 60,
+            "top_2": 20,
+            "left_3": 40,
+            "top_3": 80
+          }
+        }
+      ]
+    },
+    {
+      "name": "Lookbook / preset 4 Fullwidth 4x2 no space",
+      "settings": {
+        "fluid": true,
+        "per_row": "4",
+        "inner_space": false,
+        "images_auto_height_padding": 100
+      },
+      "blocks": [
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 10,
+            "top_1": 70,
+            "left_2": 40,
+            "top_2": 30,
+            "left_3": 70,
+            "top_3": 20
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 77,
+            "top_1": 80,
+            "left_2": 17,
+            "top_2": 48,
+            "left_3": 50,
+            "top_3": 19
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 50,
+            "top_1": 50,
+            "left_2": 60,
+            "top_2": 20,
+            "left_3": 40,
+            "top_3": 80
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 20,
+            "top_1": 40,
+            "left_2": 50,
+            "top_2": 50,
+            "left_3": 80,
+            "top_3": 60
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 10,
+            "top_1": 70,
+            "left_2": 40,
+            "top_2": 30,
+            "left_3": 70,
+            "top_3": 20
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 77,
+            "top_1": 80,
+            "left_2": 17,
+            "top_2": 48,
+            "left_3": 50,
+            "top_3": 19
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 50,
+            "top_1": 50,
+            "left_2": 60,
+            "top_2": 20,
+            "left_3": 40,
+            "top_3": 80
+          }
+        },
+        {
+          "type": "image",
+          "settings": {
+            "left_1": 20,
+            "top_1": 40,
+            "left_2": 50,
+            "top_2": 50,
+            "left_3": 80,
+            "top_3": 60
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

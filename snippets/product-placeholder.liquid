@@ -1,0 +1,5 @@
+<div class="{{ class | default: 'swiper-slide' }}">
+  <product-card class="prd prd--style1 {% if style != blank %}{{ style }}{% else %}prd-w-xxs{% endif %}">
+    <div class="prd-image-wrap image-container ic--bg" style="--product-aspect-ratio: {{ padding | default: 120 }}%"><span>{% if title != blank and title != true %}{{ title }}{% else %}{{ 'theme.general.product' | t }}{% endif %}</span></div>
+  </product-card>
+</div>

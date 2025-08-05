@@ -1,0 +1,277 @@
+.payment-notification-wrap {
+  position: fixed;
+  z-index: 1009;
+  bottom: 0;
+  left: 20px;
+  margin-bottom: 30px;
+  transition: .2s;
+  pointer-events: none
+}
+@media (max-width:767px) {
+  .payment-notification-wrap {
+    left: 15px;
+    margin-bottom: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: calc(100% - 90px)
+  }
+}
+@media (max-width:374px) {
+  .payment-notification-wrap {
+    display: none!important
+  }
+}
+@media (max-width:1024px) {
+  body.has-hdr_sticky_not_hiding.has-mobile-bottom .payment-notification-wrap,
+  body.has-mobile-bottom .payment-notification-wrap {
+    margin-bottom: 80px
+  }
+}
+.payment-notification {
+  position: relative;
+  display: block;
+  z-index: 1;
+  opacity: 0;
+  padding: 20px 45px 20px 20px;
+  transform: translateY(100px) scale(.8);
+  width: 357px;
+  height: auto;
+  border-radius: var(--radius-md,16px);
+  box-shadow: 0 5px 8px rgba(0,0,0,.2);
+  background-color: var(--payment-notification-bg);
+  pointer-events: none;
+  transition: all .5s
+}
+.payment-notification.payment-notification--open {
+  opacity: 1;
+  pointer-events: all;
+  transform: translateY(0) scale(1)
+}
+.payment-notification.payment-notification--image-off .payment-notification-container > .col-auto {
+  display: none
+}
+@media (max-width:767px) {
+  .payment-notification {
+    width: 320px;
+    max-width: 100%;
+    padding: 15px 45px 15px 15px
+  }
+  .payment-notification.payment-notification--image-off {
+    padding-left: 25px
+  }
+}
+@media (max-width:575px) {
+  .payment-notification {
+    width: 295px
+  }
+}
+.payment-labels {
+  margin-bottom: 8px
+}
+.payment-labels > * {
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 16px;
+  padding: 0 3px;
+  font-size: 9px;
+  font-weight: var(--font-weight-600);
+  line-height: 12px;
+  color: var(--label-color);
+  background-color: var(--label-bg);
+  border-radius: var(--radius-3)
+}
+.payment-labels > * + * {
+  margin-right: 7px
+}
+@media (max-width:575px) {
+  .payment-labels {
+    display: none
+  }
+}
+.payment-label--soldout {
+  color: var(--label-soldout-color);
+  background-color: var(--label-soldout-bg)
+}
+.payment-label--new {
+  color: var(--label-new-color);
+  background-color: var(--label-new-bg)
+}
+.payment-label--hot {
+  color: var(--label-hot-color);
+  background-color: var(--label-hot-bg)
+}
+.payment-label--sale {
+  color: var(--label-sale-color);
+  background-color: var(--label-sale-bg)
+}
+.payment-notification-container {
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap
+}
+.payment-notification-image {
+  display: block;
+  width: 106px;
+  border-radius: var(--radius-lg,20px);
+  overflow: hidden
+}
+.payment-notification-image img {
+  opacity: 0
+}
+.payment-notification-image img.lazyloaded {
+  opacity: 1
+}
+@media (max-width:767px) {
+  .payment-notification-image {
+    width: 86px;
+    height: 86px
+  }
+}
+@media (max-width:767px) {
+  .payment-notification-image {
+    width: 86px;
+    height: 86px
+  }
+}
+.payment-notification-content {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  margin: 0
+}
+@media (max-width:767px) {
+  .payment-notification-content-wrapper {
+    padding: 0
+  }
+}
+.payment-notification-icons {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  position: absolute;
+  z-index: 1;
+  top: 18px;
+  right: 16px;
+  bottom: 18px
+}
+.payment-notification-icons svg {
+  max-height: 22px;
+  transition: .2s
+}
+.payment-notification-icons .payment-notification-close svg {
+  max-height: 15px
+}
+.payment-notification-icons .prd-icon {
+  color: var(--product-card-icon-color)
+}
+.payment-notification-icons .prd-icon svg path {
+  fill: currentColor
+}
+@media (hover:hover),
+(hover:none) and (min-width:1025px) {
+  .payment-notification-icons .prd-icon:hover {
+    color: var(--product-card-icon-hover-color)
+  }
+  .payment-notification-icons .prd-icon:hover svg {
+    transform: scale(1.2)
+  }
+}
+.payment-notification-icons .prd-icon + * {
+  margin-top: 10px
+}
+@media (max-width:767px) {
+  .payment-notification-icons {
+    top: 16px;
+    right: 14px;
+    bottom: 14px
+  }
+}
+.payment-notification-text {
+  margin-bottom: 3px;
+  font-size: 12px;
+  line-height: 1.5em;
+  color: var(--payment-notification-text-color)
+}
+@media (max-width:575px) {
+  .payment-notification-text {
+    font-size: 11px
+  }
+}
+.payment-notification-name {
+  margin-bottom: 10px;
+  color: var(--payment-notification-name-color)
+}
+.payment-notification-name a {
+  display: inline-block;
+  max-width: 100%;
+  width: 170px;
+  font-size: 15px;
+  line-height: 1.3em;
+  font-weight: var(--font-weight-400);
+  color: var(--payment-notification-name-color);
+  text-decoration: none
+}
+@media (hover:hover),
+(hover:none) and (min-width:1025px) {
+  .payment-notification-name a:hover {
+    color: var(--payment-notification-name-hover-color);
+    text-decoration: none
+  }
+}
+@media (max-width:767px) {
+  .payment-notification-name a {
+    width: 150px
+  }
+}
+@media (max-width:575px) {
+  .payment-notification-name a {
+    font-size: 14px;
+    width: 130px
+  }
+}
+.payment-notification--image-off .payment-notification-name {
+  width: 230px
+}
+@media (max-width:767px) {
+  .payment-notification--image-off .payment-notification-name {
+    width: 200px
+  }
+}
+@media (max-width:575px) {
+  .payment-notification--image-off .payment-notification-name {
+    width: 180px
+  }
+}
+.payment-notification-when {
+  font-size: 12px;
+  line-height: 1.5em;
+  color: var(--payment-notification-when-color)
+}
+@media (max-width:575px) {
+  .payment-notification-when {
+    font-size: 11px
+  }
+}
+.payment-notification-from {
+  margin-top: 0;
+  font-size: 12px;
+  line-height: 1.5em;
+  color: var(--payment-notification-text-color)
+}
+@media (max-width:575px) {
+  .payment-notification-from {
+    font-size: 11px
+  }
+}

@@ -1,0 +1,21 @@
+{%- liquid
+    assign heading = heading | default: section.settings.heading
+    assign subtitle = subtitle | default: section.settings.subtitle
+-%}
+{%- if heading != blank -%}
+    {%- if section.settings.heading_alignment == 'left' or left == 1 -%}
+        <div class="title-wrap title-wrap--with-link text-start mb-15">
+        <h2 class="h1-style">{{ heading }}</h2>
+        {%- if section.settings.button -%}
+            <a href="{{ section.settings.button_url }}" class="title-view-more-link {% if section.settings.button_bottom_on_mobile %}hide-mobile-sm{% endif %}">{{ section.settings.button_text }}</a>
+        {%- endif -%}
+        </div>
+    {%- else -%}
+        <div class="title-wrap text-center">
+        <h2 class="h1-style">{{ heading }}</h2>
+        {%- if subtitle != blank -%}
+            <div class="h-sub w-800" style="font-size: {{ settings.font_heading_subtitle_font_size }}px;">{{ subtitle }}</div>
+        {%- endif -%}
+        </div>
+    {%- endif -%}
+{%- endif -%}

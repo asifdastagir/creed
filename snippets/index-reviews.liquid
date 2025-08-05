@@ -1,0 +1,179 @@
+{% comment %}theme-check-disable UnusedAssign{% endcomment %}
+{%- liquid
+    assign heading = heading | default: section.settings.heading
+    assign subtitle = subtitle | default: section.settings.subtitle
+    assign results = results | default: section.blocks
+    assign show = false
+
+    if source == 'products'
+        if request.page == 'search'
+            assign results = results | where: 'object_type', 'product'
+        endif
+
+        for item in results
+            assign product = item
+            assign review = product.metafields.custom.featured_review_text
+
+            unless review == blank
+                assign show = true
+
+                break
+            endunless
+        endfor
+    else
+        assign show = true
+    endif
+
+    assign count = 0
+    assign masonry = false
+
+    if results.size > 3 and results.size != 5 and results.size != 8
+        assign masonry = true
+    endif
+
+    assign masonry = false
+
+    if section.settings.masonry == true
+        assign masonry = true
+    endif
+
+    assign store_width = settings.container_max_width
+
+    if section.settings.section_width == 'custom'
+        assign store_width = section.settings.container_max_width
+    endif
+
+    if template.suffix contains 'store-width-'
+        assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+    endif
+
+    if section.settings.section_width == 'custom'
+        assign style_inline = '--container-max-width:' | append: store_width | append: 'px;'
+    endif
+
+    assign button_show_more = false
+    if section.settings.button
+        if section.settings.heading_alignment == 'left'
+            assign button_show_more = true
+        elsif section.settings.layout != 'mini_horizontal_banner'
+            assign button_show_more = true
+        endif
+    endif
+
+    assign show_button = false
+    assign button_center = false
+    assign button_left = false
+
+    if button_show_more and section.settings.layout != 'mini_horizontal_banner'
+        assign show_button = true
+    endif
+
+    if show_button and section.settings.heading_alignment == 'center'
+        assign button_center = true
+    endif
+
+    if show_button and section.settings.heading_alignment == 'left' and section.settings.button_bottom_on_mobile
+        assign button_left = true
+    endif
+-%}
+{%- if show -%}
+    {% render 'section-wrapper', placement: 'top' %}
+
+    <div class="{% render 'section-class', layout: layout %} {% if store_width > 1465 %}use-grid-xxl{% endif %} {% if store_width > 1700 %}use-grid-xxxl{% endif %}" {% render 'section-style', use_global_desktop_space: use_global_desktop_space, use_global_mobile_space: use_global_mobile_space, use_global_desktop_space_padding: use_global_desktop_space_padding, use_global_mobile_space_padding: use_global_mobile_space_padding %}>
+        <div class="{% render 'section-container-class', layout: layout %}">
+            {% render 'section-heading', section: section, heading: heading, subtitle: subtitle %}
+
+            {%- if masonry -%}
+                <masonry-grid data-masonry-size='300' data-masonry-destroy-breikpoint='1199'>
+                    <swiper-carousel data-init-breakpoint='1199' data-destroy>
+                        <div class="swiper-container review-grid-container swiper-container-center">
+                            <div class="swiper-wrapper review-grid masonry-grid-container has-shadow {% if section.blocks.size == 1 or section.blocks.size == 2 %}rg-{{ section.blocks.size }}{% endif %}">
+                                {% render 'index-reviews-items', results: results, count: count, source: source, review: review, collection: collection, class_item: 'swiper-slide', masonry: true %}
+                            </div>
+                            <div class="swiper-pagination position-relative mt-4 mt-md-5"></div>
+                            <div class="swiper-arrows-carousel container">
+                                <div class="swiper-button-next"></div>
+                                <div class="swiper-button-prev"></div>
+                            </div>
+                        </div>
+                        <script type="application/json">
+                            {
+                                "pagination": {
+                                    "el": ".swiper-pagination",
+                                    "clickable": true
+                                },
+                                "navigation": {
+                                    "nextEl": ".swiper-button-next",
+                                    "prevEl": ".swiper-button-prev"
+                                },
+                                "slidesPerColumnFill": "row",
+                                "watchOverflow": true,
+                                "slidesPerView": 1,
+                                "spaceBetween": 20,
+                                "breakpoints": {
+                                    "768": {
+                                        "slidesPerView": 2,
+                                        "spaceBetween": 20
+                                    },
+                                    "992": {
+                                        "slidesPerView": 3,
+                                        "spaceBetween": 30
+                                    }
+                                }
+                            }
+                        </script>
+                    </swiper-carousel>
+                </masonry-grid>
+            {%- else -%}
+                <smart-row>
+                    <swiper-carousel data-init-breakpoint='1199' data-destroy>
+                        <div class="swiper-container review-grid-container">
+                            <div class="swiper-wrapper review-grid row-cols-xl-3 {% if store_width > 1465 %}row-cols-xxl-4 row-cols-xxxl-5{% endif %} row gy-4 justify-content-xl-center">
+                                {% render 'index-reviews-items', results: results, class_item: 'swiper-slide' count: count, source: source, review: review, collection: collection, masonry: false %}
+                            </div>
+                            <div class="swiper-pagination position-relative mt-4 mt-md-5"></div>
+                            <div class="swiper-arrows-carousel container">
+                                <div class="swiper-button-next"></div>
+                                <div class="swiper-button-prev"></div>
+                            </div>
+                        </div>
+                        <script type="application/json">
+                            {
+                                "pagination": {
+                                    "el": ".swiper-pagination",
+                                    "clickable": true
+                                },
+                                "navigation": {
+                                    "nextEl": ".swiper-button-next",
+                                    "prevEl": ".swiper-button-prev"
+                                },
+                                "slidesPerColumnFill": "row",
+                                "watchOverflow": true,
+                                "slidesPerView": 1,
+                                "centerInsufficientSlides": true,
+                                "spaceBetween": 20,
+                                "breakpoints": {
+                                    "768": {
+                                        "slidesPerView": 2,
+                                        "spaceBetween": 20
+                                    },
+                                    "992": {
+                                        "slidesPerView": 3,
+                                        "spaceBetween": 30
+                                    }
+                                }
+                            }
+                        </script>
+                    </swiper-carousel>
+                </smart-row>
+            {%- endif -%}
+
+            {%- if button_center or button_left -%}
+                <div class="btn-showmore-wrap text-center mt-3 mt-lg-6  {% if button_left %}show-mobile-sm{% endif %}">
+                    <a href="{{ section.settings.button_url }}" class="btn btn--invert btn--showmore" {% if section.settings.button_target_blank %}target="_blank"{% endif %}>{{ section.settings.button_text }}</a>
+                </div>
+            {%- endif -%}
+        </div>
+    </div>
+    {% render 'section-wrapper' %}
+{%- endif -%}

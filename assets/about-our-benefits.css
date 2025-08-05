@@ -1,0 +1,22 @@
+.benefits-item {
+  padding: 20px;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-pack: center;
+  justify-content: center
+}
+.benefits-item-number {
+  font-size: 70px;
+  line-height: 85px
+}
+.benefits-item-title {
+  font-size: 18px;
+  line-height: 28px
+}
+.benefits-info {
+  padding: 30px
+}

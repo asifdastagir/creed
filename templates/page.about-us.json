@@ -1,0 +1,390 @@
+{
+  "sections": {
+    "index-quote-image": {
+      "type": "index-quote-image",
+      "settings": {
+        "section_width": "global",
+        "container_max_width": 1178,
+        "spacing_sections": 70,
+        "use_global_desktop_space": false,
+        "spacing_sections_mobile": 40,
+        "use_global_mobile_space": false,
+        "spacing_padding_sections": 100,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "background": false,
+        "section_decoration_top": "none",
+        "section_decoration_bottom": "none",
+        "section_decoration_top_color": "",
+        "section_decoration_bottom_color": "",
+        "section_animation": true,
+        "description": "<p>We are glad to present you our most perfect Shopify theme, which supports Sections Everywhere, very high metric scores by google page speed insight. This is the most mobile-oriented theme that will be convenient on any of your devices.</p>",
+        "author": "Jack Donowan",
+        "sign_image": "shopify://shop_images/about-quote-sign.png",
+        "bg_image": "shopify://shop_images/about-01.png",
+        "color_placeholder": "#a6d7f6"
+      }
+    },
+    "index-icons": {
+      "type": "index-icons",
+      "blocks": {
+        "icon-1": {
+          "type": "icon",
+          "settings": {
+            "icon": "icon-truck",
+            "icon_custom_svg": "",
+            "only_image": false,
+            "title": "Free worldwide<br>Delivery",
+            "subtitle": ""
+          }
+        },
+        "icon-2": {
+          "type": "icon",
+          "settings": {
+            "icon": "icon-tag",
+            "icon_custom_svg": "",
+            "only_image": false,
+            "title": "Promotions, Bonusesand discounts",
+            "subtitle": ""
+          }
+        },
+        "58635714-8423-4715-b47a-2f9b99a6381b": {
+          "type": "icon",
+          "settings": {
+            "icon": "icon-card",
+            "icon_custom_svg": "",
+            "only_image": false,
+            "title": "Free secret Reward<br>Card",
+            "subtitle": ""
+          }
+        },
+        "05919011-9975-45d5-bdf3-b10a21796b96": {
+          "type": "icon",
+          "settings": {
+            "icon": "icon-gift2",
+            "icon_custom_svg": "",
+            "only_image": false,
+            "title": "Presents to Our<br>Customers",
+            "subtitle": ""
+          }
+        }
+      },
+      "block_order": [
+        "icon-1",
+        "icon-2",
+        "58635714-8423-4715-b47a-2f9b99a6381b",
+        "05919011-9975-45d5-bdf3-b10a21796b96"
+      ],
+      "settings": {
+        "spacing_sections": 30,
+        "use_global_desktop_space": false,
+        "spacing_sections_mobile": 30,
+        "use_global_mobile_space": false,
+        "spacing_padding_sections": 40,
+        "use_global_desktop_space_padding": false,
+        "spacing_padding_sections_mobile": 40,
+        "use_global_mobile_space_padding": false,
+        "background": false,
+        "section_decoration_top": "none",
+        "section_decoration_bottom": "none",
+        "section_decoration_top_color": "",
+        "section_decoration_bottom_color": "",
+        "section_animation": true,
+        "heading_alignment": "center",
+        "layout": "layout_1",
+        "icons_font_size": "default",
+        "icons_background": false,
+        "icons_text_background": false,
+        "icons_bordered": false,
+        "under_slider": false,
+        "per_view": "4",
+        "per_view_mobile": "2",
+        "heading": "",
+        "subtitle": ""
+      }
+    },
+    "index-text-social-media": {
+      "type": "index-text-social-media",
+      "blocks": {
+        "a4fd3f56-d17a-49f4-909e-3a24b2531b56": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Our web company consists of web programmers and designers with extensive experience in the web market. Each of us worked as hired worker to create templates for Magento, <strong>Shopify</strong>, Wordpress and others. We decided to unite our forces and to do projects such as we would like them to be in accordance to our <strong>experience in customer support</strong>.</p>"
+          }
+        },
+        "a823762d-60c7-45bc-b7c3-5dd71f77c697": {
+          "type": "social-media",
+          "settings": {
+          }
+        }
+      },
+      "block_order": [
+        "a4fd3f56-d17a-49f4-909e-3a24b2531b56",
+        "a823762d-60c7-45bc-b7c3-5dd71f77c697"
+      ],
+      "settings": {
+        "spacing_sections": 100,
+        "use_global_desktop_space": true,
+        "spacing_sections_mobile": 70,
+        "use_global_mobile_space": true,
+        "spacing_padding_sections": 100,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "background": false,
+        "section_decoration_top": "none",
+        "section_decoration_bottom": "none",
+        "section_decoration_top_color": "",
+        "section_decoration_bottom_color": "",
+        "section_animation": true
+      }
+    },
+    "16395785262c701fe8": {
+      "type": "index-video",
+      "settings": {
+        "section_width": "global",
+        "container_max_width": 1178,
+        "spacing_sections": 100,
+        "use_global_desktop_space": true,
+        "spacing_sections_mobile": 70,
+        "use_global_mobile_space": true,
+        "spacing_padding_sections": 100,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "background": false,
+        "section_decoration_top": "none",
+        "section_decoration_bottom": "none",
+        "section_decoration_top_color": "",
+        "section_decoration_bottom_color": "",
+        "section_animation": true,
+        "fluid": false,
+        "inner_space": false,
+        "title": "Video",
+        "cover_image": "shopify://shop_images/about-02.png",
+        "color_placeholder": "#5f72b8",
+        "cover_image_off": false,
+        "padding": 56,
+        "padding_mobile": 56,
+        "autoplay": false,
+        "video_url": "https://www.youtube.com/watch?v=HiByPPj7SWg",
+        "description": "",
+        "button": false,
+        "button_text": "Shop now",
+        "button_url": "",
+        "button_target_blank": false,
+        "button_color": "btn--default"
+      }
+    },
+    "index-chart": {
+      "type": "index-chart",
+      "blocks": {
+        "ab6055d9-9339-4173-bbec-e55b044c3885": {
+          "type": "chart",
+          "settings": {
+            "percent": 95,
+            "heading": "Of excellent reviews",
+            "color": "-"
+          }
+        },
+        "2affa38c-d8eb-4bb1-93f9-9be8ed0e5697": {
+          "type": "chart-custom",
+          "settings": {
+            "value": 2,
+            "max": 2,
+            "unit": "k",
+            "heading": "More sales",
+            "color": "3"
+          }
+        },
+        "0565efe3-4663-4aa1-a817-a21bcd0aa738": {
+          "type": "chart",
+          "settings": {
+            "percent": 100,
+            "heading": "Happy customers",
+            "color": "2"
+          }
+        }
+      },
+      "block_order": [
+        "ab6055d9-9339-4173-bbec-e55b044c3885",
+        "2affa38c-d8eb-4bb1-93f9-9be8ed0e5697",
+        "0565efe3-4663-4aa1-a817-a21bcd0aa738"
+      ],
+      "settings": {
+        "section_width": "global",
+        "container_max_width": 1178,
+        "spacing_sections": 100,
+        "use_global_desktop_space": true,
+        "spacing_sections_mobile": 70,
+        "use_global_mobile_space": true,
+        "spacing_padding_sections": 100,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "background": false,
+        "section_decoration_top": "none",
+        "section_decoration_bottom": "none",
+        "section_decoration_top_color": "",
+        "section_decoration_bottom_color": "",
+        "section_animation": true,
+        "heading_alignment": "center",
+        "heading": "Why Choose Us",
+        "text": "<p>We like <strong>Shopify </strong>because it provides variety of tools to help you set up and run your business. <br/> You can find everything you need to <strong>showcase your products online</strong>, to process payments, and to make your store work for you</p>"
+      }
+    },
+    "522d26c0-0162-426e-8f55-be7714eb2ade": {
+      "type": "index-instagram",
+      "blocks": {
+        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-3": {
+          "type": "photo",
+          "settings": {
+            "title": "Title",
+            "image": "shopify://shop_images/instagram-default-9.png",
+            "url": ""
+          }
+        },
+        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-2": {
+          "type": "photo",
+          "settings": {
+            "title": "Title",
+            "image": "shopify://shop_images/instagram-default-6.png",
+            "url": ""
+          }
+        },
+        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-4": {
+          "type": "photo",
+          "settings": {
+            "title": "Title",
+            "image": "shopify://shop_images/instagram-default-2.png",
+            "url": ""
+          }
+        },
+        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-5": {
+          "type": "photo",
+          "settings": {
+            "title": "Title",
+            "image": "shopify://shop_images/instagram-default-8.png",
+            "url": ""
+          }
+        },
+        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-6": {
+          "type": "photo",
+          "settings": {
+            "title": "Title",
+            "image": "shopify://shop_images/instagram-default-7.png",
+            "url": ""
+          }
+        },
+        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-7": {
+          "type": "photo",
+          "settings": {
+            "title": "Title",
+            "image": "shopify://shop_images/instagram-default-1.png",
+            "url": ""
+          }
+        },
+        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-8": {
+          "type": "photo",
+          "settings": {
+            "title": "Title",
+            "image": "shopify://shop_images/instagram-default-4.png",
+            "url": ""
+          }
+        },
+        "b790f6c4-8b3a-4d70-a8b2-390177f5a0f3": {
+          "type": "photo",
+          "settings": {
+            "title": "Title",
+            "image": "shopify://shop_images/instagram-default-8.png",
+            "url": ""
+          }
+        },
+        "f923020a-74f3-4f1b-9575-c063086740f8": {
+          "type": "photo",
+          "settings": {
+            "title": "Title",
+            "image": "shopify://shop_images/instagram-default-3.png",
+            "url": ""
+          }
+        },
+        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-1": {
+          "type": "photo",
+          "disabled": true,
+          "settings": {
+            "title": "Title",
+            "image": "shopify://shop_images/instagram-3_7c5f28d9-e917-47e9-b3d8-b3333f40753c.png",
+            "url": ""
+          }
+        },
+        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-0": {
+          "type": "photo",
+          "disabled": true,
+          "settings": {
+            "title": "Title",
+            "image": "shopify://shop_images/instagram-6_5bdc53a6-47c5-4445-9f64-46b6670d03fa.png",
+            "url": ""
+          }
+        },
+        "855720fb-229b-4037-9c78-a122f6abf04d": {
+          "type": "photo",
+          "disabled": true,
+          "settings": {
+            "title": "Title",
+            "image": "shopify://shop_images/instagram-5_d9ddd81f-a18e-4504-958e-1af2eb3e0b4f.png",
+            "url": ""
+          }
+        }
+      },
+      "block_order": [
+        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-3",
+        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-2",
+        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-4",
+        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-5",
+        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-6",
+        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-7",
+        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-8",
+        "b790f6c4-8b3a-4d70-a8b2-390177f5a0f3",
+        "f923020a-74f3-4f1b-9575-c063086740f8",
+        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-1",
+        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-0",
+        "855720fb-229b-4037-9c78-a122f6abf04d"
+      ],
+      "settings": {
+        "section_width": "global",
+        "container_max_width": 1178,
+        "spacing_sections": 100,
+        "use_global_desktop_space": true,
+        "spacing_sections_mobile": 70,
+        "use_global_mobile_space": true,
+        "spacing_padding_sections": 100,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "background": false,
+        "section_decoration_top": "none",
+        "section_decoration_bottom": "none",
+        "section_decoration_top_color": "",
+        "section_decoration_bottom_color": "",
+        "section_animation": true,
+        "fluid": false,
+        "layout": "circle_grid",
+        "insta_max": 9,
+        "manual": true,
+        "url": "",
+        "heading": "#@Shop By Instagram",
+        "insta_token": "IGQVJYZAHFFOGVrS014czFsS2l0dzVzM0NmVzZAkd3RDU1I2SGV3S0JSTVF1TmUyYVZALMjJxUkM1RTJMbTNPV091MUxlR1ZAfSk4zcWgwelYwNkFpM3p3emhYRGM5UjZAELU1UQXBHWVo3Nkw2dTJWbDNlYQZDZD",
+        "insta_tag": "fashionDefault"
+      }
+    }
+  },
+  "order": [
+    "index-quote-image",
+    "index-icons",
+    "index-text-social-media",
+    "16395785262c701fe8",
+    "index-chart",
+    "522d26c0-0162-426e-8f55-be7714eb2ade"
+  ]
+}

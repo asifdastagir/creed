@@ -1,0 +1,31 @@
+<div class="prd-price">
+  {%- if item.selling_plan_allocation.selling_plan.name != blank -%}
+    <span class="prd-price-regular ">{{ item.selling_plan_allocation.price | money }}</span>
+    {%- if item.selling_plan_allocation.per_delivery_price < item.variant.compare_at_price -%}
+      <span class="prd-price-old">{{ item.selling_plan_allocation.compare_at_price | money }}</span>
+    {%- endif -%}
+  {%- else -%}
+    {%- if item.variant.price < item.variant.compare_at_price -%}
+      <span class="visually-hidden">{{ 'products.product.price.regular_price' | t }}</span>
+      <span class="prd-price-regular ">{{ item.variant.price | money }}</span>
+      {%- unless item.original_line_price != item.final_line_price -%}
+        <span class="visually-hidden">{{ 'products.product.price.sale_price' | t }}</span>
+        <span class="prd-price-old">{{ item.variant.compare_at_price | money }}</span>
+      {%- endunless -%}
+    {%- else -%}
+      <span class="prd-price-regular ">{{ item.variant.price | money }}</span>
+    {%- endif -%}
+    {%- if item.variant.available and item.unit_price_measurement -%}
+      <div class="unit-price caption">
+        <span class="visually-hidden">{{ 'products.product.price.unit_price' | t }}</span>
+        {{ item.variant.unit_price | money }}
+        <span aria-hidden="true">/</span>
+        <span class="visually-hidden">&nbsp;{{ 'accessibility.unit_price_separator' | t }}&nbsp;</span>
+        {%- if item.variant.unit_price_measurement.reference_value != 1 -%}
+          {{- item.variant.unit_price_measurement.reference_value -}}
+        {%- endif -%}
+        {{ item.variant.unit_price_measurement.reference_unit }}
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+</div>

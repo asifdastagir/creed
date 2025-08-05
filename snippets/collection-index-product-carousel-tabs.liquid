@@ -1,0 +1,11 @@
+{% comment %}theme-check-disable NestedSnippet, UndefinedObject{% endcomment %}
+{%- for product in collection.products limit: 6 -%}
+    {%- liquid
+        if product.id == current_product.id
+        continue
+        endif
+    -%}
+    <div class="col-3 swiper-slide">
+        {% render 'product-card', product: product, collection: collection %}
+    </div>
+{%- endfor -%}

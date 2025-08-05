@@ -1,0 +1,12 @@
+{%- if request.page_type == 'collection' or request.page_type == 'search' -%}
+    {%- if results.filters.size > 0 and settings.enable_filtering -%}
+        <div class="dropdn {{ class }}">
+            <filter-popup  {% if settings.filter_layout == 'outer' %}data-outer{% endif %} data-clone="[data-filter]" data-selector="#dropdnFilterPopup">
+                <a href="#" class="dropdn-link filter-toggle">
+                <span class="icon-wrap m-0">{% render 'icon-filter3' %}</span>
+                <span class="dropdn-link-sm-text">{{ 'products.facets.filter_button' | t }}</span>
+                </a>
+            </filter-popup>
+        </div>
+    {%- endif -%}
+{%- endif -%}

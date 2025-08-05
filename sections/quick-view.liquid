@@ -1,0 +1,204 @@
+{%- liquid
+  assign layout = 'quick-view'
+  assign section_id = 'quick-view'
+  assign product_form_id = 'product-form-' | append: section_id | append: '-' | append: product.id
+  assign current_variant = product.selected_or_first_available_variant | default: product.variants.first
+  assign thumbs = product.metafields.custom.thumbs | default: settings.qv_thumbs, allow_false: true
+
+  assign hide_variants = product.metafields.custom.hide_variants
+  if hide_variants.value != true
+    assign hide_variants = settings.hide_variants
+  endif
+
+  assign variant_images = product.images | where: 'attached_to_variant?', true | map: 'src'
+  if hide_variants and variant_images.size == product.media.size
+  endif
+
+  assign media_count = product.media.size
+  if hide_variants and media_count > 1 and variant_images.size > 0
+    assign media_count = media_count | minus: variant_images.size | plus: 0
+  endif
+
+  assign initialSlide = 0
+  if product.selected_variant.featured_media
+    assign selected_variant_image_id = product.selected_variant.featured_media.id
+
+    for media in product.media
+      if selected_variant_image_id == media.id
+        assign initialSlide = forloop.index0
+      endif
+    endfor
+  endif
+
+  assign model_variants_schema = product.metafields.custom.model_variants_schema
+  if product.metafields.custom.model_with_variants.value == true and model_variants_schema.value != blank
+    assign model_variant_name_array = model_variants_schema | split: product.selected_variant.id
+    if model_variant_name_array.size > 1
+      assign model_variant_name = model_variants_schema | split: product.selected_variant.id | last | split: "]" | first | strip | replace: ',', '' | replace: '"', ''
+      assign media_model_viewer_first = product.media | where: 'media_type', 'model' | first
+      assign media_model_viewer_first_id = media_model_viewer_first.id
+
+      for media in product.media
+        if media_model_viewer_first_id == media.id
+          assign initialSlide = forloop.index0
+        endif
+      endfor
+    endif
+  endif
+
+  assign options_with_values = product.options_with_values
+
+  assign color_options_name = settings.product_card_color_options_name | split: ","
+
+  assign has_color_option = false
+
+  for option in options_with_values
+    assign has_color_option = false
+
+    if color_options_name contains option.name
+      assign has_color_option = true
+      assign color_option_order = forloop.index0
+
+      break;
+    endif
+  endfor
+
+  if has_color_option == true
+    assign colorGroups = ''
+
+    if product.images.size > 0
+      for image in product.images
+        unless image.alt contains 'color-'
+          continue
+        endunless
+
+        assign imageAlt = image.alt | escape | replace: 'color-', '' | handle
+        assign colorGroups = colorGroups | append: imageAlt
+
+        unless forloop.last
+          assign colorGroups = colorGroups | append: ','
+        endunless
+      endfor
+
+      assign colorGroupsArray = colorGroups | split: ',' | uniq
+      assign colorGroups = colorGroupsArray | join: ','
+    endif
+
+    assign optionHandle = current_variant.options[color_option_order] | handle
+
+    for color in colorGroupsArray
+      if color == optionHandle
+        assign colorSelected = optionHandle
+
+        break
+      endif
+    endfor
+  endif
+
+  assign aspect_ratio = settings.product_image_aspect_ratio
+
+  if aspect_ratio == 'custom'
+    assign aspect_ratio = settings.product_height_ratio | times: 100 | divided_by: settings.product_width_ratio
+  endif
+
+  assign product_url_collection = product.url
+
+  if settings.product_card_url_within_collection
+    assign product_url_collection = product.url | within: collection
+  endif
+-%}
+
+<div class="prd-block" data-section-render>
+  <div class="prd-block-scroll js-dropdn-content-scroll">
+    {%- if settings.qv_show_media and media_count > 0 -%}
+      <product-gallery {% if colorSelected != blank %}data-filter="color-{{ colorSelected }}"{% endif %} {% if colorGroups != blank %}data-color-groups="{{ colorGroups }}"{% endif %} data-quickview="true" class="d-flex prd-block-gallery-container" data-scroll-sync="true" data-scroll-sync="{% if hide_variants %}false{% else %}true{% endif %}" data-initial-slide="{{ initialSlide }}"  data-aspect="{{ aspect_ratio }}" style="--aspect-ratio: {{ aspect_ratio }}">
+        {%- liquid
+          if thumbs == true and media_count != 1
+            assign sizes ='(min-width: 992px) 72px, (min-width: 768px) 128px, (min-width: 576px) 92px, calc((100vw - 30px - 45px)/4)'
+            render 'product-media-thumbs' sizes: sizes, product: product, product_media_main_fill_color: settings.product_media_main_fill_color, media_count: media_count, variant_images: variant_images, hide_variants: hide_variants, suffix: 'QW', thumbs_position: 'left'
+          endif
+          if media_count > 1
+            assign sizes ='(min-width: 1200px) 457px, (min-width: 992px) 348px, (min-width: 768px) 690px, (min-width: 576px) 510px, calc(100vw - 30px)'
+          else
+            assign sizes ='(min-width: 1200px) 559px, (min-width: 992px) 450px, (min-width: 768px) 690px, (min-width: 576px) 510px, calc(100vw - 30px)'
+          endif
+        -%}
+        {% render 'product-media-main',
+          product: product,
+          sizes: sizes,
+          suffix: 'QW',
+          loop: false,
+          cover: settings.product_media_main_cover,
+          product_media_main_fill_color: settings.product_media_main_fill_color,
+          media_count: media_count,
+          model_variant_name: model_variant_name
+        %}
+      </product-gallery>
+    {%- endif -%}
+    <div class="prd-block-info prd-block-info--style1 col-12 col-lg-6">
+      <div class="prd-block-info-scroll js-dropdn-content-scroll">
+        <h1 class="prd-block-name mt-product-global" data-url>
+          <a href="{{ product_url_collection }}">{{ product.title | escape | truncate: 65, '..' }}</a>
+        </h1>
+        {%- if product.metafields.custom.short_description != blank -%}
+          <div class="prd-block-desc mt-product-global">
+            {{ product.metafields.custom.short_description }}
+          </div>
+        {%- endif -%}
+        <div class="prd-block-price mt-product-global">
+          {%- render 'price', render: true, product: product, use_variant: true, show_badges: true, product_form_id: product_form_id, layout: layout -%}
+        </div>
+        <div class="prd-block-options mt-product-global">
+          <div class="prd-option">
+            {%- liquid
+              assign swatches_width = settings.product_swatches_page_color_min_width
+
+              if settings.product_swatches_page_inherits_global
+                assign swatches_width = settings.product_swatches_color_min_width
+              endif
+            -%}
+            {% render 'variant_picker',
+              product: product,
+              product_form_id: product_form_id,
+              section: section,
+              section_id: section_id
+              layout: layout,
+              picker_type: settings.product_card_picker_type,
+              use_pics: settings.product_card_use_pics,
+              use_variants_media: settings.product_card_use_variants_media,
+              color_options_name: settings.product_card_color_options_name,
+              swatches_width: swatches_width
+            %}
+          </div>
+        </div>
+        <div data-render="button-add-to-cart-{{ product_form_id }}">
+          {% render 'product-buy-buttons'
+            product: product,
+            product_form_id: product_form_id,
+            section_id: section_id,
+            layout: layout,
+            show_dynamic_checkout: false,
+            checkout_agreement: false,
+            class: 'mt-product-global',
+            show_cart_note: settings.show_cart_note
+          %}
+        </div>
+        <div class="prd-block-row mt-product-global">
+          {%- if settings.free_shipping_enable -%}
+            <div class="js-contents-free-shipping">{% render 'free-shipping-status' layout: 'product' %}</div>
+          {%- endif -%}
+        </div>
+        {%- unless settings.catalog_mode -%}
+          <div class="prd-block-row mt-product-global">
+            {%- if settings.wishlist -%}
+              <div class="prd-block-links" data-render="wishlist-{{ product_form_id }}">{% render 'wishlist-component-toggle-button', product: product, current_variant: current_variant %}</div>
+            {%- endif -%}
+          </div>
+        {%- endunless -%}
+      </div>
+    </div>
+</div>
+</div>
+<button type="button" data-fancybox-close class="fancybox-button fancybox-close-small" title="{{ 'theme.general.close_cap' | t }}"><svg xmlns="http://www.w3.org/2000/svg" version="1" viewBox="0 0 24 24"><path d="M13 12l5-5-1-1-5 5-5-5-1 1 5 5-5 5 1 1 5-5 5 5 1-1z"></path></svg></button>
+
+{% render 'product-3d-model-assets', product: product %}

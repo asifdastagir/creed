@@ -1,0 +1,1094 @@
+{% comment %}theme-check-disable UnusedAssign, UndefinedObject{% endcomment %}
+{%- liquid
+  for block in section.blocks
+    assign categories = categories | append: block.settings.category
+    unless forloop.index == section.blocks.size
+      assign categories = categories | append: ','
+    endunless
+  endfor
+  assign categories = categories | split: ',' | uniq
+
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+    assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+-%}
+
+<style>
+  :root {
+    --faq-button-color: var(--button-color-invert);
+    --faq-button-bg: var(--button-bg-invert);
+    --faq-button-hover-bg: var(--button-hover-bg-invert);
+    --faq-button-hover-color: var(--button-color-invert);
+  }
+</style>
+
+{{ 'faq' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+
+<faq-section>
+  {%- if section.settings.layout == "1" -%}
+    <div
+      {% if section.settings.search_bg -%}
+      class="holder mt-global py-6 py-md-7 text-secondary theme-bg colorize-invert"
+      {% render 'section-style', section: section %}
+      {% else -%}
+      class="holder mt-global {% if section.settings.background %}py-global bg-alt{% endif %}"
+      {% render 'section-style', section: section %}
+      {%- endif -%}>
+      <div class="container show-on-scroll">
+        <div class="title-wrap text-center">
+          <h1
+            {% if section.settings.search_bg %}
+            style="color: var(--faq-text-color)"
+            {% endif %}>{{ section.settings.heading }}</h1>
+          {%- if section.settings.search -%}
+            <div class="mt-3">
+              {% render 'faq-search-form' section: section %}
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+
+    {%- liquid
+      if section.settings.section_width == 'custom'
+        assign style = style | append: '--container-max-width:' | append: store_width | append: 'px;'
+      endif
+
+      if style != blank
+        assign style = 'style="' | append: style | append: '"'
+      endif
+    -%}
+    <div class="holder {% if section.settings.search %}mt-6 mt-md-8{% else %}mt-2 mt-md-3 mt-lg-6{% endif %}" {{ style }}>
+      <div class="container">
+        <div class="row">
+          {%- if section.settings.categories and categories.size > 0 -%}
+            <div class="col-12 pe-xl-6 col-md-3">
+              <ul class="faq-list list-unstyled faq-list heading-font text-uppercase js-tab-faq">
+                {% render 'faq-tabs' categories: categories %}
+              </ul>
+            </div>
+          {%- endif -%}
+
+          {%- if section.settings.collapsible_tabs -%}
+            <div class="col-12 col-md-9 mt-3 mt-md-0 d-none mx-auto search-result-accordion">
+              <div class="block-accordion">
+                <form></form>
+              </div>
+            </div>
+          {%- else -%}
+            <div class="col-12 col-md-9 mt-3 mt-md-0 d-none search-result"></div>
+          {%- endif -%}
+
+          <div class="col-12 col-md-9 mt-3 mt-md-0 tabs-content {% unless section.settings.categories and categories.size > 0 %}mx-auto{% endunless %}">
+            {% render 'faq-item' section: section
+              , categories: categories
+              , block: block %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {%- else -%}
+    <div class="holder mt-global {% if section.settings.background %}py-global bg-alt{% endif %}" {% render 'section-style', section: section %}>
+      <div class="container show-on-scroll">
+        <div class="row">
+          {%- if section.settings.image != blank -%}
+            <div class="col-12 col-md-4 col-xl-5 pe-xl-8 order-1 order-md-0 mt-5 mt-md-0">
+              {% render 'image-container'
+                , image: section.settings.image
+                , padding_no_bg: 184
+                , hover_scale: false
+                , sizes: '(min-width: 1200px) 395px, (min-width: 992px) 305px, (min-width: 576px) 510px, calc(100vw - 30px)'
+                , bg: false
+                , class_img_only: 'w-100'
+                , lazyload: false
+              %}
+            </div>
+          {%- endif -%}
+          <div class="col-12 {% if section.settings.image == blank %}mt-3 mt-md-0 mx-auto{% else %}col-md-8 col-xl-7{% endif %}">
+            <div class="title-wrap text-center text-md-start  {% if section.settings.image == blank %}align-items-center{% endif %}">
+              <h1>{{ section.settings.heading }}</h1>
+              {%- if section.settings.search -%}
+                <div class="mt-2 mb-2 mb-md-3">
+                  {% render 'faq-search-form' section: section
+                    , suffix: '-sm' %}
+                </div>
+              {%- endif -%}
+            </div>
+            {%- if section.settings.categories and categories.size > 0 -%}
+              <div class="my-3 mt-md-4 mb-md-5">
+                <ul class="faq-list faq-list--inline list-unstyled heading-font text-uppercase js-tab-faq {% if section.settings.image == blank %}justify-content-center{% endif %}">
+                  {% render 'faq-tabs' categories: categories %}
+                </ul>
+              </div>
+            {%- endif -%}
+            {%- if section.settings.collapsible_tabs -%}
+              <div class="col-12 col-md-9 mt-3 mt-md-0 d-none search-result-accordion">
+                <div class="block-accordion">
+                  <form></form>
+                </div>
+              </div>
+            {%- else -%}
+              <div class="mt-3 mt-md-5 d-none search-result"></div>
+            {%- endif -%}
+            <div class="mt-3 mt-md-5 tabs-content">
+              {% render 'faq-item' section: section
+                , categories: categories
+                , block: block %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+</faq-section>
+
+{% schema %}
+  {
+    "name": "Faq",
+    "tag": "section",
+    "settings": [
+      {
+        "type": "header",
+        "content": "SECTION WIDTH"
+      },
+      {
+        "type": "select",
+        "id": "section_width",
+        "label": "Select width source",
+        "options": [
+          {
+            "value": "global",
+            "label": "Use store width"
+          },
+          {
+            "value": "custom",
+            "label": "Custom width"
+          }
+        ],
+        "default": "global",
+        "info": "Store width you can set in Theme Settings / General"
+      },
+      {
+        "type": "range",
+        "id": "container_max_width",
+        "min": 1178,
+        "max": 1978,
+        "step": 8,
+        "unit": "px",
+        "label": "Custom width",
+        "default": 1178,
+        "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
+      },
+      {
+        "type": "header",
+        "content": "SECTION MARGIN"
+      },
+      {
+        "type": "range",
+        "id": "spacing_sections",
+        "min": 0,
+        "max": 200,
+        "step": 2,
+        "unit": "px",
+        "label": "Vertical space above the section on Desktop",
+        "default": 100
+      },
+      {
+        "type": "checkbox",
+        "id": "use_global_desktop_space",
+        "label": "Use global space on desktop",
+        "default": true,
+        "info": "from Theme Settings / General / Layout"
+      },
+      {
+        "type": "range",
+        "id": "spacing_sections_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Vertical space above the section on Mobile",
+        "default": 70
+      },
+      {
+        "type": "checkbox",
+        "id": "use_global_mobile_space",
+        "label": "Use global space on mobile",
+        "default": true,
+        "info": "from Theme Settings / General / Layout"
+      },
+      {
+        "type": "header",
+        "content": "SECTION PADDING",
+        "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+      },
+      {
+        "type": "range",
+        "id": "spacing_padding_sections",
+        "min": 0,
+        "max": 200,
+        "step": 2,
+        "unit": "px",
+        "label": "Vertical inner padding on Desktop",
+        "default": 100
+      },
+      {
+        "type": "checkbox",
+        "id": "use_global_desktop_space_padding",
+        "label": "Use global inner padding on desktop",
+        "default": true,
+        "info": "from Theme Settings / General / Layout"
+      },
+      {
+        "type": "range",
+        "id": "spacing_padding_sections_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Vertical inner padding on Mobile",
+        "default": 70
+      },
+      {
+        "type": "checkbox",
+        "id": "use_global_mobile_space_padding",
+        "label": "Use global inner padding on Mobile",
+        "default": true,
+        "info": "from Theme Settings / General / Layout"
+      },
+      {
+        "type": "header",
+        "content": "SECTION BACKGROUND"
+      },
+      {
+        "type": "checkbox",
+        "id": "background",
+        "label": "Enable background",
+        "default": false,
+        "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+      },
+      {
+        "type": "select",
+        "id": "background_preset",
+        "label": "Background image - preset",
+        "options": [
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "product-cosmetics-bg.png",
+            "label": "Leaves 1"
+          },
+          {
+            "value": "bottom-cosmetics-bg.png",
+            "label": "Leaves 2"
+          },
+          {
+            "value": "bg-makeup1.png,bg-makeup1-m.png",
+            "label": "Pink and Waves 1"
+          },
+          {
+            "value": "bg-makeup2.png,bg-makeup2-m.png",
+            "label": "Pink and Waves 2"
+          },
+          {
+            "value": "bg-makeup4.png,bg-makeup4-m.png",
+            "label": "Pink and Waves 3"
+          },
+          {
+            "value": "bg-makeup3.png,bg-makeup3-m.png",
+            "label": "Purple Splash"
+          },
+          {
+            "value": "bg-sweets1.png",
+            "label": "Blue Sun Rays"
+          }
+        ],
+        "default": "none",
+        "info": "default from theme"
+      },
+     {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image - custom on Desktop"
+      },
+      {
+        "type": "select",
+        "id": "background_behavior",
+        "label": "Background image behavior",
+        "options": [
+          {
+            "value": "bg-cover",
+            "label": "Cover"
+          },
+          {
+            "value": "bg-contain",
+            "label": "Contain"
+          },
+          {
+            "value": "bg-repeat",
+            "label": "Repeat"
+          }
+        ],
+        "default": "bg-cover"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image_mobile",
+        "label": "Background image - custom on Mobile",
+        "info": "only if Background image - custom on Desktop selected"
+      },
+      {
+        "type": "select",
+        "id": "background_image_placeholder_type",
+        "label": "Placeholder background color",
+        "options": [
+          {
+            "value": "color_global_primary_bg",
+            "label": "Primary background color"
+          },
+          {
+            "value": "color_global_secondary_bg",
+            "label": "Secondary background color"
+          },
+          {
+            "value": "custom",
+            "label": "Custom color"
+          }
+        ],
+        "default": "color_global_secondary_bg"
+      },
+      {
+        "type": "color",
+        "id": "background_image_placeholder",
+        "label": "Custom - Placeholder background color"
+      },
+      {
+        "type": "header",
+        "content": "Layout"
+      },
+      {
+        "type": "select",
+        "id": "layout",
+        "label": "Select design variant",
+        "options": [
+          {
+            "value": "1",
+            "label": "Classic"
+          },
+          {
+            "value": "2",
+            "label": "Modern (can have left side image)"
+          }
+        ],
+        "default": "1"
+      },
+      {
+        "type": "checkbox",
+        "id": "search",
+        "label": "Show search",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "search_bg",
+        "label": "Search Background",
+        "default": false,
+        "info": "doesn't work if \"Left side image\" is set"
+      },
+      {
+        "type": "checkbox",
+        "id": "categories",
+        "label": "Filter by categories",
+        "default": true
+      },
+      {
+        "type": "checkbox",
+        "id": "collapsible_tabs",
+        "label": "Collapsible answers",
+        "default": false
+      },
+      {
+        "type": "select",
+        "id": "collapsible_tabs_style",
+        "label": "Collapsible answers style",
+        "options": [
+          {
+            "value": "default",
+            "label": "Default"
+          },
+          {
+            "value": "bg",
+            "label": "Background"
+          }
+        ],
+        "default": "default"
+      },
+      {
+        "type": "header",
+        "content": "Content"
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "default": "Have a Question? Look here",
+        "label": "Heading"
+      },
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Left side image",
+        "info": "recommended size for retina displays is 800x1500px"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "qa",
+        "name": "Question - Answer",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Question",
+            "default": "Why is the grass green?"
+          },
+          {
+            "type": "richtext",
+            "id": "answer",
+            "label": "Answer",
+            "default": "<p>So grass is green because it contains chlorophyll. Chlorophyll is needed to provide the process of photosynthesis and convert carbon dioxide into oxygen, while obtaining energy for plant life. And it is with the process of photosynthesis that the green color of chlorophyll is associated.</p>"
+          },
+          {
+            "type": "text",
+            "id": "category",
+            "label": "Category",
+            "default": "Nature"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Faq / constructor",
+        "blocks": [
+          {
+            "type": "qa"
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Why does the sun shine?",
+              "answer": "<p>Most scientists believe that inside the Sun one chemical element - hydrogen turns into another - helium. Hydrogen particles are combined into heavier particles, with this combination, energy is released in the form of light and heat.</p>",
+              "category": "Nature"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Why is snow white?",
+              "answer": "<p>The white color of snow is caused precisely by its structure. In ice, all crystals are strictly aligned and oriented. Light, therefore, passes through ice with only a slight change in direction. Snow, on the other hand, has ice crystals arranged randomly. As a result, light falling on one of them, in a refracted form, falls on the other, which again changes its direction. Moreover, snowflakes are even capable of decomposing white light into color spectral components - but as a result, all this gives exactly white color.</p>",
+              "category": "Nature"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is a terminator?",
+              "answer": "<p>Terminator (from lat. terminare - to stop) - a line of light separation that separates the illuminated (light) part of the body (for example, the cosmic body) from the unlit (dark) part. The terminator of a spherical body is always observed as a semi-ellipse, taking the form of a straight line at the end of the first and the beginning of the last quarters.</p>",
+              "category": "Astronomy"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Who Invented the Zodiac Signs?",
+              "answer": "<p>The Sumerians were the first to divide the sky into twelve \"windows\" and group the stars about five thousand years ago. It was they who endowed each constellation with an expressive symbol and name and compared it with the events of the surrounding nature. Later, the ancient Greeks borrowed the idea of the “zodiac” (literally, “a circle of animals”) from their descendants from Mesopotamia and attributed a charismatic legend to each sign.</p>",
+              "category": "Astronomy"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Do you need to be successful?",
+              "answer": "<p>Success embodies the ability to live and develop, grow internally, spiritually, give peace and harmony to oneself and fill the space around. Purposefulness, hard work, self-respect, self-confidence, the ability to self-development, intuition, self-criticism, the ability to be grateful and generous - these qualities complement each other, become a solid foundation for success.</p>",
+              "category": "People"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is Shopify?",
+              "answer": "<p>Shopify Inc. is a Canadian multinational e-commerce company headquartered in Ottawa, Ontario. Shopify is the name of its proprietary e-commerce platform for online stores and retail point-of-sale systems.</p>",
+              "category": "Business"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "How much time should be devoted to work?",
+              "answer": "<p>The eight-hour day was introduced during the industrial revolution to reduce the number of working hours for people working in factories. At the time, this innovation was a real breakthrough. But by now, this approach to organizing working time is hopelessly outdated.</p>",
+              "category": "People"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is a business plan?",
+              "answer": "<p>A business plan is a detailed description of your project with calculations and perspectives for the next few years. It is needed by potential investors or the bank to which you will go for a loan; partners, intermediaries, your team and, in the end, you as the creator of the project. A business plan is usually written three to five years in advance.</p>",
+              "category": "Business"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Faq / preset 1 Classic tabbed",
+        "blocks": [
+          {
+            "type": "qa"
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Why does the sun shine?",
+              "answer": "<p>Most scientists believe that inside the Sun one chemical element - hydrogen turns into another - helium. Hydrogen particles are combined into heavier particles, with this combination, energy is released in the form of light and heat.</p>",
+              "category": "Nature"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Why is snow white?",
+              "answer": "<p>The white color of snow is caused precisely by its structure. In ice, all crystals are strictly aligned and oriented. Light, therefore, passes through ice with only a slight change in direction. Snow, on the other hand, has ice crystals arranged randomly. As a result, light falling on one of them, in a refracted form, falls on the other, which again changes its direction. Moreover, snowflakes are even capable of decomposing white light into color spectral components - but as a result, all this gives exactly white color.</p>",
+              "category": "Nature"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is a terminator?",
+              "answer": "<p>Terminator (from lat. terminare - to stop) - a line of light separation that separates the illuminated (light) part of the body (for example, the cosmic body) from the unlit (dark) part. The terminator of a spherical body is always observed as a semi-ellipse, taking the form of a straight line at the end of the first and the beginning of the last quarters.</p>",
+              "category": "Astronomy"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Who Invented the Zodiac Signs?",
+              "answer": "<p>The Sumerians were the first to divide the sky into twelve \"windows\" and group the stars about five thousand years ago. It was they who endowed each constellation with an expressive symbol and name and compared it with the events of the surrounding nature. Later, the ancient Greeks borrowed the idea of the “zodiac” (literally, “a circle of animals”) from their descendants from Mesopotamia and attributed a charismatic legend to each sign.</p>",
+              "category": "Astronomy"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Do you need to be successful?",
+              "answer": "<p>Success embodies the ability to live and develop, grow internally, spiritually, give peace and harmony to oneself and fill the space around. Purposefulness, hard work, self-respect, self-confidence, the ability to self-development, intuition, self-criticism, the ability to be grateful and generous - these qualities complement each other, become a solid foundation for success.</p>",
+              "category": "People"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is Shopify?",
+              "answer": "<p>Shopify Inc. is a Canadian multinational e-commerce company headquartered in Ottawa, Ontario. Shopify is the name of its proprietary e-commerce platform for online stores and retail point-of-sale systems.</p>",
+              "category": "Business"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "How much time should be devoted to work?",
+              "answer": "<p>The eight-hour day was introduced during the industrial revolution to reduce the number of working hours for people working in factories. At the time, this innovation was a real breakthrough. But by now, this approach to organizing working time is hopelessly outdated.</p>",
+              "category": "People"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is a business plan?",
+              "answer": "<p>A business plan is a detailed description of your project with calculations and perspectives for the next few years. It is needed by potential investors or the bank to which you will go for a loan; partners, intermediaries, your team and, in the end, you as the creator of the project. A business plan is usually written three to five years in advance.</p>",
+              "category": "Business"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Faq / preset 2 Full list",
+        "settings": {
+          "layout": "1",
+          "categories": false,
+          "search": false
+        },
+        "blocks": [
+          {
+            "type": "qa"
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Why does the sun shine?",
+              "answer": "<p>Most scientists believe that inside the Sun one chemical element - hydrogen turns into another - helium. Hydrogen particles are combined into heavier particles, with this combination, energy is released in the form of light and heat.</p>",
+              "category": "Nature"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Why is snow white?",
+              "answer": "<p>The white color of snow is caused precisely by its structure. In ice, all crystals are strictly aligned and oriented. Light, therefore, passes through ice with only a slight change in direction. Snow, on the other hand, has ice crystals arranged randomly. As a result, light falling on one of them, in a refracted form, falls on the other, which again changes its direction. Moreover, snowflakes are even capable of decomposing white light into color spectral components - but as a result, all this gives exactly white color.</p>",
+              "category": "Nature"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is a terminator?",
+              "answer": "<p>Terminator (from lat. terminare - to stop) - a line of light separation that separates the illuminated (light) part of the body (for example, the cosmic body) from the unlit (dark) part. The terminator of a spherical body is always observed as a semi-ellipse, taking the form of a straight line at the end of the first and the beginning of the last quarters.</p>",
+              "category": "Astronomy"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Who Invented the Zodiac Signs?",
+              "answer": "<p>The Sumerians were the first to divide the sky into twelve \"windows\" and group the stars about five thousand years ago. It was they who endowed each constellation with an expressive symbol and name and compared it with the events of the surrounding nature. Later, the ancient Greeks borrowed the idea of the “zodiac” (literally, “a circle of animals”) from their descendants from Mesopotamia and attributed a charismatic legend to each sign.</p>",
+              "category": "Astronomy"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Do you need to be successful?",
+              "answer": "<p>Success embodies the ability to live and develop, grow internally, spiritually, give peace and harmony to oneself and fill the space around. Purposefulness, hard work, self-respect, self-confidence, the ability to self-development, intuition, self-criticism, the ability to be grateful and generous - these qualities complement each other, become a solid foundation for success.</p>",
+              "category": "People"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is Shopify?",
+              "answer": "<p>Shopify Inc. is a Canadian multinational e-commerce company headquartered in Ottawa, Ontario. Shopify is the name of its proprietary e-commerce platform for online stores and retail point-of-sale systems.</p>",
+              "category": "Business"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "How much time should be devoted to work?",
+              "answer": "<p>The eight-hour day was introduced during the industrial revolution to reduce the number of working hours for people working in factories. At the time, this innovation was a real breakthrough. But by now, this approach to organizing working time is hopelessly outdated.</p>",
+              "category": "People"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is a business plan?",
+              "answer": "<p>A business plan is a detailed description of your project with calculations and perspectives for the next few years. It is needed by potential investors or the bank to which you will go for a loan; partners, intermediaries, your team and, in the end, you as the creator of the project. A business plan is usually written three to five years in advance.</p>",
+              "category": "Business"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Faq / preset 2 Full list - Collapsible",
+        "settings": {
+          "layout": "1",
+          "categories": false,
+          "search": false,
+          "collapsible_tabs": true
+        },
+        "blocks": [
+          {
+            "type": "qa"
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Why does the sun shine?",
+              "answer": "<p>Most scientists believe that inside the Sun one chemical element - hydrogen turns into another - helium. Hydrogen particles are combined into heavier particles, with this combination, energy is released in the form of light and heat.</p>",
+              "category": "Nature"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Why is snow white?",
+              "answer": "<p>The white color of snow is caused precisely by its structure. In ice, all crystals are strictly aligned and oriented. Light, therefore, passes through ice with only a slight change in direction. Snow, on the other hand, has ice crystals arranged randomly. As a result, light falling on one of them, in a refracted form, falls on the other, which again changes its direction. Moreover, snowflakes are even capable of decomposing white light into color spectral components - but as a result, all this gives exactly white color.</p>",
+              "category": "Nature"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is a terminator?",
+              "answer": "<p>Terminator (from lat. terminare - to stop) - a line of light separation that separates the illuminated (light) part of the body (for example, the cosmic body) from the unlit (dark) part. The terminator of a spherical body is always observed as a semi-ellipse, taking the form of a straight line at the end of the first and the beginning of the last quarters.</p>",
+              "category": "Astronomy"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Who Invented the Zodiac Signs?",
+              "answer": "<p>The Sumerians were the first to divide the sky into twelve \"windows\" and group the stars about five thousand years ago. It was they who endowed each constellation with an expressive symbol and name and compared it with the events of the surrounding nature. Later, the ancient Greeks borrowed the idea of the “zodiac” (literally, “a circle of animals”) from their descendants from Mesopotamia and attributed a charismatic legend to each sign.</p>",
+              "category": "Astronomy"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Do you need to be successful?",
+              "answer": "<p>Success embodies the ability to live and develop, grow internally, spiritually, give peace and harmony to oneself and fill the space around. Purposefulness, hard work, self-respect, self-confidence, the ability to self-development, intuition, self-criticism, the ability to be grateful and generous - these qualities complement each other, become a solid foundation for success.</p>",
+              "category": "People"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is Shopify?",
+              "answer": "<p>Shopify Inc. is a Canadian multinational e-commerce company headquartered in Ottawa, Ontario. Shopify is the name of its proprietary e-commerce platform for online stores and retail point-of-sale systems.</p>",
+              "category": "Business"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "How much time should be devoted to work?",
+              "answer": "<p>The eight-hour day was introduced during the industrial revolution to reduce the number of working hours for people working in factories. At the time, this innovation was a real breakthrough. But by now, this approach to organizing working time is hopelessly outdated.</p>",
+              "category": "People"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is a business plan?",
+              "answer": "<p>A business plan is a detailed description of your project with calculations and perspectives for the next few years. It is needed by potential investors or the bank to which you will go for a loan; partners, intermediaries, your team and, in the end, you as the creator of the project. A business plan is usually written three to five years in advance.</p>",
+              "category": "Business"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Faq / preset 6 Tabbed list - Collapsible Style 2",
+        "settings": {
+          "layout": "2",
+          "categories": true,
+          "search": false,
+          "collapsible_tabs": true,
+          "collapsible_tabs_style": "bg"
+        },
+        "blocks": [
+          {
+            "type": "qa"
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Why does the sun shine?",
+              "answer": "<p>Most scientists believe that inside the Sun one chemical element - hydrogen turns into another - helium. Hydrogen particles are combined into heavier particles, with this combination, energy is released in the form of light and heat.</p>",
+              "category": "Nature"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Why is snow white?",
+              "answer": "<p>The white color of snow is caused precisely by its structure. In ice, all crystals are strictly aligned and oriented. Light, therefore, passes through ice with only a slight change in direction. Snow, on the other hand, has ice crystals arranged randomly. As a result, light falling on one of them, in a refracted form, falls on the other, which again changes its direction. Moreover, snowflakes are even capable of decomposing white light into color spectral components - but as a result, all this gives exactly white color.</p>",
+              "category": "Nature"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is a terminator?",
+              "answer": "<p>Terminator (from lat. terminare - to stop) - a line of light separation that separates the illuminated (light) part of the body (for example, the cosmic body) from the unlit (dark) part. The terminator of a spherical body is always observed as a semi-ellipse, taking the form of a straight line at the end of the first and the beginning of the last quarters.</p>",
+              "category": "Astronomy"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Who Invented the Zodiac Signs?",
+              "answer": "<p>The Sumerians were the first to divide the sky into twelve \"windows\" and group the stars about five thousand years ago. It was they who endowed each constellation with an expressive symbol and name and compared it with the events of the surrounding nature. Later, the ancient Greeks borrowed the idea of the “zodiac” (literally, “a circle of animals”) from their descendants from Mesopotamia and attributed a charismatic legend to each sign.</p>",
+              "category": "Astronomy"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Do you need to be successful?",
+              "answer": "<p>Success embodies the ability to live and develop, grow internally, spiritually, give peace and harmony to oneself and fill the space around. Purposefulness, hard work, self-respect, self-confidence, the ability to self-development, intuition, self-criticism, the ability to be grateful and generous - these qualities complement each other, become a solid foundation for success.</p>",
+              "category": "People"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is Shopify?",
+              "answer": "<p>Shopify Inc. is a Canadian multinational e-commerce company headquartered in Ottawa, Ontario. Shopify is the name of its proprietary e-commerce platform for online stores and retail point-of-sale systems.</p>",
+              "category": "Business"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "How much time should be devoted to work?",
+              "answer": "<p>The eight-hour day was introduced during the industrial revolution to reduce the number of working hours for people working in factories. At the time, this innovation was a real breakthrough. But by now, this approach to organizing working time is hopelessly outdated.</p>",
+              "category": "People"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is a business plan?",
+              "answer": "<p>A business plan is a detailed description of your project with calculations and perspectives for the next few years. It is needed by potential investors or the bank to which you will go for a loan; partners, intermediaries, your team and, in the end, you as the creator of the project. A business plan is usually written three to five years in advance.</p>",
+              "category": "Business"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Faq / preset 3 Alternate",
+        "settings": {
+          "layout": "1",
+          "search_bg": true,
+          "spacing_sections": 0,
+          "use_global_desktop_space": false,
+          "spacing_sections_mobile": 0,
+          "use_global_mobile_space": false
+        },
+        "blocks": [
+          {
+            "type": "qa"
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Why does the sun shine?",
+              "answer": "<p>Most scientists believe that inside the Sun one chemical element - hydrogen turns into another - helium. Hydrogen particles are combined into heavier particles, with this combination, energy is released in the form of light and heat.</p>",
+              "category": "Nature"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Why is snow white?",
+              "answer": "<p>The white color of snow is caused precisely by its structure. In ice, all crystals are strictly aligned and oriented. Light, therefore, passes through ice with only a slight change in direction. Snow, on the other hand, has ice crystals arranged randomly. As a result, light falling on one of them, in a refracted form, falls on the other, which again changes its direction. Moreover, snowflakes are even capable of decomposing white light into color spectral components - but as a result, all this gives exactly white color.</p>",
+              "category": "Nature"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is a terminator?",
+              "answer": "<p>Terminator (from lat. terminare - to stop) - a line of light separation that separates the illuminated (light) part of the body (for example, the cosmic body) from the unlit (dark) part. The terminator of a spherical body is always observed as a semi-ellipse, taking the form of a straight line at the end of the first and the beginning of the last quarters.</p>",
+              "category": "Astronomy"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Who Invented the Zodiac Signs?",
+              "answer": "<p>The Sumerians were the first to divide the sky into twelve \"windows\" and group the stars about five thousand years ago. It was they who endowed each constellation with an expressive symbol and name and compared it with the events of the surrounding nature. Later, the ancient Greeks borrowed the idea of the “zodiac” (literally, “a circle of animals”) from their descendants from Mesopotamia and attributed a charismatic legend to each sign.</p>",
+              "category": "Astronomy"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Do you need to be successful?",
+              "answer": "<p>Success embodies the ability to live and develop, grow internally, spiritually, give peace and harmony to oneself and fill the space around. Purposefulness, hard work, self-respect, self-confidence, the ability to self-development, intuition, self-criticism, the ability to be grateful and generous - these qualities complement each other, become a solid foundation for success.</p>",
+              "category": "People"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is Shopify?",
+              "answer": "<p>Shopify Inc. is a Canadian multinational e-commerce company headquartered in Ottawa, Ontario. Shopify is the name of its proprietary e-commerce platform for online stores and retail point-of-sale systems.</p>",
+              "category": "Business"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "How much time should be devoted to work?",
+              "answer": "<p>The eight-hour day was introduced during the industrial revolution to reduce the number of working hours for people working in factories. At the time, this innovation was a real breakthrough. But by now, this approach to organizing working time is hopelessly outdated.</p>",
+              "category": "People"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is a business plan?",
+              "answer": "<p>A business plan is a detailed description of your project with calculations and perspectives for the next few years. It is needed by potential investors or the bank to which you will go for a loan; partners, intermediaries, your team and, in the end, you as the creator of the project. A business plan is usually written three to five years in advance.</p>",
+              "category": "Business"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Faq / preset 4 Modern tabbed",
+        "settings": {
+          "layout": "2"
+        },
+        "blocks": [
+          {
+            "type": "qa"
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Why does the sun shine?",
+              "answer": "<p>Most scientists believe that inside the Sun one chemical element - hydrogen turns into another - helium. Hydrogen particles are combined into heavier particles, with this combination, energy is released in the form of light and heat.</p>",
+              "category": "Nature"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Why is snow white?",
+              "answer": "<p>The white color of snow is caused precisely by its structure. In ice, all crystals are strictly aligned and oriented. Light, therefore, passes through ice with only a slight change in direction. Snow, on the other hand, has ice crystals arranged randomly. As a result, light falling on one of them, in a refracted form, falls on the other, which again changes its direction. Moreover, snowflakes are even capable of decomposing white light into color spectral components - but as a result, all this gives exactly white color.</p>",
+              "category": "Nature"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is a terminator?",
+              "answer": "<p>Terminator (from lat. terminare - to stop) - a line of light separation that separates the illuminated (light) part of the body (for example, the cosmic body) from the unlit (dark) part. The terminator of a spherical body is always observed as a semi-ellipse, taking the form of a straight line at the end of the first and the beginning of the last quarters.</p>",
+              "category": "Astronomy"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Who Invented the Zodiac Signs?",
+              "answer": "<p>The Sumerians were the first to divide the sky into twelve \"windows\" and group the stars about five thousand years ago. It was they who endowed each constellation with an expressive symbol and name and compared it with the events of the surrounding nature. Later, the ancient Greeks borrowed the idea of the “zodiac” (literally, “a circle of animals”) from their descendants from Mesopotamia and attributed a charismatic legend to each sign.</p>",
+              "category": "Astronomy"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Do you need to be successful?",
+              "answer": "<p>Success embodies the ability to live and develop, grow internally, spiritually, give peace and harmony to oneself and fill the space around. Purposefulness, hard work, self-respect, self-confidence, the ability to self-development, intuition, self-criticism, the ability to be grateful and generous - these qualities complement each other, become a solid foundation for success.</p>",
+              "category": "People"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is Shopify?",
+              "answer": "<p>Shopify Inc. is a Canadian multinational e-commerce company headquartered in Ottawa, Ontario. Shopify is the name of its proprietary e-commerce platform for online stores and retail point-of-sale systems.</p>",
+              "category": "Business"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "How much time should be devoted to work?",
+              "answer": "<p>The eight-hour day was introduced during the industrial revolution to reduce the number of working hours for people working in factories. At the time, this innovation was a real breakthrough. But by now, this approach to organizing working time is hopelessly outdated.</p>",
+              "category": "People"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is a business plan?",
+              "answer": "<p>A business plan is a detailed description of your project with calculations and perspectives for the next few years. It is needed by potential investors or the bank to which you will go for a loan; partners, intermediaries, your team and, in the end, you as the creator of the project. A business plan is usually written three to five years in advance.</p>",
+              "category": "Business"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Faq / preset 5 Modern full list",
+        "settings": {
+          "layout": "2",
+          "categories": false,
+          "search": false
+        },
+        "blocks": [
+          {
+            "type": "qa"
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Why does the sun shine?",
+              "answer": "<p>Most scientists believe that inside the Sun one chemical element - hydrogen turns into another - helium. Hydrogen particles are combined into heavier particles, with this combination, energy is released in the form of light and heat.</p>",
+              "category": "Nature"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Why is snow white?",
+              "answer": "<p>The white color of snow is caused precisely by its structure. In ice, all crystals are strictly aligned and oriented. Light, therefore, passes through ice with only a slight change in direction. Snow, on the other hand, has ice crystals arranged randomly. As a result, light falling on one of them, in a refracted form, falls on the other, which again changes its direction. Moreover, snowflakes are even capable of decomposing white light into color spectral components - but as a result, all this gives exactly white color.</p>",
+              "category": "Nature"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is a terminator?",
+              "answer": "<p>Terminator (from lat. terminare - to stop) - a line of light separation that separates the illuminated (light) part of the body (for example, the cosmic body) from the unlit (dark) part. The terminator of a spherical body is always observed as a semi-ellipse, taking the form of a straight line at the end of the first and the beginning of the last quarters.</p>",
+              "category": "Astronomy"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Who Invented the Zodiac Signs?",
+              "answer": "<p>The Sumerians were the first to divide the sky into twelve \"windows\" and group the stars about five thousand years ago. It was they who endowed each constellation with an expressive symbol and name and compared it with the events of the surrounding nature. Later, the ancient Greeks borrowed the idea of the “zodiac” (literally, “a circle of animals”) from their descendants from Mesopotamia and attributed a charismatic legend to each sign.</p>",
+              "category": "Astronomy"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "Do you need to be successful?",
+              "answer": "<p>Success embodies the ability to live and develop, grow internally, spiritually, give peace and harmony to oneself and fill the space around. Purposefulness, hard work, self-respect, self-confidence, the ability to self-development, intuition, self-criticism, the ability to be grateful and generous - these qualities complement each other, become a solid foundation for success.</p>",
+              "category": "People"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is Shopify?",
+              "answer": "<p>Shopify Inc. is a Canadian multinational e-commerce company headquartered in Ottawa, Ontario. Shopify is the name of its proprietary e-commerce platform for online stores and retail point-of-sale systems.</p>",
+              "category": "Business"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "How much time should be devoted to work?",
+              "answer": "<p>The eight-hour day was introduced during the industrial revolution to reduce the number of working hours for people working in factories. At the time, this innovation was a real breakthrough. But by now, this approach to organizing working time is hopelessly outdated.</p>",
+              "category": "People"
+            }
+          },
+          {
+            "type": "qa",
+            "settings": {
+              "title": "What is a business plan?",
+              "answer": "<p>A business plan is a detailed description of your project with calculations and perspectives for the next few years. It is needed by potential investors or the bank to which you will go for a loan; partners, intermediaries, your team and, in the end, you as the creator of the project. A business plan is usually written three to five years in advance.</p>",
+              "category": "Business"
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

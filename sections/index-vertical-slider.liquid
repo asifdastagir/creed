@@ -1,0 +1,921 @@
+{% comment %}theme-check-disable DeprecateBgsizes, UnusedAssign{% endcomment %}
+{%- liquid
+  assign layout = 'index-vertical-slider'
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign color = section.settings.color_placeholder
+
+  if color != 'rgba(0,0,0,0)' and color != blank
+    assign ic_style = '--placeholder-bg: ' | append: color | append: ';'
+  endif
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+    assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+
+  assign decoration = false
+  case settings.section_decoration
+    when "1"
+      assign section_decoration_global = "none"
+    when "2"
+      assign section_decoration_global = "grunge1"
+    when "3"
+      assign section_decoration_global = "grunge2"
+    when "4"
+      assign section_decoration_global = "grunge3"
+    when "5"
+      assign section_decoration_global = "paper"
+    when "6"
+      assign section_decoration_global = "mountains"
+    when "7"
+      assign section_decoration_global = "ellipse1"
+    when "8"
+      assign section_decoration_global = "ellipse2"
+    when "9"
+      assign section_decoration_global = "wave1"
+    when "10"
+      assign section_decoration_global = "wave2"
+    when "11"
+      assign section_decoration_global = "wave3"
+    when "21"
+      assign section_decoration_global = "wave4"
+    when "22"
+      assign section_decoration_global = "wave5"
+    when "12"
+      assign section_decoration_global = "triangle1"
+    when "13"
+      assign section_decoration_global = "triangle2"
+    when "14"
+      assign section_decoration_global = "triangle_assymetrical1"
+    when "15"
+      assign section_decoration_global = "triangle_assymetrical1_flip"
+    when "16"
+      assign section_decoration_global = "triangle_assymetrical2"
+    when "17"
+      assign section_decoration_global = "triangle_assymetrical2_flip"
+    when "18"
+      assign section_decoration_global = "tilt"
+    when "19"
+      assign section_decoration_global = "tilt_flip"
+    when "20"
+      assign section_decoration_global = "glaze"
+  endcase
+  assign section_decoration_top = section.settings.section_decoration_top
+  assign section_decoration_bottom = section.settings.section_decoration_bottom
+
+  if section_decoration_bottom != 'none' and section_decoration_bottom != 'global' or section_decoration_global != 'none'
+    assign decoration = true
+  endif
+
+-%}
+
+{% render 'section-wrapper', placement: 'top' %}
+
+<div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+  <div class="{% render 'section-container-class', layout: layout %}">
+    <sticky-sections>
+      <div class="sticky-sections">
+        {%- for block in section.blocks -%}
+          {%- liquid
+
+            if block.settings.text_column_max
+              assign content_max_width = block.settings.text_column_max_width | append: 'px'
+            else
+              assign content_max_width = '100%'
+            endif
+
+            assign background_image = ''
+
+            if block.settings.background_image != blank
+              assign background_image = block.settings.background_image | image_url: width: block.settings.background_image.width
+              assign background_image = "data-bgset=" | append: background_image | append: '"'
+            endif
+
+            assign background = block.settings.background
+
+            assign background_color = 'var(--body-bg-secondary)'
+
+            if background == 'primary_bg'
+              assign background_color = 'var(--body-bg)'
+            elsif background == 'custom'
+              assign background_color = block.settings.background_custom
+            endif
+            assign background_style = 'background-color: ' | append: background_color | append: ';'
+
+            assign ic_style = ''
+            assign color = block.settings.color_placeholder
+            if color != 'rgba(0,0,0,0)' and color != blank
+              assign ic_style = '--placeholder-bg: ' | append: color | append: ';'
+            endif
+
+            assign colorize_invert_style = ''
+            if block.settings.invert_color
+              assign colorize_invert_style = 'colorize-invert'
+            endif
+
+            assign sizes = '(min-width: 1400px) 559px, (min-width: 1200px) 540px, (min-width: 992px) 466px, (min-width: 768px) 354px, (min-width: 576px) 263px, calc(100vw - 50px) / 2'
+
+          -%}
+          <div class="sticky-section lazyload {{ block.settings.background_behavior }}" style="{{ background_style }};--padding-y: {{ block.settings.spacing_padding }}px" {% if background_image != blank %}{{ background_image }} data-sizes="auto" {% endif %}>
+            <div class="row gx-0 gy-md-3 {% if block.settings.reverse %}flex-row-reverse{% endif %}">
+              {% if block.settings.enable_image %}
+                <div class="col-12 col-md-6 sticky-section-image align-content-center">
+                  {% render 'image-container',
+                      image: block.settings.image,
+                      cover: true,
+                      style: ic_style,
+                      sizes: sizes,
+                      hover_scale: false
+                  %}
+                </div>
+              {% endif %}
+              <div class="{% if block.settings.enable_image %}col-12 col-md-6 {% endif %}sticky-section-info {{ colorize_invert_style }} text-{{ block.settings.text_aligment }}">
+                <div class="mx-auto" style="max-width: {{ content_max_width }}">
+                  {% if block.settings.title != blank %}
+                    <div class="title-wrap mb-3">
+                      <h2 class="h1-style">{{ block.settings.title }}</h2>
+                    </div>
+                  {% endif %}
+                  {{ block.settings.description }}
+                  {%- if block.settings.button -%}
+                    <div class="btn-showmore-wrap text-{{ block.settings.text_aligment }} mt-4">
+                      <a href="{{ block.settings.button_url }}" class="btn {{ block.settings.button_color }} btn--showmore">{{ block.settings.button_text }}</a>
+                    </div>
+                  {%- endif -%}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </sticky-sections>
+  </div>
+</div>
+
+{% render 'section-wrapper' %}
+
+{% schema %}
+{
+  "name": "Vertical Slider",
+  "tag": "section",
+  "class": "section-class",
+  "settings": [
+    {
+      "type": "header",
+      "content": "SECTION GENERAL"
+    },
+    {
+      "type": "checkbox",
+      "id": "section_animation",
+      "label": "Enable soft appearing of section",
+      "default": true,
+      "info": "Global sections animation disabling in Theme Settings / General / Sections. AUTODISABLED if section has top or bottom separator."
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "checkbox",
+      "id": "fluid",
+      "label": "Fluid layout",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "inner_space",
+      "label": "Inner space",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "heading_alignment",
+      "label": "Heading aligment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "default": "Subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "header",
+      "content": "SECTION MARGIN"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical space above the section on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space",
+      "label": "Use global space on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical space above the section on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space",
+      "label": "Use global space on mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING",
+      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections",
+      "min": 0,
+      "max": 200,
+      "step": 2,
+      "unit": "px",
+      "label": "Vertical inner padding on Desktop",
+      "default": 100
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_desktop_space_padding",
+      "label": "Use global inner padding on desktop",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "range",
+      "id": "spacing_padding_sections_mobile",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "label": "Vertical inner padding on Mobile",
+      "default": 70
+    },
+    {
+      "type": "checkbox",
+      "id": "use_global_mobile_space_padding",
+      "label": "Use global inner padding on Mobile",
+      "default": true,
+      "info": "from Theme Settings / General / Layout"
+    },
+    {
+      "type": "header",
+      "content": "SECTION BACKGROUND"
+    },
+    {
+      "type": "checkbox",
+      "id": "background",
+      "label": "Enable background",
+      "default": false,
+      "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+    },
+    {
+      "type": "select",
+      "id": "background_preset",
+      "label": "Background image - preset",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "product-cosmetics-bg.png",
+          "label": "Leaves 1"
+        },
+        {
+          "value": "bottom-cosmetics-bg.png",
+          "label": "Leaves 2"
+        },
+        {
+          "value": "bg-makeup1.png,bg-makeup1-m.png",
+          "label": "Pink and Waves 1"
+        },
+        {
+          "value": "bg-makeup2.png,bg-makeup2-m.png",
+          "label": "Pink and Waves 2"
+        },
+        {
+          "value": "bg-makeup4.png,bg-makeup4-m.png",
+          "label": "Pink and Waves 3"
+        },
+        {
+          "value": "bg-makeup3.png,bg-makeup3-m.png",
+          "label": "Purple Splash"
+        },
+        {
+          "value": "bg-sweets1.png",
+          "label": "Blue Sun Rays"
+        }
+      ],
+      "default": "none",
+      "info": "default from theme"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image - custom on Desktop"
+    },
+    {
+      "type": "select",
+      "id": "background_behavior",
+      "label": "Background image behavior",
+      "options": [
+        {
+          "value": "bg-cover",
+          "label": "Cover"
+        },
+        {
+          "value": "bg-contain",
+          "label": "Contain"
+        },
+        {
+          "value": "bg-repeat",
+          "label": "Repeat"
+        }
+      ],
+      "default": "bg-cover"
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image_mobile",
+      "label": "Background image - custom on Mobile",
+      "info": "only if Background image - custom on Desktop selected"
+    },
+    {
+      "type": "select",
+      "id": "background_image_placeholder_type",
+      "label": "Placeholder background color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_secondary_bg"
+    },
+    {
+      "type": "color",
+      "id": "background_image_placeholder",
+      "label": "Custom - Placeholder background color"
+    },
+    {
+      "type": "header",
+      "content": "SECTION SEPARATOR"
+    },
+    {
+      "type": "header",
+      "content": "Top separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_top_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_header_main_bg",
+          "label": "Header - Middle(main) part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_top_color",
+      "label": "Custom - top separator color"
+    },
+    {
+      "type": "header",
+      "content": "Bottom separator"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom",
+      "label": "Shape",
+      "options": [
+        {
+          "value": "global",
+          "label": "Use global separator"
+        },
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "grunge1",
+          "label": "Grunge 1"
+        },
+        {
+          "value": "grunge2",
+          "label": "Grunge 2"
+        },
+        {
+          "value": "grunge3",
+          "label": "Grunge 3"
+        },
+        {
+          "value": "paper",
+          "label": "Paper"
+        },
+        {
+          "value": "mountains",
+          "label": "Mountains"
+        },
+        {
+          "value": "ellipse1",
+          "label": "Ellipse 1"
+        },
+        {
+          "value": "ellipse2",
+          "label": "Ellipse 2"
+        },
+        {
+          "value": "wave1",
+          "label": "Wave 1"
+        },
+        {
+          "value": "wave2",
+          "label": "Wave 2"
+        },
+        {
+          "value": "wave3",
+          "label": "Wave 3"
+        },
+        {
+          "value": "wave4",
+          "label": "Wave 4"
+        },
+        {
+          "value": "wave5",
+          "label": "Wave 5"
+        },
+        {
+          "value": "triangle1",
+          "label": "Triangle 1"
+        },
+        {
+          "value": "triangle2",
+          "label": "Triangle 2"
+        },
+        {
+          "value": "triangle_assymetrical1",
+          "label": "Triangle assymetrical 1"
+        },
+        {
+          "value": "triangle_assymetrical1_flip",
+          "label": "Triangle assymetrical 1 flip"
+        },
+        {
+          "value": "triangle_assymetrical2",
+          "label": "Triangle assymetrical 2"
+        },
+        {
+          "value": "triangle_assymetrical2_flip",
+          "label": "Triangle assymetrical 2 flip"
+        },
+        {
+          "value": "tilt",
+          "label": "Tilt"
+        },
+        {
+          "value": "tilt_flip",
+          "label": "Tilt flip"
+        },
+        {
+          "value": "glaze",
+          "label": "Glaze"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "paragraph",
+      "content": "'Global separator' is set in Theme Settings / Separators / Global separator style"
+    },
+    {
+      "type": "select",
+      "id": "section_decoration_bottom_color_type",
+      "label": "Color",
+      "options": [
+        {
+          "value": "color_global_primary_bg",
+          "label": "Primary background color"
+        },
+        {
+          "value": "color_global_secondary_bg",
+          "label": "Secondary background color"
+        },
+        {
+          "value": "color_footer_top_bg",
+          "label": "Footer - Top part color"
+        },
+        {
+          "value": "custom",
+          "label": "Custom color"
+        }
+      ],
+      "default": "color_global_primary_bg"
+    },
+    {
+      "type": "color",
+      "id": "section_decoration_bottom_color",
+      "label": "Custom - bottom separator color"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+       {
+        "type": "checkbox",
+        "id": "reverse",
+        "label": "Reverse layout (desktop)",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Content"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Heading",
+        "default": "Heading"
+      },
+      {
+        "type": "richtext",
+        "id": "description",
+        "default": "<p>Our web company consists of web programmers and designers with extensive experience in the web market. Each of us worked as hired worker to create templates for Magento, Shopify, Wordpress and others. We decided to unite our forces and to do projects such as we would like them to be in accordance to our experience in customer support.</p>",
+        "label": "About us"
+      },
+      {
+        "type": "select",
+        "id": "text_aligment",
+        "label": "Text aligment",
+        "options": [
+          {
+            "value": "start",
+            "label": "Start"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          },
+          {
+            "value": "end",
+            "label": "Right"
+          }
+        ],
+        "default": "start"
+      },
+      {
+        "type": "checkbox",
+        "id": "invert_color",
+        "label": "Invert captions color",
+        "default": false,
+        "info": "Invert color you can set in Theme Settings / General / Colors - General"
+      },
+      {
+        "type": "checkbox",
+        "id": "text_column_max",
+        "label": "Limit the content width",
+        "default": true
+      },
+      {
+        "type": "range",
+        "id": "text_column_max_width",
+        "min": 300,
+        "max": 1600,
+        "step": 20,
+        "unit": "px",
+        "label": "The content column's width",
+        "default": 600,
+        "info": "The content column's MAX width"
+      },
+      {
+        "type": "range",
+        "id": "spacing_padding",
+        "min": 20,
+        "max": 300,
+        "step": 5,
+        "unit": "px",
+        "label": "Text vertical inner padding on Desktop",
+        "default": 100
+      },
+      {
+        "type": "header",
+        "content": "Image"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_image",
+        "label": "Enable",
+        "default": true
+      },
+      {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Image",
+        "info": "set empty if you want to use 'Image preset'"
+      },
+      {
+        "type": "color",
+        "id": "color_placeholder",
+        "label": "Placeholder background loader",
+        "info": "Set the main color of the image (visually softens the appearance of the image)"
+      },
+      {
+        "type": "header",
+        "content": "Slide Background"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image"
+      },
+      {
+        "type": "select",
+        "id": "background_behavior",
+        "label": "Background image behavior",
+        "options": [
+          {
+            "value": "bg-cover",
+            "label": "Cover"
+          },
+          {
+            "value": "bg-contain",
+            "label": "Contain"
+          },
+          {
+            "value": "bg-repeat",
+            "label": "Repeat"
+          }
+        ],
+        "default": "bg-cover"
+      },
+      {
+        "type": "select",
+        "id": "background",
+        "label": "Background color",
+        "options": [
+          {
+            "value": "primary_bg",
+            "label": "Primary background color"
+          },
+          {
+            "value": "secondary_bg",
+            "label": "Secondary background color"
+          },
+          {
+            "value": "custom",
+            "label": "Custom color"
+          }
+        ],
+        "default": "secondary_bg"
+      },
+      {
+        "type": "color",
+        "id": "background_custom",
+        "label": "Custom - Background color"
+      },
+      {
+        "type": "header",
+        "content": "Button"
+      },
+      {
+        "type": "checkbox",
+        "id": "button",
+        "label": "Show",
+        "default": true
+      },
+      {
+        "type": "select",
+        "id": "button_color",
+        "label": "Button color",
+        "options": [
+          {
+            "value": "btn--default",
+            "label": "Primary"
+          },
+          {
+            "value": "btn--invert",
+            "label": "Secondary"
+          },
+          {
+            "value": "btn--grey",
+            "label": "Third"
+          },
+          {
+            "value": "btn--white",
+            "label": "Fourth"
+          },
+          {
+            "value": "btn--fifth",
+            "label": "Fifth"
+          }
+        ],
+        "default": "btn--invert"
+      },
+      {
+        "type": "text",
+        "id": "button_text",
+        "label": "Caption",
+        "default": "Read more"
+      },
+      {
+        "type": "url",
+        "id": "button_url",
+        "label": "Link"
+      }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vertical Slider",
+      "category": "Sliders",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "reverse": true,
+            "background": "primary_bg"
+          }
+        },
+        {
+          "type": "slide"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

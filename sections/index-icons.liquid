@@ -1,0 +1,1575 @@
+{% comment %}theme-check-disable TemplateLength, UnusedAssign, UndefinedObject{% endcomment %}
+{%- liquid
+  assign layout = 'index-icons'
+  if "ar he he-IL hi" contains localization.language.iso_code
+    assign rtl = '-rtl'
+  endif
+
+  assign heading = heading | default: section.settings.heading
+  assign subtitle = subtitle | default: section.settings.subtitle
+
+  assign store_width = settings.container_max_width
+
+  if section.settings.section_width == 'custom'
+    assign store_width = section.settings.container_max_width
+  endif
+
+  if template.suffix contains 'store-width-'
+    assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+  endif
+-%}
+{{ 'shop-info' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
+{% render 'section-wrapper'
+  , placement: 'top' %}
+
+<div
+  class="{% render 'section-class', layout: layout %} py-global"
+  {% render 'section-style', section: section %}
+  {% if section.settings.under_slider %}
+  data-slider-under{% endif %}>
+  <div class="{% render 'section-container-class', layout: layout %} justify-content-center">
+    {% render 'section-heading'
+      , section: section
+      , heading: heading
+      , subtitle: subtitle %}
+    <smart-row>
+      <div class="shop-info-row {% if section.settings.icons_bordered %}shop-info--bordered{% endif %} {% if section.settings.layout == 'layout_1' %}shop-info--vertical{% else %}shop-info--horizontal{% endif %} {% if section.settings.icons_background %}shop-info-style2{% endif %} {% if section.settings.icons_text_background %}shop-info--bg-secondary{% endif %} shop-info--{{ section.settings.icons_font_size }}
+        row row-cols-{{ section.settings.per_view_mobile }} row-cols-md-{{ section.settings.per_view | minus: 1 | at_least: section.settings.per_view_mobile }} row-cols-lg-{{ section.settings.per_view }} g-3 g-lg-4 hide-insufficient-row">
+        {%- for block in section.blocks -%}
+          <div class="col shop-info-wrap" {{ block.shopify_attributes }}>
+            {%- if block.settings.only_image and block.settings.icon_custom_image != blank -%}
+              {% render 'image-container'
+                , image: block.settings.icon_custom_image
+                , size: '264px'
+                , class_img: 'w-100'
+                , hover_scale: true
+                , lazyload: false
+                , cover: false
+                , bg: false
+                , round: 0
+                , hover_scale: false
+              %}
+            {%- else -%}
+              <div class="shop-info d-flex">
+                <div class="shop-info-icon {% if block.settings.icon_custom_image != blank %}has-image{%- endif -%}">
+                  {%- if block.settings.icon_custom_image != blank -%}
+                    {% render 'image-container'
+                      , image: block.settings.icon_custom_image
+                      , padding: 100
+                      , sizes: '100px'
+                      , class_img: 'w-100'
+                      , hover_scale: true
+                      , lazyload: false
+                      , cover: false
+                      , bg: false
+                      , round: 0
+                      , hover_scale: false
+                    %}
+                  {%- elsif block.settings.icon_custom_svg != blank -%}
+                    {{ block.settings.icon_custom_svg }}
+                  {%- else -%}
+                    {% render 'icon'
+                      , icon: block.settings.icon %}
+                  {%- endif -%}
+                </div>
+                <div class="shop-info-text">
+                  <div class="shop-info-title text-uppercase">{{ block.settings.title }}</div>
+                  <span>{{ block.settings.subtitle }}</span>
+                </div>
+                {% if section.settings.icons_bordered %}{% render 'icon', icon: 'border' %}{% endif %}
+              </div>
+            {%- endif -%}
+          </div>
+          <div class='line-break'></div>
+        {%- endfor -%}
+      </div>
+    </smart-row>
+  </div>
+</div>
+{% render 'section-wrapper' %}
+{% schema %}
+  {
+    "name": "Icons",
+    "tag": "section",
+    "settings": [
+      {
+        "type": "header",
+        "content": "SECTION GENERAL"
+      },
+      {
+        "type": "checkbox",
+        "id": "section_animation",
+        "label": "Enable soft appearing of section",
+        "default": true,
+        "info": "Global sections animation disabling in Theme Settings / General / Sections. AUTODISABLED if section has top or bottom separator."
+      },
+      {
+        "type": "header",
+        "content": "Layout"
+      },
+      {
+        "type": "radio",
+        "id": "heading_alignment",
+        "label": "Heading aligment",
+        "options": [
+          {
+            "value": "left",
+            "label": "Left"
+          },
+          {
+            "value": "center",
+            "label": "Center"
+          }
+        ],
+        "default": "center"
+      },
+      {
+        "type": "radio",
+        "id": "layout",
+        "label": "Select design variant",
+        "options": [
+          {
+            "value": "layout_1",
+            "label": "Vertical"
+          },
+          {
+            "value": "layout_2",
+            "label": "Horizontal"
+          }
+        ],
+        "default": "layout_2"
+      },
+      {
+        "type": "select",
+        "id": "icons_font_size",
+        "label": "Font size",
+        "options": [
+          {
+            "value": "default",
+            "label": "Normal"
+          },
+          {
+            "value": "lg",
+            "label": "Large"
+          }
+        ],
+        "default": "default"
+      },
+      {
+        "type": "checkbox",
+        "id": "icons_background",
+        "label": "Fill icons with background",
+        "default": false,
+        "info": "for horizontal layout only, bg is inherited from Theme Settings / Colors - Buttons / Primary (blue by default) / Button background hover"
+      },
+      {
+        "type": "checkbox",
+        "id": "icons_text_background",
+        "label": "Fill icons+text with background",
+        "default": false,
+        "info": "inherited from Theme Settings / Colors - General Secondary / Secondary background color"
+      },
+      {
+        "type": "checkbox",
+        "id": "icons_bordered",
+        "label": "Bordered",
+        "default": false
+      },
+      {
+        "type": "checkbox",
+        "id": "under_slider",
+        "label": "Sew under the slider",
+        "default": false,
+        "info": "Slideshow must be fullheight and first in the order, Icons section has to be the second in order"
+      },
+      {
+        "type": "select",
+        "id": "per_view",
+        "label": "Icons per row on Desktop",
+        "options": [
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          },
+          {
+            "value": "4",
+            "label": "4"
+          },
+          {
+            "value": "5",
+            "label": "5"
+          }
+        ],
+        "default": "4",
+        "info": "The specified columns per row may differ from the per row set because this section uses a smart grid for the most successful arrangement of columns in rows and for best view."
+      },
+      {
+        "type": "select",
+        "id": "per_view_mobile",
+        "label": "Icons per row on Mobile",
+        "options": [
+          {
+            "value": "1",
+            "label": "1"
+          },
+          {
+            "value": "2",
+            "label": "2"
+          },
+          {
+            "value": "3",
+            "label": "3"
+          }
+        ],
+        "default": "2"
+      },
+      {
+        "type": "header",
+        "content": "Content"
+      },
+      {
+        "type": "text",
+        "id": "heading",
+        "label": "Heading"
+      },
+      {
+        "type": "text",
+        "id": "subtitle",
+        "label": "Subtitle"
+      },
+      {
+        "type": "header",
+        "content": "SECTION MARGIN"
+      },
+      {
+        "type": "range",
+        "id": "spacing_sections",
+        "min": 0,
+        "max": 200,
+        "step": 2,
+        "unit": "px",
+        "label": "Vertical space above the section on Desktop",
+        "default": 0
+      },
+      {
+        "type": "checkbox",
+        "id": "use_global_desktop_space",
+        "label": "Use global space on desktop",
+        "default": false,
+        "info": "from Theme Settings / General / Layout"
+      },
+      {
+        "type": "range",
+        "id": "spacing_sections_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Vertical space above the section on Mobile",
+        "default": 0
+      },
+      {
+        "type": "checkbox",
+        "id": "use_global_mobile_space",
+        "label": "Use global space on mobile",
+        "default": false,
+        "info": "from Theme Settings / General / Layout"
+      },
+      {
+        "type": "header",
+        "content": "SECTION PADDING",
+        "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+      },
+      {
+        "type": "range",
+        "id": "spacing_padding_sections",
+        "min": 0,
+        "max": 200,
+        "step": 2,
+        "unit": "px",
+        "label": "Vertical inner padding on Desktop",
+        "default": 40
+      },
+      {
+        "type": "checkbox",
+        "id": "use_global_desktop_space_padding",
+        "label": "Use global inner padding on desktop",
+        "default": false,
+        "info": "from Theme Settings / General / Layout"
+      },
+      {
+        "type": "range",
+        "id": "spacing_padding_sections_mobile",
+        "min": 0,
+        "max": 100,
+        "step": 1,
+        "unit": "px",
+        "label": "Vertical inner padding on Mobile",
+        "default": 40
+      },
+      {
+        "type": "checkbox",
+        "id": "use_global_mobile_space_padding",
+        "label": "Use global inner padding on Mobile",
+        "default": false,
+        "info": "from Theme Settings / General / Layout"
+      },
+      {
+        "type": "header",
+        "content": "SECTION BACKGROUND"
+      },
+      {
+        "type": "checkbox",
+        "id": "background",
+        "label": "Enable background",
+        "default": false,
+        "info": "by default inherits Secondary background color from Theme Settings / Colors - General Secondary"
+      },
+      {
+        "type": "select",
+        "id": "background_preset",
+        "label": "Background image - preset",
+        "options": [
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "product-cosmetics-bg.png",
+            "label": "Leaves 1"
+          },
+          {
+            "value": "bottom-cosmetics-bg.png",
+            "label": "Leaves 2"
+          },
+          {
+            "value": "bg-makeup1.png,bg-makeup1-m.png",
+            "label": "Pink and Waves 1"
+          },
+          {
+            "value": "bg-makeup2.png,bg-makeup2-m.png",
+            "label": "Pink and Waves 2"
+          },
+          {
+            "value": "bg-makeup4.png,bg-makeup4-m.png",
+            "label": "Pink and Waves 3"
+          },
+          {
+            "value": "bg-makeup3.png,bg-makeup3-m.png",
+            "label": "Purple Splash"
+          },
+          {
+            "value": "bg-sweets1.png",
+            "label": "Blue Sun Rays"
+          }
+        ],
+        "default": "none",
+        "info": "default from theme"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background image - custom on Desktop"
+      },
+      {
+        "type": "select",
+        "id": "background_behavior",
+        "label": "Background image behavior",
+        "options": [
+          {
+            "value": "bg-cover",
+            "label": "Cover"
+          },
+          {
+            "value": "bg-contain",
+            "label": "Contain"
+          },
+          {
+            "value": "bg-repeat",
+            "label": "Repeat"
+          }
+        ],
+        "default": "bg-cover"
+      },
+      {
+        "type": "image_picker",
+        "id": "background_image_mobile",
+        "label": "Background image - custom on Mobile",
+        "info": "only if Background image - custom on Desktop selected"
+      },
+      {
+        "type": "select",
+        "id": "background_image_placeholder_type",
+        "label": "Placeholder background color",
+        "options": [
+          {
+            "value": "color_global_primary_bg",
+            "label": "Primary background color"
+          },
+          {
+            "value": "color_global_secondary_bg",
+            "label": "Secondary background color"
+          },
+          {
+            "value": "custom",
+            "label": "Custom color"
+          }
+        ],
+        "default": "color_global_secondary_bg"
+      },
+      {
+        "type": "color",
+        "id": "background_image_placeholder",
+        "label": "Custom - Placeholder background color"
+      },
+      {
+        "type": "header",
+        "content": "SECTION SEPARATOR"
+      },
+      {
+        "type": "header",
+        "content": "Top separator"
+      },
+      {
+        "type": "select",
+        "id": "section_decoration_top",
+        "label": "Shape",
+        "options": [
+          {
+            "value": "global",
+            "label": "Use global separator"
+          },
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "grunge1",
+            "label": "Grunge 1"
+          },
+          {
+            "value": "grunge2",
+            "label": "Grunge 2"
+          },
+          {
+            "value": "grunge3",
+            "label": "Grunge 3"
+          },
+          {
+            "value": "paper",
+            "label": "Paper"
+          },
+          {
+            "value": "mountains",
+            "label": "Mountains"
+          },
+          {
+            "value": "ellipse1",
+            "label": "Ellipse 1"
+          },
+          {
+            "value": "ellipse2",
+            "label": "Ellipse 2"
+          },
+          {
+            "value": "wave1",
+            "label": "Wave 1"
+          },
+          {
+            "value": "wave2",
+            "label": "Wave 2"
+          },
+          {
+            "value": "wave3",
+            "label": "Wave 3"
+          },
+          {
+            "value": "wave4",
+            "label": "Wave 4"
+          },
+          {
+            "value": "wave5",
+            "label": "Wave 5"
+          },
+          {
+            "value": "triangle1",
+            "label": "Triangle 1"
+          },
+          {
+            "value": "triangle2",
+            "label": "Triangle 2"
+          },
+          {
+            "value": "triangle_assymetrical1",
+            "label": "Triangle assymetrical 1"
+          },
+          {
+            "value": "triangle_assymetrical1_flip",
+            "label": "Triangle assymetrical 1 flip"
+          },
+          {
+            "value": "triangle_assymetrical2",
+            "label": "Triangle assymetrical 2"
+          },
+          {
+            "value": "triangle_assymetrical2_flip",
+            "label": "Triangle assymetrical 2 flip"
+          },
+          {
+            "value": "tilt",
+            "label": "Tilt"
+          },
+          {
+            "value": "tilt_flip",
+            "label": "Tilt flip"
+          },
+          {
+            "value": "glaze",
+            "label": "Glaze"
+          }
+        ],
+        "default": "none"
+      },
+      {
+        "type": "select",
+        "id": "section_decoration_top_color_type",
+        "label": "Color",
+        "options": [
+          {
+            "value": "color_global_primary_bg",
+            "label": "Primary background color"
+          },
+          {
+            "value": "color_global_secondary_bg",
+            "label": "Secondary background color"
+          },
+          {
+            "value": "color_header_main_bg",
+            "label": "Header - Middle(main) part color"
+          },
+          {
+            "value": "custom",
+            "label": "Custom color"
+          }
+        ],
+        "default": "color_global_primary_bg"
+      },
+      {
+        "type": "color",
+        "id": "section_decoration_top_color",
+        "label": "Custom - top separator color"
+      },
+      {
+        "type": "header",
+        "content": "Bottom separator"
+      },
+      {
+        "type": "select",
+        "id": "section_decoration_bottom",
+        "label": "Shape",
+        "options": [
+          {
+            "value": "global",
+            "label": "Use global separator"
+          },
+          {
+            "value": "none",
+            "label": "None"
+          },
+          {
+            "value": "grunge1",
+            "label": "Grunge 1"
+          },
+          {
+            "value": "grunge2",
+            "label": "Grunge 2"
+          },
+          {
+            "value": "grunge3",
+            "label": "Grunge 3"
+          },
+          {
+            "value": "paper",
+            "label": "Paper"
+          },
+          {
+            "value": "mountains",
+            "label": "Mountains"
+          },
+          {
+            "value": "ellipse1",
+            "label": "Ellipse 1"
+          },
+          {
+            "value": "ellipse2",
+            "label": "Ellipse 2"
+          },
+          {
+            "value": "wave1",
+            "label": "Wave 1"
+          },
+          {
+            "value": "wave2",
+            "label": "Wave 2"
+          },
+          {
+            "value": "wave3",
+            "label": "Wave 3"
+          },
+          {
+            "value": "wave4",
+            "label": "Wave 4"
+          },
+          {
+            "value": "wave5",
+            "label": "Wave 5"
+          },
+          {
+            "value": "triangle1",
+            "label": "Triangle 1"
+          },
+          {
+            "value": "triangle2",
+            "label": "Triangle 2"
+          },
+          {
+            "value": "triangle_assymetrical1",
+            "label": "Triangle assymetrical 1"
+          },
+          {
+            "value": "triangle_assymetrical1_flip",
+            "label": "Triangle assymetrical 1 flip"
+          },
+          {
+            "value": "triangle_assymetrical2",
+            "label": "Triangle assymetrical 2"
+          },
+          {
+            "value": "triangle_assymetrical2_flip",
+            "label": "Triangle assymetrical 2 flip"
+          },
+          {
+            "value": "tilt",
+            "label": "Tilt"
+          },
+          {
+            "value": "tilt_flip",
+            "label": "Tilt flip"
+          },
+          {
+            "value": "glaze",
+            "label": "Glaze"
+          }
+        ],
+        "default": "none"
+      },
+      {
+        "type": "paragraph",
+        "content": "'Global separator' is set in Theme Settings / Separators / Global separator style"
+      },
+      {
+        "type": "select",
+        "id": "section_decoration_bottom_color_type",
+        "label": "Color",
+        "options": [
+          {
+            "value": "color_global_primary_bg",
+            "label": "Primary background color"
+          },
+          {
+            "value": "color_global_secondary_bg",
+            "label": "Secondary background color"
+          },
+          {
+            "value": "color_footer_top_bg",
+            "label": "Footer - Top part color"
+          },
+          {
+            "value": "custom",
+            "label": "Custom color"
+          }
+        ],
+        "default": "color_global_primary_bg"
+      },
+      {
+        "type": "color",
+        "id": "section_decoration_bottom_color",
+        "label": "Custom - bottom separator color"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "icon",
+        "name": "icon",
+        "settings": [
+          {
+            "type": "select",
+            "id": "icon",
+            "label": "Preset Icon",
+            "options": [
+              {
+                "value": "icon-404",
+                "label": "404"
+              },
+              {
+                "value": "icon-arrow-down2",
+                "label": "arrow-down"
+              },
+              {
+                "value": "icon-arrow-left",
+                "label": "arrow-left"
+              },
+              {
+                "value": "icon-arrow-right",
+                "label": "arrow-right"
+              },
+              {
+                "value": "icon-arrow-up2",
+                "label": "arrow-up"
+              },
+              {
+                "value": "icon-card",
+                "label": "card"
+              },
+              {
+                "value": "icon-cart",
+                "label": "cart"
+              },
+              {
+                "value": "icon-cart3",
+                "label": "cart2"
+              },
+              {
+                "value": "icon-catalog3",
+                "label": "catalog"
+              },
+              {
+                "value": "icon-check",
+                "label": "check"
+              },
+              {
+                "value": "icon-checkmark",
+                "label": "checkmark"
+              },
+              {
+                "value": "icon-child",
+                "label": "child"
+              },
+              {
+                "value": "icon-coupon",
+                "label": "coupon"
+              },
+              {
+                "value": "icon-dress",
+                "label": "dress"
+              },
+              {
+                "value": "icon-edit",
+                "label": "pensil"
+              },
+              {
+                "value": "icon-email",
+                "label": "email"
+              },
+              {
+                "value": "icon-mail",
+                "label": "email2"
+              },
+              {
+                "value": "icon-mail2",
+                "label": "email3"
+              },
+              {
+                "value": "icon-eye",
+                "label": "eye"
+              },
+              {
+                "value": "icon-facebook",
+                "label": "facebook"
+              },
+              {
+                "value": "icon-filter3",
+                "label": "filter"
+              },
+              {
+                "value": "icon-gift-card",
+                "label": "gift-card"
+              },
+              {
+                "value": "icon-gift",
+                "label": "gift"
+              },
+              {
+                "value": "icon-heart",
+                "label": "heart"
+              },
+              {
+                "value": "icon-heart2",
+                "label": "heart2"
+              },
+              {
+                "value": "icon-home",
+                "label": "home"
+              },
+              {
+                "value": "icon-instagram",
+                "label": "instagram"
+              },
+              {
+                "value": "icon-location",
+                "label": "location"
+              },
+              {
+                "value": "icon-man",
+                "label": "man"
+              },
+              {
+                "value": "icon-message2",
+                "label": "message"
+              },
+              {
+                "value": "icon-minus",
+                "label": "minus"
+              },
+              {
+                "value": "icon-new",
+                "label": "new"
+              },
+              {
+                "value": "icon-pause",
+                "label": "pause"
+              },
+              {
+                "value": "icon-phone",
+                "label": "phone"
+              },
+              {
+                "value": "icon-phone2",
+                "label": "phone2"
+              },
+              {
+                "value": "icon-play",
+                "label": "play"
+              },
+              {
+                "value": "icon-plus",
+                "label": "plus"
+              },
+              {
+                "value": "icon-quote",
+                "label": "quote"
+              },
+              {
+                "value": "icon-remove2",
+                "label": "remove"
+              },
+              {
+                "value": "icon-return",
+                "label": "return"
+              },
+              {
+                "value": "icon-sale",
+                "label": "sale"
+              },
+              {
+                "value": "icon-search",
+                "label": "search"
+              },
+              {
+                "value": "icon-secure",
+                "label": "secure"
+              },
+              {
+                "value": "icon-settings",
+                "label": "settings"
+              },
+              {
+                "value": "icon-size",
+                "label": "size"
+              },
+              {
+                "value": "icon-size2",
+                "label": "size 2"
+              },
+              {
+                "value": "icon-star",
+                "label": "star"
+              },
+              {
+                "value": "icon-star2",
+                "label": "star2"
+              },
+              {
+                "value": "icon-support",
+                "label": "support"
+              },
+              {
+                "value": "icon-suppor2",
+                "label": "support2"
+              },
+              {
+                "value": "icon-tag",
+                "label": "tag"
+              },
+              {
+                "value": "icon-tiktok",
+                "label": "tiktok"
+              },
+              {
+                "value": "icon-truck",
+                "label": "truck"
+              },
+              {
+                "value": "icon-truck2",
+                "label": "truck2"
+              },
+              {
+                "value": "icon-truck3",
+                "label": "truck3"
+              },
+              {
+                "value": "icon-truck4",
+                "label": "truck4"
+              },
+              {
+                "value": "icon-twitter",
+                "label": "twitter"
+              },
+              {
+                "value": "icon-user",
+                "label": "user"
+              },
+              {
+                "value": "icon-video",
+                "label": "video"
+              },
+              {
+                "value": "icon-woman",
+                "label": "woman"
+              },
+              {
+                "value": "icon-youtube",
+                "label": "youtube"
+              },
+              {
+                "value": "icon-zoom",
+                "label": "zoom"
+              },
+              {
+                "value": "icon-zoom2",
+                "label": "zoom2"
+              },
+              {
+                "value": "placeholder",
+                "label": "placeholder"
+              },
+              {
+                "value": "icon-award",
+                "label": "award"
+              },
+              {
+                "value": "icon-contrast",
+                "label": "contrast"
+              },
+              {
+                "value": "icon-cotton",
+                "label": "cotton"
+              },
+              {
+                "value": "icon-megaphone",
+                "label": "megaphone"
+              },
+              {
+                "value": "icon-washing",
+                "label": "washing"
+              },
+              {
+                "value": "icon-animal-safe",
+                "label": "animal-safe"
+              },
+              {
+                "value": "icon-chemistry",
+                "label": "chemistry"
+              },
+              {
+                "value": "icon-drops",
+                "label": "drops"
+              },
+              {
+                "value": "icon-organic",
+                "label": "organic"
+              },
+              {
+                "value": "icon-recycle",
+                "label": "recycle"
+              },
+              {
+                "value": "icon-tested",
+                "label": "tested"
+              },
+              {
+                "value": "icon-chain",
+                "label": "chain"
+              },
+              {
+                "value": "icon-hangle",
+                "label": "hangle"
+              },
+              {
+                "value": "icon-iron",
+                "label": "iron"
+              },
+              {
+                "value": "icon-stars",
+                "label": "stars"
+              }
+            ],
+            "default": "placeholder"
+          },
+          {
+            "type": "textarea",
+            "id": "icon_custom_svg",
+            "label": "Custom svg icon code",
+            "info": "fill it to use instead of preset icon"
+          },
+          {
+            "type": "image_picker",
+            "id": "icon_custom_image",
+            "label": "Icon image",
+            "info": "fill it to use instead of preset icon"
+          },
+          {
+            "type": "checkbox",
+            "id": "only_image",
+            "label": "Show only image",
+            "default": false
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Icon Title"
+          },
+          {
+            "type": "text",
+            "id": "subtitle",
+            "label": "Subtitle",
+            "default": "When you spend $100+"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Icons / constructor",
+        "blocks": [
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-truck",
+              "title": "FREE SHIPPING",
+              "subtitle": "When you spend $100+ "
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-return",
+              "title": "FREE RETURNS",
+              "subtitle": "Within 14 days"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-secure",
+              "title": "SECURED PAYMENTS",
+              "subtitle": "We are officially registered"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-support",
+              "title": "SUPPORT 24/7",
+              "subtitle": "Ready to help our clients"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Icons / preset 1 Horizontal",
+        "blocks": [
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-truck",
+              "title": "FREE SHIPPING",
+              "subtitle": "When you spend $100+ "
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-return",
+              "title": "FREE RETURNS",
+              "subtitle": "Within 14 days"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-secure",
+              "title": "SECURED PAYMENTS",
+              "subtitle": "We are officially registered"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-support",
+              "title": "SUPPORT 24/7",
+              "subtitle": "Ready to help our clients"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Icons / preset 1 Horizontal style 2",
+        "settings": {
+          "icons_background": true
+        },
+        "blocks": [
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-truck2",
+              "title": "FREE SHIPPING",
+              "subtitle": "When you spend $100+ "
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-return",
+              "title": "FREE RETURNS",
+              "subtitle": "Within 14 days"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-secure",
+              "title": "SECURED PAYMENTS",
+              "subtitle": "We are officially registered"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-support",
+              "title": "SUPPORT 24/7",
+              "subtitle": "Ready to help our clients"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Icons / preset 1 Horizontal with background",
+        "settings": {
+          "spacing_sections": 0,
+          "use_global_desktop_space": false,
+          "spacing_sections_mobile": 0,
+          "use_global_mobile_space": false,
+          "spacing_padding_sections": 40,
+          "use_global_desktop_space_padding": false,
+          "spacing_padding_sections_mobile": 40,
+          "use_global_mobile_space_padding": false,
+          "background": true
+        },
+        "blocks": [
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-truck",
+              "title": "FREE SHIPPING",
+              "subtitle": "When you spend $100+ "
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-return",
+              "title": "FREE RETURNS",
+              "subtitle": "Within 14 days"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-secure",
+              "title": "SECURED PAYMENTS",
+              "subtitle": "We are officially registered"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-support",
+              "title": "SUPPORT 24/7",
+              "subtitle": "Ready to help our clients"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Icons / preset 2 Vertical",
+        "settings": {
+          "layout": "layout_1"
+        },
+        "blocks": [
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-truck",
+              "title": "FREE SHIPPING",
+              "subtitle": "When you spend $100+ "
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-return",
+              "title": "FREE RETURNS",
+              "subtitle": "Within 14 days"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-secure",
+              "title": "SECURED PAYMENTS",
+              "subtitle": "We are officially registered"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-support",
+              "title": "SUPPORT 24/7",
+              "subtitle": "Ready to help our clients"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Icons / preset 2 Vertical with background",
+        "settings": {
+          "layout": "layout_1",
+          "spacing_sections": 0,
+          "use_global_desktop_space": false,
+          "spacing_sections_mobile": 0,
+          "use_global_mobile_space": false,
+          "spacing_padding_sections": 40,
+          "use_global_desktop_space_padding": false,
+          "spacing_padding_sections_mobile": 40,
+          "use_global_mobile_space_padding": false,
+          "background": true
+        },
+        "blocks": [
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-truck",
+              "title": "FREE SHIPPING",
+              "subtitle": "When you spend $100+ "
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-return",
+              "title": "FREE RETURNS",
+              "subtitle": "Within 14 days"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-secure",
+              "title": "SECURED PAYMENTS",
+              "subtitle": "We are officially registered"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-support",
+              "title": "SUPPORT 24/7",
+              "subtitle": "Ready to help our clients"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Icons / preset 3 Vertical Bordered",
+        "settings": {
+          "layout": "layout_1",
+          "icons_bordered": true
+        },
+        "blocks": [
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-truck",
+              "title": "FREE SHIPPING",
+              "subtitle": "When you spend $100+ "
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-return",
+              "title": "FREE RETURNS",
+              "subtitle": "Within 14 days"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-secure",
+              "title": "SECURED PAYMENTS",
+              "subtitle": "We are officially registered"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-support",
+              "title": "SUPPORT 24/7",
+              "subtitle": "Ready to help our clients"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Icons / preset 4 Vertical partly backgrounded",
+        "settings": {
+          "layout": "layout_1",
+          "icons_font_size": "lg",
+          "icons_text_background": true,
+          "heading": "Advantages",
+          "subtitle": "Tested by the best experts and our customers",
+          "use_global_desktop_space": true,
+          "use_global_mobile_space": true,
+          "spacing_padding_sections": 0,
+          "use_global_desktop_space_padding": false,
+          "spacing_padding_sections_mobile": 0,
+          "use_global_mobile_space_padding": false
+        },
+        "blocks": [
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-truck",
+              "title": "FREE SHIPPING",
+              "subtitle": "When you spend $100+ "
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-return",
+              "title": "FREE RETURNS",
+              "subtitle": "Within 14 days"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-secure",
+              "title": "SECURED PAYMENTS",
+              "subtitle": "We are officially registered"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-support",
+              "title": "SUPPORT 24/7",
+              "subtitle": "Ready to help our clients"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-truck",
+              "title": "FREE SHIPPING",
+              "subtitle": "When you spend $100+ "
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-return",
+              "title": "FREE RETURNS",
+              "subtitle": "Within 14 days"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-secure",
+              "title": "SECURED PAYMENTS",
+              "subtitle": "We are officially registered"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-support",
+              "title": "SUPPORT 24/7",
+              "subtitle": "Ready to help our clients"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Icons / preset 4 Horizontal partly backgrounded",
+        "settings": {
+          "layout": "layout_2",
+          "icons_font_size": "lg",
+          "icons_text_background": true,
+          "heading": "Advantages",
+          "subtitle": "Tested by the best experts and our customers",
+          "use_global_desktop_space": true,
+          "use_global_mobile_space": true,
+          "spacing_padding_sections": 0,
+          "use_global_desktop_space_padding": false,
+          "spacing_padding_sections_mobile": 0,
+          "use_global_mobile_space_padding": false
+        },
+        "blocks": [
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-truck",
+              "title": "FREE SHIPPING",
+              "subtitle": "When you spend $100+ "
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-return",
+              "title": "FREE RETURNS",
+              "subtitle": "Within 14 days"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-secure",
+              "title": "SECURED PAYMENTS",
+              "subtitle": "We are officially registered"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-support",
+              "title": "SUPPORT 24/7",
+              "subtitle": "Ready to help our clients"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Icons / preset 4 Horizontal partly backgrounded - Tshirts",
+        "settings": {
+          "layout": "layout_2",
+          "icons_font_size": "lg",
+          "icons_text_background": true,
+          "heading": "Advantages",
+          "subtitle": "Tested by the best experts and our customers",
+          "use_global_desktop_space": true,
+          "use_global_mobile_space": true,
+          "spacing_padding_sections": 0,
+          "use_global_desktop_space_padding": false,
+          "spacing_padding_sections_mobile": 0,
+          "use_global_mobile_space_padding": false
+        },
+        "blocks": [
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-washing",
+              "title": "MACHINE WASH",
+              "subtitle": "does not shrink<br> and does not shed"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-contrast",
+              "title": "BRIGHT COLORS",
+              "subtitle": "does not fade<br> in the sun"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-cotton",
+              "title": "100% NATURAL",
+              "subtitle": "only natural fabrics<br> and colors"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-award",
+              "title": "CERTIFIED",
+              "subtitle": "certificates of quality<br> and composition"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-chain",
+              "title": "DURABLE",
+              "subtitle": "excellent appearance<br> during wear"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-stars",
+              "title": "FASHION",
+              "subtitle": "trendy models<br> for every taste"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-iron",
+              "title": "EASY IRON",
+              "subtitle": "can be ironed<br> with a warm iron"
+            }
+          },
+          {
+            "type": "icon",
+            "settings": {
+              "icon": "icon-hangle",
+              "title": "TRUE TO SIZE",
+              "subtitle": "looks great on<br>every figure"
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
