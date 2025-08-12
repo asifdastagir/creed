@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "16643761521a16538a": {
@@ -6,7 +15,6 @@
         "1664376151123c8161-0": {
           "type": "banner",
           "settings": {
-            "image": "shopify://shop_images/slide-index1_ff1c6058-bea7-45d8-be96-f5e0ee6835e0.png",
             "video_loop": false,
             "video_darkness": 0,
             "color_placeholder": "#2d80f9",
@@ -31,7 +39,6 @@
             "width": 45,
             "left_padding": 5,
             "top_padding": 5,
-            "image_mobile": "shopify://shop_images/slide-index1-m.png",
             "color_placeholder_mobile": "",
             "mobile_sync": false,
             "aligment_mobile": "center",
@@ -45,12 +52,12 @@
         "1664376151123c8161-1": {
           "type": "banner",
           "settings": {
-            "image": "shopify://shop_images/slide-index2.png",
+            "image": "shopify://shop_images/Mask_group.png",
             "video_loop": false,
             "video_darkness": 0,
             "color_placeholder": "#f3477c",
             "title": "Limited Offer",
-            "subtitle": "39$ <del>89$</del>",
+            "subtitle": "39$ 89$",
             "invert_color": true,
             "custom_caption_colorization": false,
             "color_title": "rgba(0,0,0,0)",
@@ -70,7 +77,6 @@
             "width": 45,
             "left_padding": 5,
             "top_padding": 5,
-            "image_mobile": "shopify://shop_images/slide-index2-m.png",
             "color_placeholder_mobile": "",
             "mobile_sync": false,
             "aligment_mobile": "center",
@@ -84,8 +90,7 @@
       },
       "block_order": [
         "1664376151123c8161-0",
-        "1664376151123c8161-1",
-        "d5b01228-7eb6-4991-9394-e2b901b41242"
+        "1664376151123c8161-1"
       ],
       "custom_css": [],
       "settings": {
@@ -231,7 +236,6 @@
             "invert_color": true,
             "color_title": "",
             "color_subtitle": "",
-            "image": "shopify://shop_images/category-01_6e022e00-a7b9-4d9f-8b57-fabda36afc4e.png",
             "color_placeholder": "#f3478e",
             "url": "shopify://collections/women",
             "sub_caption_1": "New items",
@@ -248,7 +252,6 @@
             "invert_color": true,
             "color_title": "",
             "color_subtitle": "",
-            "image": "shopify://shop_images/category-02.png",
             "color_placeholder": "#fdcf3c",
             "url": "shopify://collections/men",
             "sub_caption_1": "New items",
@@ -265,7 +268,6 @@
             "invert_color": true,
             "color_title": "",
             "color_subtitle": "",
-            "image": "shopify://shop_images/category-03.png",
             "color_placeholder": "#2d80f9",
             "url": "shopify://collections/teenager",
             "sub_caption_1": "New items",
@@ -282,7 +284,6 @@
             "invert_color": true,
             "color_title": "",
             "color_subtitle": "",
-            "image": "shopify://shop_images/category-04.png",
             "color_placeholder": "#b270bf",
             "url": "shopify://collections/sport-shoes",
             "sub_caption_1": "New items",
@@ -410,7 +411,6 @@
         "font_subtitle_color": "#22292f",
         "predictive_search_enabled": true,
         "search_width": 520,
-        "bg_image": "shopify://shop_images/search-bg.png",
         "bg_color": "#f8ad27",
         "invert_color": false,
         "search_placeholder": "search here",
@@ -501,7 +501,6 @@
             "invert_color": true,
             "color_title": "",
             "color_subtitle": "",
-            "image": "shopify://shop_images/category-circle-01.png",
             "color_placeholder": "#4184f6",
             "url": "shopify://collections/men",
             "sub_caption_1": "New items",
@@ -518,7 +517,6 @@
             "invert_color": true,
             "color_title": "",
             "color_subtitle": "",
-            "image": "shopify://shop_images/category-circle-02_6a81e2fa-f772-4324-b614-5d88f3dfa55e.png",
             "color_placeholder": "#cd4ddd",
             "url": "shopify://collections/women",
             "sub_caption_1": "New items",
@@ -535,7 +533,6 @@
             "invert_color": true,
             "color_title": "",
             "color_subtitle": "",
-            "image": "shopify://shop_images/category-circle-03_128b8298-f423-488b-b98f-4fb8668411f1.png",
             "color_placeholder": "#f8ad27",
             "url": "shopify://collections/bags",
             "sub_caption_1": "New items",
@@ -552,7 +549,6 @@
             "invert_color": true,
             "color_title": "",
             "color_subtitle": "",
-            "image": "shopify://shop_images/category-circle-04_a394c379-2fd9-4600-9a8f-869836018098.png",
             "color_placeholder": "#ed3974",
             "url": "shopify://collections/dresses",
             "sub_caption_1": "New items",
@@ -614,7 +610,6 @@
           "type": "brand",
           "settings": {
             "title": "Cabian",
-            "image": "shopify://shop_images/vendor-cabian-home.png",
             "color_placeholder": "",
             "url": "/collections/all?filter.p.vendor=Cabian"
           }
@@ -623,7 +618,6 @@
           "type": "brand",
           "settings": {
             "title": "Canvers",
-            "image": "shopify://shop_images/vendor-canvers-home.png",
             "color_placeholder": "",
             "url": "/collections/all?filter.p.vendor=Canverse"
           }
@@ -632,7 +626,6 @@
           "type": "brand",
           "settings": {
             "title": "Claytan",
-            "image": "shopify://shop_images/vendor-claytan-home.png",
             "color_placeholder": "",
             "url": "/collections/all?filter.p.vendor=Claytan"
           }
@@ -641,7 +634,6 @@
           "type": "brand",
           "settings": {
             "title": "Clorks",
-            "image": "shopify://shop_images/vendor-clorks-home.png",
             "color_placeholder": "",
             "url": "/collections/all?filter.p.vendor=Clorks"
           }
@@ -650,7 +642,6 @@
           "type": "brand",
           "settings": {
             "title": "Saucany",
-            "image": "shopify://shop_images/vendor-saucany-home2.png",
             "color_placeholder": "",
             "url": "/collections/all?filter.p.vendor=Saucany"
           }
@@ -659,7 +650,6 @@
           "type": "brand",
           "settings": {
             "title": "Cole Hoon",
-            "image": "shopify://shop_images/vendor-cole-hoon-home.png",
             "color_placeholder": "",
             "url": "/collections/all?filter.p.vendor=Cole+Hoon"
           }
@@ -668,7 +658,6 @@
           "type": "brand",
           "settings": {
             "title": "Colvin Klein",
-            "image": "shopify://shop_images/vendor-colvin-klein-home.png",
             "color_placeholder": "",
             "url": "/collections/all?filter.p.vendor=Colvin+Klein"
           }
@@ -677,7 +666,6 @@
           "type": "brand",
           "settings": {
             "title": "Dacoste",
-            "image": "shopify://shop_images/vendor-dacoste-home.png",
             "color_placeholder": "",
             "url": "/collections/all?filter.p.vendor=Dacoste"
           }
@@ -686,7 +674,6 @@
           "type": "brand",
           "settings": {
             "title": "Koach",
-            "image": "shopify://shop_images/vendor-koach-home.png",
             "color_placeholder": "",
             "url": "/collections/all?filter.p.vendor=Koach"
           }
@@ -695,7 +682,6 @@
           "type": "brand",
           "settings": {
             "title": "Canvers",
-            "image": "shopify://shop_images/vendor-canvers-home2.png",
             "color_placeholder": "",
             "url": "/collections/all?filter.p.vendor=Canverse"
           }
@@ -704,7 +690,6 @@
           "type": "brand",
           "settings": {
             "title": "Saucany",
-            "image": "shopify://shop_images/vendor-saucany-home.png",
             "color_placeholder": "",
             "url": "/collections/all?filter.p.vendor=Saucany"
           }
@@ -713,7 +698,6 @@
           "type": "brand",
           "settings": {
             "title": "Under Armor",
-            "image": "shopify://shop_images/vendor-under-armor-home.png",
             "color_placeholder": "",
             "url": "/collections/all?filter.p.vendor=Under+Armor"
           }
@@ -722,7 +706,6 @@
           "type": "brand",
           "settings": {
             "title": "Cole Hoon",
-            "image": "shopify://shop_images/vendor-cole-hoon-home_1.png",
             "color_placeholder": "",
             "url": "/collections/all?filter.p.vendor=Cole+Hoon"
           }
@@ -731,7 +714,6 @@
           "type": "brand",
           "settings": {
             "title": "Cabian",
-            "image": "shopify://shop_images/vendor-cabian-home_1.png",
             "color_placeholder": "",
             "url": "/collections/all?filter.p.vendor=Cabian"
           }
@@ -740,7 +722,6 @@
           "type": "brand",
           "settings": {
             "title": "Dacoste",
-            "image": "shopify://shop_images/vendor-dacoste-home2.png",
             "color_placeholder": "",
             "url": "/collections/all?filter.p.vendor=Dacoste"
           }
@@ -815,7 +796,6 @@
           "type": "image",
           "settings": {
             "title": "Title",
-            "image": "shopify://shop_images/lookbook-01_c83ee3c1-f925-43db-8db8-0c90f2734a17.png",
             "color_placeholder": "#ffd339",
             "enable_1": true,
             "product_1": "leather-sneakers",
@@ -843,7 +823,6 @@
           "type": "image",
           "settings": {
             "title": "Title",
-            "image": "shopify://shop_images/lookbook-02_47dd79d8-4c2d-4715-af03-43876624ed8d.png",
             "color_placeholder": "#4582eb",
             "enable_1": true,
             "product_1": "short-denim-shorts",
@@ -871,7 +850,6 @@
           "type": "image",
           "settings": {
             "title": "Title",
-            "image": "shopify://shop_images/lookbook-03_04f944a1-7ad9-4f46-be80-cc5bd50ef1b0.png",
             "color_placeholder": "#ed3c75",
             "enable_1": true,
             "product_1": "classic-bow-tie",
@@ -943,7 +921,6 @@
           "type": "review",
           "settings": {
             "title": "Isabel Hanson",
-            "image": "shopify://shop_images/review-author-04.png",
             "profession": "Designer",
             "review": "We had several questions and minor issues that we werent aware of how to fix it. Contacted support and they were super quick..",
             "stars": 5,
@@ -954,7 +931,6 @@
           "type": "review",
           "settings": {
             "title": "Ewan Sharpe",
-            "image": "shopify://shop_images/review-author-02.png",
             "profession": "Developer",
             "review": "By far one of the best developers we have worked with. They were extremely knowledgeable with any question, comment, or concern we had and solved any issue in a timely manner. We highly recommend them for not only their quality products (themes & HTML templates) but their customer service as well..",
             "stars": 5,
@@ -965,7 +941,6 @@
           "type": "review",
           "settings": {
             "title": "Alisha Finch",
-            "image": "shopify://shop_images/review-author-03.png",
             "profession": "SEO manager",
             "review": "The customer support is absolutely amazing. Every time I submitted an question, Bigsteps was able to provide an answer very fast..",
             "stars": 5,
@@ -976,7 +951,6 @@
           "type": "review",
           "settings": {
             "title": "Hasan Demir",
-            "image": "shopify://shop_images/review-author-01.png",
             "profession": "Marketing Manager",
             "review": "Great theme with lots of options and great support. Their support is awesome.  Amazing communication and service!",
             "stars": 5,
@@ -1036,7 +1010,6 @@
           "type": "photo",
           "settings": {
             "title": "Title",
-            "image": "shopify://shop_images/instagram-default-1.png",
             "url": "https://www.instagram.com/lumia_theme_shopify/"
           }
         },
@@ -1044,7 +1017,6 @@
           "type": "photo",
           "settings": {
             "title": "Title",
-            "image": "shopify://shop_images/instagram-default-5.png",
             "url": "https://www.instagram.com/lumia_theme_shopify/"
           }
         },
@@ -1052,7 +1024,6 @@
           "type": "photo",
           "settings": {
             "title": "Title",
-            "image": "shopify://shop_images/instagram-default-6.png",
             "url": "https://www.instagram.com/lumia_theme_shopify/"
           }
         },
@@ -1060,7 +1031,6 @@
           "type": "photo",
           "settings": {
             "title": "Title",
-            "image": "shopify://shop_images/instagram-default-7.png",
             "url": "https://www.instagram.com/lumia_theme_shopify/"
           }
         },
@@ -1068,7 +1038,6 @@
           "type": "photo",
           "settings": {
             "title": "Title",
-            "image": "shopify://shop_images/instagram-default-3.png",
             "url": "https://www.instagram.com/lumia_theme_shopify/"
           }
         },
@@ -1076,7 +1045,6 @@
           "type": "photo",
           "settings": {
             "title": "Title",
-            "image": "shopify://shop_images/instagram-default-4.png",
             "url": "https://www.instagram.com/lumia_theme_shopify/"
           }
         },
@@ -1084,7 +1052,6 @@
           "type": "photo",
           "settings": {
             "title": "Title",
-            "image": "shopify://shop_images/instagram-default-9.png",
             "url": "https://www.instagram.com/lumia_theme_shopify/"
           }
         },
@@ -1092,7 +1059,6 @@
           "type": "photo",
           "settings": {
             "title": "Title",
-            "image": "shopify://shop_images/instagram-default-2.png",
             "url": "https://www.instagram.com/lumia_theme_shopify/"
           }
         },
@@ -1100,7 +1066,6 @@
           "type": "photo",
           "settings": {
             "title": "Title",
-            "image": "shopify://shop_images/instagram-default-8.png",
             "url": "https://www.instagram.com/lumia_theme_shopify/"
           }
         },
@@ -1109,7 +1074,6 @@
           "disabled": true,
           "settings": {
             "title": "Title",
-            "image": "shopify://shop_images/instagram-3_7c5f28d9-e917-47e9-b3d8-b3333f40753c.png",
             "url": ""
           }
         },
@@ -1118,7 +1082,6 @@
           "disabled": true,
           "settings": {
             "title": "Title",
-            "image": "shopify://shop_images/instagram-4_b0a7e1ae-53f5-46a1-b5f7-fb88603ef161.png",
             "url": ""
           }
         },
@@ -1127,7 +1090,6 @@
           "disabled": true,
           "settings": {
             "title": "Title",
-            "image": "shopify://shop_images/instagram-7_d1efa058-64fb-4b60-9ac6-ae5ed43747af.png",
             "url": ""
           }
         }
