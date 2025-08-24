@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -14,7 +23,6 @@
         "spacing_padding_sections_mobile": 70,
         "use_global_mobile_space_padding": true,
         "background": false,
-        "enable_sorting": true,
         "infinite_scroll": true,
         "product_reviews": true
       }
@@ -22,6 +30,10 @@
     "16452143071d3d004f": {
       "type": "index-recently-viewed-items",
       "settings": {
+        "limit": 8,
+        "heading_alignment": "center",
+        "heading": "Recently Viewed Products",
+        "subtitle": "",
         "section_width": "global",
         "container_max_width": 1178,
         "spacing_sections": 100,
@@ -32,11 +44,7 @@
         "use_global_desktop_space_padding": true,
         "spacing_padding_sections_mobile": 70,
         "use_global_mobile_space_padding": true,
-        "background": false,
-        "limit": 8,
-        "heading_alignment": "center",
-        "heading": "Recently Viewed Products",
-        "subtitle": ""
+        "background": false
       }
     }
   },

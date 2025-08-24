@@ -1,13 +1,16 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "main-blog",
-      "blocks": {},
-      "block_order": [
-        "66171bd6-2ff6-4239-8d1d-0e62ebbf5485",
-        "c472c4df-3554-435c-a7ad-ff64424c31e5",
-        "516dabd4-9822-43c7-a946-da04a5973845"
-      ],
       "settings": {
         "section_width": "global",
         "container_max_width": 1178,

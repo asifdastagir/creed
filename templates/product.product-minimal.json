@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -93,8 +102,7 @@
             "use_global_blocks_desktop_space": true,
             "picker_type": "button",
             "use_pics": true,
-            "use_variants_media": true,
-            "swatches_width": 22
+            "use_variants_media": true
           }
         },
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8": {
@@ -104,7 +112,6 @@
             "use_global_blocks_desktop_space": true,
             "show_dynamic_checkout": true,
             "show_cart_note": true,
-            "buy_button_hide_quantity": false,
             "button_animation": "shakeY",
             "button_delay_start": 10,
             "button_pause": 10,
@@ -154,10 +161,6 @@
             "heading": "Description",
             "opened": false
           }
-        },
-        "25a852af-928f-4015-99b4-36e3ee284cfe": {
-          "type": "shopify://apps/product-reviews/blocks/reviews/bae150af-8da8-48b2-9867-398188115e5f",
-          "settings": {}
         }
       },
       "block_order": [
@@ -176,11 +179,7 @@
         "76950c5f-272a-48a3-984e-4d6f1806cbab",
         "8d2dfbaa-2c52-4b6c-bc3b-9f8e74051088",
         "c76032b7-b980-426d-a29d-78e790a4bcf2",
-        "ec7689d3-c6aa-48df-8382-aad75ba581e3",
-        "25a852af-928f-4015-99b4-36e3ee284cfe",
-        "a776bd44-7b46-4d2c-8868-ff6fb48df973",
-        "9ae92ad8-6003-4195-889e-8da21836a04e",
-        "8a8946ca-7f06-4a27-8a6d-d19cf76a6d30"
+        "ec7689d3-c6aa-48df-8382-aad75ba581e3"
       ],
       "settings": {
         "spacing_sections": 46,
@@ -195,7 +194,6 @@
         "bottom_tabs": true,
         "apps_placement": "tab",
         "thumbs_position": "bottom",
-        "product_media_main_cover": true,
         "product_media_main_fill_color": "bg-white",
         "enable_video_looping": false,
         "thumbs": true,
@@ -252,6 +250,10 @@
     "1645027960e9e80794": {
       "type": "index-recently-viewed-items",
       "settings": {
+        "limit": 8,
+        "heading_alignment": "center",
+        "heading": "Recently Viewed Products",
+        "subtitle": "",
         "spacing_sections": 100,
         "use_global_desktop_space": true,
         "spacing_sections_mobile": 70,
@@ -260,11 +262,7 @@
         "use_global_desktop_space_padding": true,
         "spacing_padding_sections_mobile": 70,
         "use_global_mobile_space_padding": true,
-        "background": false,
-        "limit": 8,
-        "heading_alignment": "center",
-        "heading": "Recently Viewed Products",
-        "subtitle": ""
+        "background": false
       }
     }
   },

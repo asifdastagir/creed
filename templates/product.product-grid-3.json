@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -196,10 +205,7 @@
         "70fe4b5c-ab02-48ca-aeb4-82d4ace7bb11",
         "76950c5f-272a-48a3-984e-4d6f1806cbab",
         "c76032b7-b980-426d-a29d-78e790a4bcf2",
-        "ec7689d3-c6aa-48df-8382-aad75ba581e3",
-        "a776bd44-7b46-4d2c-8868-ff6fb48df973",
-        "9ae92ad8-6003-4195-889e-8da21836a04e",
-        "8a8946ca-7f06-4a27-8a6d-d19cf76a6d30"
+        "ec7689d3-c6aa-48df-8382-aad75ba581e3"
       ],
       "settings": {
         "section_width": "global",

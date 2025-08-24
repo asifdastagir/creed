@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "7d32e181-db3e-4aaf-8f73-0a188fc48351": {
@@ -39,15 +48,6 @@
         "template--20765088514333__7d32e181-db3e-4aaf-8f73-0a188fc48351-banner-1"
       ],
       "settings": {
-        "spacing_sections": 0,
-        "use_global_desktop_space": false,
-        "spacing_sections_mobile": 8,
-        "use_global_mobile_space": false,
-        "spacing_padding_sections": 60,
-        "use_global_desktop_space_padding": true,
-        "spacing_padding_sections_mobile": 70,
-        "use_global_mobile_space_padding": true,
-        "background": false,
         "fluid": false,
         "inner_space": true,
         "slider_bottom_ellipse": false,
@@ -68,24 +68,22 @@
         "heading": "",
         "subtitle": "",
         "lazyload": false,
-        "placeholder": false
+        "placeholder": false,
+        "spacing_sections": 0,
+        "use_global_desktop_space": false,
+        "spacing_sections_mobile": 8,
+        "use_global_mobile_space": false,
+        "spacing_padding_sections": 60,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "background": false
       }
     },
     "10bd415d-1260-4dcb-936f-f55a99d02a82": {
       "type": "index-product-carousel",
       "disabled": true,
       "settings": {
-        "section_width": "global",
-        "container_max_width": 1178,
-        "spacing_sections": 46,
-        "use_global_desktop_space": false,
-        "spacing_sections_mobile": 30,
-        "use_global_mobile_space": false,
-        "spacing_padding_sections": 100,
-        "use_global_desktop_space_padding": true,
-        "spacing_padding_sections_mobile": 70,
-        "use_global_mobile_space_padding": true,
-        "background": false,
         "limit": 4,
         "slides_per_view": "1",
         "compact": true,
@@ -108,7 +106,18 @@
         "button_color": "btn--invert",
         "image_bg_preset": "none",
         "placeholder": false,
-        "hide_on_mobile": false
+        "hide_on_mobile": false,
+        "section_width": "global",
+        "container_max_width": 1178,
+        "spacing_sections": 46,
+        "use_global_desktop_space": false,
+        "spacing_sections_mobile": 30,
+        "use_global_mobile_space": false,
+        "spacing_padding_sections": 100,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "background": false
       }
     },
     "product-grid": {
@@ -128,13 +137,16 @@
         "fluid": false,
         "infinite_scroll": true,
         "update_url": false,
-        "enable_sorting": true,
         "product_reviews": true
       }
     },
     "16449230461ed3a51f": {
       "type": "index-recently-viewed-items",
       "settings": {
+        "limit": 8,
+        "heading_alignment": "center",
+        "heading": "Recently Viewed Products",
+        "subtitle": "Exclusive section that stores the history of product views",
         "section_width": "global",
         "container_max_width": 1178,
         "spacing_sections": 100,
@@ -145,11 +157,7 @@
         "use_global_desktop_space_padding": true,
         "spacing_padding_sections_mobile": 70,
         "use_global_mobile_space_padding": true,
-        "background": false,
-        "limit": 8,
-        "heading_alignment": "center",
-        "heading": "Recently Viewed Products",
-        "subtitle": "Exclusive section that stores the history of product views"
+        "background": false
       }
     }
   },

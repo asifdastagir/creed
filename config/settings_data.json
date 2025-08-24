@@ -492,23 +492,26 @@
           "announcement-bar-0": {
             "type": "link",
             "settings": {
-              "title": "Try Shopify store for FREE!",
-              "text_2": "Open store right now",
+              "title": "\"Memory\" Collection available now Free delivery from 160€.",
+              "text_2": "",
               "url": "https://shopify.pxf.io/jrromn",
               "button_target_blank": true
             }
           },
-          "announcement-bar-1": {
-            "type": "discount",
+          "link_3Np8NQ": {
+            "type": "link",
             "settings": {
-              "title": "Save 30-70% Sitewide!!!",
-              "text_2": "Click And Copy Code",
-              "discount": "save70",
-              "copied_text": "Code Copied!"
+              "title": "10% For New Customers - Code: NEW10",
+              "text_2": "",
+              "url": "",
+              "button_target_blank": true
             }
           }
         },
-        "block_order": ["announcement-bar-0", "announcement-bar-1"],
+        "block_order": [
+          "announcement-bar-0",
+          "link_3Np8NQ"
+        ],
         "settings": {
           "enable": true,
           "height_desktop": 53,
@@ -531,10 +534,13 @@
           "welcome_txt": "WELCOME TO OUR STORE LOGO",
           "svg_logo": false,
           "svg_logo_name": "logo.svg",
+          "logo": "shopify://shop_images/creed-logo.png",
           "logo_width": 144,
           "logo_width_mobile": 80,
           "svg_logo_transparent": false,
           "svg_logo_name_transparent": "logo-white.svg",
+          "logo_transparent": "shopify://shop_images/creed-logo.png",
+          "logo_sticky": "shopify://shop_images/creed-logo.png",
           "logo_sticky_width": 144,
           "show_cart_note": true,
           "header_search": true,
@@ -542,7 +548,7 @@
           "featured_link_url": "",
           "featured_link_badge": "Sale",
           "menu_categories_button": true,
-          "menu_categories": "catalog-cars",
+          "menu_categories": "",
           "menu_categories_previews": true,
           "tab_button_invert": false
         }
@@ -571,7 +577,7 @@
             "type": "link_list",
             "settings": {
               "heading": "Get Shopping",
-              "menu": "footer-menu-2",
+              "menu": "",
               "column_width": 17,
               "column_opened": true
             }
@@ -755,13 +761,11 @@
               "button_text": "View all products",
               "button_url": "",
               "brands": "automatic",
-              "image_1_fullwidth": "shopify://shop_images/menu-banner-06.png",
               "color_placeholder_image_1_fullwidth": "#f4f5f9",
               "image_1_href_fullwidth": "shopify://collections/women",
               "image_1_caption_1_fullwidth": "SELECTED SHIRTS",
               "image_1_caption_2_fullwidth": "Summer Sale",
               "image_1_captions_invert_fullwidth": false,
-              "image_2_fullwidth": "shopify://shop_images/menu-banner-07.png",
               "color_placeholder_image_2_fullwidth": "#f1f6fa",
               "image_2_href_fullwidth": "shopify://collections/women",
               "image_2_caption_1_fullwidth": "DISCOUNT",
@@ -775,7 +779,6 @@
             "settings": {
               "layout": "boxed",
               "boxed_columns_count": 3,
-              "image_1_boxed": "shopify://shop_images/menu-banner-03.png",
               "color_placeholder_image_1_boxed": "#f0f6fd",
               "image_1_href_boxed": "shopify://collections/women",
               "image_1_caption_1_boxed": "TODAY ONLY",
@@ -838,62 +841,6 @@
         "settings": {
           "style": "classic",
           "clock": true
-        }
-      },
-      "demo-intro-announcement-bar": {
-        "type": "demo-intro-announcement-bar",
-        "blocks": {
-          "b8026122-c08f-4b85-bb81-c9b02ba809cc": {
-            "type": "link",
-            "settings": {
-              "title": "50% off this week only!",
-              "text_2": "Hurry up to buy a theme →",
-              "url": "https://themeforest.net/user/bigsteps/portfolio"
-            }
-          },
-          "a52c6af9-48e6-4707-978c-0e55221a2c80": {
-            "type": "discount",
-            "settings": {
-              "title": "First theme with own subscription widgets",
-              "text_2": "",
-              "discount": "",
-              "copied_text": ""
-            }
-          },
-          "b846b3b9-8760-4373-9e12-6137dd1add8b": {
-            "type": "link",
-            "settings": {
-              "title": "Real Shipping Calculator",
-              "text_2": "",
-              "url": ""
-            }
-          },
-          "27498d94-e6e8-4f87-8d38-5059da95c2a0": {
-            "type": "link",
-            "settings": {
-              "title": "Shopify 2.0 Sections Everywhere",
-              "text_2": "",
-              "url": ""
-            }
-          },
-          "6fd2642a-d52c-4a60-90fe-be021e230673": {
-            "type": "link",
-            "settings": {
-              "title": "Multilanguages Ready",
-              "text_2": "",
-              "url": ""
-            }
-          }
-        },
-        "block_order": [
-          "b8026122-c08f-4b85-bb81-c9b02ba809cc",
-          "a52c6af9-48e6-4707-978c-0e55221a2c80",
-          "b846b3b9-8760-4373-9e12-6137dd1add8b",
-          "27498d94-e6e8-4f87-8d38-5059da95c2a0",
-          "6fd2642a-d52c-4a60-90fe-be021e230673"
-        ],
-        "settings": {
-          "enable": true
         }
       }
     },
