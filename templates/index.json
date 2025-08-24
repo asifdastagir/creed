@@ -52,12 +52,11 @@
         "1664376151123c8161-1": {
           "type": "banner",
           "settings": {
-            "image": "shopify://shop_images/Mask_group.png",
             "video_loop": false,
             "video_darkness": 0,
             "color_placeholder": "#f3477c",
             "title": "Limited Offer",
-            "subtitle": "39$ 89$",
+            "subtitle": "39$ <del>89$</del>",
             "invert_color": true,
             "custom_caption_colorization": false,
             "color_title": "rgba(0,0,0,0)",
@@ -1003,181 +1002,6 @@
         "section_decoration_bottom_color": ""
       }
     },
-    "16643767055db8d6bf": {
-      "type": "index-instagram",
-      "blocks": {
-        "1664376705a5d0ebcb-8": {
-          "type": "photo",
-          "settings": {
-            "title": "Title",
-            "url": "https://www.instagram.com/lumia_theme_shopify/"
-          }
-        },
-        "1664376705a5d0ebcb-0": {
-          "type": "photo",
-          "settings": {
-            "title": "Title",
-            "url": "https://www.instagram.com/lumia_theme_shopify/"
-          }
-        },
-        "1664376705a5d0ebcb-1": {
-          "type": "photo",
-          "settings": {
-            "title": "Title",
-            "url": "https://www.instagram.com/lumia_theme_shopify/"
-          }
-        },
-        "1664376705a5d0ebcb-3": {
-          "type": "photo",
-          "settings": {
-            "title": "Title",
-            "url": "https://www.instagram.com/lumia_theme_shopify/"
-          }
-        },
-        "1664376705a5d0ebcb-4": {
-          "type": "photo",
-          "settings": {
-            "title": "Title",
-            "url": "https://www.instagram.com/lumia_theme_shopify/"
-          }
-        },
-        "1664376705a5d0ebcb-2": {
-          "type": "photo",
-          "settings": {
-            "title": "Title",
-            "url": "https://www.instagram.com/lumia_theme_shopify/"
-          }
-        },
-        "1664376705a5d0ebcb-6": {
-          "type": "photo",
-          "settings": {
-            "title": "Title",
-            "url": "https://www.instagram.com/lumia_theme_shopify/"
-          }
-        },
-        "1664376705a5d0ebcb-7": {
-          "type": "photo",
-          "settings": {
-            "title": "Title",
-            "url": "https://www.instagram.com/lumia_theme_shopify/"
-          }
-        },
-        "1664376705a5d0ebcb-5": {
-          "type": "photo",
-          "settings": {
-            "title": "Title",
-            "url": "https://www.instagram.com/lumia_theme_shopify/"
-          }
-        },
-        "a5f61cb8-5f0d-4689-a056-23e3ae09ad25": {
-          "type": "photo",
-          "disabled": true,
-          "settings": {
-            "title": "Title",
-            "url": ""
-          }
-        },
-        "0547c6c8-6f02-415e-9e39-e52e11074806": {
-          "type": "photo",
-          "disabled": true,
-          "settings": {
-            "title": "Title",
-            "url": ""
-          }
-        },
-        "20c7615f-3bcf-4a49-892d-7745e2d16661": {
-          "type": "photo",
-          "disabled": true,
-          "settings": {
-            "title": "Title",
-            "url": ""
-          }
-        }
-      },
-      "block_order": [
-        "1664376705a5d0ebcb-8",
-        "1664376705a5d0ebcb-0",
-        "1664376705a5d0ebcb-1",
-        "1664376705a5d0ebcb-3",
-        "1664376705a5d0ebcb-4",
-        "1664376705a5d0ebcb-2",
-        "1664376705a5d0ebcb-6",
-        "1664376705a5d0ebcb-7",
-        "1664376705a5d0ebcb-5",
-        "a5f61cb8-5f0d-4689-a056-23e3ae09ad25",
-        "0547c6c8-6f02-415e-9e39-e52e11074806",
-        "20c7615f-3bcf-4a49-892d-7745e2d16661"
-      ],
-      "settings": {
-        "section_animation": true,
-        "fluid": false,
-        "layout": "circle_grid",
-        "insta_max": 9,
-        "manual": true,
-        "url": "",
-        "heading": "#@Shop By Instagram",
-        "insta_token": "IGQVJYZAHFFOGVrS014czFsS2l0dzVzM0NmVzZAkd3RDU1I2SGV3S0JSTVF1TmUyYVZALMjJxUkM1RTJMbTNPV091MUxlR1ZAfSk4zcWgwelYwNkFpM3p3emhYRGM5UjZAELU1UQXBHWVo3Nkw2dTJWbDNlYQZDZD",
-        "insta_tag": "fashionDefault",
-        "section_width": "global",
-        "container_max_width": 1178,
-        "spacing_sections": 100,
-        "use_global_desktop_space": true,
-        "spacing_sections_mobile": 70,
-        "use_global_mobile_space": true,
-        "spacing_padding_sections": 100,
-        "use_global_desktop_space_padding": true,
-        "spacing_padding_sections_mobile": 70,
-        "use_global_mobile_space_padding": true,
-        "background": true,
-        "background_preset": "none",
-        "background_behavior": "bg-cover",
-        "background_image_placeholder_type": "color_global_secondary_bg",
-        "background_image_placeholder": "",
-        "section_decoration_top": "none",
-        "section_decoration_top_color_type": "color_global_primary_bg",
-        "section_decoration_top_color": "",
-        "section_decoration_bottom": "none",
-        "section_decoration_bottom_color_type": "color_global_primary_bg",
-        "section_decoration_bottom_color": ""
-      }
-    },
-    "68114ff3-47df-401e-86a7-efb9cc276a34": {
-      "type": "index-ticker",
-      "settings": {
-        "layout": "default",
-        "text": "<em>Hot offers ticker section </em>                              <a href=\"https://shopify.pxf.io/c/2245513/1061744/13624\" target=\"_blank\" title=\"https://shopify.pxf.io/c/2245513/1061744/13624\"><strong>Start your free trial</strong> and enjoy 1 months of Shopify for <strong>$1</strong>/month on select plans.</a>",
-        "color_text": "",
-        "text_2": "",
-        "color_text2": "",
-        "megaphone": false,
-        "badge_sale_ticker_speed": 7,
-        "under_slider": false,
-        "font_size_desktop": 80,
-        "font_size_mobile": 60,
-        "font_weight": "900",
-        "countdown": false,
-        "countdown_period": "none",
-        "countdown_text": "** Use Cupone Code  <span class=\"theme-color\">CYBER</span>",
-        "color_countdown_text": "",
-        "button": false,
-        "button_text": "View all sales",
-        "button_url": "",
-        "button_color": "btn--invert",
-        "image_bg_preset": "none",
-        "spacing_sections": 0,
-        "use_global_desktop_space": false,
-        "spacing_sections_mobile": 0,
-        "use_global_mobile_space": false,
-        "spacing_padding_sections": 100,
-        "use_global_desktop_space_padding": true,
-        "spacing_padding_sections_mobile": 70,
-        "use_global_mobile_space_padding": true,
-        "background": false,
-        "background_behavior": "bg-cover",
-        "background_image_placeholder_type": "color_global_secondary_bg",
-        "background_image_placeholder": ""
-      }
-    },
     "d3e375b7-930a-42ff-ad59-0c46be1cdc58": {
       "type": "index-negative-space",
       "settings": {
@@ -1199,8 +1023,6 @@
     "16643766588e956a32",
     "166437667450e6e358",
     "1664376687b727c411",
-    "16643767055db8d6bf",
-    "68114ff3-47df-401e-86a7-efb9cc276a34",
     "d3e375b7-930a-42ff-ad59-0c46be1cdc58"
   ]
 }

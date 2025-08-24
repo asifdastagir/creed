@@ -1,0 +1,367 @@
+/* Hero Video Section Styles */
+
+.hero-video-section {
+    --hero-opacity: 1;
+    --gutter: 1rem;
+    position: relative;
+    height: 100vh;
+    clip-path: inset(0 0 0 0);
+    background-color: black;
+    color: white;
+    overflow: hidden;
+}
+
+.hero-video-section .w-viewport {
+    width: 100vw;
+}
+
+.hero-video-section .h-full {
+    height: 100%;
+}
+
+.hero-video-section .grid-layout {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(12, 1fr);
+    height: 100%;
+}
+
+.hero-video-section .col-start-1 {
+    grid-column-start: 1;
+}
+
+.hero-video-section .col-end-7 {
+    grid-column-end: 7;
+}
+
+.hero-video-section .col-end-5 {
+    grid-column-end: 5;
+}
+
+.hero-video-section .row-start-1 {
+    grid-row-start: 1;
+}
+
+.hero-video-section .md\:col-start-1 {
+    grid-column-start: 1;
+}
+
+.hero-video-section .md\:col-end-7 {
+    grid-column-end: 7;
+}
+
+.hero-video-section .md\:col-end-5 {
+    grid-column-end: 5;
+}
+
+.hero-video-section .sm\:col-start-1 {
+    grid-column-start: 1;
+}
+
+.hero-video-section .sm\:col-end-5 {
+    grid-column-end: 5;
+}
+
+.hero-video-section .flex {
+    display: flex;
+}
+
+.hero-video-section .items-center {
+    align-items: center;
+}
+
+.hero-video-section .items-end {
+    align-items: end;
+}
+
+.hero-video-section .flex-col {
+    flex-direction: column;
+}
+
+.hero-video-section .gap-5 {
+    gap: 1.25rem;
+}
+
+.hero-video-section .pb-20 {
+    padding-bottom: 5rem;
+}
+
+.hero-video-section .lg\:pb-8 {
+    padding-bottom: 2rem;
+}
+
+.hero-video-section .px-gutter {
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+}
+
+.hero-video-section .relative {
+    position: relative;
+}
+
+.hero-video-section .absolute {
+    position: absolute;
+}
+
+.hero-video-section .fixed {
+    position: fixed;
+}
+
+.hero-video-section .top-0 {
+    top: 0;
+}
+
+.hero-video-section .left-0 {
+    left: 0;
+}
+
+.hero-video-section .inset-0 {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.hero-video-section .z-10 {
+    z-index: 10;
+}
+
+.hero-video-section .w-full {
+    width: 100%;
+}
+
+.hero-video-section .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.hero-video-section .lead-text {
+    font-size: clamp(2rem, 8vw, 6rem);
+    line-height: 0.9;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.hero-video-section .whitespace-nowrap {
+    white-space: nowrap;
+}
+
+.hero-video-section .text-pre {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.hero-video-section .large {
+    font-size: 1.125rem;
+    line-height: 1.75;
+}
+
+.hero-video-section .w-1\.75 {
+    width: 0.4375rem;
+}
+
+.hero-video-section .h-1\.75 {
+    height: 0.4375rem;
+}
+
+.hero-video-section .-top-12 {
+    top: -3rem;
+}
+
+.hero-video-section .lg\:-top-20 {
+    top: -5rem;
+}
+
+.hero-video-section .-bottom-12 {
+    bottom: -3rem;
+}
+
+.hero-video-section .lg\:-bottom-20 {
+    bottom: -5rem;
+}
+
+.hero-video-section .left-1\/2 {
+    left: 50%;
+}
+
+.hero-video-section .-translate-x-1\/2 {
+    transform: translateX(-50%);
+}
+
+.hero-video-section .bottom-gutter {
+    bottom: var(--gutter);
+}
+
+.hero-video-section .left-gutter {
+    left: var(--gutter);
+}
+
+.hero-video-section .lg\:hidden {
+    display: none;
+}
+
+.hero-video-section .-lg\:hidden {
+    display: block;
+}
+
+.hero-video-section .object-cover {
+    object-fit: cover;
+}
+
+.hero-video-section .focal-point-center {
+    object-position: center;
+}
+
+.hero-video-section .after\:absolute::after {
+    content: '';
+    position: absolute;
+}
+
+.hero-video-section .after\:inset-0::after {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.hero-video-section .after\:bg-black\/30::after {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+.hero-video-section video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* Responsive Design */
+
+@media (max-width: 1024px) {
+    .hero-video-section .lg\:hidden {
+        display: block;
+    }
+    .hero-video-section .-lg\:hidden {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-video-section .sm\:col-start-1 {
+        grid-column-start: 1;
+    }
+    .hero-video-section .sm\:col-end-5 {
+        grid-column-end: 5;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero-video-section .col-start-1 {
+        grid-column-start: 1;
+    }
+    .hero-video-section .col-end-5 {
+        grid-column-end: 5;
+    }
+}
+
+
+/* Video Overlay */
+
+.hero-video-section .video-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.1) 50%, rgba(0, 0, 0, 0.4) 100%);
+    pointer-events: none;
+}
+
+
+/* Plus Icon Animations */
+
+.hero-video-section svg {
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.hero-video-section svg:hover {
+    opacity: 0.8;
+    transform: scale(1.1);
+}
+
+
+/* Text Animations */
+
+.hero-video-section .lead-text span {
+    display: inline-block;
+    animation: fadeInUp 0.8s ease-out forwards;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+.hero-video-section .lead-text span:nth-child(1) {
+    animation-delay: 0.2s;
+}
+
+.hero-video-section .lead-text span:nth-child(2) {
+    animation-delay: 0.4s;
+}
+
+.hero-video-section .text-pre.large {
+    animation: fadeInUp 0.8s ease-out 0.6s forwards;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Loading States */
+
+.hero-video-section video {
+    transition: opacity 0.5s ease-in-out;
+}
+
+.hero-video-section video[poster] {
+    opacity: 1;
+}
+
+.hero-video-section video:not([poster]) {
+    opacity: 0;
+}
+
+.hero-video-section video.loaded {
+    opacity: 1;
+}
+
+
+/* Accessibility */
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-video-section svg,
+    .hero-video-section .lead-text span,
+    .hero-video-section .text-pre.large {
+        animation: none;
+        transition: none;
+    }
+}
+
+
+/* High Contrast Mode */
+
+@media (prefers-contrast: high) {
+    .hero-video-section .after\:bg-black\/30::after {
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+    .hero-video-section .lead-text {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+}

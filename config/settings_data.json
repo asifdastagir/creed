@@ -492,32 +492,32 @@
           "announcement-bar-0": {
             "type": "link",
             "settings": {
-              "title": "Try Shopify store for FREE!",
-              "text_2": "Open store right now",
-              "url": "https://shopify.pxf.io/jrromn",
+              "title": "\"Memory\" Collection available now Free delivery from 160€.",
+              "text_2": "",
+              "url": "",
               "button_target_blank": true
             }
           },
-          "announcement-bar-1": {
-            "type": "discount",
+          "link_3Np8NQ": {
+            "type": "link",
             "settings": {
-              "title": "Save 30-70% Sitewide!!!",
-              "text_2": "Click And Copy Code",
-              "discount": "save70",
-              "copied_text": "Code Copied!"
+              "title": "10% For New Customers - Code: NEW10",
+              "text_2": "",
+              "url": "",
+              "button_target_blank": true
             }
           }
         },
         "block_order": [
           "announcement-bar-0",
-          "announcement-bar-1"
+          "link_3Np8NQ"
         ],
         "settings": {
           "enable": true,
-          "height_desktop": 53,
-          "height_mobile": 46,
-          "font_size_desktop": 21,
-          "font_size_mobile": 13
+          "height_desktop": 39,
+          "height_mobile": 39,
+          "font_size_desktop": 11,
+          "font_size_mobile": 11
         }
       },
       "header": {
@@ -534,11 +534,13 @@
           "welcome_txt": "WELCOME TO OUR STORE LOGO",
           "svg_logo": false,
           "svg_logo_name": "logo.svg",
-          "logo": "shopify://shop_images/Mask_group.png",
+          "logo": "shopify://shop_images/creed-logo.png",
           "logo_width": 144,
           "logo_width_mobile": 80,
           "svg_logo_transparent": false,
           "svg_logo_name_transparent": "logo-white.svg",
+          "logo_transparent": "shopify://shop_images/creed-logo.png",
+          "logo_sticky": "shopify://shop_images/creed-logo.png",
           "logo_sticky_width": 144,
           "show_cart_note": true,
           "header_search": true,
