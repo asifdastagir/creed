@@ -9395,10 +9395,10 @@ ul.prd-option-list {
 
 .prd.prd--style1 {
   height          : 100%;
-  padding         : 10px;
+  padding         : 30px;
   border-radius   : var(--radius-md, 16px);
   background-color: var(--product-card-bg);
-  box-shadow      : 0 0 14px rgba(0, 0, 0, var(--global-box-shadow, .04));
+  box-shadow      : 10px 6px 40px 0px #00000017;
   transition      : box-shadow .2s
 }
 
@@ -9429,9 +9429,9 @@ ul.prd-option-list {
   align-items   : center
 }
 
-.prd.prd--style1 .prd-top .prd-name {
+/* .prd.prd--style1 .prd-top .prd-name {
   display: none
-}
+} */
 
 .prd.prd--style1 .prd-bot {
   -ms-flex-pack  : center;
@@ -12583,9 +12583,9 @@ minicart-prd-img {
   height: 100%
 }
 
-body:not(.rtl-mode) .swiper-container-prd-carousel .swiper-slide:not(.swiper-slide-visible) .prd {
+/* body:not(.rtl-mode) .swiper-container-prd-carousel .swiper-slide:not(.swiper-slide-visible) .prd {
   box-shadow: none
-}
+} */
 
 .has-product-style1 .swiper-container-prd-carousel .swiper-slide,
 .has-product-style1 .swiper-container-prd-carousel .swiper-wrapper,

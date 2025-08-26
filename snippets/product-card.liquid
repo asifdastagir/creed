@@ -124,15 +124,7 @@
 -%}
 <product-card class="prd {% if hide_hover %}prd--hover-off{% endif %} {% if settings.product_card_layout == '3' %}prd--style1{% endif %} prd--style{{ settings.product_card_layout }} {% if settings.product_card_image_mobile_rounded_image %}mobile-rounded-on{% endif %} {% unless settings.product_card_vendor %}prd-off-vendor{% endunless %} {% if swatches_lazy %}lazyload{% endif %}" {% if swatches_lazy %}data-ajax="{{ product_url }}&section_id=async-product-card-variant-picker{{ product_form_suffix }}" data-expand="-50"{% endif %} data-section-render data-available="{% if product.available %}true{% else %}false{% endif %}">
   {%- if settings.product_card_layout == '1' -%}
-    <div class="prd-top">
-      {%- if settings.product_card_vendor and show_price_old == true -%}
-        <a class="prd-category" href="{{ product.vendor | url_for_vendor }}" data-tippy-content="{{ 'theme.general.show_all_products_from_vendor' | t | escape }}" data-tippy-placement="top">
-          {{ product.vendor | upcase | truncate: 15, '..' }}
-        </a>
-      {%- endif -%}
-      <h3 class="prd-name"><a href="{{ product_url_collection }}" class="" data-url>{{ product.title | escape | truncate: settings.product_card_title_truncate, '..' }}</a></h3>
-      {%- render 'price', product: product, use_variant: true, render: true, product_card_style_1: true, product_form_id: product_form_id, product_card: true -%}
-    </div>
+    
     <div class="prd-image-wrap image-container ic--ignore-global-round {% if media_size == 1 %}image-hover-scale{% endif %} {% if settings.product_card_cover %}ic--cover{% endif %} {% if settings.product_card_image_rounded == "1" %}ic--rd ic--img-r{% endif %} {{ bg_class }} {% if settings.product_card_image_padding == "0" %} no-gutter{% endif %}" style="--product-aspect-ratio: {{ aspect_ratio }}%;--aspect-ratio: {{ aspect_ratio }}" >
       {% render 'product-card-media',
         product: product,
@@ -153,6 +145,17 @@
         {% render 'product-countdown', render: true, section: section, product: product, class: ' hide-on-hover', product_form_id: product_form_id %}
       {%- endif -%}
     </div>
+    
+    <div class="prd-top">
+      {% comment %} {%- if settings.product_card_vendor and show_price_old == true -%}
+        <a class="prd-category" href="{{ product.vendor | url_for_vendor }}" data-tippy-content="{{ 'theme.general.show_all_products_from_vendor' | t | escape }}" data-tippy-placement="top">
+          {{ product.vendor | upcase | truncate: 15, '..' }}
+        </a>
+      {%- endif -%} {% endcomment %}
+      <h3 class="prd-name"><a href="{{ product_url_collection }}" class="" data-url>{{ product.title | escape | truncate: settings.product_card_title_truncate, '..' }}</a></h3>
+      {%- render 'price', product: product, use_variant: true, render: true, product_card_style_1: true, product_form_id: product_form_id, product_card: true -%}
+    </div>
+    
       <div class="prd-bot hide-on-hover">
        {%- if settings.product_card_show_variants and product_card_quick_options != 'none' and show_variant_picker -%}
           {% render 'variant_picker',
