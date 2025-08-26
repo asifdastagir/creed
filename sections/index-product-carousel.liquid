@@ -419,8 +419,8 @@
                         class_ic: 'bnr-img',
                         style: ic_style
                       %}
-                      <div class="bnr-caption h-100 {% if section.settings.invert_color %}colorize-invert{% endif %}" style="--padding: 18% 0; --padding-mobile:  18% 0; --caption-width: 74%; --caption-width-mobile: 74%;">
-                        <div class="bnr-text" style="font-size: .3em; line-height: 1.2em; font-weight: {{ settings.font_weight_500 }};">{{ section.settings.banner_title }}</div>
+                      <div class="bnr-caption bottom-0 {% if section.settings.invert_color %}colorize-invert{% endif %}" style="--padding: 4% 0; --padding-mobile:  4% 0; --caption-width: 92%; --caption-width-mobile: 92%;">
+                        <div class="bnr-text text-white text-uppercase text-left mb-2"  style="font-size: .3em; line-height: 1.2em; font-weight: {{ settings.font_weight_500 }};">{{ section.settings.banner_title }}</div>
                         {%- if section.settings.button -%}
                           <div class="bnr-btn-wrap mt-auto">
                             <div class="btn w-100 {{ section.settings.button_color }}">{{ section.settings.button_text }}</div>
@@ -432,7 +432,7 @@
                 </flow-type>
               </div>
             {%- else -%}
-              <div class="col-lg-6">
+              <div class="col-lg-4">
                 <flow-type>
                   <a href="{{ section.settings.button_url }}" class="bnr-wrap h-100 position-relative z-index-over">
                     {%- liquid
@@ -495,10 +495,10 @@
                 assign col = col | append: suffix
               else
                 if decoration
-                  assign col = 'd-flex flex-column justify-content-center col-lg-6 px-3 px-md-5 py-global ' | append: section.settings.background_inner_type
+                  assign col = 'd-flex flex-column justify-content-center col-lg-8 px-3 px-md-5 py-global ' | append: section.settings.background_inner_type
                   assign style = 'style="--padding-top-desktop: 200px;--padding-bottom-desktop: 200px;--padding-top-mobile:50px;' | append: inner_bg_custom | append: '"'
                 else
-                  assign col = 'd-flex flex-column justify-content-center col-lg-6 p-3 p-md-5 ' | append: section.settings.background_inner_type
+                  assign col = 'd-flex flex-column justify-content-center col-lg-8 p-3 p-md-5 ' | append: section.settings.background_inner_type
                   assign style = 'style="' | append: inner_bg_custom | append: '"'
                 endif
               endif
