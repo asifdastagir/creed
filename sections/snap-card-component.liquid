@@ -1,0 +1,83 @@
+{% comment %}
+  Snap Card Component Section
+{% endcomment %}
+
+<section 
+  id="snapCardComponent-{{ section.id }}" 
+  class="component component-animation relative grid items-start min-h-screen bg-grey text-white"
+>
+  <div class="sticky z-10 top-header header-folded:top-0 grid-layout gap-y-5 px-gutter py-gutter transition-[top] ease-in-out duration-500">
+    <div class="col-start-1 col-end-7 lg:col-end-6 block text-h2 relative z-10">
+      <h2 class="flex flex-col">
+        <span>{{ section.settings.heading_line1 }}</span>
+        <span>{{ section.settings.heading_line2 }}</span>
+      </h2>
+    </div>
+    <div class="rich-text col-start-1 col-end-10 lg:col-end-13 lg:col-start-9 relative z-10">
+      <p>{{ section.settings.text }}</p>
+    </div>
+  </div>
+
+  <div class="absolute inset-0 overflow-hidden focal-point-center">
+    <picture>
+      <source 
+        media="(min-aspect-ratio: 16/9)" 
+        width="1600" 
+        height="900" 
+        sizes="100vw" 
+        srcset="{{ section.settings.image | image_url: width: 1600 }}">
+      <source 
+        media="(min-aspect-ratio: 1/1)" 
+        width="900" 
+        height="900" 
+        sizes="100vw" 
+        srcset="{{ section.settings.image | image_url: width: 900 }}">
+      <img 
+        loading="lazy" 
+        alt="{{ section.settings.image.alt | escape }}" 
+        class="w-full h-full object-cover" 
+        src="{{ section.settings.image | image_url: width: 1200 }}" 
+        width="506" 
+        height="900" 
+        sizes="100vw">
+    </picture>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Snap Card Component",
+  "tag":"section",
+  "class": "snap-card",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading_line1",
+      "label": "Heading Line 1",
+      "default": "Aesthetically"
+    },
+    {
+      "type": "text",
+      "id": "heading_line2",
+      "label": "Heading Line 2",
+      "default": "Engineered Coverage"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Description",
+      "default": "High performance coverage waistband and integrated knee length liner built for the active without compromise."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background Image"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Snap Card Component"
+    }
+  ]
+}
+{% endschema %}
