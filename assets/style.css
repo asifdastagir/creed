@@ -8532,7 +8532,7 @@ swiper-carousel.hover-off .prd {
   display        : flex;
   -ms-flex-pack  : justify;
   justify-content: space-between;
-  padding        : 6px 12px 18px
+  padding        : 6px 0 18px
 }
 
 .prd-bot {
@@ -8564,7 +8564,7 @@ swiper-carousel.hover-off .prd {
   }
 }
 
-.prd-hover {
+/* .prd-hover {
   position           : absolute;
   z-index            : 21;
   transform          : translateY(100%);
@@ -8586,7 +8586,7 @@ swiper-carousel.hover-off .prd {
   background-color: var(--product-only-card-hover-bg);
   border-radius   : var(--radius-md, 16px);
   z-index         : -1
-}
+} */
 
 @media (max-width:1024px) {
   .prd-hover {
@@ -8703,13 +8703,12 @@ swiper-carousel.hover-off .prd {
 }
 
 .prd-name a {
-  font-size      : var(--product-card-name-size);
-  font-weight    : var(--product-card-name-weight);
-  font-family    : var(--body-font-family);
-  line-height    : 21px;
-  text-align     : center;
-  text-decoration: none;
-  color          : var(--product-card-link-color)
+  font-size         : var(--product-card-name-size);
+  font-weight       : var(--product-card-name-weight);
+  /* font-family    : var(--body-font-family); */
+  line-height       : 21px;
+  text-decoration   : none;
+  color             : var(--product-card-link-color)
 }
 
 .secondary-color .prd-name a {
@@ -8783,7 +8782,7 @@ swiper-carousel.hover-off .prd {
   justify-content: flex-start;
   -ms-flex-align : baseline;
   align-items    : baseline;
-  font-size      : var(--product-card-price-size);
+  font-size      : 20px;
   line-height    : 1em;
   transition     : .2s;
   transform      : translate3d(0, 0, 0)
@@ -8795,7 +8794,7 @@ swiper-carousel.hover-off .prd {
 }
 
 .prd-price .prd-price-regular {
-  font-weight: var(--global-product-price-width);
+  font-weight: bold;
   font-family: var(--global-product-price-font-family);
   color      : var(--product-price-actual-color)
 }
@@ -9560,6 +9559,15 @@ ul.prd-option-list {
   display: none
 } */
 
+.prd.prd--style1 .prd-des {
+  padding    : 0;
+  margin     : 0;
+  font-size  : 16px;
+  line-height: 26px;
+  font-family: 'Aeonik';
+
+}
+
 .prd.prd--style1 .prd-bot {
   -ms-flex-pack  : center;
   justify-content: center;
@@ -9570,8 +9578,10 @@ ul.prd-option-list {
   bottom       : 0;
   left         : 10px;
   right        : 10px;
-  padding      : 18px 5px 28px;
-  border-radius: var(--radius-md, 16px)
+  padding      : 18px 0 28px;
+  border-radius: var(--radius-md, 16px);
+  display      : flex;
+
 }
 
 .prd.prd--style1 .prd-hover variant-radios,
@@ -9591,7 +9601,42 @@ ul.prd-option-list {
 }
 
 .prd.prd--style1 .prd-hover .prd-action {
-  position: relative
+  position: relative;
+  padding : 0;
+  width   : auto;
+
+}
+
+.prd.prd--style1 .prd-option {
+  display    : flex;
+  align-items: center;
+  gap        : 10px;
+}
+
+.prd.prd--style1 .prd-hover .prd-action .prd-quantity {
+  display: none;
+}
+
+
+.prd.prd--style1 .prd-hover .prd-action .btn {
+  min-width    : max-content;
+  background   : #000000;
+  border-radius: 5px;
+  color        : #FFF;
+  padding      : 11px;
+}
+
+.prd.prd--style1 .prd-hover .prd-action .btn:hover {
+  background: #333333;
+}
+
+.prd.prd--style1 .prd-hover .prd-action .btn-txt {
+  display: none;
+}
+
+.prd.prd--style1 .prd-hover .prd-action .btn-hover-txt {
+  opacity : 1;
+  position: static;
 }
 
 .prd.prd--style1 .prd-price {
@@ -10438,6 +10483,10 @@ body.has-btn-wrap .prd-w-xxs .btn.btn--lg {
 
 .prd-hor .prd-hover .scroll-content {
   padding-right: 10px
+}
+
+.prd-hor .prd-hover .scroll-content .prd-option {
+  display: flex;
 }
 
 .prd-hor .prd-hover .scrollbar-track-y {

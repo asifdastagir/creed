@@ -517,7 +517,7 @@
                     {%- endfor -%}
                   {%- endfor -%}
                 </div>
-                <div class="swiper-pagination position-relative mt-4 mt-md-5{% if section.settings.pagination_invert_color %} colorize-invert-banner{% endif %}"></div>
+                {% comment %} <div class="swiper-pagination position-relative mt-4 mt-md-5{% if section.settings.pagination_invert_color %} colorize-invert-banner{% endif %}"></div> {% endcomment %}
                 <div class="swiper-arrows-carousel container">
                   <div class="swiper-button-next"></div>
                   <div class="swiper-button-prev"></div>
@@ -573,11 +573,11 @@
                         "spaceBetween": 20
                       },
                       "1120": {
-                        "slidesPerView": 4,
+                        "slidesPerView": 3,
                         "spaceBetween": 20
                       },
                       "1400": {
-                        "slidesPerView": 5,
+                        "slidesPerView": 3,
                         "spaceBetween": 20
                       }
                     }
