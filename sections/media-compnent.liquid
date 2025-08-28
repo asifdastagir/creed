@@ -1,0 +1,105 @@
+<section 
+  id="mediaComponent-{{ section.id }}"
+  class="component component--media relative h-[200vh] mb-[-100vh] [clip-path:inset(0_0_100vh_0)] bg-black text-white"
+  style="
+    margin-top: {{ section.settings.margin_top | default: 0 }}px; 
+    margin-bottom: {{ section.settings.margin_bottom | default: 0 }}px;
+  "
+>
+  <div class="sticky top-0 overflow-hidden">
+    <div class="relative focal-point-center w-full h-screen object-cover">
+      <div class="absolute inset-0 overlay block z-infront">
+        <div
+          class="px-gutter text-center flex flex-col h-full items-center justify-center lg:justify-between before:block gap-y-8 py-10 lg:py-16 relative z-10">
+
+          {%- if section.settings.button_label != blank -%}
+            <a href="{{ section.settings.button_url }}" class="flex justify-center items-center gap-2 text-pre large group/play">
+              <span>{{ section.settings.button_label }}</span>
+              <svg class="transition-transform duration-500 ease-in-out group-hover/play:translate-y-3"
+                width="11" height="15" viewBox="0 0 11 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M0.159521 8.9684L1.20659 7.92143L4.8106 11.5407L4.8106 0.645508L6.27958 0.645508L6.27935 2.11425L6.27935 11.5407L9.89859 7.92143L10.9453 8.95323L5.54498 14.3538L0.159521 8.9684Z"
+                  fill="white" />
+              </svg>
+            </a>
+          {%- endif -%}
+        </div>
+
+        {%- if section.settings.image != blank -%}
+          <img 
+            loading="lazy" 
+            alt="{{ section.settings.image.alt | escape }}"
+            class="absolute top-0 left-0 w-full h-full z-behind object-cover"
+            src="{{ section.settings.image | image_url: width: 1600 }}"
+            width="1600" height="900"
+          >
+        {%- endif -%}
+
+      </div>
+
+      {%- if section.settings.video != blank -%}
+        <video 
+          class="w-full h-full relative object-contain" 
+          autoplay muted loop playsinline preload="metadata">
+          <source src="{{ section.settings.video }}" type="video/mp4">
+        </video>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Media Component",
+  "tag": "section",
+  "class": "media-component",
+  "settings": [
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 40
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 40
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background Image"
+    },
+    {
+      "type": "url",
+      "id": "video",
+      "label": "Background Video URL (MP4)"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "About Us"
+    },
+    {
+      "type": "url",
+      "id": "button_url",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Media Component"
+    }
+  ]
+}
+{% endschema %}

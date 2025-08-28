@@ -1,26 +1,29 @@
 {% comment %}
-  Text with image Parallax Component Section
+  Text with Image Parallax Component Section
 {% endcomment %}
 
 <section 
   id="textAndParallaxComponent-{{ section.id }}"
   class="bg-yellow component relative px-gutter min-h-screen flex flex-col bg-white-true text-black {{ section.settings.margin_top }} {{ section.settings.margin_bottom }}"
+  data-parallax-container
 >
   <div class="relative z-10 grid-layout py-6 lg:py-8 gap-y-6 mb-10">
     <div class="col-start-1 col-end-13 lg:row-start-1 lg:col-start-9 lg:col-end-13 lg:text-right">
-      <h2 class="text-pre">{{ section.settings.subtitle }}</h2>
+      <h2 class="text-lg font-semibold">{{ section.settings.subtitle }}</h2>
     </div>
 
     <div class="col-start-1 col-end-13 lg:row-start-1 lg:col-start-1 lg:col-end-6 self-start">
       <div class="grid gap-y-8 lg:gap-y-12">
-        <div class="rich-text text-h3">
+        <div class="rich-text text-2xl">
           <h3>{{ section.settings.heading }}</h3>
           <p>{{ section.settings.description }}</p>
         </div>
         {% if section.settings.cta_label != blank and section.settings.cta_url != blank %}
         <p>
-          <span class="flex pointer-events-none flex-nowrap items-center gap-x-2.25 text-pre group/button">
-            <a class="pointer-events-auto" href="{{ section.settings.cta_url }}" target="_self">
+          <span class="flex pointer-events-none flex-nowrap items-center gap-x-2.25 text-lg group/button">
+            <a class="pointer-events-auto underline hover:text-gray-600 text-[14px]" 
+               href="{{ section.settings.cta_url }}" 
+               {% if section.settings.cta_new_tab %} target="_blank" rel="noopener" {% else %} target="_self" {% endif %}>
               {{ section.settings.cta_label }}
             </a>
             <svg class="w-6 h-6 group-hover/button:translate-x-3 transition-transform duration-500 ease-in-out"
@@ -36,9 +39,9 @@
 
   <div class="grid-layout pb-6 lg:pb-8 mt-auto">
     <div class="col-start-1 col-end-13 lg:col-start-7 lg:col-end-13 self-end">
-      <div class="grid-layout">
+      <div class="grid grid-cols-12 gap-4">
         {% for block in section.blocks %}
-          <div class="col-span-4">
+          <div class="col-span-4" data-parallax-image>
             {% if block.settings.image != blank %}
               <img 
                 loading="lazy" 
@@ -46,6 +49,7 @@
                 src="{{ block.settings.image | image_url: width: 500 }}" 
                 width="236"
                 height="276"
+                class="w-full h-auto object-cover"
               >
             {% endif %}
           </div>
@@ -53,35 +57,32 @@
       </div>
     </div>
   </div>
-
-  <svg xmlns="http://www.w3.org/2000/svg" class="absolute bottom-gutter left-gutter w-1.75 h-1.75"
-      viewBox="0 0 7 7" fill="currentColor" style="opacity: 1;">
-    <path d="M4 0H3V3H0V4H3V7H4V4H7V3H4V0Z"></path>
-  </svg>
 </section>
 
 
 {% schema %}
 {
-  "name": "Image Parallax",
+  "name": "Text image Parallax",
+  "tag": "section",
+  "class": "text-parallax",
   "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "ABOUT US"
+    },
     {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "ABOUT US"
+      "default": "Creed Label was born from MΛSS AWΛKΞNІИG— The idea of being fully awake..."
     },
     {
       "type": "textarea",
       "id": "description",
       "label": "Description",
-      "default": "Creed Label was born from MΛSS AWΛKΞNІИG— The idea of being fully awake..."
-    },
-    {
-    "type": "url",
-    "id": "cta_url",
-    "label": "CTA URL",
-    "default": "/the-science"
+      "default": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
     },
     {
       "type": "text",
@@ -90,24 +91,54 @@
       "default": "Discover the Science"
     },
     {
-      "type": "image_picker",
-      "id": "image1",
-      "label": "Parallax Image 1"
+      "type": "url",
+      "id": "cta_url",
+      "label": "CTA URL"
     },
     {
-      "type": "image_picker",
-      "id": "image2",
-      "label": "Parallax Image 2"
+      "type": "checkbox",
+      "id": "cta_new_tab",
+      "label": "Open CTA in new tab",
+      "default": false
+    },
+     {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 40
     },
     {
-      "type": "image_picker",
-      "id": "image3",
-      "label": "Parallax Image 3"
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 40
+    }
+  ],
+  "blocks": [
+    {
+      "type": "parallax_image",
+      "name": "Parallax Image",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Parallax Image"
+        }
+      ]
     }
   ],
   "presets": [
     {
-      "name": "Image Parallax"
+      "name": "Text + Parallax Component",
+      "category": "Custom"
     }
   ]
 }
