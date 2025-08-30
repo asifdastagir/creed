@@ -64,39 +64,60 @@ gsap.fromTo(".textAndParallaxComponent .col-span-4:nth-child(2) img", { yPercent
     }
 }
 );
+ScrollTrigger.matchMedia({
 
-gsap.fromTo(
-    ".textPromoComponent h2 > span:nth-child(1)",
-    { y: 30 }, // start at +400px
-    {
-        y: -600, // end at -400.5px
-        ease: "none",
-        scrollTrigger: {
-            trigger: ".textPromoComponent",
-            start: "top bottom",   // when section top hits bottom of viewport
-            end: "bottom top",     // when section bottom hits top of viewport
-            scrub: true,
+    // Desktop & Tablet ≥768px
+    "(min-width: 768px)": function () {
 
-        }
+        gsap.fromTo(
+            ".textPromoComponent h2 > span:nth-child(1)",
+            { y: 30 },
+            {
+                y: -600,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: ".textPromoComponent",
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: true,
+                    id: "promo-span-1"
+                }
+            }
+        );
+
+        gsap.fromTo(
+            ".textPromoComponent h2 > span:last-child",
+            { yPercent: 0 },
+            {
+                yPercent: 500,
+                ease: "none",
+                scrollTrigger: {
+                    trigger: ".textPromoComponent",
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: true,
+                    id: "promo-span-2"
+                }
+            }
+        );
+
+    },
+
+    // Mobile <768px
+    "(max-width: 767px)": function () {
+        // Kill only the textPromoComponent animations
+        ScrollTrigger.getAll().forEach(st => {
+            if (st.vars?.id === "promo-span-1" || st.vars?.id === "promo-span-2") {
+                st.kill();
+            }
+        });
+
+        // Reset transforms (important so text isn't stuck offset)
+        gsap.set(".textPromoComponent h2 > span:nth-child(1)", { clearProps: "all" });
+        gsap.set(".textPromoComponent h2 > span:last-child", { clearProps: "all" });
     }
-);
 
-
-gsap.fromTo(
-    ".textPromoComponent h2 > span:last-child",
-    { yPercent: 0 },
-    {
-        yPercent: 500,
-        ease: "none",
-        scrollTrigger: {
-            trigger: ".textPromoComponent",
-            start: "top bottom",   // when section top hits bottom of viewport
-            end: "bottom top",     // when section bottom hits top of viewport
-            scrub: true,
-
-        }
-    }
-);
+});
 
 gsap.fromTo("#Footer-footer",
     { opacity: 0, yPercent: 12 },
