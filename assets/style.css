@@ -1209,7 +1209,7 @@ main-slider .swiper-container {
 }
 
 .swiper-pagination .swiper-pagination-bullet-active:after {
-  background: var(--swiper-pagination-active-color);
+  background: black;
   width     : 27px
 }
 
@@ -9685,14 +9685,14 @@ ul.prd-option-list {
 
 @media (max-width:1024px) {
   .prd.prd--style1 .prd-hover {
-    height            : 100%;
-    display           : -ms-flexbox;
-    display           : flex;
-    -ms-flex-direction: column;
-    flex-direction    : column;
-    -ms-flex-align    : center;
-    align-items       : center;
-    padding           : 0 5px 15px
+    height               : 100%;
+    display              : -ms-flexbox;
+    display              : flex;
+    /* -ms-flex-direction: column;
+    flex-direction       : column; */
+    -ms-flex-align       : center;
+    align-items          : center;
+    padding              : 0 5px 15px
   }
 
   .prd.prd--style1 .prd-bot {

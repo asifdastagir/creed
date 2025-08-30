@@ -517,7 +517,7 @@
                     {%- endfor -%}
                   {%- endfor -%}
                 </div>
-                {% comment %} <div class="swiper-pagination position-relative mt-4 mt-md-5{% if section.settings.pagination_invert_color %} colorize-invert-banner{% endif %}"></div> {% endcomment %}
+                <div class="swiper-pagination lg-hidden position-relative mt-4 mt-md-5{% if section.settings.pagination_invert_color %} colorize-invert-banner{% endif %}"></div>
                 <div class="swiper-arrows-carousel container">
                   <div class="swiper-button-next"></div>
                   <div class="swiper-button-prev"></div>
@@ -565,7 +565,7 @@
                     "breakpointsBase": "container",
                     "breakpoints": {
                       "{{ settings.product_card_one_in_row_width }}": {
-                        "slidesPerView": 2,
+                        "slidesPerView": 1,
                         "spaceBetween": 20
                       },
                       "716": {
