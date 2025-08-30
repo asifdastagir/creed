@@ -17,7 +17,7 @@
     {{ content_for_header }}
   </head>
   <body
-    class="shopify-theme template-{{ request.page_type | handle }} localization-{{ localization.language.iso_code | handle }} {% if rtl_mode %}rtl-mode{% endif %} page-{{ template.suffix }} first-section-off-animate {% if settings.use_ajax_scroll and template == 'index' %}has-ajax-scroll{% endif %} {% unless settings.rounded_disable == "1" %} has-rounded{% endunless %} {% unless settings.rounded_buttons_disable == "1" %} has-button-rounded{% endunless %} initial-hide{% if customer and customer.accepts_marketing %}subscribed{% endif %} {% if settings.animation_sections %}has-animate-scroll{% endif %} full-load-hide{% if settings.catalog_mode %}catalog-mode{% endif %} has-product-style{{ settings.product_card_layout }} filter-layout-{{ settings.filter_layout }} {% if settings.demo %}is-demo{% endif %} {% unless localization.language.iso_code == 'en' %}has-btn-wrap{% endunless %} {% if settings.header_sticky_always_visible %}has-hdr_sticky has-hdr_sticky_not_hiding{% endif %} wishlist-{% if settings.wishlist %}on{% else %}off{% endif %} {% if settings.shipping_calculator_static %}shipping-calculator-static{% endif %} {% if settings.font_headings_style == '2' %}has-headings-style2{% elsif settings.font_headings_style == '3' %}has-headings-style3{% endif %} {% if settings.header_cart_show %}header-cart-dropdown{% endif %} {% if settings.fbt_source == 'app' %}fbt-app{% endif %} {% if settings.product_swatches_rounded %}has-rounded-options{% endif %} {% if settings.fixed_footer %}has-fixed-footer{% endif %}"
+    class="shopify-theme template-{{ request.page_type | handle }} localization-{{ localization.language.iso_code | handle }} {% if rtl_mode %}rtl-mode{% endif %} page-{{ template.suffix }} first-section-off-animate {% unless settings.rounded_disable == "1" %} has-rounded{% endunless %} {% unless settings.rounded_buttons_disable == "1" %} has-button-rounded{% endunless %} initial-hide{% if customer and customer.accepts_marketing %}subscribed{% endif %} {% if settings.animation_sections %}has-animate-scroll{% endif %} full-load-hide{% if settings.catalog_mode %}catalog-mode{% endif %} has-product-style{{ settings.product_card_layout }} filter-layout-{{ settings.filter_layout }} {% if settings.demo %}is-demo{% endif %} {% unless localization.language.iso_code == 'en' %}has-btn-wrap{% endunless %} {% if settings.header_sticky_always_visible %}has-hdr_sticky has-hdr_sticky_not_hiding{% endif %} wishlist-{% if settings.wishlist %}on{% else %}off{% endif %} {% if settings.shipping_calculator_static %}shipping-calculator-static{% endif %} {% if settings.font_headings_style == '2' %}has-headings-style2{% elsif settings.font_headings_style == '3' %}has-headings-style3{% endif %} {% if settings.header_cart_show %}header-cart-dropdown{% endif %} {% if settings.fbt_source == 'app' %}fbt-app{% endif %} {% if settings.product_swatches_rounded %}has-rounded-options{% endif %} {% if settings.fixed_footer %}has-fixed-footer{% endif %}"
     data-tooltip-color="dark"
     data-tooltip-animation="shift-toward"
     data-tooltip-delay="100"
@@ -55,67 +55,8 @@
       role="main">
       {% render 'breadcrumbs' %}
 
-      {%- if settings.use_ajax_scroll and template == 'index' and request.design_mode == false -%}
-        {% capture content_for_layout %}
-          {{ content_for_layout }}
-        {% endcapture %}
-        {%- liquid
-          assign regex_match ='id="shopify-section-[section_id]" class="shopify-section'
-          assign prefix = regex_match | split: '[section_id]' | first
-          assign suffix = regex_match | split: '[section_id]' | last
+      {{ content_for_layout }}
 
-          if content_for_layout contains prefix
-            assign chunks = content_for_layout | split: prefix
-
-            for chunk in chunks
-              if chunk contains suffix
-                assign child_chunk = chunk | split: suffix
-                assign id = child_chunk | first
-                assign ids = ids | append: id | append: " "
-              endif
-            endfor
-
-            assign ids = ids | split: ' '
-            assign id_3 = ids[2]
-            assign regex_match_id_2 ='<section id="shopify-section-' | append: id_3 | append: '" class="shopify-section'
-            assign chunk_not_ajaxed = content_for_layout | split: regex_match_id_2 | first
-
-            assign regex_match ='id="shopify-section-[section_id]" class="shopify-section section-negative-margin'
-            assign suffix = regex_match | split: '[section_id]' | last
-
-            assign chunk_last = chunks | last
-            if chunk_last contains suffix
-              assign id_negative_last = chunk_last | split: suffix | first
-              assign id_last = ids | last
-
-              if id_negative_last == id_last
-                assign show_last_chunk = true
-                assign sections = content_for_layout | split: '</section>'
-                assign sections_pre_last = sections | size | minus: 2
-                assign section_last = sections[sections_pre_last]
-                assign chunk_not_ajaxed_last = section_last | append: '</section>'
-              endif
-            endif
-
-            echo chunk_not_ajaxed
-          endif
-        -%}
-        {%- for id in ids %}
-          {%- if forloop.index > 2 -%}
-            {% if id_negative_last == id_last and id_negative_last == id %}
-              {% continue %}
-            {% endif %}
-            <div data-ajax-section-scroll="{{ routes.root_url }}?section_id={{ id }}&preview_theme_id={{ theme.id }}" class="shopify-section show-on-scroll"></div>
-          {%- endif -%}
-        {% endfor -%}
-      {%- else -%}
-        {{ content_for_layout }}
-      {%- endif -%}
-      {%- liquid
-        if settings.use_ajax_scroll and template == 'index' and request.design_mode == false and show_last_chunk
-          echo chunk_not_ajaxed_last
-        endif
-      -%}
         <div class="sticky left-0 w-viewport z-40 bottom-0 pointer-events-none h-0 overflow-visible flex items-end
                         justify-end px-gutter">
             <div class="w-full flex items-end justify-end gap-2.25 overflow-visible h-max -sm:grid -sm:grid-cols-2">

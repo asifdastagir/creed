@@ -11,9 +11,6 @@ function raf(time) {
 }
 requestAnimationFrame(raf);
 
-
-// Gsap
-
 // GSAP setup
 gsap.registerPlugin(ScrollTrigger);
 lenis.on('scroll', ScrollTrigger.update);
@@ -42,12 +39,12 @@ gsap.utils.toArray(".component-animation").forEach(section => {
 });
 
 
-gsap.fromTo("#textAndParallaxComponent .col-span-4:last-child img", { yPercent: 0, force3D: true }, {
+gsap.fromTo(".textAndParallaxComponent .col-span-4:last-child img", { yPercent: 0, force3D: true }, {
     yPercent: -200,
     ease: "none",
     force3D: true,
     scrollTrigger: {
-        trigger: "#textAndParallaxComponent",
+        trigger: ".textAndParallaxComponent",
         start: "top bottom",
         end: "bottom top",
         scrub: true
@@ -55,12 +52,12 @@ gsap.fromTo("#textAndParallaxComponent .col-span-4:last-child img", { yPercent: 
 }
 );
 
-gsap.fromTo("#textAndParallaxComponent .col-span-4:nth-child(2) img", { yPercent: 0, force3D: true }, {
+gsap.fromTo(".textAndParallaxComponent .col-span-4:nth-child(2) img", { yPercent: 0, force3D: true }, {
     yPercent: -100,
     ease: "none",
     force3D: true,
     scrollTrigger: {
-        trigger: "#textAndParallaxComponent",
+        trigger: ".textAndParallaxComponent",
         start: "top bottom",
         end: "bottom top",
         scrub: true
