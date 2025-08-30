@@ -561,27 +561,10 @@
       "footer": {
         "type": "footer",
         "blocks": {
-          "ed51d82f-c2bb-4cbd-824b-93e9b1db5f8f": {
-            "type": "logo_text_socials",
-            "settings": {
-              "text": "<p>Worldwide fashion store with wide collection of styles with over 100 international fashion brands.</p>",
-              "show_social": true,
-              "column_width": 40
-            }
-          },
-          "footer-0": {
-            "type": "link_list",
-            "settings": {
-              "heading": "Information",
-              "menu": "footer",
-              "column_width": 17,
-              "column_opened": true
-            }
-          },
           "3f4a7a2c-4cfe-42b0-b7b6-8ce4ea6dfc9f": {
             "type": "link_list",
             "settings": {
-              "heading": "Get Shopping",
+              "heading": "Quick Link",
               "menu": "main-menu",
               "column_width": 17,
               "column_opened": true
@@ -590,7 +573,7 @@
           "link_list_TUqkik": {
             "type": "link_list",
             "settings": {
-              "heading": "Quick links",
+              "heading": "Useful Links",
               "menu": "footer",
               "column_width": 25,
               "column_opened": true
@@ -600,7 +583,7 @@
             "type": "contacts",
             "settings": {
               "show_captions": true,
-              "heading": "Contacts",
+              "heading": "Contact us",
               "phone": "+1-202-555-0158",
               "email": "loremipsum@gmail.com",
               "address": "165th St, Jamaica, NY 11",
@@ -610,8 +593,6 @@
           }
         },
         "block_order": [
-          "ed51d82f-c2bb-4cbd-824b-93e9b1db5f8f",
-          "footer-0",
           "3f4a7a2c-4cfe-42b0-b7b6-8ce4ea6dfc9f",
           "link_list_TUqkik",
           "f825b8ca-1a1b-455a-84f9-599c8d77aeca"
