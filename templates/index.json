@@ -173,7 +173,58 @@
         "text": "Moisture-wicking specially engineered fabric designed to seamlessly move between land and water.",
         "image": "shopify://shop_images/WhatsApp_Image_2025-06-25_at_7.19.57_PM.jpg",
         "margin_top": 0,
-        "margin_bottom": 40
+        "margin_bottom": 0
+      }
+    },
+    "image_parallax_zamTdA": {
+      "type": "image-parallax",
+      "blocks": {
+        "parallax_image_prBGgd": {
+          "type": "parallax_image",
+          "settings": {
+            "image": "shopify://shop_images/Parallax_01.jpg"
+          }
+        },
+        "parallax_image_BTcQB7": {
+          "type": "parallax_image",
+          "settings": {
+            "image": "shopify://shop_images/Parallax_02.jpg"
+          }
+        },
+        "parallax_image_qeeAm4": {
+          "type": "parallax_image",
+          "settings": {
+            "image": "shopify://shop_images/Parallax_03.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "parallax_image_prBGgd",
+        "parallax_image_BTcQB7",
+        "parallax_image_qeeAm4"
+      ],
+      "name": "Text + Parallax Component",
+      "settings": {
+        "subtitle": "ABOUT US",
+        "heading": "Creed Label was born from MΛSS AWΛKΞNІИG— The idea of being fully awake: in movement, in discipline, and in the choices we make.",
+        "description": "",
+        "cta_label": "Discover the Science",
+        "cta_url": "shopify://products/nomad-x-hydro-black-copy",
+        "cta_new_tab": false,
+        "margin_top": 0,
+        "margin_bottom": 0
+      }
+    },
+    "media_compnent_FBQaXr": {
+      "type": "media-compnent",
+      "name": "Media Component",
+      "settings": {
+        "margin_top": 0,
+        "margin_bottom": 0,
+        "image": "shopify://shop_images/mass.jpg",
+        "video": "",
+        "button_label": "About Us",
+        "button_url": "shopify://pages/contact"
       }
     }
   },
@@ -183,6 +234,8 @@
     "index_product_carousel_Mnqkxp",
     "snap_card_component_YLqD8W",
     "snap_card_component_4TfcKt",
-    "snap_card_component_WkxQM4"
+    "snap_card_component_WkxQM4",
+    "image_parallax_zamTdA",
+    "media_compnent_FBQaXr"
   ]
 }

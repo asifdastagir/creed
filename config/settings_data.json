@@ -378,7 +378,7 @@
     "color_header_transparent_bottom_link": "",
     "color_header_transparent_bottom_link_hover": "",
     "color_header_transparent_bottom_link_active": "",
-    "color_footer_global_bg": "#0067ff",
+    "color_footer_global_bg": "#212121",
     "color_footer_global": "#ffffff",
     "color_footer_global_link": "rgba(0,0,0,0)",
     "color_footer_global_link_hover": "#8fb9fa",
@@ -582,8 +582,17 @@
             "type": "link_list",
             "settings": {
               "heading": "Get Shopping",
-              "menu": "",
+              "menu": "main-menu",
               "column_width": 17,
+              "column_opened": true
+            }
+          },
+          "link_list_TUqkik": {
+            "type": "link_list",
+            "settings": {
+              "heading": "Quick links",
+              "menu": "footer",
+              "column_width": 25,
               "column_opened": true
             }
           },
@@ -604,25 +613,27 @@
           "ed51d82f-c2bb-4cbd-824b-93e9b1db5f8f",
           "footer-0",
           "3f4a7a2c-4cfe-42b0-b7b6-8ce4ea6dfc9f",
+          "link_list_TUqkik",
           "f825b8ca-1a1b-455a-84f9-599c8d77aeca"
         ],
         "settings": {
           "layout": "1",
           "svg_logo": false,
           "svg_logo_name": "logo-white.svg",
+          "logo": "shopify://shop_images/Mask_group.png",
           "logo_width": 145,
           "logo_width_mobile": 145,
           "input_style": "shadow",
           "button_color": "btn--fifth",
           "newsletter_enable": true,
-          "top_bottom_space": "small",
-          "payment_enable": true,
-          "bottom_socials_media": false,
+          "top_bottom_space": "none",
+          "payment_enable": false,
+          "bottom_socials_media": true,
           "column_width": 25,
           "set_equal_width": false,
           "space_between_columns": "gx-5",
           "columns_text_aligment": "start",
-          "collections_column_title_style": "4",
+          "collections_column_title_style": "0",
           "copyright": "<a href=\"https://themeforest.net/user/bigsteps/portfolio\" target=\"_blank\">Powered by Bigsteps</a>"
         }
       },
