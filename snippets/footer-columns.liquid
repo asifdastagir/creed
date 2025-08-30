@@ -1,4 +1,4 @@
-<div class="col-md-6">
+<div class="col-md-5">
 
 {% comment %}theme-check-disable NestedSnippet{% endcomment %}
 {%- if section.blocks.size > 0 -%}
@@ -18,7 +18,7 @@
                   continue
                 endif
               -%}
-              <div class="col footer-col text-{{ section.settings.columns_text_aligment }}" style="--footer-column-width-desktop: {{ width }}%" {{ block.shopify_attributes }}>
+              <div class="col footer-col text-{{ section.settings.columns_text_aligment }}"  {{ block.shopify_attributes }}>
                 <div class="mb-2 mb-lg-0">
                   {% render 'logo',
                     logo: section.settings.logo,
@@ -42,7 +42,7 @@
                 </div>
               </div>
             {%- when 'contacts' -%}
-              <div class="col footer-col text-{{ section.settings.columns_text_aligment }}" style="--footer-column-width-desktop: {{ width }}%" {{ block.shopify_attributes }}>
+              <div class="col footer-col text-{{ section.settings.columns_text_aligment }}"  {{ block.shopify_attributes }}>
                 <div class="footer-block collapsed-mobile{% if block.settings.column_opened %} open{% endif %}">
                   <h3 class="footer-list-title column-caption-style-{{ section.settings.collections_column_title_style }}">{{ block.settings.heading }}<span class="toggle-arrow"></span></h3>
                   <div class="footer-collapsed-content">
@@ -77,7 +77,7 @@
                 </div>
               </div>
             {%- when 'text' -%}
-              <div class="col footer-col text-{{ section.settings.columns_text_aligment }}" style="--footer-column-width-desktop: {{ width }}%" {{ block.shopify_attributes }}>
+              <div class="col footer-col text-{{ section.settings.columns_text_aligment }}"  {{ block.shopify_attributes }}>
                 <div class="footer-block collapsed-mobile{% if block.settings.column_opened %} open{% endif %}">
                   <h3 class="footer-list-title column-caption-style-{{ section.settings.collections_column_title_style }}">{{ block.settings.heading }}<span class="toggle-arrow"></span></h3>
                   <div class="footer-collapsed-content ">
@@ -87,7 +87,7 @@
               </div>
             {%- when 'link_list' -%}
               {%- if block.settings.menu != blank and block.settings.heading != blank -%}
-                <div class="col footer-col text-{{ section.settings.columns_text_aligment }}" style="--footer-column-width-desktop: {{ width }}%" {{ block.shopify_attributes }}>
+                <div class="col footer-col text-{{ section.settings.columns_text_aligment }}"  {{ block.shopify_attributes }}>
                   <div class="footer-block collapsed-mobile{% if block.settings.column_opened %} open{% endif %}">
                     <h3 class="footer-list-title column-caption-style-{{ section.settings.collections_column_title_style }}">{{ block.settings.heading }}<span class="toggle-arrow"></span></h3>
                     <div class="footer-collapsed-content">
@@ -103,7 +103,7 @@
                 </div>
               {%- endif -%}
             {%- when 'subscribe' -%}
-              <div class="col footer-col text-{{ section.settings.columns_text_aligment }}" style="--footer-column-width-desktop: {{ width }}%" {{ block.shopify_attributes }}>
+              <div class="col footer-col text-{{ section.settings.columns_text_aligment }}"  {{ block.shopify_attributes }}>
                 <div class="footer-block subscribe-footer-col">
                   {%- form 'customer', class: 'newsletter-form', name: 'newsletter' -%}
                     <input type="hidden" name="contact[tags]" value="newsletter">
@@ -126,7 +126,7 @@
                 </div>
               </div>
             {%- when 'image' -%}
-              <div class="col footer-col text-{{ section.settings.columns_text_aligment }}" style="--footer-column-width-desktop: {{ width }}%" {{ block.shopify_attributes }}>
+              <div class="col footer-col text-{{ section.settings.columns_text_aligment }}"  {{ block.shopify_attributes }}>
                 <div class="footer-block collapsed-mobile open">
                   <div class="footer-collapsed-content footer-block-image {{ block.settings.alignment }}">
                     {% render 'image-container',

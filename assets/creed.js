@@ -66,13 +66,13 @@ gsap.fromTo(".textAndParallaxComponent .col-span-4:nth-child(2) img", { yPercent
 );
 
 gsap.fromTo(
-    "#textPromoComponent h2 > span:nth-child(1)",
+    ".textPromoComponent h2 > span:nth-child(1)",
     { y: 30 }, // start at +400px
     {
         y: -600, // end at -400.5px
         ease: "none",
         scrollTrigger: {
-            trigger: "#textPromoComponent",
+            trigger: ".textPromoComponent",
             start: "top bottom",   // when section top hits bottom of viewport
             end: "bottom top",     // when section bottom hits top of viewport
             scrub: true,
@@ -83,13 +83,13 @@ gsap.fromTo(
 
 
 gsap.fromTo(
-    "#textPromoComponent h2 > span:last-child",
+    ".textPromoComponent h2 > span:last-child",
     { yPercent: 0 },
     {
         yPercent: 500,
         ease: "none",
         scrollTrigger: {
-            trigger: "#textPromoComponent",
+            trigger: ".textPromoComponent",
             start: "top bottom",   // when section top hits bottom of viewport
             end: "bottom top",     // when section bottom hits top of viewport
             scrub: true,
@@ -98,7 +98,7 @@ gsap.fromTo(
     }
 );
 
-gsap.fromTo("footer.sticky",
+gsap.fromTo("#Footer-footer",
     { opacity: 0, yPercent: 12 },
     {
         opacity: 1,
@@ -109,7 +109,23 @@ gsap.fromTo("footer.sticky",
             start: "bottom bottom",   // when main ends & viewport bottom meet
             end: "bottom center",     // animate while scrolling a bit further
             scrub: true,
-            markers: true
+            // markers: true
+        }
+    }
+);
+
+gsap.fromTo(
+    ".hero-video-section .clip-container",
+    { "--hero-opacity": 1 },   // starting value
+    {
+        "--hero-opacity": 0,     // ending value
+        ease: "none",
+        scrollTrigger: {
+            trigger: ".hero-video-section",
+            start: "top top",     // start when hero enters
+            end: "bottom top",    // end when hero leaves top
+            scrub: true,
+            // markers: true
         }
     }
 );

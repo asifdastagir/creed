@@ -2970,6 +2970,7 @@ button[disabled] {
 .rich-text p,
 .rich-text ul {
     padding-top: 1rem;
+    font-family: "Aeonik";
 }
 
 .rich-text p:first-child,
@@ -4900,14 +4901,35 @@ button[disabled] {
     border-top-width: 0px;
 }
 
+
+.\[opacity\:var\(--hero-opacity\,1\)\;\] {
+    opacity: 1;
+    opacity: var(--hero-opacity, 1)
+}
+
 .lead-text {
-    font-size     : 120px;
-    line-height   : 120px;
+    font-size     : 8.571rem;
+    line-height   : 8.571rem;
     letter-spacing: -1px;
+}
+
+@media (max-width: 1200px) {
+    .lead-text {
+        font-size  : 3.571rem;
+        line-height: 3.571rem;
+    }
 }
 
 html {
     background: #000;
+    font-size : 14px;
+}
+
+
+@media (max-width: 1200px) {
+    html {
+        font-size: 18px;
+    }
 }
 
 .form-control {

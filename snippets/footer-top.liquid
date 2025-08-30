@@ -25,9 +25,12 @@
           assign padding = 'py-8'
         endif
       -%}
-    <div class="col-lg-6">
-        <div class="subscribe-footer {{ padding }}">
-            <h4 class="subscribe-footer-title heading-font">{{ 'theme.general.subscribe_first_html' | t }}</h4>
+    <div class="col-lg-8">
+        <div class="subscribe-footer text-body {{ padding }}">
+            <h4 class="subscribe-footer-title heading-font mb-2">{{ 'theme.general.subscribe_first_html' | t }}</h4>
+            <div class="rich-text">
+              <p class="mb-5">Feel free to reach our if you want to collaborate with us, or simply have a chat</p>
+            </div>
             <div class="subscribe-footer-input-group">
                   {% render 'footer-subscribe-core', form: form %}
             </div>

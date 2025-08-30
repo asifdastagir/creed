@@ -21887,7 +21887,14 @@ html[lang=de] .minicart-drop-total-txt {
 }
 
 #shopify-section-footer {
-  overflow: hidden
+  overflow  : hidden;
+  position  : sticky;
+  top       : 0;
+  bottom    : 0;
+  height    : 100vh;
+  background: #000;
+  color     : #FFF;
+
 }
 
 shopify-google-pay-button {

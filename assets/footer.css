@@ -33,8 +33,7 @@
 }
 
 .footer-content {
-  color           : var(--footer-content-color);
-  background-color: var(--footer-content-bg)
+  color: var(--footer-content-color);
 }
 
 .footer-content .footer-list a[href*=mailto],
@@ -52,9 +51,10 @@
   }
 }
 
+
 .footer-bottom {
-  color           : var(--footer-bottom-color);
-  background-color: var(--footer-bottom-bg)
+  font-family: 'Aeonik', sans-serif;
+  font-size  : 14px;
 }
 
 .footer-bottom a {
@@ -134,7 +134,7 @@ ul.footer-hor-nav-list li a {
 }
 
 .subscribe-footer-title {
-  font-size  : 23px;
+  font-size  : 3.214rem;
   font-weight: var(--footer-title-weight, var(--heading-md-weight));
   line-height: 1.348em;
   color      : var(--footer-top-color, var(--footer-global-color))
@@ -297,7 +297,9 @@ body:not(.has-button-rounded) .subscribe-footer-input-group .btn {
 
 .footer-list-title {
   margin-bottom: 26px;
-  color        : var(--footer-content-color)
+  color        : var(--footer-content-color);
+  font-size    : 2.142rem;
+  line-height  : 2.142rem;
 }
 
 .footer-list-title .toggle-arrow {
@@ -1196,7 +1198,7 @@ body:not(.has-button-rounded) .subscribe-footer-input-group .btn {
   padding-bottom: 0 !important
 }
 
-.footer-bottom.p-glue-prev,
+
 .footer-content.p-glue-prev,
 .footer-top.p-glue-prev {
   padding-top: 0 !important

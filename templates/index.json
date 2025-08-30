@@ -215,6 +215,19 @@
         "margin_bottom": 0
       }
     },
+    "text_promo_component_XMEgYD": {
+      "type": "text-promo-component",
+      "name": "Text Promo Component",
+      "settings": {
+        "heading": "A new",
+        "image": "shopify://shop_images/logo.png",
+        "text": "Activewear engineered with purpose and function, without compromising on faith-driven values. Every piece is built for those who demand performance and stand by their convictions.",
+        "cta_text": "Discover more",
+        "cta_url": "/",
+        "margin_top": 40,
+        "margin_bottom": 40
+      }
+    },
     "media_compnent_FBQaXr": {
       "type": "media-compnent",
       "name": "Media Component",
@@ -236,6 +249,7 @@
     "snap_card_component_4TfcKt",
     "snap_card_component_WkxQM4",
     "image_parallax_zamTdA",
+    "text_promo_component_XMEgYD",
     "media_compnent_FBQaXr"
   ]
 }
