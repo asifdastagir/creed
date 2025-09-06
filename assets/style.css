@@ -2725,7 +2725,7 @@ swiper-carousel {
 }
 
 .hidden {
-  display: none !important
+  display: none
 }
 
 .visibility-hidden {
@@ -8999,7 +8999,9 @@ swiper-carousel.hover-off .prd {
 .prd-option-list label.label-radio.swatch-active {
   border-color    : var(--product-swatches-border-active-color);
   color           : var(--product-swatches-active-color);
-  background-color: var(--product-swatches-active-bg)
+  background-color: var(--product-swatches-active-bg);
+  border-radius   : 5px;
+  overflow        : hidden;
 }
 
 .prd-option-list input[type=radio]:checked+label,
@@ -9010,17 +9012,17 @@ swiper-carousel.hover-off .prd {
 
 .prd-option-list label.label-option-color,
 .prd-option-list li.label-option-color {
-  display      : -ms-flexbox;
-  display      : flex;
-  position     : relative;
-  min-width    : var(--product-swatches-color-width);
-  min-height   : var(--product-swatches-color-height);
-  border-radius: var(--product-swatches-radius);
-  margin       : var(--product-swatches-color-gap);
-  padding      : 3px 5px;
-  transition   : none;
-  border       : 0;
-  box-shadow   : 0 0 0 var(--product-swatches-color-border-width) var(--product-swatches-border-color)
+  display         : -ms-flexbox;
+  display         : flex;
+  position        : relative;
+  min-width       : var(--product-swatches-color-width);
+  min-height      : var(--product-swatches-color-height);
+  border-radius   : 3px;
+  margin          : var(--product-swatches-color-gap);
+  padding         : 6px 8px;
+  transition      : none;
+  /* border       : 0;
+  box-shadow      : 0 0 0 var(--product-swatches-color-border-width) var(--product-swatches-border-color) */
 }
 
 .prd-option-list label.label-option-color img,
@@ -9063,7 +9065,7 @@ swiper-carousel.hover-off .prd {
   bottom        : 0;
   right         : 0;
   border-radius : var(--product-swatches-radius);
-  border        : calc(var(--product-swatches-inner-border-width) + 1px) solid var(--product-swatches-inner-border-color);
+  border        : 1px solid var(--product-swatches-inner-border-color);
   opacity       : 0;
   transition    : opacity .2s;
   pointer-events: none
@@ -9092,7 +9094,7 @@ swiper-carousel.hover-off .prd {
 @media (hover:hover),
 (hover:none) and (min-width:1025px) {
   .prd-option-list label.label-option-color:hover:not(.active) {
-    box-shadow: 0 0 0 var(--product-swatches-color-border-width) var(--product-swatches-border-hover-color)
+    /* box-shadow: 0 0 0 var(--product-swatches-color-border-width) var(--product-swatches-border-hover-color) */
   }
 
   .prd-option-list label.label-option-color:hover:not(.active)>span:after {
@@ -9165,7 +9167,7 @@ swiper-carousel.hover-off .prd {
 
 .prd-block-actions .form-group+.form-group,
 .prd-options.table_r .prd-option:not(.hidden)+.prd-option {
-  margin-top : 0;
+  margin-top : 30px;
   padding-top: var(--product-swatches-group-gy)
 }
 
@@ -14390,13 +14392,14 @@ product-single-previews {
 
 .modal-info-link {
   cursor: pointer;
-  color : var(--body-link-color)
+  color : #333333;
 }
 
 @media (hover:hover),
 (hover:none) and (min-width:1025px) {
   .modal-info-link:hover {
-    color: var(--body-link-color-hover)
+    color          : var(--body-link-color-hover);
+    text-decoration: underline;
   }
 }
 
@@ -16556,6 +16559,10 @@ custom-swiper-navigation>div {
   min-height: 34px
 }
 
+.prd-block .prd-option.tr_d+.prd-option.tr_d {
+  border-top: dashed 1px #00000020;
+}
+
 .prd-block .table-borderless:not(.table-striped)> :not(caption)> :first-child>* {
   padding-top: 15px
 }
@@ -16908,9 +16915,14 @@ custom-swiper-navigation>div {
   width: 100%
 }
 
-.prd-block-info .mt-product-global,
+
 .prd-block-info .prd-block-actions.mt-product-global {
-  margin-top: var(--margin-top-product-blocks, 20px)
+  margin-top: 30px;
+}
+
+.prd-block-info .mt-product-global.prd-block-meta {
+  margin-top   : 20px;
+  margin-bottom: 30px;
 }
 
 .prd-block-info .mt-product-global:not(.prd-info-hr):empty {
@@ -16920,6 +16932,9 @@ custom-swiper-navigation>div {
 .prd-block-info .prd-options.table_r {
   padding: 0
 }
+
+
+.prd-block-info .prd-options.table_r {}
 
 .prd-block-info .only-outer-tab {
   display: none
@@ -16942,7 +16957,9 @@ custom-swiper-navigation>div {
     min-height : var(--button-addtocart-desktop-height);
     padding    : calc(var(--button-addtocart-desktop-height) * .2) calc(var(--button-addtocart-desktop-height) * .5);
     font-size  : calc(var(--button-addtocart-desktop-height) * .3);
-    line-height: calc(var(--button-addtocart-desktop-height) * .6)
+    line-height: calc(var(--button-addtocart-desktop-height) * .6);
+    background : #000;
+    color      : #FFF;
   }
 }
 
@@ -16971,9 +16988,9 @@ custom-swiper-navigation>div {
 .prd-block-name {
   --heading-color: var(--product-page-title-color);
   margin-bottom  : 0;
-  font-size      : 23px;
-  font-weight    : var(--heading-md-weight);
-  line-height    : 1.478em
+  font-size      : 4rem;
+  font-weight    : 500;
+  line-height    : 4rem
 }
 
 @media (max-width:767px) {
@@ -17432,7 +17449,9 @@ h4.prd-block-desc-title+p {
   margin-right   : 35px;
   -ms-flex-pack  : justify;
   justify-content: space-between;
-  font-size      : 12px
+  font-size      : 12px;
+  text-transform : uppercase;
+  margin-block   : 30px;
 }
 
 @media (max-width:575px) {
@@ -17937,9 +17956,15 @@ product-gallery img:not([src]) {
 }
 
 .prd-block-price .prd-price {
-  display  : table-row;
-  overflow : hidden;
-  font-size: 30px
+  display    : table-row;
+  overflow   : hidden;
+  font-size  : 2.857rem;
+  color      : #666666;
+  font-family: "Aeonik";
+}
+
+.prd-price .prd-price-regular {
+  color: #666666;
 }
 
 .prd-block-price .prd-price>[class*=prd-price-] {
@@ -21894,7 +21919,6 @@ html[lang=de] .minicart-drop-total-txt {
   height    : 100vh;
   background: #000;
   color     : #FFF;
-
 }
 
 shopify-google-pay-button {
@@ -22880,7 +22904,7 @@ form .article-template__comment-warning {
 .rating-star {
   --percent     : calc((var(--rating) / var(--rating-max) + var(--rating-decimal) * var(--font-size) / (var(--rating-max) * (var(--letter-spacing) + var(--font-size)))) * 100%);
   letter-spacing: calc(var(--letter-spacing) * 1rem);
-  font-size     : calc(var(--font-size) * 1.15rem);
+  font-size     : 25px;
   line-height   : 1;
   display       : inline-block;
   font-family   : system-ui;

@@ -439,7 +439,7 @@ body:not(.has-button-rounded) .subscribe-footer-input-group .btn {
 }
 
 .footer-social li {
-  margin: 0 8px 16px
+  margin: 0 4px 16px
 }
 
 .footer-social li a {
@@ -632,6 +632,19 @@ body:not(.has-button-rounded) .subscribe-footer-input-group .btn {
 
 .footer-inline-link>* {
   padding: 0 10px
+}
+
+
+.footer-social .icon-wrap {
+  background   : #212123;
+  border-radius: 10px;
+  display      : block;
+  padding      : 12px;
+}
+
+.footer-social .icon-wrap svg {
+  width : 20px;
+  height: 20px;
 }
 
 .footer-inline-link .icon-wrap:not(:only-child) {

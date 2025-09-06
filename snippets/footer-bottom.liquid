@@ -5,8 +5,11 @@
         {% render 'copyright', section: section %}
       </div>
       {%- if section.settings.bottom_socials_media -%}
-        <div class="col footer-social-wrap">
-          {% render 'social-media', class: 'footer-social list-unstyled' %}
+        <div class="col footer-social-wrap lg:justify-end flex">
+          <div class="flex items-center gap-[30px]">
+          <div class="text-[24px] text-white" >Follow us on</div>
+            {% render 'social-media', class: 'footer-social list-unstyled' %}
+          </div>
         </div>
       {%- endif -%}
       {%- if section.settings.payment_enable -%}
