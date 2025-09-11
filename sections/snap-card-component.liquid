@@ -1,5 +1,5 @@
 {% comment %} 
-                                                              Snap Card Component with Style Switcher 
+      Snap Card Component with Style Switcher 
 {% endcomment %}
 
 <section
@@ -43,12 +43,12 @@
       </div>
     {% endif %}
 
-  {% else if section.settings.style == 'style2' %}
+  {% elsif section.settings.style == 'style2' %}
 
     <div class="sticky z-10 top-header header-folded:top-0 mb-[100px] grid-layout gap-y-5 px-gutter py-gutter transition-[top] ease-in-out duration-500">
       <div class="col-start-1 col-end-7 lg:col-end-6 block text-h2 relative z-10">
         <h2 class="flex flex-col">
-          <span>{{ section.settings.heading_line1 }} resrubg</span>
+          <span>{{ section.settings.heading_line1 }}</span>
           <span>{{ section.settings.heading_line2 }}</span>
         </h2>
       </div>
@@ -67,34 +67,32 @@
       {% endif %}
     </div>
 
-
     <div class="sticky z-10 w-full mt-auto p-[30px] flex items-center justify-between">
-      <a href="" class="flex justify-center items-center gap-2 text-pre large group/play">
-        <span>
-          Discover the Science
-        </span>
-        <svg
-          width="15"
-          height="13"
-          viewBox="0 0 15 13"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg">
-          <path d="M8.75537 12.1578L7.654 11.0563L11.4614 7.26501H0V5.71969L1.54507 5.71994H11.4614L7.654 1.91263L8.73941 0.811523L14.4206 6.49247L8.75537 12.1578Z" fill="white" />
-        </svg>
+      {% if section.settings.link != blank %}
+        <a href="{{ section.settings.link }}" class="flex justify-center items-center gap-2 text-pre large group/play">
+          <span>{{ section.settings.link_label }}</span>
+          <svg
+            width="15"
+            height="13"
+            viewBox="0 0 15 13"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <path d="M8.75537 12.1578L7.654 11.0563L11.4614 7.26501H0V5.71969L1.54507 5.71994H11.4614L7.654 1.91263L8.73941 0.811523L14.4206 6.49247L8.75537 12.1578Z" fill="white" />
+          </svg>
+        </a>
+      {% endif %}
 
-      </a>
       {% if section.settings.image_logo != blank %}
         <div class="w-[202px] h-[78px]">
           <img
             loading="lazy"
             alt="{{ section.settings.image_logo.alt | escape }}"
-            class="w-full h-full object-contain "
+            class="w-full h-full object-contain"
             src="{{ section.settings.image_logo | image_url: width: 400 }}"
             width="202"
             height="78">
         </div>
       {% endif %}
-
     </div>
 
   {% endif %}
@@ -146,6 +144,15 @@
         "type": "image_picker",
         "id": "image_logo",
         "label": "Logo"
+      }, {
+        "type": "url",
+        "id": "link",
+        "label": "Button Link"
+      }, {
+        "type": "text",
+        "id": "link_label",
+        "label": "Button Label",
+        "default": "Discover the Science"
       }, {
         "type": "range",
         "id": "margin_top",
