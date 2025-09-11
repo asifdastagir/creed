@@ -1,104 +1,147 @@
-{% comment %}
-  Snap Card Component Section
+{% comment %} 
+                                      Snap Card Component with Style Switcher 
 {% endcomment %}
 
-<section 
-  id="snapCardComponent-{{ section.id }}" 
+<section
+  id="snapCardComponent-{{ section.id }}"
   class="component component-animation relative grid items-start min-h-screen bg-grey text-white"
-  style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px;"
->
-  <div class="sticky z-10 top-header header-folded:top-0 grid-layout gap-y-5 px-gutter py-gutter transition-[top] ease-in-out duration-500">
-    <div class="col-start-1 col-end-7 lg:col-end-6 block text-h2 relative z-10">
-      <h2 class="flex flex-col">
-        <span>{{ section.settings.heading_line1 }}</span>
-        <span>{{ section.settings.heading_line2 }}</span>
-      </h2>
-    </div>
-    <div class="rich-text col-start-1 col-end-10 lg:col-end-13 lg:col-start-9 relative z-10">
-      <p class="text-[.9rem] lg:text-[1.714rem]">{{ section.settings.text }}</p>
-    </div>
-  </div>
+  style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px;">
 
-  <div class="absolute inset-0 overflow-hidden focal-point-center">
-    <picture>
-      <source 
-        media="(min-aspect-ratio: 16/9)" 
-        width="1600" 
-        height="900" 
-        sizes="100vw" 
-        srcset="{{ section.settings.image | image_url: width: 1600 }}">
-      <source 
-        media="(min-aspect-ratio: 1/1)" 
-        width="900" 
-        height="900" 
-        sizes="100vw" 
-        srcset="{{ section.settings.image | image_url: width: 900 }}">
-      <img 
-        loading="lazy" 
-        alt="{{ section.settings.image.alt | escape }}" 
-        class="w-full h-full object-cover" 
-        src="{{ section.settings.image | image_url: width: 1200 }}" 
-        width="506" 
-        height="900" 
-        sizes="100vw">
-    </picture>
-  </div>
+  {% if section.settings.style == 'style1' %}
+
+    <div class="sticky z-10 top-header header-folded:top-0 grid-layout gap-y-5 px-gutter py-gutter transition-[top] ease-in-out duration-500">
+      <div class="col-start-1 col-end-7 lg:col-end-6 block text-h2 relative z-10">
+        <h2 class="flex flex-col">
+          <span>{{ section.settings.heading_line1 }}</span>
+          <span>{{ section.settings.heading_line2 }}</span>
+        </h2>
+      </div>
+      <div class="rich-text col-start-1 col-end-10 lg:col-end-13 lg:col-start-9 relative z-10">
+        <p class="text-[.9rem] lg:text-[1.714rem]">{{ section.settings.text }}</p>
+      </div>
+    </div>
+
+    <div class="absolute inset-0 overflow-hidden focal-point-center">
+      {% if section.settings.image != blank %}
+        <img
+          loading="lazy"
+          alt="{{ section.settings.image.alt | escape }}"
+          class="w-full h-full object-cover"
+          src="{{ section.settings.image | image_url: width: 1600 }}">
+      {% endif %}
+    </div>
+
+    {% if section.settings.image_logo != blank %}
+      <div class="absolute z-10 bottom-[30px] left-[32px] transition-[top] ease-in-out duration-500">
+        <img
+          loading="lazy"
+          alt="{{ section.settings.image_logo.alt | escape }}"
+          class="w-full h-full object-contain"
+          src="{{ section.settings.image_logo | image_url: width: 400 }}"
+          width="202"
+          height="78">
+      </div>
+    {% endif %}
+
+  {% elsif section.settings.style == 'style2' %}
+    <div class="grid-layout px-gutter py-gutter text-center">
+      <h2 class="text-h1 mb-4">
+        {{ section.settings.heading_line1 }} <br>
+        <span class="text-accent">{{ section.settings.heading_line2 }}</span>
+      </h2>
+      <p class="text-lg max-w-2xl mx-auto mb-6">{{ section.settings.text }}</p>
+
+      {% if section.settings.image != blank %}
+        <div class="mt-6">
+          <img
+            src="{{ section.settings.image | image_url: width: 1200 }}"
+            alt="{{ section.settings.image.alt | escape }}"
+            class="mx-auto rounded-2xl shadow-lg object-cover">
+        </div>
+      {% endif %}
+
+      {% if section.settings.image_logo != blank %}
+        <div class="mt-6 flex justify-center">
+          <img
+            src="{{ section.settings.image_logo | image_url: width: 300 }}"
+            alt="{{ section.settings.image_logo.alt | escape }}"
+            class="h-16 object-contain">
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
 </section>
 
 {% schema %}
-{
-  "name": "Snap Card Component",
-  "tag": "section",
-  "class": "snap-card",
-  "settings": [
-    {
-      "type": "text",
-      "id": "heading_line1",
-      "label": "Heading Line 1",
-      "default": "Aesthetically"
-    },
-    {
-      "type": "text",
-      "id": "heading_line2",
-      "label": "Heading Line 2",
-      "default": "Engineered Coverage"
-    },
-    {
-      "type": "textarea",
-      "id": "text",
-      "label": "Description",
-      "default": "High performance coverage waistband and integrated knee length liner built for the active without compromise."
-    },
-    {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Background Image"
-    },
-    {
-      "type": "range",
-      "id": "margin_top",
-      "min": 0,
-      "max": 200,
-      "step": 5,
-      "unit": "px",
-      "label": "Margin Top",
-      "default": 40
-    },
-    {
-      "type": "range",
-      "id": "margin_bottom",
-      "min": 0,
-      "max": 200,
-      "step": 5,
-      "unit": "px",
-      "label": "Margin Bottom",
-      "default": 40
-    }
-  ],
-  "presets": [
-    {
-      "name": "Snap Card Component"
-    }
-  ]
-}
+  {
+    "name": "Snap Card Component",
+    "tag": "section",
+    "class": "snap-card",
+    "settings": [
+      {
+        "type": "select",
+        "id": "style",
+        "label": "Component Style",
+        "default": "style1",
+        "options": [
+          {
+            "value": "style1",
+            "label": "Style 1"
+          }, {
+            "value": "style2",
+            "label": "Style 2"
+          }
+        ]
+      },
+      {
+        "type": "text",
+        "id": "heading_line1",
+        "label": "Heading Line 1",
+        "default": "Aesthetically"
+      },
+      {
+        "type": "text",
+        "id": "heading_line2",
+        "label": "Heading Line 2",
+        "default": "Engineered Coverage"
+      },
+      {
+        "type": "textarea",
+        "id": "text",
+        "label": "Description",
+        "default": "High performance coverage waistband and integrated knee length liner built for the active without compromise."
+      }, {
+        "type": "image_picker",
+        "id": "image",
+        "label": "Background / Main Image"
+      }, {
+        "type": "image_picker",
+        "id": "image_logo",
+        "label": "Logo"
+      }, {
+        "type": "range",
+        "id": "margin_top",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "label": "Margin Top",
+        "default": 40
+      }, {
+        "type": "range",
+        "id": "margin_bottom",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "label": "Margin Bottom",
+        "default": 40
+      }
+    ],
+    "presets": [
+      {
+        "name": "Snap Card Component"
+      }
+    ]
+  }
 {% endschema %}

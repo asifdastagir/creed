@@ -1,0 +1,39 @@
+{% schema %}
+  {
+    "name": "Page Heading Component",
+    "settings": [
+      {
+        "type": "text",
+        "id": "heading_line1",
+        "label": "Heading - Line 1",
+        "default": "The"
+      }, {
+        "type": "text",
+        "id": "heading_line2",
+        "label": "Heading - Line 2",
+        "default": "Science"
+      }, {
+        "type": "textarea",
+        "id": "description",
+        "label": "Description",
+        "default": "Activewear engineered with purpose and function, without compromising on faith-driven values. Every piece is built for those who demand performance and stand by their convictions."
+      }
+    ],
+    "presets": [
+      {
+        "name": "Page Heading",
+        "category": "Custom Sections"
+      }
+    ]
+  }
+{% endschema %}
+
+<section id="pageHeadingComponent" class="component text-center px-gutter pt-6 pb-6 lg:pb-8 lg:pt-8 grid-layout gap-y-12 lg:gap-y-16 bg-white text-black">
+  <h1 class="col-start-1 col-end-13 flex flex-col text-pullout">
+    <span>{{ section.settings.heading_line1 }}</span>
+    <span class="pl-12.5 lg:pl-25">{{ section.settings.heading_line2 }}</span>
+  </h1>
+  <h2 class="col-start-1 col-end-13 lg:col-start-3 lg:col-end-11 text-h2">
+    {{ section.settings.description }}
+  </h2>
+</section>

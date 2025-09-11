@@ -672,15 +672,14 @@ summary::marker {
 *,
 :before,
 :after {
-    --tw-border-spacing-x      : 0;
-    --tw-border-spacing-y      : 0;
-    --tw-translate-x           : 0;
-    --tw-translate-y           : 0;
-    --tw-rotate                : 0;
-    --tw-skew-x                : 0;
-    --tw-skew-y                : 0;
-    --tw-scale-x               : 1;
-    --tw-scale-y               : 1;
+    --tw-border-spacing-x: 0;
+    --tw-border-spacing-y: 0;
+    --tw-translate-x     : 0;
+    --tw-translate-y     : 0;
+    --tw-rotate          : 0;
+    --tw-skew-x          : 0;
+    --tw-skew-y          : 0;
+
     --tw-pan-x                 : ;
     --tw-pan-y                 : ;
     --tw-pinch-zoom            : ;
@@ -729,8 +728,6 @@ summary::marker {
     --tw-rotate                : 0;
     --tw-skew-x                : 0;
     --tw-skew-y                : 0;
-    --tw-scale-x               : 1;
-    --tw-scale-y               : 1;
     --tw-pan-x                 : ;
     --tw-pan-y                 : ;
     --tw-pinch-zoom            : ;
@@ -4976,5 +4973,13 @@ html {
 }
 
 .btn {
+    border-radius: 6px;
+}
+
+
+.story-btn {
+    color        : #000;
+    transition   : all 0.3s ease-in-out;
+    border       : solid 1px #CCCCCC;
     border-radius: 6px;
 }

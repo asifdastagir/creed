@@ -1,0 +1,156 @@
+<section class="story-section bg-white py-16 px-4">
+  <div class="">
+    <!-- Header Section -->
+    <div class="mb-12">
+      <p class="text-[24px] font-medium tracking-wider uppercase mb-4">
+        {{ section.settings.story_subtitle | default: 'THE OVER+ABOVE STORY' }}
+      </p>
+      <div class="flex flex-col md:flex-row lg:flex-row sm:items-end sm:justify-between gap-6">
+        <h2 class="text-h2 max-w-[70%]">
+          {{ section.settings.story_title | default: 'Step into our world, where passion meets innovation, fuelled by arelentless pursuit of greatness. Discover the roots of our brand, born from personal experience and a drive to push boundaries.' }}
+        </h2>
+        <!-- Navigation Controls -->
+        <div class="flex gap-2 mt-8 justify-end">
+          <button class="swiper-button-prev-custom w-10 h-10 flex items-center justify-center story-btn">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+          </button>
+          <button class="swiper-button-next-custom w-10 h-10 flex items-center justify-center story-btn">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carousel Section -->
+    <div class="relative">
+      <div class="swiper story-swiper">
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+            <div class="swiper-slide">
+              <div class="relative overflow-hidden rounded-lg bg-gray-100 aspect-[2/3] group cursor-pointer">
+                {% if block.settings.image %}
+                  <img
+                    src="{{ block.settings.image | img_url: '400x300' }}"
+                    alt="{{ block.settings.image.alt | escape }}"
+                    class="w-full h-full object-cover grayscale  scale-101 group-hover:scale-110 transition-all duration-500"
+                    loading="lazy">
+                {% else %}
+                  <div class="w-full h-full bg-gray-200 flex items-center justify-center scale-101 group-hover:scale-110 transition-transform duration-500">
+                    <span class="text-gray-400">No image</span>
+                  </div>
+                {% endif %}
+
+                <!-- Overlay Content -->
+                <div class="absolute inset-0  group-hover:bg-opacity-10 transition-all duration-300">
+                  <div class="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <div class="flex items-center gap-4 text-[14px] font-medium tracking-wider uppercase mb-2">
+                      {% if block.settings.date %}
+                        <span>{{ block.settings.date }}</span>
+                      {% endif %}
+                      {% if block.settings.category %}
+                        <span class="border-l border-white pl-4">{{ block.settings.category }}</span>
+                      {% endif %}
+                    </div>
+                    {% if block.settings.description %}
+                      <p class="text-[20px]">{{ block.settings.description }}</p>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+{% schema %}
+  {
+    "name": "Story Section",
+    "tag": "section",
+    "class": "story-section",
+    "settings": [
+      {
+        "type": "text",
+        "id": "story_subtitle",
+        "label": "Story Subtitle",
+        "default": "THE OVER+ABOVE STORY"
+      }, {
+        "type": "textarea",
+        "id": "story_title",
+        "label": "Story Title",
+        "default": "Step into our world, where passion meets innovation, fuelled by arelentless pursuit of greatness. Discover the roots of our brand, born from personal experience and a drive to push boundaries."
+      }
+    ],
+    "blocks": [
+      {
+        "type": "story_slide",
+        "name": "Story Slide",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Slide Image"
+          }, {
+            "type": "text",
+            "id": "date",
+            "label": "Date",
+            "placeholder": "MAY 2017"
+          }, {
+            "type": "text",
+            "id": "category",
+            "label": "Category",
+            "placeholder": "FRUSTRATION"
+          }, {
+            "type": "textarea",
+            "id": "description",
+            "label": "Description",
+            "placeholder": "Lorem ipsum concept was born out of personal frustration with repetitive shoulder injury from competitive hockey and cricket."
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Story Section",
+        "blocks": [
+          {
+            "type": "story_slide",
+            "settings": {
+              "date": "MAY 2017",
+              "category": "FRUSTRATION",
+              "description": "Lorem ipsum concept was born out of personal frustration with repetitive shoulder injury from competitive hockey and cricket."
+            }
+          }, {
+            "type": "story_slide",
+            "settings": {
+              "date": "JUNE 2017",
+              "category": "CONCEPTION",
+              "description": "Active barrier James sought a solution beyond kinesiology tape, aiming to integrate active shoulder support into a garment."
+            }
+          }, {
+            "type": "story_slide",
+            "settings": {
+              "date": "JAN 2018",
+              "category": "COLLABORATION",
+              "description": "James teamed up with sports biomechanist Dr. Chris Peploe to transform his idea from concept into reality."
+            }
+          }, {
+            "type": "story_slide",
+            "settings": {
+              "date": "APRIL 2019",
+              "category": "PRODUCTION",
+              "description": "Our patented technology was globally launched, revolutionizing athletic performance and injury prevention."
+            }
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

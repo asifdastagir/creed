@@ -152,17 +152,48 @@ gsap.fromTo(
 );
 
 
+document.addEventListener('DOMContentLoaded', function () {
 
-var swiper = new Swiper('.product-swiper', {
-    slidesPerView: 1,
-    spaceBetween: 16,
-    breakpoints: {
-        768: { slidesPerView: 2 },
-        1024: { slidesPerView: 3 }
-    },
 
-    navigation: {
-        nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev',
-    },
+    var swiper = new Swiper('.product-swiper', {
+        slidesPerView: 1,
+        spaceBetween: 16,
+        breakpoints: {
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 }
+        },
+
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+
+    const swiperStory = new Swiper('.story-swiper', {
+        slidesPerView: 'auto',
+        spaceBetween: 24,
+        freeMode: true,
+        navigation: {
+            nextEl: '.swiper-button-next-custom',
+            prevEl: '.swiper-button-prev-custom',
+        },
+        breakpoints: {
+            640: {
+                slidesPerView: 2,
+                spaceBetween: 0,
+            },
+            768: {
+                slidesPerView: 2.5,
+                spaceBetween: 0,
+            },
+            1024: {
+                slidesPerView: 3,
+                spaceBetween: 0,
+            },
+            1280: {
+                slidesPerView: 3.5,
+                spaceBetween: 0,
+            }
+        }
+    });
 });
