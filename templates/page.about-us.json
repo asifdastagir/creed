@@ -22,6 +22,7 @@
       "type": "snap-card-component",
       "name": "Snap Card Component",
       "settings": {
+        "style": "style1",
         "heading_line1": "",
         "heading_line2": "",
         "text": "",
@@ -81,6 +82,20 @@
       "settings": {
         "story_subtitle": "THE OVER+ABOVE STORY",
         "story_title": "Step into our world, where passion meets innovation, fuelled by arelentless pursuit of greatness. Discover the roots of our brand, born from personal experience and a drive to push boundaries."
+      }
+    },
+    "snap_card_component_hLcNFQ": {
+      "type": "snap-card-component",
+      "name": "Snap Card Component",
+      "settings": {
+        "style": "style2",
+        "heading_line1": "A journey to develop ground-breaking athletic apparel",
+        "heading_line2": "",
+        "text": "",
+        "image": "shopify://shop_images/section1.jpg",
+        "image_logo": "shopify://shop_images/creed-logo.png",
+        "margin_top": 40,
+        "margin_bottom": 40
       }
     },
     "index-quote-image": {
@@ -486,6 +501,7 @@
     "page_heading_VHMzBD",
     "snap_card_component_Te9mGU",
     "story_WQFYWU",
+    "snap_card_component_hLcNFQ",
     "index-quote-image",
     "index-icons",
     "index-text-social-media",
