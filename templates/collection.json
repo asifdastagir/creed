@@ -37,7 +37,7 @@
         "feature_MTf9gm": {
           "type": "feature",
           "settings": {
-            "image": "shopify://shop_images/4a04087a0d1e15a46421d5cc04b74a100d1a7ed5.png",
+            "image": "shopify://shop_images/0af40c1020c1aabb84ccaba3c7d76f872e4b657e.png",
             "title": "Flexible Fabric",
             "description": "Active barrister Jamas sought a solution\nbeyond kinesiology tape, aiming to integrate\nactive shoulder support into a garment."
           }
@@ -55,7 +55,7 @@
       "settings": {
         "section_width": "global",
         "container_max_width": 1178,
-        "spacing_sections": 46,
+        "spacing_sections": 0,
         "spacing_padding_sections": 100
       }
     },
@@ -94,8 +94,8 @@
         "cta_label": "Discover the Science",
         "cta_url": "shopify://products/nomad-x-hydro-black-copy",
         "cta_new_tab": false,
-        "margin_top": 0,
-        "margin_bottom": 0
+        "margin_top": 40,
+        "margin_bottom": 40
       }
     }
   },
