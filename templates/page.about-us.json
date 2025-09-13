@@ -28,6 +28,8 @@
         "text": "",
         "image": "shopify://shop_images/download.jpg",
         "image_logo": "shopify://shop_images/creed-logo.png",
+        "link": "",
+        "link_label": "Discover the Science",
         "margin_top": 40,
         "margin_bottom": 40
       }
@@ -84,6 +86,14 @@
         "story_title": "Step into our world, where passion meets innovation, fuelled by arelentless pursuit of greatness. Discover the roots of our brand, born from personal experience and a drive to push boundaries."
       }
     },
+    "story_nKApV6": {
+      "type": "story",
+      "name": "Story Section",
+      "settings": {
+        "story_subtitle": "The Team",
+        "story_title": "Our people are motivated by detailand driven by performance in allaspects of life. Obsessed withlearning, anything that can optimiseoutput gets their attention."
+      }
+    },
     "snap_card_component_hLcNFQ": {
       "type": "snap-card-component",
       "name": "Snap Card Component",
@@ -94,406 +104,49 @@
         "text": "",
         "image": "shopify://shop_images/section1.jpg",
         "image_logo": "shopify://shop_images/creed-logo.png",
-        "margin_top": 40,
-        "margin_bottom": 40
+        "link": "shopify://collections",
+        "link_label": "Discover the Science",
+        "margin_top": 0,
+        "margin_bottom": 0
       }
     },
-    "index-quote-image": {
-      "type": "index-quote-image",
-      "settings": {
-        "section_animation": true,
-        "description": "<p>We are glad to present you our most perfect Shopify theme, which supports Sections Everywhere, very high metric scores by google page speed insight. This is the most mobile-oriented theme that will be convenient on any of your devices.</p>",
-        "author": "Jack Donowan",
-        "color_placeholder": "#a6d7f6",
-        "section_width": "global",
-        "container_max_width": 1178,
-        "spacing_sections": 70,
-        "use_global_desktop_space": false,
-        "spacing_sections_mobile": 40,
-        "use_global_mobile_space": false,
-        "spacing_padding_sections": 100,
-        "use_global_desktop_space_padding": true,
-        "spacing_padding_sections_mobile": 70,
-        "use_global_mobile_space_padding": true,
-        "background": false,
-        "background_preset": "none",
-        "background_behavior": "bg-cover",
-        "background_image_placeholder_type": "color_global_secondary_bg",
-        "background_image_placeholder": "",
-        "section_decoration_top": "none",
-        "section_decoration_top_color_type": "color_global_primary_bg",
-        "section_decoration_top_color": "",
-        "section_decoration_bottom": "none",
-        "section_decoration_bottom_color_type": "color_global_primary_bg",
-        "section_decoration_bottom_color": ""
-      }
-    },
-    "index-icons": {
-      "type": "index-icons",
+    "image_parallax_yDjGC9": {
+      "type": "image-parallax",
       "blocks": {
-        "icon-1": {
-          "type": "icon",
+        "parallax_image_C7nqL8": {
+          "type": "parallax_image",
           "settings": {
-            "icon": "icon-truck",
-            "icon_custom_svg": "",
-            "only_image": false,
-            "title": "Free worldwide<br>Delivery",
-            "subtitle": ""
+            "image": "shopify://shop_images/Parallax_01.jpg"
           }
         },
-        "icon-2": {
-          "type": "icon",
+        "parallax_image_thFQat": {
+          "type": "parallax_image",
           "settings": {
-            "icon": "icon-tag",
-            "icon_custom_svg": "",
-            "only_image": false,
-            "title": "Promotions, Bonusesand discounts",
-            "subtitle": ""
+            "image": "shopify://shop_images/Parallax_02.jpg"
           }
         },
-        "58635714-8423-4715-b47a-2f9b99a6381b": {
-          "type": "icon",
+        "parallax_image_4zVjz9": {
+          "type": "parallax_image",
           "settings": {
-            "icon": "icon-card",
-            "icon_custom_svg": "",
-            "only_image": false,
-            "title": "Free secret Reward<br>Card",
-            "subtitle": ""
-          }
-        },
-        "05919011-9975-45d5-bdf3-b10a21796b96": {
-          "type": "icon",
-          "settings": {
-            "icon": "icon-gift2",
-            "icon_custom_svg": "",
-            "only_image": false,
-            "title": "Presents to Our<br>Customers",
-            "subtitle": ""
+            "image": "shopify://shop_images/Parallax_03.jpg"
           }
         }
       },
       "block_order": [
-        "icon-1",
-        "icon-2",
-        "58635714-8423-4715-b47a-2f9b99a6381b",
-        "05919011-9975-45d5-bdf3-b10a21796b96"
+        "parallax_image_C7nqL8",
+        "parallax_image_thFQat",
+        "parallax_image_4zVjz9"
       ],
+      "name": "Text + Parallax Component",
       "settings": {
-        "section_animation": true,
-        "heading_alignment": "center",
-        "layout": "layout_1",
-        "icons_font_size": "default",
-        "icons_background": false,
-        "icons_text_background": false,
-        "icons_bordered": false,
-        "under_slider": false,
-        "per_view": "4",
-        "per_view_mobile": "2",
-        "heading": "",
-        "subtitle": "",
-        "spacing_sections": 30,
-        "use_global_desktop_space": false,
-        "spacing_sections_mobile": 30,
-        "use_global_mobile_space": false,
-        "spacing_padding_sections": 40,
-        "use_global_desktop_space_padding": false,
-        "spacing_padding_sections_mobile": 40,
-        "use_global_mobile_space_padding": false,
-        "background": false,
-        "background_preset": "none",
-        "background_behavior": "bg-cover",
-        "background_image_placeholder_type": "color_global_secondary_bg",
-        "background_image_placeholder": "",
-        "section_decoration_top": "none",
-        "section_decoration_top_color_type": "color_global_primary_bg",
-        "section_decoration_top_color": "",
-        "section_decoration_bottom": "none",
-        "section_decoration_bottom_color_type": "color_global_primary_bg",
-        "section_decoration_bottom_color": ""
-      }
-    },
-    "index-text-social-media": {
-      "type": "index-text-social-media",
-      "blocks": {
-        "a4fd3f56-d17a-49f4-909e-3a24b2531b56": {
-          "type": "text",
-          "settings": {
-            "text": "<p>Our web company consists of web programmers and designers with extensive experience in the web market. Each of us worked as hired worker to create templates for Magento, <strong>Shopify</strong>, Wordpress and others. We decided to unite our forces and to do projects such as we would like them to be in accordance to our <strong>experience in customer support</strong>.</p>"
-          }
-        },
-        "a823762d-60c7-45bc-b7c3-5dd71f77c697": {
-          "type": "social-media",
-          "settings": {}
-        }
-      },
-      "block_order": [
-        "a4fd3f56-d17a-49f4-909e-3a24b2531b56",
-        "a823762d-60c7-45bc-b7c3-5dd71f77c697"
-      ],
-      "settings": {
-        "section_animation": true,
-        "spacing_sections": 100,
-        "use_global_desktop_space": true,
-        "spacing_sections_mobile": 70,
-        "use_global_mobile_space": true,
-        "spacing_padding_sections": 100,
-        "use_global_desktop_space_padding": true,
-        "spacing_padding_sections_mobile": 70,
-        "use_global_mobile_space_padding": true,
-        "background": false,
-        "background_preset": "none",
-        "background_behavior": "bg-cover",
-        "background_image_placeholder_type": "color_global_secondary_bg",
-        "background_image_placeholder": "",
-        "section_decoration_top": "none",
-        "section_decoration_top_color_type": "color_global_primary_bg",
-        "section_decoration_top_color": "",
-        "section_decoration_bottom": "none",
-        "section_decoration_bottom_color_type": "color_global_primary_bg",
-        "section_decoration_bottom_color": ""
-      }
-    },
-    "16395785262c701fe8": {
-      "type": "index-video",
-      "settings": {
-        "section_animation": true,
-        "fluid": false,
-        "inner_space": false,
-        "title": "Video",
-        "color_placeholder": "#5f72b8",
-        "cover_image_off": false,
-        "padding": 56,
-        "padding_mobile": 56,
-        "autoplay": false,
-        "video_url": "https://www.youtube.com/watch?v=HiByPPj7SWg",
+        "subtitle": "ABOUT US",
+        "heading": "Creed Label was born from MΛSS AWΛKΞNІИG— The idea of being fully awake: in movement, in discipline, and in the choices we make.",
         "description": "",
-        "button": false,
-        "button_text": "Shop now",
-        "button_url": "",
-        "button_target_blank": false,
-        "button_color": "btn--default",
-        "section_width": "global",
-        "container_max_width": 1178,
-        "spacing_sections": 100,
-        "use_global_desktop_space": true,
-        "spacing_sections_mobile": 70,
-        "use_global_mobile_space": true,
-        "spacing_padding_sections": 100,
-        "use_global_desktop_space_padding": true,
-        "spacing_padding_sections_mobile": 70,
-        "use_global_mobile_space_padding": true,
-        "background": false,
-        "background_preset": "none",
-        "background_behavior": "bg-cover",
-        "background_image_placeholder_type": "color_global_secondary_bg",
-        "background_image_placeholder": "",
-        "section_decoration_top": "none",
-        "section_decoration_top_color_type": "color_global_primary_bg",
-        "section_decoration_top_color": "",
-        "section_decoration_bottom": "none",
-        "section_decoration_bottom_color_type": "color_global_primary_bg",
-        "section_decoration_bottom_color": ""
-      }
-    },
-    "index-chart": {
-      "type": "index-chart",
-      "blocks": {
-        "ab6055d9-9339-4173-bbec-e55b044c3885": {
-          "type": "chart",
-          "settings": {
-            "percent": 95,
-            "heading": "Of excellent reviews",
-            "color": "-"
-          }
-        },
-        "2affa38c-d8eb-4bb1-93f9-9be8ed0e5697": {
-          "type": "chart-custom",
-          "settings": {
-            "value": 2,
-            "max": 2,
-            "unit": "k",
-            "heading": "More sales",
-            "color": "3"
-          }
-        },
-        "0565efe3-4663-4aa1-a817-a21bcd0aa738": {
-          "type": "chart",
-          "settings": {
-            "percent": 100,
-            "heading": "Happy customers",
-            "color": "2"
-          }
-        }
-      },
-      "block_order": [
-        "ab6055d9-9339-4173-bbec-e55b044c3885",
-        "2affa38c-d8eb-4bb1-93f9-9be8ed0e5697",
-        "0565efe3-4663-4aa1-a817-a21bcd0aa738"
-      ],
-      "settings": {
-        "section_animation": true,
-        "heading_alignment": "center",
-        "heading": "Why Choose Us",
-        "text": "<p>We like <strong>Shopify </strong>because it provides variety of tools to help you set up and run your business. <br/> You can find everything you need to <strong>showcase your products online</strong>, to process payments, and to make your store work for you</p>",
-        "section_width": "global",
-        "container_max_width": 1178,
-        "spacing_sections": 100,
-        "use_global_desktop_space": true,
-        "spacing_sections_mobile": 70,
-        "use_global_mobile_space": true,
-        "spacing_padding_sections": 100,
-        "use_global_desktop_space_padding": true,
-        "spacing_padding_sections_mobile": 70,
-        "use_global_mobile_space_padding": true,
-        "background": false,
-        "background_preset": "none",
-        "background_behavior": "bg-cover",
-        "background_image_placeholder_type": "color_global_secondary_bg",
-        "background_image_placeholder": "",
-        "section_decoration_top": "none",
-        "section_decoration_top_color_type": "color_global_primary_bg",
-        "section_decoration_top_color": "",
-        "section_decoration_bottom": "none",
-        "section_decoration_bottom_color_type": "color_global_primary_bg",
-        "section_decoration_bottom_color": ""
-      }
-    },
-    "522d26c0-0162-426e-8f55-be7714eb2ade": {
-      "type": "index-instagram",
-      "blocks": {
-        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-3": {
-          "type": "photo",
-          "settings": {
-            "title": "Title",
-            "url": ""
-          }
-        },
-        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-2": {
-          "type": "photo",
-          "settings": {
-            "title": "Title",
-            "url": ""
-          }
-        },
-        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-4": {
-          "type": "photo",
-          "settings": {
-            "title": "Title",
-            "url": ""
-          }
-        },
-        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-5": {
-          "type": "photo",
-          "settings": {
-            "title": "Title",
-            "url": ""
-          }
-        },
-        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-6": {
-          "type": "photo",
-          "settings": {
-            "title": "Title",
-            "url": ""
-          }
-        },
-        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-7": {
-          "type": "photo",
-          "settings": {
-            "title": "Title",
-            "url": ""
-          }
-        },
-        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-8": {
-          "type": "photo",
-          "settings": {
-            "title": "Title",
-            "url": ""
-          }
-        },
-        "b790f6c4-8b3a-4d70-a8b2-390177f5a0f3": {
-          "type": "photo",
-          "settings": {
-            "title": "Title",
-            "url": ""
-          }
-        },
-        "f923020a-74f3-4f1b-9575-c063086740f8": {
-          "type": "photo",
-          "settings": {
-            "title": "Title",
-            "url": ""
-          }
-        },
-        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-1": {
-          "type": "photo",
-          "disabled": true,
-          "settings": {
-            "title": "Title",
-            "url": ""
-          }
-        },
-        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-0": {
-          "type": "photo",
-          "disabled": true,
-          "settings": {
-            "title": "Title",
-            "url": ""
-          }
-        },
-        "855720fb-229b-4037-9c78-a122f6abf04d": {
-          "type": "photo",
-          "disabled": true,
-          "settings": {
-            "title": "Title",
-            "url": ""
-          }
-        }
-      },
-      "block_order": [
-        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-3",
-        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-2",
-        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-4",
-        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-5",
-        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-6",
-        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-7",
-        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-8",
-        "b790f6c4-8b3a-4d70-a8b2-390177f5a0f3",
-        "f923020a-74f3-4f1b-9575-c063086740f8",
-        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-1",
-        "template--14377629646945__522d26c0-0162-426e-8f55-be7714eb2ade-16678895814c3326d5-0",
-        "855720fb-229b-4037-9c78-a122f6abf04d"
-      ],
-      "settings": {
-        "section_animation": true,
-        "fluid": false,
-        "layout": "circle_grid",
-        "insta_max": 9,
-        "manual": true,
-        "url": "",
-        "heading": "#@Shop By Instagram",
-        "insta_token": "IGQVJYZAHFFOGVrS014czFsS2l0dzVzM0NmVzZAkd3RDU1I2SGV3S0JSTVF1TmUyYVZALMjJxUkM1RTJMbTNPV091MUxlR1ZAfSk4zcWgwelYwNkFpM3p3emhYRGM5UjZAELU1UQXBHWVo3Nkw2dTJWbDNlYQZDZD",
-        "insta_tag": "fashionDefault",
-        "section_width": "global",
-        "container_max_width": 1178,
-        "spacing_sections": 100,
-        "use_global_desktop_space": true,
-        "spacing_sections_mobile": 70,
-        "use_global_mobile_space": true,
-        "spacing_padding_sections": 100,
-        "use_global_desktop_space_padding": true,
-        "spacing_padding_sections_mobile": 70,
-        "use_global_mobile_space_padding": true,
-        "background": false,
-        "background_preset": "none",
-        "background_behavior": "bg-cover",
-        "background_image_placeholder_type": "color_global_secondary_bg",
-        "background_image_placeholder": "",
-        "section_decoration_top": "none",
-        "section_decoration_top_color_type": "color_global_primary_bg",
-        "section_decoration_top_color": "",
-        "section_decoration_bottom": "none",
-        "section_decoration_bottom_color_type": "color_global_primary_bg",
-        "section_decoration_bottom_color": ""
+        "cta_label": "Discover the Science",
+        "cta_url": "shopify://products/nomad-x-hydro-black-copy",
+        "cta_new_tab": false,
+        "margin_top": 0,
+        "margin_bottom": 0
       }
     }
   },
@@ -501,12 +154,8 @@
     "page_heading_VHMzBD",
     "snap_card_component_Te9mGU",
     "story_WQFYWU",
+    "story_nKApV6",
     "snap_card_component_hLcNFQ",
-    "index-quote-image",
-    "index-icons",
-    "index-text-social-media",
-    "16395785262c701fe8",
-    "index-chart",
-    "522d26c0-0162-426e-8f55-be7714eb2ade"
+    "image_parallax_yDjGC9"
   ]
 }

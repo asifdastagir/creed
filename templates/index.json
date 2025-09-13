@@ -144,10 +144,13 @@
       "type": "snap-card-component",
       "name": "Snap Card Component",
       "settings": {
+        "style": "style1",
         "heading_line1": "Aesthetically",
         "heading_line2": "Engineered Coverage",
         "text": "High performance coverage waistband and integrated knee length liner built for the active without compromise.",
-        "image": "shopify://shop_images/section1.jpg",
+        "image": "shopify://shop_images/Screenshot_20250821_154750_Gallery_2.jpg",
+        "link": "",
+        "link_label": "Discover the Science",
         "margin_top": 100,
         "margin_bottom": 0
       }
@@ -156,10 +159,13 @@
       "type": "snap-card-component",
       "name": "Snap Card Component",
       "settings": {
+        "style": "style1",
         "heading_line1": "Ergonomic",
         "heading_line2": "Design",
         "text": "Strategically cut for unrestricted movement and underwater functionality---While maintaining Aesthetic balance.",
-        "image": "shopify://shop_images/section2.jpg",
+        "image": "shopify://shop_images/Screenshot_20250903_165245_Gallery_2.jpg",
+        "link": "",
+        "link_label": "Discover the Science",
         "margin_top": 0,
         "margin_bottom": 0
       }
@@ -168,10 +174,13 @@
       "type": "snap-card-component",
       "name": "Snap Card Component",
       "settings": {
+        "style": "style1",
         "heading_line1": "HydrotechTM",
         "heading_line2": "Fabric",
         "text": "Moisture-wicking specially engineered fabric designed to seamlessly move between land and water.",
-        "image": "shopify://shop_images/WhatsApp_Image_2025-06-25_at_7.19.57_PM.jpg",
+        "image": "shopify://shop_images/1756030025465_jpg.png",
+        "link": "",
+        "link_label": "Discover the Science",
         "margin_top": 0,
         "margin_bottom": 0
       }

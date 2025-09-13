@@ -9,115 +9,18 @@
  */
 {
   "sections": {
-    "7d32e181-db3e-4aaf-8f73-0a188fc48351": {
-      "type": "index-banner-grid",
-      "blocks": {
-        "template--20765088514333__7d32e181-db3e-4aaf-8f73-0a188fc48351-banner-1": {
-          "type": "banner",
-          "settings": {
-            "image": "",
-            "video_loop": false,
-            "color_placeholder": "",
-            "title": "{{ collection.title }}",
-            "subtitle": "",
-            "invert_color": true,
-            "url": "",
-            "fast_shop": false,
-            "description": "Suspendisse ultrices viverra nibh in mollis quisque dictum mattis elementum mauris in luctus diam.",
-            "button": false,
-            "button_text": "",
-            "button_target_blank": false,
-            "button_color": "btn--invert",
-            "aligment": "center",
-            "aligment_v": "middle",
-            "aligment_text": "end",
-            "width": 82,
-            "left_padding": 13,
-            "top_padding": 14,
-            "mobile_sync": false,
-            "aligment_mobile": "right",
-            "aligment_v_mobile": "middle",
-            "aligment_text_mobile": "end",
-            "width_mobile": 100,
-            "left_padding_mobile": 14,
-            "top_padding_mobile": 14
-          }
-        }
-      },
-      "block_order": [
-        "template--20765088514333__7d32e181-db3e-4aaf-8f73-0a188fc48351-banner-1"
-      ],
+    "page_heading_JpxLXU": {
+      "type": "page-heading",
+      "name": "Page Heading",
       "settings": {
-        "fluid": false,
-        "inner_space": true,
-        "slider_bottom_ellipse": false,
-        "layout": "grid",
-        "slideshow_fullheight_mobile": false,
-        "slideshow_control_layout": "bottom",
-        "slideshow_autoplay": true,
-        "style": "style-1",
-        "per_row": "2",
-        "images_auto_height": true,
-        "images_auto_height_padding": 46,
-        "font_ratio": 132,
-        "per_row_mobile": "1",
-        "images_auto_height_mobile": true,
-        "images_auto_height_padding_mobile": 46,
-        "font_ratio_mobile": 144,
-        "heading_alignment": "center",
-        "heading": "",
-        "subtitle": "",
-        "lazyload": false,
-        "placeholder": false,
-        "spacing_sections": 0,
-        "use_global_desktop_space": false,
-        "spacing_sections_mobile": 8,
-        "use_global_mobile_space": false,
-        "spacing_padding_sections": 60,
-        "use_global_desktop_space_padding": true,
-        "spacing_padding_sections_mobile": 70,
-        "use_global_mobile_space_padding": true,
-        "background": false
-      }
-    },
-    "10bd415d-1260-4dcb-936f-f55a99d02a82": {
-      "type": "index-product-carousel",
-      "disabled": true,
-      "settings": {
-        "limit": 4,
-        "slides_per_view": "1",
-        "compact": true,
-        "reverse": false,
-        "countdown": "none",
-        "heading_alignment": "center",
-        "heading": "",
-        "subtitle": "",
-        "collection": "",
-        "banner": false,
-        "layout": "compact",
-        "color_placeholder": "",
-        "banner_title": "Best Offer",
-        "banner_subtitle": "DISCOUNT",
-        "invert_color": false,
-        "button": false,
-        "button_bottom_on_mobile": false,
-        "button_text": "View all",
-        "button_url": "",
-        "button_color": "btn--invert",
-        "image_bg_preset": "none",
-        "placeholder": false,
-        "hide_on_mobile": false,
-        "section_width": "global",
-        "container_max_width": 1178,
-        "spacing_sections": 46,
-        "use_global_desktop_space": false,
-        "spacing_sections_mobile": 30,
-        "use_global_mobile_space": false,
-        "spacing_padding_sections": 100,
-        "use_global_desktop_space_padding": true,
-        "spacing_padding_sections_mobile": 70,
-        "use_global_mobile_space_padding": true,
-        "background": false
+        "style": "style2",
+        "heading_line1": "Form One",
+        "heading_line2": "",
+        "description": "Technical training apparel which blends performance with faith conscious design",
+        "background_image": "shopify://shop_images/933634256f06b07535a666184ae5f5d7b7cc7a6f.jpg",
+        "overlay": true,
+        "padding_top_style2": 80,
+        "padding_bottom_style2": 80
       }
     },
     "product-grid": {
@@ -126,45 +29,52 @@
         "section_width": "global",
         "container_max_width": 1178,
         "spacing_sections": 46,
-        "use_global_desktop_space": false,
-        "spacing_sections_mobile": 20,
-        "use_global_mobile_space": false,
-        "spacing_padding_sections": 100,
-        "use_global_desktop_space_padding": true,
-        "spacing_padding_sections_mobile": 70,
-        "use_global_mobile_space_padding": true,
-        "background": false,
-        "fluid": false,
-        "infinite_scroll": true,
-        "update_url": false,
-        "product_reviews": true
+        "spacing_padding_sections": 100
       }
     },
-    "16449230461ed3a51f": {
-      "type": "index-recently-viewed-items",
+    "image_parallax_grRd6f": {
+      "type": "image-parallax",
+      "blocks": {
+        "parallax_image_xJEzdW": {
+          "type": "parallax_image",
+          "settings": {
+            "image": "shopify://shop_images/Parallax_01.jpg"
+          }
+        },
+        "parallax_image_qeih96": {
+          "type": "parallax_image",
+          "settings": {
+            "image": "shopify://shop_images/Parallax_02.jpg"
+          }
+        },
+        "parallax_image_UF4wrg": {
+          "type": "parallax_image",
+          "settings": {
+            "image": "shopify://shop_images/Parallax_03.jpg"
+          }
+        }
+      },
+      "block_order": [
+        "parallax_image_xJEzdW",
+        "parallax_image_qeih96",
+        "parallax_image_UF4wrg"
+      ],
+      "name": "Text + Parallax Component",
       "settings": {
-        "limit": 8,
-        "heading_alignment": "center",
-        "heading": "Recently Viewed Products",
-        "subtitle": "Exclusive section that stores the history of product views",
-        "section_width": "global",
-        "container_max_width": 1178,
-        "spacing_sections": 100,
-        "use_global_desktop_space": true,
-        "spacing_sections_mobile": 70,
-        "use_global_mobile_space": true,
-        "spacing_padding_sections": 100,
-        "use_global_desktop_space_padding": true,
-        "spacing_padding_sections_mobile": 70,
-        "use_global_mobile_space_padding": true,
-        "background": false
+        "subtitle": "ABOUT US",
+        "heading": "Creed Label was born from MΛSS AWΛKΞNІИG— The idea of being fully awake: in movement, in discipline, and in the choices we make.",
+        "description": "",
+        "cta_label": "Discover the Science",
+        "cta_url": "shopify://products/nomad-x-hydro-black-copy",
+        "cta_new_tab": false,
+        "margin_top": 0,
+        "margin_bottom": 0
       }
     }
   },
   "order": [
-    "7d32e181-db3e-4aaf-8f73-0a188fc48351",
-    "10bd415d-1260-4dcb-936f-f55a99d02a82",
+    "page_heading_JpxLXU",
     "product-grid",
-    "16449230461ed3a51f"
+    "image_parallax_grRd6f"
   ]
 }

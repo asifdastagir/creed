@@ -1,22 +1,66 @@
 {% schema %}
   {
-    "name": "Page Heading Component",
+    "name": "Page Heading",
     "settings": [
+      {
+        "type": "select",
+        "id": "style",
+        "label": "Select Style",
+        "options": [
+          {
+            "value": "style1",
+            "label": "Style 1 - Default"
+          }, {
+            "value": "style2",
+            "label": "Style 2 - Background Image"
+          }
+        ],
+        "default": "style1"
+      },
       {
         "type": "text",
         "id": "heading_line1",
         "label": "Heading - Line 1",
         "default": "The"
-      }, {
+      },
+      {
         "type": "text",
         "id": "heading_line2",
         "label": "Heading - Line 2",
         "default": "Science"
-      }, {
+      },
+      {
         "type": "textarea",
         "id": "description",
         "label": "Description",
-        "default": "Activewear engineered with purpose and function, without compromising on faith-driven values. Every piece is built for those who demand performance and stand by their convictions."
+        "default": "Activewear engineered with purpose and function, without compromising on faith-driven values. Every piece is built for those who demand performance and stand by their convictions."
+      }, {
+        "type": "image_picker",
+        "id": "background_image",
+        "label": "Background Image (Style 2 only)"
+      }, {
+        "type": "checkbox",
+        "id": "overlay",
+        "label": "Enable dark overlay (Style 2 only)",
+        "default": true
+      }, {
+        "type": "range",
+        "id": "padding_top_style2",
+        "label": "Top padding for Style 2",
+        "min": 0,
+        "max": 300,
+        "step": 5,
+        "unit": "px",
+        "default": 80
+      }, {
+        "type": "range",
+        "id": "padding_bottom_style2",
+        "label": "Bottom padding for Style 2",
+        "min": 0,
+        "max": 300,
+        "step": 5,
+        "unit": "px",
+        "default": 80
       }
     ],
     "presets": [
@@ -28,12 +72,43 @@
   }
 {% endschema %}
 
-<section id="pageHeadingComponent" class="component text-center px-gutter pt-6 pb-6 lg:pb-8 lg:pt-8 grid-layout gap-y-12 lg:gap-y-16 bg-white text-black">
-  <h1 class="col-start-1 col-end-13 flex flex-col text-pullout">
-    <span>{{ section.settings.heading_line1 }}</span>
-    <span class="pl-12.5 lg:pl-25">{{ section.settings.heading_line2 }}</span>
-  </h1>
-  <h2 class="col-start-1 col-end-13 lg:col-start-3 lg:col-end-11 text-h2">
-    {{ section.settings.description }}
-  </h2>
+<section
+  id="pageHeadingComponent"
+  class="component text-center px-gutter grid-layout gap-y-12 lg:gap-y-16 {% if section.settings.style == 'style2' %}relative{% endif %}"
+  style="
+    {% if section.settings.style == 'style2' and section.settings.background_image %}
+      background-image: url('{{ section.settings.background_image | img_url: '2048x2048' }}'); 
+      background-size: cover; 
+      background-position: center;
+    {% endif %}
+    {% if section.settings.style == 'style2' %}
+      padding-top: {{ section.settings.padding_top_style2 }}px;
+      padding-bottom: {{ section.settings.padding_bottom_style2 }}px;
+    {% endif %}
+  ">
+  {% if section.settings.style == 'style2' and section.settings.overlay %}
+    <div class="absolute inset-0 bg-white/90"></div>
+  {% endif %}
+
+  <div class="col-start-1 col-end-13 lg:col-start-3 lg:col-end-11 relative z-10">
+    {% if section.settings.style == 'style1' %}
+      <!-- Style 1 -->
+      <h1 class="text-pullout text-center">
+        <span>{{ section.settings.heading_line1 }}</span>
+        <span>{{ section.settings.heading_line2 }}</span>
+      </h1>
+      <h2 class="text-h2">
+        {{ section.settings.description }}
+      </h2>
+    {% else %}
+      <!-- Style 2 (same classes, smaller copy) -->
+      <h1 class="text-pullout text-center">
+        <span>{{ section.settings.heading_line1 }}</span>
+        <span>{{ section.settings.heading_line2 }}</span>
+      </h1>
+      <p class="text-pre large mt-2 lg:mt-4 max-w-[640px] mx-auto">
+        {{ section.settings.description }}
+      </p>
+    {% endif %}
+  </div>
 </section>
