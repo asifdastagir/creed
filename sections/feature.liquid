@@ -1,0 +1,78 @@
+<section class="w-full bg-white">
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-0">
+
+    {% for block in section.blocks %}
+      {% assign col_class = 'lg:col-span-12' %}
+      {% if section.blocks.size == 2 %}
+        {% assign col_class = 'lg:col-span-6' %}
+      {% elsif section.blocks.size == 3 %}
+        {% assign col_class = 'lg:col-span-4' %}
+      {% endif %}
+
+      <div class="relative group overflow-hidden {{ col_class }} col-span-12">
+        <div class="aspect-[4/3] relative w-full">
+          {% if block.settings.image %}
+            <img
+              src="{{ block.settings.image | img_url: '800x600' }}"
+              alt="{{ block.settings.title | escape }}"
+              class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 ease-in-out group-hover:scale-105"
+              loading="lazy">
+          {% else %}
+            <img
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-ItBBqQGdhU8TCeQLr0m9bvG48Et5JQ.png"
+              alt="{{ block.settings.title | escape }}"
+              class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 ease-in-out group-hover:scale-105"
+              loading="lazy">
+          {% endif %}
+
+
+          <!-- Content -->
+          <div class="absolute inset-0 flex flex-col justify-end p-8 lg:p-12 lg:max-w-[70%]">
+            <h3 class="text-h2 text-white font-normal mb-2 transform group-hover:-translate-y-1 transition-transform duration-300">
+              {{ block.settings.title }}
+            </h3>
+            <p class="text-white text-base lg:text-xl leading-relaxed opacity-90 group-hover:opacity-100 transition-opacity duration-300">
+              {{ block.settings.description }}
+            </p>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+
+  </div>
+</section>
+
+{% schema %}
+  {
+    "name": "Feature Section",
+    "settings": [],
+    "blocks": [
+      {
+        "type": "feature",
+        "name": "Feature Item",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Image"
+          }, {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Feature Title"
+          }, {
+            "type": "textarea",
+            "id": "description",
+            "label": "Description",
+            "default": "Feature description goes here."
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Dynamic Feature Section"
+      }
+    ]
+  }
+{% endschema %}
