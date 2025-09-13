@@ -55,7 +55,7 @@
       "settings": {
         "section_width": "global",
         "container_max_width": 1178,
-        "spacing_sections": 46,
+        "spacing_sections": 0,
         "spacing_padding_sections": 100
       }
     },
@@ -94,8 +94,8 @@
         "cta_label": "Discover the Science",
         "cta_url": "shopify://products/nomad-x-hydro-black-copy",
         "cta_new_tab": false,
-        "margin_top": 0,
-        "margin_bottom": 0
+        "margin_top": 40,
+        "margin_bottom": 40
       }
     }
   },
