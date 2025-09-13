@@ -45,6 +45,24 @@
         "default": true
       }, {
         "type": "range",
+        "id": "padding_top_style1",
+        "label": "Top padding for Style 1",
+        "min": 0,
+        "max": 300,
+        "step": 5,
+        "unit": "px",
+        "default": 60
+      }, {
+        "type": "range",
+        "id": "padding_bottom_style1",
+        "label": "Bottom padding for Style 1",
+        "min": 0,
+        "max": 300,
+        "step": 5,
+        "unit": "px",
+        "default": 60
+      }, {
+        "type": "range",
         "id": "padding_top_style2",
         "label": "Top padding for Style 2",
         "min": 0,
@@ -76,12 +94,15 @@
   id="pageHeadingComponent"
   class="component text-center px-gutter grid-layout gap-y-12 lg:gap-y-16 {% if section.settings.style == 'style2' %}relative{% endif %}"
   style="
-    {% if section.settings.style == 'style2' and section.settings.background_image %}
-      background-image: url('{{ section.settings.background_image | img_url: '2048x2048' }}'); 
-      background-size: cover; 
-      background-position: center;
-    {% endif %}
-    {% if section.settings.style == 'style2' %}
+    {% if section.settings.style == 'style1' %}
+      padding-top: {{ section.settings.padding_top_style1 }}px;
+      padding-bottom: {{ section.settings.padding_bottom_style1 }}px;
+    {% else %}
+      {% if section.settings.background_image %}
+        background-image: url('{{ section.settings.background_image | img_url: '2048x2048' }}'); 
+        background-size: cover; 
+        background-position: center;
+      {% endif %}
       padding-top: {{ section.settings.padding_top_style2 }}px;
       padding-bottom: {{ section.settings.padding_bottom_style2 }}px;
     {% endif %}
@@ -101,7 +122,7 @@
         {{ section.settings.description }}
       </h2>
     {% else %}
-      <!-- Style 2 (same classes, smaller copy) -->
+      <!-- Style 2 -->
       <h1 class="text-pullout text-center">
         <span>{{ section.settings.heading_line1 }}</span>
         <span>{{ section.settings.heading_line2 }}</span>
