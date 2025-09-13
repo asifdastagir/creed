@@ -73,7 +73,9 @@
           "type": "form",
           "settings": {
             "heading": "Our Policy",
-            "subtext": "Make a statement with the Splat T-Shirt, available in Blue Grass, Black, and White, each with unique splat accents. This 100% cotton tee, made in Portugal from heavyweight 275gsm fabric, includes a small logo on the left chest and a dynamic splat graffiti design on the back with a \"flair\" definition. Add a bold splash of color to your wardrobe and showcase your individuality."
+            "subtext": "Make a statement with the Splat T-Shirt, available in Blue Grass, Black, and White, each with unique splat accents. This 100% cotton tee, made in Portugal from heavyweight 275gsm fabric, includes a small logo on the left chest and a dynamic splat graffiti design on the back with a \"flair\" definition. Add a bold splash of color to your wardrobe and showcase your individuality.",
+            "link_text": "Learn more",
+            "link_url": "shopify://pages/about"
           }
         },
         "info_X6w7ea": {
