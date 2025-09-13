@@ -1,4 +1,4 @@
-<section class="w-full bg-white">
+<section class="w-full bg-white  mt-[{{ section.settings.margin_top }}px] mb-[{{ section.settings.margin_bottom }}px]">
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-0">
 
     {% for block in section.blocks %}
@@ -45,7 +45,27 @@
 {% schema %}
   {
     "name": "Feature Section",
-    "settings": [],
+    "settings": [
+      {
+        "type": "range",
+        "id": "margin_top",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "label": "Margin Top",
+        "default": 0
+      }, {
+        "type": "range",
+        "id": "margin_bottom",
+        "min": 0,
+        "max": 200,
+        "step": 5,
+        "unit": "px",
+        "label": "Margin Bottom",
+        "default": 0
+      }
+    ],
     "blocks": [
       {
         "type": "feature",
