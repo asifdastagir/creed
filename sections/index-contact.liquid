@@ -37,6 +37,13 @@
               <div class="title-wrap">
                 <h1>{{ block.settings.heading }}</h1>
                 <div class="h-sub" style="font-size: {{ settings.font_heading_subtitle_font_size }}px;">{{ block.settings.subtext }}</div>
+                {% if block.settings.link_url != blank and block.settings.link_text != blank %}
+                  <div class="mt-2">
+                    <a href="{{ block.settings.link_url }}" class="text-blue-600 hover:text-blue-800 underline">
+                      {{ block.settings.link_text }}
+                    </a>
+                  </div>
+                {% endif %}
               </div>
               {%- form 'contact'
                 , class: 'contact-form contact-form--max400 mt-4' -%}
@@ -632,6 +639,15 @@
             "id": "subtext",
             "label": "Subtext",
             "default": "To request a quote our products, contact us directly or fill out the form and we will get back to you promptly."
+          }, {
+            "type": "text",
+            "id": "link_text",
+            "label": "Link Text",
+            "default": "Learn more"
+          }, {
+            "type": "url",
+            "id": "link_url",
+            "label": "Link URL"
           }
         ]
       }, {
