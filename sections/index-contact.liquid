@@ -38,11 +38,15 @@
                 <h1>{{ block.settings.heading }}</h1>
                 <div class="h-sub" style="font-size: {{ settings.font_heading_subtitle_font_size }}px;">{{ block.settings.subtext }}</div>
                 {% if block.settings.link_url != blank and block.settings.link_text != blank %}
-                  <div class="mt-2">
-                    <a href="{{ block.settings.link_url }}" class="text-blue-600 hover:text-blue-800 underline">
-                      {{ block.settings.link_text }}
+
+                  <span class="flex pointer-events-none flex-nowrap items-center gap-x-2.25 text-lg group/button">
+                    <a class="pointer-events-auto underline hover:text-gray-600 text-[14px]" href="{{ block.settings.link_url }}" target="_self">
+                        {{ block.settings.link_text }}
                     </a>
-                  </div>
+                    <svg class="w-6 h-6 group-hover/button:translate-x-3 transition-transform duration-500 ease-in-out" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 24" fill="none">
+                      <path d="M7.5 12H17.5M17.5 12L13.5 8M17.5 12L13.5 16" stroke="currentColor" stroke-linecap="square"></path>
+                    </svg>
+                   </span>                  
                 {% endif %}
               </div>
               {%- form 'contact'

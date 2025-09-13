@@ -672,14 +672,15 @@ summary::marker {
 *,
 :before,
 :after {
-    --tw-border-spacing-x: 0;
-    --tw-border-spacing-y: 0;
-    --tw-translate-x     : 0;
-    --tw-translate-y     : 0;
-    --tw-rotate          : 0;
-    --tw-skew-x          : 0;
-    --tw-skew-y          : 0;
-
+    --tw-border-spacing-x      : 0;
+    --tw-border-spacing-y      : 0;
+    --tw-translate-x           : 0;
+    --tw-translate-y           : 0;
+    --tw-rotate                : 0;
+    --tw-skew-x                : 0;
+    --tw-skew-y                : 0;
+    --tw-scale-x               : 1;
+    --tw-scale-y               : 1;
     --tw-pan-x                 : ;
     --tw-pan-y                 : ;
     --tw-pinch-zoom            : ;
@@ -715,9 +716,9 @@ summary::marker {
     --tw-backdrop-grayscale    : ;
     --tw-backdrop-hue-rotate   : ;
     --tw-backdrop-invert       : ;
-    --tw-backdrop-opacity      : 1;
+    --tw-backdrop-opacity      : ;
     --tw-backdrop-saturate     : ;
-    --tw-backdrop-sepia        : ;
+    --tw-backdrop-sepia        : sepia(100%);
 }
 
 ::backdrop {
@@ -728,6 +729,8 @@ summary::marker {
     --tw-rotate                : 0;
     --tw-skew-x                : 0;
     --tw-skew-y                : 0;
+    --tw-scale-x               : 1;
+    --tw-scale-y               : 1;
     --tw-pan-x                 : ;
     --tw-pan-y                 : ;
     --tw-pinch-zoom            : ;
@@ -751,7 +754,7 @@ summary::marker {
     --tw-blur                  : ;
     --tw-brightness            : ;
     --tw-contrast              : ;
-    --tw-grayscale             : ;
+    --tw-grayscale             : grayscale(100%);
     --tw-hue-rotate            : ;
     --tw-invert                : ;
     --tw-saturate              : ;
@@ -763,9 +766,9 @@ summary::marker {
     --tw-backdrop-grayscale    : ;
     --tw-backdrop-hue-rotate   : ;
     --tw-backdrop-invert       : ;
-    --tw-backdrop-opacity      : 1;
+    --tw-backdrop-opacity      : ;
     --tw-backdrop-saturate     : ;
-    --tw-backdrop-sepia        : ;
+    --tw-backdrop-sepia        : sepia(100%);
 }
 
 .table {
