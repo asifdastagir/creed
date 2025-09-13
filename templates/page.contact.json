@@ -91,7 +91,7 @@
       ],
       "settings": {
         "section_animation": true,
-        "section_width": "global",
+        "section_width": "custom",
         "container_max_width": 1178,
         "spacing_sections": 70,
         "use_global_desktop_space": false,
