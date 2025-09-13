@@ -100,7 +100,7 @@
         "cta_url": "shopify://products/nomad-x-hydro-black-copy",
         "cta_new_tab": false,
         "margin_top": 100,
-        "margin_bottom": 40
+        "margin_bottom": 0
       }
     }
   },
