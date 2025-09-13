@@ -703,7 +703,7 @@ summary::marker {
     --tw-blur                  : ;
     --tw-brightness            : ;
     --tw-contrast              : ;
-    --tw-grayscale             : ;
+    --tw-grayscale             : grayscale(100%);
     --tw-hue-rotate            : ;
     --tw-invert                : ;
     --tw-saturate              : ;
