@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main-page": {
@@ -17,15 +26,54 @@
         "background": false
       }
     },
+    "index_contact_GnCFEW": {
+      "type": "index-contact",
+      "blocks": {
+        "map_didHE3": {
+          "type": "map",
+          "settings": {
+            "show_social": false,
+            "google_map": "<iframe title=\"Google Map\" src=\"https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2201.3258493677126!2d-74.01291322172017!3d40.70657451080482!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sua!4v1492962272380\"></iframe>"
+          }
+        }
+      },
+      "block_order": [
+        "map_didHE3"
+      ],
+      "name": "Contact Form / preset 4 Only Map",
+      "settings": {
+        "section_animation": true,
+        "section_width": "custom",
+        "container_max_width": 1978,
+        "spacing_sections": 0,
+        "use_global_desktop_space": true,
+        "spacing_sections_mobile": 0,
+        "use_global_mobile_space": true,
+        "spacing_padding_sections": 0,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 0,
+        "use_global_mobile_space_padding": true,
+        "background": false,
+        "background_preset": "none",
+        "background_behavior": "bg-cover",
+        "background_image_placeholder_type": "color_global_secondary_bg",
+        "background_image_placeholder": "",
+        "section_decoration_top": "none",
+        "section_decoration_top_color_type": "color_global_primary_bg",
+        "section_decoration_top_color": "",
+        "section_decoration_bottom": "none",
+        "section_decoration_bottom_color_type": "color_global_primary_bg",
+        "section_decoration_bottom_color": ""
+      }
+    },
     "main-contact": {
       "type": "index-contact",
       "blocks": {
         "f501d350-327a-416d-a7be-e45d554455e1": {
           "type": "map",
           "settings": {
-            "show_social": true,
-            "google_map": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3596.6666484674465!2d-74.00630732029427!3d40.70867969006109!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a2355a4b96f%3A0xfb2676ee3604a0ff!2s254%20Front%20Street!5e0!3m2!1sen!2sua!4v1670171743339!5m2!1sen!2sua\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>",
-            "map_image": "shopify://shop_images/lumia-map-big.png"
+            "show_social": false,
+            "google_map": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3596.6666484674465!2d-74.00630732029427!3d40.70867969006109!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a2355a4b96f%3A0xfb2676ee3604a0ff!2s254%20Front%20Street!5e0!3m2!1sen!2sua!4v1670171743339!5m2!1sen!2sua\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>"
           }
         },
         "0273f6d3-f4e7-433d-a810-090db027fca9": {
@@ -34,40 +82,14 @@
             "heading": "Let’s Talk",
             "subtext": "To request a quote our products, contact us directly or fill out the form and we will get back to you promptly."
           }
-        },
-        "19068ef5-b463-45bb-8b64-86b04ce7d6dd": {
-          "type": "info",
-          "settings": {
-            "icon": "icon-location",
-            "title": "Location",
-            "description": "165th St, Jamaica, NY 11"
-          }
-        },
-        "e5e0589c-dfff-468f-93ed-838028d02fdb": {
-          "type": "info",
-          "settings": {
-            "icon": "icon-mail",
-            "title": "Email",
-            "description": "loremipsum@gmail.com"
-          }
-        },
-        "29d0ed73-189f-4aec-98af-1d0fcb33b264": {
-          "type": "info",
-          "settings": {
-            "icon": "icon-phone2",
-            "title": "Phone",
-            "description": "+1-202-555-0158"
-          }
         }
       },
       "block_order": [
         "f501d350-327a-416d-a7be-e45d554455e1",
-        "0273f6d3-f4e7-433d-a810-090db027fca9",
-        "19068ef5-b463-45bb-8b64-86b04ce7d6dd",
-        "e5e0589c-dfff-468f-93ed-838028d02fdb",
-        "29d0ed73-189f-4aec-98af-1d0fcb33b264"
+        "0273f6d3-f4e7-433d-a810-090db027fca9"
       ],
       "settings": {
+        "section_animation": true,
         "section_width": "global",
         "container_max_width": 1178,
         "spacing_sections": 70,
@@ -78,12 +100,23 @@
         "use_global_desktop_space_padding": true,
         "spacing_padding_sections_mobile": 70,
         "use_global_mobile_space_padding": true,
-        "background": false
+        "background": false,
+        "background_preset": "none",
+        "background_behavior": "bg-cover",
+        "background_image_placeholder_type": "color_global_secondary_bg",
+        "background_image_placeholder": "",
+        "section_decoration_top": "none",
+        "section_decoration_top_color_type": "color_global_primary_bg",
+        "section_decoration_top_color": "",
+        "section_decoration_bottom": "none",
+        "section_decoration_bottom_color_type": "color_global_primary_bg",
+        "section_decoration_bottom_color": ""
       }
     }
   },
   "order": [
     "main-page",
+    "index_contact_GnCFEW",
     "main-contact"
   ]
 }
