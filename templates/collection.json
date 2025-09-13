@@ -70,11 +70,39 @@
         "margin_top": 0,
         "margin_bottom": 0
       }
+    },
+    "feature_HqPX8Y": {
+      "type": "feature",
+      "blocks": {
+        "feature_cV7nKX": {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/4a04087a0d1e15a46421d5cc04b74a100d1a7ed5.png",
+            "title": "Shoulder Support",
+            "description": "Active barrister Jamas sought a solution\nbeyond kinesiology tape, aiming to integrate\nactive shoulder support into a garment."
+          }
+        },
+        "feature_MTf9gm": {
+          "type": "feature",
+          "settings": {
+            "image": "shopify://shop_images/4a04087a0d1e15a46421d5cc04b74a100d1a7ed5.png",
+            "title": "Flexible Fabric",
+            "description": "Active barrister Jamas sought a solution\nbeyond kinesiology tape, aiming to integrate\nactive shoulder support into a garment."
+          }
+        }
+      },
+      "block_order": [
+        "feature_cV7nKX",
+        "feature_MTf9gm"
+      ],
+      "name": "Dynamic Feature Section",
+      "settings": {}
     }
   },
   "order": [
     "page_heading_JpxLXU",
     "product-grid",
-    "image_parallax_grRd6f"
+    "image_parallax_grRd6f",
+    "feature_HqPX8Y"
   ]
 }
