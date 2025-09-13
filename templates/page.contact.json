@@ -26,6 +26,46 @@
         "background": false
       }
     },
+    "index_contact_GnCFEW": {
+      "type": "index-contact",
+      "blocks": {
+        "map_didHE3": {
+          "type": "map",
+          "settings": {
+            "show_social": false,
+            "google_map": "<iframe title=\"Google Map\" src=\"https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2201.3258493677126!2d-74.01291322172017!3d40.70657451080482!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sua!4v1492962272380\"></iframe>"
+          }
+        }
+      },
+      "block_order": [
+        "map_didHE3"
+      ],
+      "name": "Contact Form / preset 4 Only Map",
+      "settings": {
+        "section_animation": true,
+        "section_width": "global",
+        "container_max_width": 1178,
+        "spacing_sections": 100,
+        "use_global_desktop_space": true,
+        "spacing_sections_mobile": 70,
+        "use_global_mobile_space": true,
+        "spacing_padding_sections": 100,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "background": false,
+        "background_preset": "none",
+        "background_behavior": "bg-cover",
+        "background_image_placeholder_type": "color_global_secondary_bg",
+        "background_image_placeholder": "",
+        "section_decoration_top": "none",
+        "section_decoration_top_color_type": "color_global_primary_bg",
+        "section_decoration_top_color": "",
+        "section_decoration_bottom": "none",
+        "section_decoration_bottom_color_type": "color_global_primary_bg",
+        "section_decoration_bottom_color": ""
+      }
+    },
     "main-contact": {
       "type": "index-contact",
       "blocks": {
@@ -76,6 +116,7 @@
   },
   "order": [
     "main-page",
+    "index_contact_GnCFEW",
     "main-contact"
   ]
 }
