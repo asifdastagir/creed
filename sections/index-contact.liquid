@@ -28,7 +28,7 @@
   , placement: 'top' %}
 
 <div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
-  <div class=" asif {% render 'section-container-class', layout: layout %}">
+  <div class=" asif ">
     <div class="row gy-5">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
@@ -124,7 +124,7 @@
               {%- endform -%}
             </div>
           {%- when 'map' -%}
-            <div class="col-md {% if form_block > 0 %}{% else %}mx-auto{% endif %} col-contact-map" {{ block.shopify_attributes }}>
+            <div class="col-md {% if form_block > 0 %}{% else %}mx-auto{% endif %} " {{ block.shopify_attributes }}>
               {%- capture poster -%}
                 {% render 'image-container', image: block.settings.map_image, padding_no_bg: 48, sizes: '(min-width: 1920px) 1375px, (min-width: 1602px) 1087px, (min-width: 1466px) 951px, (min-width: 1200px) 645px, (min-width: 1025px) 588px, (min-width: 360px) 330px, calc(100vw - 30px)', image_k: image_k %}
               {%- endcapture -%}

@@ -354,7 +354,7 @@ strong {
   color: var(--heading-sub-color) !important
 }
 
-.mt-global {
+/* .mt-global {
   margin-top: var(--margin-top-desktop)
 }
 
@@ -362,7 +362,7 @@ strong {
   .mt-global {
     margin-top: var(--margin-top-mobile)
   }
-}
+} */
 
 .mt-global-negative {
   margin-top: calc(-1 * var(--margin-top-desktop))
