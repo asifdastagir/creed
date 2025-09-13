@@ -69,28 +69,29 @@
     "main-contact": {
       "type": "index-contact",
       "blocks": {
-        "f501d350-327a-416d-a7be-e45d554455e1": {
-          "type": "map",
-          "settings": {
-            "show_social": false,
-            "google_map": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3596.6666484674465!2d-74.00630732029427!3d40.70867969006109!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25a2355a4b96f%3A0xfb2676ee3604a0ff!2s254%20Front%20Street!5e0!3m2!1sen!2sua!4v1670171743339!5m2!1sen!2sua\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>"
-          }
-        },
         "0273f6d3-f4e7-433d-a810-090db027fca9": {
           "type": "form",
           "settings": {
-            "heading": "Let’s Talk",
-            "subtext": "To request a quote our products, contact us directly or fill out the form and we will get back to you promptly."
+            "heading": "",
+            "subtext": ""
+          }
+        },
+        "info_X6w7ea": {
+          "type": "info",
+          "settings": {
+            "icon": "icon-truck",
+            "title": "Title",
+            "description": "Description text goes here"
           }
         }
       },
       "block_order": [
-        "f501d350-327a-416d-a7be-e45d554455e1",
-        "0273f6d3-f4e7-433d-a810-090db027fca9"
+        "0273f6d3-f4e7-433d-a810-090db027fca9",
+        "info_X6w7ea"
       ],
       "settings": {
         "section_animation": true,
-        "section_width": "global",
+        "section_width": "custom",
         "container_max_width": 1178,
         "spacing_sections": 70,
         "use_global_desktop_space": false,
