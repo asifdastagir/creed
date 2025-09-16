@@ -148,7 +148,7 @@
   {% render 'section-wrapper', placement: 'top' %}
 
 
-  <div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
+  <div style="margin-top: {{ section.settings.spacing_sections }}px;" class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
     <div class="{% render 'section-container-class', layout: layout %}">
 
       {%- if background != false -%}
@@ -525,10 +525,7 @@
               </div>
               <script type="application/json">
                 {
-                  "pagination": {
-                    "el": ".swiper-pagination",
-                    "clickable": true
-                  },
+                 
                   "navigation": {
                     "nextEl": ".swiper-button-next",
                     "prevEl": ".swiper-button-prev"
