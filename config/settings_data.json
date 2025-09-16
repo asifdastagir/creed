@@ -570,7 +570,7 @@
             "type": "link_list",
             "settings": {
               "heading": "Quick Link",
-              "menu": "main-menu",
+              "menu": "quick-link",
               "column_width": 17,
               "column_opened": true
             }
