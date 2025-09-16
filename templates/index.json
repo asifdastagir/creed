@@ -217,8 +217,8 @@
         "subtitle": "ABOUT US",
         "heading": "Creed Label was born from MΛSS AWΛKΞNІИG— The idea of being fully awake: in movement, in discipline, and in the choices we make.",
         "description": "",
-        "cta_label": "Discover the Science",
-        "cta_url": "shopify://products/nomad-x-hydro-black-copy",
+        "cta_label": "About US",
+        "cta_url": "shopify://pages/about",
         "cta_new_tab": false,
         "margin_top": 0,
         "margin_bottom": 0
@@ -231,8 +231,8 @@
         "heading": "A new",
         "image": "shopify://shop_images/logo.png",
         "text": "Activewear engineered with purpose and function, without compromising on faith-driven values. Every piece is built for those who demand performance and stand by their convictions.",
-        "cta_text": "Discover more",
-        "cta_url": "/",
+        "cta_text": "",
+        "cta_url": "",
         "margin_top": 40,
         "margin_bottom": 40
       }
@@ -246,7 +246,7 @@
         "image": "shopify://shop_images/mass.jpg",
         "video": "",
         "button_label": "About Us",
-        "button_url": "shopify://pages/contact"
+        "button_url": "shopify://pages/about"
       }
     }
   },
