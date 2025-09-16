@@ -115,11 +115,28 @@
         "section_decoration_bottom_color_type": "color_global_primary_bg",
         "section_decoration_bottom_color": ""
       }
+    },
+    "snap_card_component_gUH7D7": {
+      "type": "snap-card-component",
+      "name": "Snap Card Component",
+      "settings": {
+        "style": "style1",
+        "heading_line1": "",
+        "heading_line2": "",
+        "text": "",
+        "image": "shopify://shop_images/download.jpg",
+        "image_logo": "shopify://shop_images/creed-logo.png",
+        "link": "",
+        "link_label": "Discover the Science",
+        "margin_top": 40,
+        "margin_bottom": 40
+      }
     }
   },
   "order": [
     "main-page",
     "index_contact_GnCFEW",
-    "main-contact"
+    "main-contact",
+    "snap_card_component_gUH7D7"
   ]
 }
