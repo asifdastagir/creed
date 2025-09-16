@@ -29,17 +29,17 @@
 
 <div class="{% render 'section-class', layout: layout %}" {% render 'section-style', layout: layout %}>
   <div class=" asif ">
-    <div class="row gy-5">
+    <div class="container">
       {%- for block in section.blocks -%}
         {%- case block.type -%}
           {%- when 'form' -%}
-            <div class="col {% if map_block > 0 %}{% else %}mx-auto{% endif %} col-contact-form" {{ block.shopify_attributes }}>
-              <div class="title-wrap">
-                <h1>{{ block.settings.heading }}</h1>
-                <div class="h-sub" style="font-size: {{ settings.font_heading_subtitle_font_size }}px;">{{ block.settings.subtext }}</div>
+            <div class="grid-layout gap-y-5 px-gutter py-gutter">
+              <div class="title-wrap col-start-1 col-end-12  lg:col-start-2 lg:col-end-6">
+                <h1 class="text-h2 mb-3">{{ block.settings.heading }}</h1>
+                <div class="h-sub">{{ block.settings.subtext }}</div>
                 {% if block.settings.link_url != blank and block.settings.link_text != blank %}
 
-                  <span class="flex pointer-events-none flex-nowrap items-center gap-x-2.25 text-lg group/button">
+                  <span class="mt-3 flex pointer-events-none flex-nowrap items-center gap-x-2.25 text-lg group/button">
                     <a class="pointer-events-auto underline hover:text-gray-600 text-[14px]" href="{{ block.settings.link_url }}" target="_self">
                         {{ block.settings.link_text }}
                     </a>
@@ -50,7 +50,7 @@
                 {% endif %}
               </div>
               {%- form 'contact'
-                , class: 'contact-form contact-form--max400 mt-4' -%}
+                , class: 'contact-form col-start-1 col-end-12 lg:col-end-11 lg:col-start-7' -%}
                 {%- if form.posted_successfully? -%}
                   <div tabindex="-1" autofocus>
                     {%- liquid

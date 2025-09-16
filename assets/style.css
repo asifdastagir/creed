@@ -863,7 +863,8 @@ h6 a {
 .title-wrap .h-sub {
   min-width: 100%;
   position : relative;
-  z-index  : 1
+  z-index  : 1;
+  font-size: 20px;
 }
 
 .title-wrap .h-sub--500 {
@@ -874,7 +875,7 @@ h6 a {
 
 .title-wrap .h-sub,
 .title-wrap .h-sub p {
-  font-size  : var(--heading-sub-size);
+  font-size  : 16px;
   line-height: 1.69em;
   font-weight: var(--heading-sub-weight);
   color      : var(--heading-sub-color)
@@ -7023,9 +7024,12 @@ fieldset.custom-form>*+* {
 }
 
 .contact-form .btn.w-100 {
-  display  : block;
-  max-width: 305px;
-  margin   : 0 auto
+  display       : block;
+  max-width     : max-content;
+  border        : solid 1px #9c9c9c !important;
+  border-radius : 5px;
+  text-transform: uppercase;
+
 }
 
 .contact-form--max {
@@ -9011,17 +9015,17 @@ swiper-carousel.hover-off .prd {
 
 .prd-option-list label.label-option-color,
 .prd-option-list li.label-option-color {
-  display         : -ms-flexbox;
-  display         : flex;
-  position        : relative;
-  min-width       : var(--product-swatches-color-width);
-  min-height      : var(--product-swatches-color-height);
-  border-radius   : 3px;
-  margin          : var(--product-swatches-color-gap);
-  padding         : 6px 8px;
-  transition      : none;
-  /* border       : 0;
-  box-shadow      : 0 0 0 var(--product-swatches-color-border-width) var(--product-swatches-border-color) */
+  display           : -ms-flexbox;
+  display           : flex;
+  position          : relative;
+  min-width         : var(--product-swatches-color-width);
+  min-height        : var(--product-swatches-color-height);
+  border-radius     : 3px;
+  margin            : var(--product-swatches-color-gap);
+  padding           : 6px 8px;
+  transition        : none;
+  /* border         : 0;
+  box-shadow        : 0 0 0 var(--product-swatches-color-border-width) var(--product-swatches-border-color) */
 }
 
 .prd-option-list label.label-option-color img,
@@ -9686,14 +9690,14 @@ ul.prd-option-list {
 
 @media (max-width:1024px) {
   .prd.prd--style1 .prd-hover {
-    height               : 100%;
-    display              : -ms-flexbox;
-    display              : flex;
-    /* -ms-flex-direction: column;
-    flex-direction       : column; */
-    -ms-flex-align       : center;
-    align-items          : center;
-    padding              : 0 5px 15px
+    height                 : 100%;
+    display                : -ms-flexbox;
+    display                : flex;
+    /* -ms-flex-direction  : column;
+    flex-direction         : column; */
+    -ms-flex-align         : center;
+    align-items            : center;
+    padding                : 0 5px 15px
   }
 
   .prd.prd--style1 .prd-bot {
