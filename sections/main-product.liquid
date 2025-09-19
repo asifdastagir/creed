@@ -140,15 +140,19 @@
   endif
 
   if section.settings.bottom_tabs or section.settings.bottom_tabs == false and section.settings.inner_tabs_to_horizontal
+    assign collapsible_blocks = section.blocks | where: 'type', 'collapsible_tab'
+    assign description_blocks = section.blocks | where: 'type', 'description'
+    
     if section.settings.apps_placement == 'tab'
-      assign blocks = section.blocks | where: 'type', 'collapsible_tab_apps'
-      assign blocks = section.blocks | where: 'type', 'collapsible_tab' | concat: blocks
+      assign app_blocks = section.blocks | where: 'type', 'collapsible_tab_apps'
+      assign blocks = description_blocks | concat: collapsible_blocks | concat: app_blocks
     else
-      assign blocks = section.blocks | where: 'type', 'collapsible_tab'
+      assign blocks = description_blocks | concat: collapsible_blocks
     endif
 
-    assign blocks = section.blocks | where: 'type', 'description' | concat: blocks
     assign blocks = blocks | sort: 'settings.position'
+    
+    assign tab_apps = section.blocks | where: 'type', 'collapsible_tab_apps'
   endif
 
   assign hide_quantity = 1
@@ -476,7 +480,7 @@
               -%}
               {%- liquid assign buy_buttons_block_size = section.blocks | where: 'type', 'buy_buttons' | size -%}
               {%- if buy_buttons_block_size == 0 -%}
-                {%- form 'product', product, id: product_form_id, class: 'form js-product-form', novalidate: 'novalidate' -%}
+                {%- form 'product', product, id: 'product-form-{{ section.id }}', class: 'form js-product-form', novalidate: 'novalidate' -%}
                   <input type="hidden" name="id" value="{{ current_variant.id }}">
                 {%- endform -%}
               {%- endif -%}
@@ -572,8 +576,19 @@
                   endif
                 endif
                 
-                # Combine content sources
-                assign final_content = tab_content | append: page_content
+                assign final_content = ''
+                if tab_content != blank
+                  assign final_content = tab_content
+                endif
+                if page_content != blank
+                  if final_content != blank
+                    assign final_content = final_content | append: '<br><br>' | append: page_content
+                  else
+                    assign final_content = page_content
+                  endif
+                endif
+                
+                # Clean up HTML entities
                 assign final_content = final_content | replace: '&lt;', '<' | replace: '&gt;', '>' | replace: '&amp;', '&' | replace: '&quot;', '"'
               -%}
               
@@ -646,6 +661,7 @@
         {%- endfor -%}
 
         {%- if section.settings.bottom_tabs == false and section.settings.inner_tabs_to_horizontal -%}
+          {%- comment -%} Added debug check and improved condition {%- endcomment -%}
           {%- if blocks.size > 0 or tab_apps.size > 0 -%}
             <div class="mt-product-global" style="--margin-top-product-blocks:70px;">
               {% render 'product-tabs-core', blocks: blocks, product: product, section: section %}
@@ -704,6 +720,7 @@
 {%- endif -%}
 
 {%- if section.settings.bottom_tabs -%}
+  {%- comment -%} Improved bottom tabs condition {%- endcomment -%}
   {%- if blocks.size > 0 or tab_apps.size > 0 -%}
     <div class="holder mt-global" style="--margin-top-mobile:40px; {{ style_inline }}">
       <div class="container show-on-scroll">
