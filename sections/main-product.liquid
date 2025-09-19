@@ -139,30 +139,15 @@
     endfor
   endif
 
-  comment
-    Initialize blocks and tab_apps variables at the start to ensure they're always available
-  endcomment
-  
-  assign blocks = blank
-  assign tab_apps = section.blocks | where: 'type', 'collapsible_tab_apps'
-  
-  comment
-    Set up blocks for tabs display based on settings
-  endcomment
--%}
-{%- liquid
   if section.settings.bottom_tabs or section.settings.bottom_tabs == false and section.settings.inner_tabs_to_horizontal
-    assign collapsible_blocks = section.blocks | where: 'type', 'collapsible_tab'
-    assign description_blocks = section.blocks | where: 'type', 'description'
-    
     if section.settings.apps_placement == 'tab'
-      assign app_blocks = section.blocks | where: 'type', 'collapsible_tab_apps'
-      assign blocks = description_blocks | concat: collapsible_blocks | concat: app_blocks
+      assign blocks = section.blocks | where: 'type', 'collapsible_tab_apps'
+      assign blocks = section.blocks | where: 'type', 'collapsible_tab' | concat: blocks
     else
-      assign blocks = description_blocks | concat: collapsible_blocks
+      assign blocks = section.blocks | where: 'type', 'collapsible_tab'
     endif
 
-    assign blocks = blocks | sort: 'settings.position'
+    assign blocks = section.blocks | where: 'type', 'description' | concat: blocks
   endif
 
   assign hide_quantity = 1
@@ -334,21 +319,23 @@
               </div>
             </div>
           {%- when 'image' -%}
-            <div class="prd-block-safety  mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
-              <h2 class="h4-style line-text">{{ 'theme.general.guaranteed_safe_checkout' | t }}</h2>
-              {%- if block.settings.payment_image != blank -%}
-                {% render 'image-container',
-                  image: block.settings.payment_image,
-                  sizes: '500px',
-                  cover: false,
-                  bg: false,
-                  round: 0,
-                  hover_scale: false
-                %}
-              {%- else -%}
-                {% render 'payments', class: 'row g-1 flex-wrap justify-content-center' %}
-              {%- endif -%}
-            </div>
+            {%- if block.settings.payment_enable -%}
+              <div class="prd-block-safety  mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
+                <h2 class="h4-style line-text">{{ 'theme.general.guaranteed_safe_checkout' | t }}</h2>
+                {%- if block.settings.payment_image != blank -%}
+                  {% render 'image-container',
+                    image: block.settings.payment_image,
+                    sizes: '500px',
+                    cover: false,
+                    bg: false,
+                    round: 0,
+                    hover_scale: false
+                  %}
+                {%- else -%}
+                  {% render 'payments', class: 'row g-1 flex-wrap justify-content-center' %}
+                {%- endif -%}
+              </div>
+            {%- endif -%}
           {%- when 'meta' -%}
             <div class="prd-block-meta row  mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
               {%- if block.settings.rating -%}
@@ -558,79 +545,22 @@
             </div>
           {%- when 'collapsible_tab' -%}
             {%- if section.settings.bottom_tabs == false and section.settings.inner_tabs_to_horizontal == false -%}
-              {%- liquid
-                assign tab_content = ''
-                
-                # Handle metafield content
-                if block.settings.metafield_namespace and block.settings.metafield_key
-                  assign metafield_content = product.metafields[block.settings.metafield_namespace][block.settings.metafield_key]
-                  if metafield_content != blank
-                    assign tab_content = tab_content | append: metafield_content
-                  endif
-                endif
-                
-                # Handle page content
-                if block.settings.page.content != blank
-                  if tab_content != blank
-                    assign tab_content = tab_content | append: '<br><br>'
-                  endif
-                  assign tab_content = tab_content | append: block.settings.page.content
-                endif
-                
-                # Handle custom content
-                if block.settings.content != blank
-                  if tab_content != blank
-                    assign tab_content = tab_content | append: '<br><br>'
-                  endif
-                  assign tab_content = tab_content | append: block.settings.content
-                endif
-                
-                # Handle product metafields for common use cases
-                if block.settings.use_product_metafield
-                  case block.settings.product_metafield_type
-                    when 'description'
-                      assign product_meta = product.metafields.custom.description
-                    when 'specifications'
-                      assign product_meta = product.metafields.custom.specifications
-                    when 'ingredients'
-                      assign product_meta = product.metafields.custom.ingredients
-                    when 'care_instructions'
-                      assign product_meta = product.metafields.custom.care_instructions
-                    when 'size_guide'
-                      assign product_meta = product.metafields.custom.size_guide
-                    else
-                      assign product_meta = product.metafields[block.settings.custom_namespace][block.settings.custom_key]
-                  endcase
-                  
-                  if product_meta != blank
-                    if tab_content != blank
-                      assign tab_content = tab_content | append: '<br><br>'
-                    endif
-                    assign tab_content = tab_content | append: product_meta
-                  endif
-                endif
-              -%}
-              
-              {%- if tab_content != blank -%}
-                <div class="block-accordion mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
-                  <form>
-                    <div class="tab-accordion-item">
-                      <input type="checkbox" name="tab-accordion" id="tabAccordion{{ block.id }}" {% if block.settings.opened %}checked{% endif %}>
-                      <label for="tabAccordion{{ block.id }}" class="text-uppercase">
-                        {{ block.settings.heading | default: block.settings.page.title | default: 'Custom Tab' }}
-                        <span class="toggle-arrow"></span>
-                      </label>
-                      <div class='tab-accordion-item-content js-set-height'>
-                        <div class="tab-accordion-item-content-inside">
-                          <div class="rte">
-                            {{ tab_content | replace: '&lt;', '<' | replace: '&gt;', '>' | replace: '&amp;', '&' | replace: '&quot;', '"' }}
-                          </div>
+              <div class="block-accordion  mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
+                <form>
+                  <div class="tab-accordion-item">
+                    <input type="checkbox" name="tab-accordion" id="tabAccordion{{ block.id }}" {% if block.settings.opened %}checked{% endif %}>
+                    <label for="tabAccordion{{ block.id }}" class="text-uppercase">{{ block.settings.heading | default: block.settings.page.title }}<span class="toggle-arrow"></span></label>
+                    <div class='tab-accordion-item-content js-set-height'>
+                      <div class="tab-accordion-item-content-inside">
+                        <div class="rte">
+                          {{ block.settings.content | replace: '&lt;', '<' | replace: '&gt;', '>' | replace: '&amp;', '&' | replace: '&quot;', '"' }}
+                          {{ block.settings.page.content }}
                         </div>
                       </div>
                     </div>
-                  </form>
-                </div>
-              {%- endif -%}
+                  </div>
+                </form>
+              </div>
             {%- endif -%}
           {%- when 'collapsible_tab_apps' -%}
             {%- if section.settings.bottom_tabs == false and section.settings.inner_tabs_to_horizontal == false -%}
@@ -683,8 +613,7 @@
         {%- endfor -%}
 
         {%- if section.settings.bottom_tabs == false and section.settings.inner_tabs_to_horizontal -%}
-          {%- assign total_blocks = blocks.size | plus: tab_apps.size -%}
-          {%- if total_blocks > 0 -%}
+          {%- if blocks.size > 0 or tab_apps.size > 0 -%}
             <div class="mt-product-global" style="--margin-top-product-blocks:70px;">
               {% render 'product-tabs-core', blocks: blocks, product: product, section: section %}
             </div>
@@ -742,8 +671,7 @@
 {%- endif -%}
 
 {%- if section.settings.bottom_tabs -%}
-  {%- assign total_blocks = blocks.size | plus: tab_apps.size -%}
-  {%- if total_blocks > 0 -%}
+  {%- if blocks.size > 0 or tab_apps.size > 0 -%}
     <div class="holder mt-global" style="--margin-top-mobile:40px; {{ style_inline }}">
       <div class="container show-on-scroll">
         {% render 'product-tabs-core', blocks: blocks, product: product, section: section %}
@@ -2878,7 +2806,7 @@
         },
         {
           "type": "paragraph",
-          "content": "If you include a link in social media posts, the page’s featured image will be shown as the preview image. [Learn more](https://help.shopify.com/manual/online-store/themes/change-the-layout/dynamic-checkout)"
+          "content": "If you include a link in social media posts, the page’s featured image will be shown as the preview image. [Learn more](https://help.shopify.com/manual/online-store/images/showing-social-media-thumbnail-images)"
         },
         {
           "type": "paragraph",
@@ -3018,7 +2946,7 @@
     },
     {
       "type": "collapsible_tab",
-      "name": "Custom Collapsible Tab",
+      "name": "Collapsible tab",
       "settings": [
         {
           "type": "header",
@@ -3054,92 +2982,18 @@
         {
           "type": "text",
           "id": "heading",
-          "default": "Custom Tab",
-          "label": "Tab Heading"
-        },
-        {
-          "type": "header",
-          "content": "Content Sources"
+          "default": "Collapsible html tab",
+          "label": "Heading"
         },
         {
           "type": "richtext",
           "id": "content",
-          "label": "Custom Content"
+          "label": "Row content"
         },
         {
           "type": "page",
           "id": "page",
-          "label": "Page Content"
-        },
-        {
-          "type": "header",
-          "content": "Metafield Settings"
-        },
-        {
-          "type": "text",
-          "id": "metafield_namespace",
-          "label": "Metafield Namespace",
-          "info": "e.g., 'custom' or 'global'"
-        },
-        {
-          "type": "text",
-          "id": "metafield_key",
-          "label": "Metafield Key",
-          "info": "e.g., 'description' or 'specifications'"
-        },
-        {
-          "type": "header",
-          "content": "Product Metafields"
-        },
-        {
-          "type": "checkbox",
-          "id": "use_product_metafield",
-          "label": "Use Product Metafield",
-          "default": false
-        },
-        {
-          "type": "select",
-          "id": "product_metafield_type",
-          "label": "Product Metafield Type",
-          "options": [
-            {
-              "value": "description",
-              "label": "Description"
-            },
-            {
-              "value": "specifications",
-              "label": "Specifications"
-            },
-            {
-              "value": "ingredients",
-              "label": "Ingredients"
-            },
-            {
-              "value": "care_instructions",
-              "label": "Care Instructions"
-            },
-            {
-              "value": "size_guide",
-              "label": "Size Guide"
-            },
-            {
-              "value": "custom",
-              "label": "Custom (specify below)"
-            }
-          ],
-          "default": "description"
-        },
-        {
-          "type": "text",
-          "id": "custom_namespace",
-          "label": "Custom Namespace",
-          "info": "Only used when 'Custom' is selected above"
-        },
-        {
-          "type": "text",
-          "id": "custom_key",
-          "label": "Custom Key",
-          "info": "Only used when 'Custom' is selected above"
+          "label": "Row content from page"
         }
       ]
     },
