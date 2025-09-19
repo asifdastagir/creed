@@ -102,13 +102,7 @@
             "opened": true,
             "heading": "Custom Tab",
             "content": "<p>fgfgfgf</p>",
-            "page": "material-tech-form-one",
-            "metafield_namespace": "gfgfgf",
-            "metafield_key": "{{ block.settings.page.title }}",
-            "use_product_metafield": false,
-            "product_metafield_type": "size_guide",
-            "custom_namespace": "{{ block.settings.page.title }}",
-            "custom_key": "{{ block.settings.page.title }}"
+            "page": "material-tech-form-one"
           }
         }
       },
