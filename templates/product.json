@@ -37,6 +37,26 @@
             "rating": true
           }
         },
+        "99f0f2da-d3ea-474c-b74a-2eedb6bb3849": {
+          "type": "short_description",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "show_title": true,
+            "text": ""
+          }
+        },
+        "collapsible_tab_LtW7Nk": {
+          "type": "collapsible_tab",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "opened": true,
+            "heading": "Designed For",
+            "content": "",
+            "page": ""
+          }
+        },
         "b7f80323-d148-407e-88e9-b918d1c12ffa": {
           "type": "variant_picker",
           "settings": {
@@ -84,40 +104,18 @@
             "heading": "Description",
             "opened": false
           }
-        },
-        "collapsible_tab_fTXBqx": {
-          "type": "collapsible_tab",
-          "settings": {
-            "spacing_blocks": 30,
-            "use_global_blocks_desktop_space": true,
-            "opened": true,
-            "heading": "Designed For",
-            "content": "<p>{{ block.settings.page.metafields.custom.designed_for | metafield_tag }}</p>",
-            "page": ""
-          }
-        },
-        "collapsible_tab_BpE37Q": {
-          "type": "collapsible_tab",
-          "settings": {
-            "spacing_blocks": 30,
-            "use_global_blocks_desktop_space": true,
-            "opened": true,
-            "heading": "Material Tech",
-            "content": "",
-            "page": "material-tech-form-one"
-          }
         }
       },
       "block_order": [
         "bb4d64a3-e671-4e68-a82b-040cd63b5066",
         "b9205a37-550c-4593-81b2-3b63ca982935",
         "14d99583-84dc-4dae-aec3-8f51bd93b1a6",
+        "99f0f2da-d3ea-474c-b74a-2eedb6bb3849",
+        "collapsible_tab_LtW7Nk",
         "b7f80323-d148-407e-88e9-b918d1c12ffa",
         "2f540e78-040a-4fc2-a26e-8063b6bd5043",
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
-        "ec7689d3-c6aa-48df-8382-aad75ba581e3",
-        "collapsible_tab_fTXBqx",
-        "collapsible_tab_BpE37Q"
+        "ec7689d3-c6aa-48df-8382-aad75ba581e3"
       ],
       "custom_css": [
         ".holder {--margin-top-desktop: 30px; --margin-top-mobile: 20px;}"
@@ -135,8 +133,8 @@
         "use_global_mobile_space_padding": true,
         "background": false,
         "bottom_tabs": false,
-        "inner_tabs_to_horizontal": false,
-        "apps_placement": "tab",
+        "inner_tabs_to_horizontal": true,
+        "apps_placement": "default",
         "media_layout": "thumbs",
         "thumbs_position": "right",
         "thumbs_cover": true,
