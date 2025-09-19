@@ -148,6 +148,7 @@
     endif
 
     assign blocks = section.blocks | where: 'type', 'description' | concat: blocks
+    assign blocks = blocks | sort: 'settings.position'
   endif
 
   assign hide_quantity = 1
@@ -237,14 +238,22 @@
                 assign block_html_show = false
               endif
 
-              assign html = block.settings.html | replace: '&lt;', '<' | replace: '&gt;', '>' | replace: '&amp;', '&' | replace: '&quot;', '"'
+              assign html = block.settings.html
+              if block.settings.html_metafield != blank
+                assign metafield_html = product.metafields[block.settings.html_metafield.namespace][block.settings.html_metafield.key]
+                if metafield_html != blank
+                  assign html = metafield_html
+                endif
+              endif
+              
+              assign html = html | replace: '&lt;', '<' | replace: '&gt;', '>' | replace: '&amp;', '&' | replace: '&quot;', '"'
             -%}
-            {%- if block_html_show -%}
+            {%- if block_html_show and html != blank -%}
               {%- if block.settings.collapsible_tab -%}
-                <div class="block-accordion  mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
+                <div class="block-accordion mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
                   <form><div class="tab-accordion-item">
                     <input type="checkbox" name="tab-accordion" id="tabAccordion{{ block.id }}" {% if block.settings.opened %}checked{% endif %}>
-                    <label for="tabAccordion{{ block.id }}" class="text-uppercase">{{ block.settings.heading | default: 'Heading' }}<span class="toggle-arrow"></span></label>
+                    <label for="tabAccordion{{ block.id }}" class="text-uppercase">{{ block.settings.heading | default: 'Content' }}<span class="toggle-arrow"></span></label>
                     <div class='tab-accordion-item-content js-set-height'>
                       <div class="tab-accordion-item-content-inside">
                         <div class="rte">
@@ -319,23 +328,21 @@
               </div>
             </div>
           {%- when 'image' -%}
-            {%- if block.settings.payment_enable -%}
-              <div class="prd-block-safety  mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
-                <h2 class="h4-style line-text">{{ 'theme.general.guaranteed_safe_checkout' | t }}</h2>
-                {%- if block.settings.payment_image != blank -%}
-                  {% render 'image-container',
-                    image: block.settings.payment_image,
-                    sizes: '500px',
-                    cover: false,
-                    bg: false,
-                    round: 0,
-                    hover_scale: false
-                  %}
-                {%- else -%}
-                  {% render 'payments', class: 'row g-1 flex-wrap justify-content-center' %}
-                {%- endif -%}
-              </div>
-            {%- endif -%}
+            <div class="prd-block-safety  mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
+              <h2 class="h4-style line-text">{{ 'theme.general.guaranteed_safe_checkout' | t }}</h2>
+              {%- if block.settings.payment_image != blank -%}
+                {% render 'image-container',
+                  image: block.settings.payment_image,
+                  sizes: '500px',
+                  cover: false,
+                  bg: false,
+                  round: 0,
+                  hover_scale: false
+                %}
+              {%- else -%}
+                {% render 'payments', class: 'row g-1 flex-wrap justify-content-center' %}
+              {%- endif -%}
+            </div>
           {%- when 'meta' -%}
             <div class="prd-block-meta row  mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
               {%- if block.settings.rating -%}
@@ -545,22 +552,48 @@
             </div>
           {%- when 'collapsible_tab' -%}
             {%- if section.settings.bottom_tabs == false and section.settings.inner_tabs_to_horizontal == false -%}
-              <div class="block-accordion  mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
-                <form>
-                  <div class="tab-accordion-item">
-                    <input type="checkbox" name="tab-accordion" id="tabAccordion{{ block.id }}" {% if block.settings.opened %}checked{% endif %}>
-                    <label for="tabAccordion{{ block.id }}" class="text-uppercase">{{ block.settings.heading | default: block.settings.page.title }}<span class="toggle-arrow"></span></label>
-                    <div class='tab-accordion-item-content js-set-height'>
-                      <div class="tab-accordion-item-content-inside">
-                        <div class="rte">
-                          {{ block.settings.content | replace: '&lt;', '<' | replace: '&gt;', '>' | replace: '&amp;', '&' | replace: '&quot;', '"' }}
-                          {{ block.settings.page.content }}
+              {%- liquid
+                assign tab_heading = block.settings.heading
+                assign tab_content = block.settings.content
+                assign page_content = ''
+                
+                if block.settings.page != blank
+                  assign page_content = block.settings.page.content
+                  if tab_heading == blank
+                    assign tab_heading = block.settings.page.title
+                  endif
+                endif
+                
+                # Handle metafield content if specified
+                if block.settings.content_metafield != blank
+                  assign metafield_content = product.metafields[block.settings.content_metafield.namespace][block.settings.content_metafield.key]
+                  if metafield_content != blank
+                    assign tab_content = metafield_content
+                  endif
+                endif
+                
+                # Combine content sources
+                assign final_content = tab_content | append: page_content
+                assign final_content = final_content | replace: '&lt;', '<' | replace: '&gt;', '>' | replace: '&amp;', '&' | replace: '&quot;', '"'
+              -%}
+              
+              {%- if final_content != blank or tab_heading != blank -%}
+                <div class="block-accordion mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
+                  <form>
+                    <div class="tab-accordion-item">
+                      <input type="checkbox" name="tab-accordion" id="tabAccordion{{ block.id }}" {% if block.settings.opened %}checked{% endif %}>
+                      <label for="tabAccordion{{ block.id }}" class="text-uppercase">{{ tab_heading | default: 'Tab Content' }}<span class="toggle-arrow"></span></label>
+                      <div class='tab-accordion-item-content js-set-height'>
+                        <div class="tab-accordion-item-content-inside">
+                          <div class="rte">
+                            {{ final_content }}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </form>
-              </div>
+                  </form>
+                </div>
+              {%- endif -%}
             {%- endif -%}
           {%- when 'collapsible_tab_apps' -%}
             {%- if section.settings.bottom_tabs == false and section.settings.inner_tabs_to_horizontal == false -%}
@@ -2994,6 +3027,12 @@
           "type": "page",
           "id": "page",
           "label": "Row content from page"
+        },
+        {
+          "type": "text",
+          "id": "content_metafield",
+          "label": "Dynamic source metafield",
+          "info": "Example: 'metafields.custom.my_content'"
         }
       ]
     },
