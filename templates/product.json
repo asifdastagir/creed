@@ -84,6 +84,26 @@
             "button_pause": 10,
             "button_add_to_cart_hide": false
           }
+        },
+        "description_zzQLwa": {
+          "type": "description",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "heading": "Description",
+            "opened": true
+          }
+        },
+        "collapsible_tab_gta4h3": {
+          "type": "collapsible_tab",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "opened": true,
+            "heading": "Designed For",
+            "content": "<p>{{ block.settings.page.metafields.custom.design_for | metafield_tag }}</p>",
+            "page": ""
+          }
         }
       },
       "block_order": [
@@ -93,7 +113,9 @@
         "99f0f2da-d3ea-474c-b74a-2eedb6bb3849",
         "b7f80323-d148-407e-88e9-b918d1c12ffa",
         "2f540e78-040a-4fc2-a26e-8063b6bd5043",
-        "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8"
+        "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
+        "description_zzQLwa",
+        "collapsible_tab_gta4h3"
       ],
       "custom_css": [
         ".holder {--margin-top-desktop: 30px; --margin-top-mobile: 20px;}"
