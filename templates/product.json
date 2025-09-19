@@ -145,7 +145,7 @@
         "use_global_mobile_space_padding": true,
         "background": false,
         "bottom_tabs": false,
-        "inner_tabs_to_horizontal": true,
+        "inner_tabs_to_horizontal": false,
         "apps_placement": "default",
         "media_layout": "thumbs",
         "thumbs_position": "right",
