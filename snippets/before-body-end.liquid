@@ -89,16 +89,7 @@
 {% render 'dark-light-switcher' %}
 
 
-<script>
-  Shopify.theme.version = '7.0.0';
-  window.shopInfo = {version: Shopify.theme.version, uuid: '{{ settings.theme_uuid | replace: 'a', 'z' | replace: 'b', 'x' | replace: 'c', 'v' | replace: 'd', 'w' | replace: 'e', 'r' | replace: 'f', 'y' | replace: '-', 'pus' }}', theme_id: 44566068, store: 'https://{{ shop.permanent_domain }}', xyz: '{{ shop.email | replace: '@', 'portions34' }}', zzz: '{{ settings.theme_email | replace: '@', 'sweet17solt' }}'};
 
-  const e = "\n- High conversion theme\n- Incredibly fast\n- Fully customizable\n- RTL support\n- 150+ widgets, 15+ ready skins\n\n\nCheckout theme by a link: https://bit.ly/46ySEsC\n\n"
-    , ttt = "display:inline-block; font-size: 14px; padding: 5px; background: linear-gradient(to right, #156de1, #2a7ef6); color:#FFFFFF; border-radius: 5px;";
-  console.group("%cLumia - Shopify Theme v." + Shopify.theme.version, ttt),
-  console.log(`%c ${e}`, "font-size: 13px;"),
-  console.groupEnd()
-</script>
 
 {%- if settings.product_card_rating_vendor == 'rivyo' -%}
   <script>
