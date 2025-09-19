@@ -93,17 +93,6 @@
             "heading": "Description",
             "opened": true
           }
-        },
-        "collapsible_tab_XLPBfU": {
-          "type": "collapsible_tab",
-          "settings": {
-            "spacing_blocks": 30,
-            "use_global_blocks_desktop_space": true,
-            "opened": true,
-            "heading": "Design For",
-            "content": "",
-            "page": "material-tech-form-one"
-          }
         }
       },
       "block_order": [
@@ -114,8 +103,7 @@
         "b7f80323-d148-407e-88e9-b918d1c12ffa",
         "2f540e78-040a-4fc2-a26e-8063b6bd5043",
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
-        "description_zzQLwa",
-        "collapsible_tab_XLPBfU"
+        "description_zzQLwa"
       ],
       "custom_css": [
         ".holder {--margin-top-desktop: 30px; --margin-top-mobile: 20px;}"
