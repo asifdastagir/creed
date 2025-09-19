@@ -85,17 +85,6 @@
             "opened": false
           }
         },
-        "collapsible_tab_BpE37Q": {
-          "type": "collapsible_tab",
-          "settings": {
-            "spacing_blocks": 30,
-            "use_global_blocks_desktop_space": true,
-            "opened": true,
-            "heading": "Material Tech",
-            "content": "",
-            "page": "material-tech-form-one"
-          }
-        },
         "collapsible_tab_fTXBqx": {
           "type": "collapsible_tab",
           "settings": {
@@ -105,6 +94,17 @@
             "heading": "Designed For",
             "content": "",
             "page": ""
+          }
+        },
+        "collapsible_tab_BpE37Q": {
+          "type": "collapsible_tab",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "opened": true,
+            "heading": "Material Tech",
+            "content": "",
+            "page": "material-tech-form-one"
           }
         }
       },
@@ -116,8 +116,8 @@
         "2f540e78-040a-4fc2-a26e-8063b6bd5043",
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
         "ec7689d3-c6aa-48df-8382-aad75ba581e3",
-        "collapsible_tab_BpE37Q",
-        "collapsible_tab_fTXBqx"
+        "collapsible_tab_fTXBqx",
+        "collapsible_tab_BpE37Q"
       ],
       "custom_css": [
         ".holder {--margin-top-desktop: 30px; --margin-top-mobile: 20px;}"
