@@ -93,6 +93,17 @@
             "heading": "Description",
             "opened": false
           }
+        },
+        "collapsible_tab_aa7YY3": {
+          "type": "collapsible_tab",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "opened": true,
+            "heading": "Design For",
+            "content": "<p>{{ block.settings.page.metafields.custom.designed_for | metafield_tag }} </p>",
+            "page": ""
+          }
         }
       },
       "block_order": [
@@ -103,7 +114,8 @@
         "b7f80323-d148-407e-88e9-b918d1c12ffa",
         "2f540e78-040a-4fc2-a26e-8063b6bd5043",
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
-        "ec7689d3-c6aa-48df-8382-aad75ba581e3"
+        "ec7689d3-c6aa-48df-8382-aad75ba581e3",
+        "collapsible_tab_aa7YY3"
       ],
       "custom_css": [
         ".holder {--margin-top-desktop: 30px; --margin-top-mobile: 20px;}"
@@ -120,7 +132,7 @@
         "spacing_padding_sections_mobile": 70,
         "use_global_mobile_space_padding": true,
         "background": false,
-        "bottom_tabs": true,
+        "bottom_tabs": false,
         "inner_tabs_to_horizontal": false,
         "apps_placement": "default",
         "media_layout": "thumbs",
