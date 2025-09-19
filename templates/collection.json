@@ -14,7 +14,7 @@
       "name": "Page Heading",
       "settings": {
         "style": "style2",
-        "heading_line1": "Form One",
+        "heading_line1": "SPRINT '25",
         "heading_line2": "",
         "description": "Technical training apparel which blends performance with faith conscious design",
         "background_image": "shopify://shop_images/933634256f06b07535a666184ae5f5d7b7cc7a6f.jpg",
@@ -31,17 +31,17 @@
         "feature_cV7nKX": {
           "type": "feature",
           "settings": {
-            "image": "shopify://shop_images/4a04087a0d1e15a46421d5cc04b74a100d1a7ed5.png",
-            "title": "Shoulder Support",
-            "description": "Active barrister Jamas sought a solution\nbeyond kinesiology tape, aiming to integrate\nactive shoulder support into a garment."
+            "image": "shopify://shop_images/catelog01.png",
+            "title": "FROM ONE",
+            "description": "Essential oversized long hem, pure cotton tee"
           }
         },
         "feature_MTf9gm": {
           "type": "feature",
           "settings": {
-            "image": "shopify://shop_images/0af40c1020c1aabb84ccaba3c7d76f872e4b657e.png",
-            "title": "Flexible Fabric",
-            "description": "Active barrister Jamas sought a solution\nbeyond kinesiology tape, aiming to integrate\nactive shoulder support into a garment."
+            "image": "shopify://shop_images/WhatsAppImage2025-06-28at5.31.08PM_1_44f29213-7272-46aa-b418-508bfa709bc0.jpg",
+            "title": "Nomad X Hydro",
+            "description": "High-waist hybrid-shorts built for water and training"
           }
         }
       },
