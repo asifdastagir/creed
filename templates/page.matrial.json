@@ -9,9 +9,67 @@
  */
 {
   "sections": {
+    "17582882459244abc8": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_2ad73cb_6MdGJP": {
+          "type": "ai_gen_block_2ad73cb",
+          "settings": {
+            "heading": "Material Tech",
+            "description": "",
+            "show_features": true,
+            "feature_1": "100% Cotton: Natural softness, breathable structure",
+            "feature_2": "Oversized Fit: Relaxed silhouette, free movement",
+            "feature_3": "Curved Hem: Added coverage, modern finish",
+            "feature_4": "Premium Weight: Durable fabric with refined drape",
+            "show_icon_section": true,
+            "icon_1": "shopify://shop_images/72931.png",
+            "icon_title_1": "Breathable Fabric",
+            "icon_description_1": "Pure Cotton",
+            "icon_2": "shopify://shop_images/72929.png",
+            "icon_title_2": "Durable",
+            "icon_description_2": "Built to last for years",
+            "icon_3": "shopify://shop_images/IMG_1139_1.png",
+            "icon_title_3": "Durable Build",
+            "icon_description_3": "Soft and breathable fabric",
+            "image": "shopify://shop_images/WhatsApp_Image_2025-06-28_at_4.48.27_PM_560f4c1c-5ba3-4b92-a24d-967026096af6.jpg",
+            "layout": "image_right",
+            "image_aspect_ratio": "4/3",
+            "background_color": "#ffffff",
+            "heading_color": "#000000",
+            "text_color": "#666666",
+            "accent_color": "#007c89",
+            "icon_background_color": "#f8f8f8",
+            "heading_size": 32,
+            "heading_weight": "600",
+            "text_size": 16,
+            "icon_title_size": 16,
+            "icon_title_weight": "600",
+            "icon_description_size": 14,
+            "icon_size": 60,
+            "icon_padding": 10,
+            "icon_border_radius": 8,
+            "icon_spacing": 25,
+            "section_padding": 50,
+            "content_gap": 40,
+            "text_spacing": 20,
+            "feature_spacing": 12,
+            "border_radius": 8,
+            "image_border_radius": 8
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_2ad73cb_6MdGJP"
+      ],
+      "settings": {}
+    },
     "main": {
       "type": "main-page",
       "settings": {
+        "section_width": "global",
+        "container_max_width": 1178,
         "spacing_sections": 100,
         "use_global_desktop_space": true,
         "spacing_sections_mobile": 40,
@@ -25,6 +83,7 @@
     }
   },
   "order": [
+    "17582882459244abc8",
     "main"
   ]
 }
