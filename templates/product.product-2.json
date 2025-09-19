@@ -33,7 +33,8 @@
           "type": "price",
           "settings": {
             "spacing_blocks": 16,
-            "use_global_blocks_desktop_space": false
+            "use_global_blocks_desktop_space": false,
+            "product_page_price_tax_included": true
           }
         },
         "b7f80323-d148-407e-88e9-b918d1c12ffa": {
@@ -83,6 +84,11 @@
             "use_global_blocks_desktop_space": true,
             "show_dynamic_checkout": true,
             "show_cart_note": true,
+            "wishlist": true,
+            "checkout_agreement": true,
+            "button_height": 40,
+            "button_height_mobile": 40,
+            "add_to_cart_ajax": true,
             "button_animation": "shakeY",
             "button_delay_start": 10,
             "button_pause": 10,
@@ -97,15 +103,23 @@
             "icon_show_1": true,
             "icon_title_1": "FREE SHIPPING",
             "icon_1": "icon-truck",
+            "icon_custom_svg_1": "",
+            "only_image_1": false,
             "icon_show_2": true,
             "icon_title_2": "FREE RETURNS",
             "icon_2": "icon-return",
+            "icon_custom_svg_2": "",
+            "only_image_2": false,
             "icon_show_3": true,
             "icon_title_3": "SUPPORT 24/7",
             "icon_3": "icon-support",
+            "icon_custom_svg_3": "",
+            "only_image_3": false,
             "icon_show_4": true,
             "icon_title_4": "SECURED PAYMENTS",
-            "icon_4": "icon-secure"
+            "icon_4": "icon-secure",
+            "icon_custom_svg_4": "",
+            "only_image_4": false
           }
         },
         "1f083b36-ce2d-4937-99ba-4d3d637adc43": {
@@ -163,6 +177,28 @@
             "opened": true
           }
         },
+        "collapsible_tab_Q9qqHE": {
+          "type": "collapsible_tab",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "opened": true,
+            "heading": "Collapsible html tab",
+            "content": "",
+            "page": "material-tech-form-one"
+          }
+        },
+        "collapsible_tab_Ng6G3e": {
+          "type": "collapsible_tab",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "opened": true,
+            "heading": "Collapsible html tab",
+            "content": "<p>{{ block.settings.page.title }}</p>",
+            "page": ""
+          }
+        },
         "c76032b7-b980-426d-a29d-78e790a4bcf2": {
           "type": "fbt",
           "settings": {
@@ -197,10 +233,14 @@
         "a5446c3d-5c20-44d3-9a3b-acd1f40da006",
         "693396e8-ae84-42b8-8c1e-7666af367d41",
         "ec7689d3-c6aa-48df-8382-aad75ba581e3",
+        "collapsible_tab_Q9qqHE",
+        "collapsible_tab_Ng6G3e",
         "c76032b7-b980-426d-a29d-78e790a4bcf2",
         "b5ef625a-1151-4eb1-bb2b-406b7428c7b2"
       ],
       "settings": {
+        "section_width": "global",
+        "container_max_width": 1178,
         "spacing_sections": 46,
         "use_global_desktop_space": false,
         "spacing_sections_mobile": 20,
@@ -211,9 +251,13 @@
         "use_global_mobile_space_padding": true,
         "background": false,
         "bottom_tabs": false,
+        "inner_tabs_to_horizontal": false,
         "apps_placement": "tab",
+        "media_layout": "thumbs",
         "thumbs_position": "bottom",
+        "thumbs_cover": true,
         "product_media_main_fill_color": "bg-white",
+        "pjpg": true,
         "enable_video_looping": false,
         "thumbs": true,
         "show_social": true,
@@ -230,12 +274,17 @@
         "availability_variants_map": true,
         "availability_width": 500,
         "availability_variant_image": false,
-        "availability_add_to_cart": true
+        "availability_add_to_cart": true,
+        "color_title": "",
+        "color_price_regular": "",
+        "color_price_old": ""
       }
     },
     "product-related": {
       "type": "product-related",
       "settings": {
+        "section_width": "global",
+        "container_max_width": 1178,
         "spacing_sections": 100,
         "use_global_desktop_space": true,
         "spacing_sections_mobile": 70,
@@ -253,6 +302,8 @@
       "type": "product-recommendations",
       "disabled": true,
       "settings": {
+        "section_width": "global",
+        "container_max_width": 1178,
         "spacing_sections": 100,
         "use_global_desktop_space": true,
         "spacing_sections_mobile": 70,
@@ -269,10 +320,13 @@
     "1645027960e9e80794": {
       "type": "index-recently-viewed-items",
       "settings": {
+        "section_animation": true,
         "limit": 8,
         "heading_alignment": "center",
         "heading": "Recently Viewed Products",
         "subtitle": "",
+        "section_width": "global",
+        "container_max_width": 1178,
         "spacing_sections": 100,
         "use_global_desktop_space": true,
         "spacing_sections_mobile": 70,
@@ -281,7 +335,17 @@
         "use_global_desktop_space_padding": true,
         "spacing_padding_sections_mobile": 70,
         "use_global_mobile_space_padding": true,
-        "background": false
+        "background": false,
+        "background_preset": "none",
+        "background_behavior": "bg-cover",
+        "background_image_placeholder_type": "color_global_secondary_bg",
+        "background_image_placeholder": "",
+        "section_decoration_top": "none",
+        "section_decoration_top_color_type": "color_global_primary_bg",
+        "section_decoration_top_color": "",
+        "section_decoration_bottom": "none",
+        "section_decoration_bottom_color_type": "color_global_primary_bg",
+        "section_decoration_bottom_color": ""
       }
     }
   },
