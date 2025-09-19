@@ -100,7 +100,19 @@
             "spacing_blocks": 30,
             "use_global_blocks_desktop_space": true,
             "opened": false,
-            "heading": "Apps collapsible tab"
+            "heading": "{{ product.metafields.shopify[\"age-group\"] | metafield_text: field: 'label' }}"
+          }
+        },
+        "collapsible_tab_9AtztX": {
+          "type": "collapsible_tab",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "opened": true,
+            "heading": "Collapsible html tab",
+            "content": "",
+            "page": "",
+            "content_metafield": ""
           }
         }
       },
@@ -113,7 +125,8 @@
         "2f540e78-040a-4fc2-a26e-8063b6bd5043",
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
         "description_zzQLwa",
-        "collapsible_tab_apps_jUjhRM"
+        "collapsible_tab_apps_jUjhRM",
+        "collapsible_tab_9AtztX"
       ],
       "custom_css": [
         ".holder {--margin-top-desktop: 30px; --margin-top-mobile: 20px;}"
