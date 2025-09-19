@@ -6360,7 +6360,9 @@ select:-webkit-autofill:hover.form-select {
 
 textarea.form-control {
   line-height: 1.6em;
-  overflow   : hidden
+  overflow   : hidden;
+  min-height : 80px;
+  padding-top: 10px;
 }
 
 textarea.form-control.textarea--height-65 {
