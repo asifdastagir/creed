@@ -8537,7 +8537,7 @@ swiper-carousel.hover-off .prd {
   display        : flex;
   -ms-flex-pack  : justify;
   justify-content: space-between;
-  padding        : 6px 0 18px
+  padding        : 6px 0 10px
 }
 
 .prd-bot {
@@ -9555,7 +9555,8 @@ ul.prd-option-list {
 
 .prd.prd--style1 .prd-top {
   position      : relative;
-  top           : 2px;
+  top           : 0;
+  margin-top    : 10px;
   -ms-flex-align: center;
   align-items   : center
 }
@@ -12738,6 +12739,11 @@ minicart-prd-img {
 
 .swiper-container-prd-carousel .swiper-slide .prd {
   width: 100%
+}
+
+.swiper-container-prd-carousel .swiper-slide .prd.prd--style1 .prd-hover,
+.swiper-container-prd-carousel .swiper-slide .prd.prd--style1 .prd-price {
+  display: none;
 }
 
 .swiper-container-prd-carousel:not(.swiper-container-multirow) .swiper-slide:last-child {
@@ -25617,6 +25623,10 @@ body.safari_version_below_14 .hdr-second-nav .menu-label {
   border-radius  : 8px;
   z-index        : 2;
 
+}
+
+.recommended-product .btn-black {
+  display: none;
 }
 
 .recommended-product .prd.prd--style1 .prd-hover {

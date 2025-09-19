@@ -4990,3 +4990,16 @@ html {
 .feature_overlay {
     opacity: .3;
 }
+
+
+.btn.btn-black {
+    background-color: #000;
+    color           : #fff;
+}
+
+
+.btn.btn-black:hover {
+    background-color: #EEEEEE;
+    color           : #000;
+
+}

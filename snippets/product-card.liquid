@@ -154,9 +154,13 @@
       {%- render 'price', product: product, use_variant: true, render: true, product_card_style_1: true, product_form_id: product_form_id, product_card: true -%}
     </div>
     
-     <p class="prd-des">
+     <p class="prd-des mb-1">
       {{ product.description | strip_html | truncate: 100 }}
     </p>
+
+    <a href="{{ product_url_collection }}" class="btn btn-black w-100">
+      SHOP NOW
+    </a>
     
     
       {% comment %} <div class="prd-bot hide-on-hover">

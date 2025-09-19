@@ -39,31 +39,42 @@ gsap.utils.toArray(".component-animation").forEach(section => {
 });
 
 
-gsap.fromTo(".textAndParallaxComponent .col-span-4:last-child img", { yPercent: 0, force3D: true }, {
-    yPercent: -200,
-    ease: "none",
-    force3D: true,
-    scrollTrigger: {
-        trigger: ".textAndParallaxComponent",
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true
+gsap.fromTo(".textAndParallaxComponent .col-span-4:last-child img",
+    { yPercent: 0, force3D: true },
+    {
+        yPercent: -250,
+        ease: "none",
+        force3D: true,
+        scrollTrigger: {
+            trigger: ".textAndParallaxComponent",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true
+        }
     }
-}
 );
 
-gsap.fromTo(".textAndParallaxComponent .col-span-4:nth-child(2) img", { yPercent: 0, force3D: true }, {
-    yPercent: -100,
-    ease: "none",
-    force3D: true,
-    scrollTrigger: {
-        trigger: ".textAndParallaxComponent",
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true
+gsap.fromTo(".textAndParallaxComponent .col-span-4:nth-child(2) img",
+    { yPercent: 0, force3D: true },
+    {
+        yPercent: -150,
+        ease: "none",
+        force3D: true,
+        scrollTrigger: {
+            trigger: ".textAndParallaxComponent",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true
+        }
     }
-}
 );
+
+
+
+
+
+
+
 ScrollTrigger.matchMedia({
 
     // Desktop & Tablet ≥768px
@@ -71,9 +82,9 @@ ScrollTrigger.matchMedia({
 
         gsap.fromTo(
             ".textPromoComponent h2 > span:nth-child(1)",
-            { y: 30 },
+            { y: -450 },
             {
-                y: -600,
+                y: 350,
                 ease: "none",
                 scrollTrigger: {
                     trigger: ".textPromoComponent",
@@ -87,9 +98,9 @@ ScrollTrigger.matchMedia({
 
         gsap.fromTo(
             ".textPromoComponent h2 > span:last-child",
-            { yPercent: 0 },
+            { yPercent: 350 },
             {
-                yPercent: 500,
+                yPercent: -350,
                 ease: "none",
                 scrollTrigger: {
                     trigger: ".textPromoComponent",
@@ -97,6 +108,21 @@ ScrollTrigger.matchMedia({
                     end: "bottom top",
                     scrub: true,
                     id: "promo-span-2"
+                }
+            }
+        );
+
+        gsap.fromTo(".text-parallax-copy",
+            { yPercent: 0, force3D: true },
+            {
+                yPercent: 200,
+                ease: "none",
+                force3D: true,
+                scrollTrigger: {
+                    trigger: ".textAndParallaxComponent",
+                    start: "top bottom",
+                    end: "bottom top",
+                    scrub: true
                 }
             }
         );
