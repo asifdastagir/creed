@@ -92,7 +92,7 @@
             "use_global_blocks_desktop_space": true,
             "opened": true,
             "heading": "Designed For",
-            "content": "",
+            "content": "<p>{{ block.settings.page.metafields.custom.designed_for | metafield_tag }}</p>",
             "page": ""
           }
         },
