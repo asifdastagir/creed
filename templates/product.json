@@ -94,15 +94,13 @@
             "opened": true
           }
         },
-        "collapsible_tab_XLPBfU": {
-          "type": "collapsible_tab",
+        "collapsible_tab_apps_jUjhRM": {
+          "type": "collapsible_tab_apps",
           "settings": {
             "spacing_blocks": 30,
             "use_global_blocks_desktop_space": true,
-            "opened": true,
-            "heading": "Design For",
-            "content": "<p><strong>sdsdsdsdsdsds</strong></p>",
-            "page": "material-tech-form-one"
+            "opened": false,
+            "heading": "Apps collapsible tab"
           }
         }
       },
@@ -115,7 +113,7 @@
         "2f540e78-040a-4fc2-a26e-8063b6bd5043",
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
         "description_zzQLwa",
-        "collapsible_tab_XLPBfU"
+        "collapsible_tab_apps_jUjhRM"
       ],
       "custom_css": [
         ".holder {--margin-top-desktop: 30px; --margin-top-mobile: 20px;}"
