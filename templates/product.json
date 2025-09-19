@@ -53,7 +53,7 @@
             "use_global_blocks_desktop_space": true,
             "opened": true,
             "heading": "Designed For",
-            "content": "<p>{{ block.settings.page.metafields.custom.designed_for | metafield_tag }}</p>",
+            "content": "",
             "page": ""
           }
         },
@@ -146,7 +146,7 @@
         "background": false,
         "bottom_tabs": false,
         "inner_tabs_to_horizontal": true,
-        "apps_placement": "default",
+        "apps_placement": "tab",
         "media_layout": "thumbs",
         "thumbs_position": "right",
         "thumbs_cover": true,
