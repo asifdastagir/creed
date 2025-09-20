@@ -175,10 +175,10 @@
       "name": "Snap Card Component",
       "settings": {
         "style": "style1",
-        "heading_line1": "Hydro-Tek <sup>TM</sup>",
+        "heading_line1": "Hydro-Tek TM",
         "heading_line2": "Fabric",
         "text": "Moisture-wicking specially engineered fabric designed to seamlessly move between land and water.",
-        "image": "shopify://shop_images/1756030025465_jpg.png",
+        "image": "shopify://shop_images/IMG_1008.png",
         "link": "",
         "link_label": "Discover the Science",
         "margin_top": 0,
