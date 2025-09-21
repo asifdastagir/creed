@@ -10,7 +10,7 @@
     padding: {{ block.settings.padding }}px;
     background-color: {{ block.settings.background_color }};
     border-radius: {{ block.settings.border_radius }}px;
-    max-width: 100%;
+    /* max-width: 100%; */
   }
 
   .ai-page-data__title-{{ ai_gen_id }} {
@@ -111,7 +111,8 @@
       gap: 8px;
     }
   }
-{% endstyle %}<div class="ai-page-data-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+{% endstyle %}
+<div class="container ai-page-data-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
   {% if block.settings.selected_page != blank %}
     {% assign page = block.settings.selected_page %}
     
