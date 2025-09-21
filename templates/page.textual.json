@@ -9,32 +9,6 @@
  */
 {
   "sections": {
-    "17584673677d153d16": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_f2aa8b8_A49fWW": {
-          "type": "ai_gen_block_f2aa8b8",
-          "settings": {
-            "heading": "",
-            "subtitle": "",
-            "text_alignment": "left",
-            "heading_size": 48,
-            "heading_weight": "600",
-            "subtitle_size": 18,
-            "spacing_below_title": 16,
-            "background_color": "#ffffff",
-            "text_color": "#000000",
-            "padding_top": 40,
-            "padding_bottom": 40
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_f2aa8b8_A49fWW"
-      ],
-      "settings": {}
-    },
     "1758466955c0ce580b": {
       "type": "_blocks",
       "blocks": {
@@ -94,7 +68,6 @@
     }
   },
   "order": [
-    "17584673677d153d16",
     "1758466955c0ce580b",
     "main"
   ]
