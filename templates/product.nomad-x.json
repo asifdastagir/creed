@@ -1,0 +1,229 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "bb4d64a3-e671-4e68-a82b-040cd63b5066": {
+          "type": "title",
+          "settings": {
+            "spacing_blocks": 16,
+            "use_global_blocks_desktop_space": false
+          }
+        },
+        "b9205a37-550c-4593-81b2-3b63ca982935": {
+          "type": "price",
+          "settings": {
+            "spacing_blocks": 16,
+            "use_global_blocks_desktop_space": false,
+            "product_page_price_tax_included": true
+          }
+        },
+        "14d99583-84dc-4dae-aec3-8f51bd93b1a6": {
+          "type": "meta",
+          "settings": {
+            "spacing_blocks": 16,
+            "use_global_blocks_desktop_space": true,
+            "vendor": false,
+            "availability": false,
+            "rating": true
+          }
+        },
+        "99f0f2da-d3ea-474c-b74a-2eedb6bb3849": {
+          "type": "short_description",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "show_title": true,
+            "text": ""
+          }
+        },
+        "b7f80323-d148-407e-88e9-b918d1c12ffa": {
+          "type": "variant_picker",
+          "settings": {
+            "spacing_blocks": 16,
+            "use_global_blocks_desktop_space": false,
+            "picker_type": "button",
+            "use_pics": true,
+            "use_variants_media": true
+          }
+        },
+        "2f540e78-040a-4fc2-a26e-8063b6bd5043": {
+          "type": "popup",
+          "settings": {
+            "spacing_blocks": 16,
+            "use_global_blocks_desktop_space": false,
+            "text": "Sizing guide",
+            "page": "sizing-guide",
+            "subtitle": "Set up an individual subtitle for each popup in the admin panel",
+            "icon": "icon-size"
+          }
+        },
+        "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8": {
+          "type": "buy_buttons",
+          "settings": {
+            "spacing_blocks": 0,
+            "use_global_blocks_desktop_space": true,
+            "show_dynamic_checkout": true,
+            "show_cart_note": false,
+            "wishlist": false,
+            "checkout_agreement": false,
+            "button_height": 40,
+            "button_height_mobile": 40,
+            "add_to_cart_ajax": true,
+            "button_animation": "shakeX",
+            "button_delay_start": 10,
+            "button_pause": 10,
+            "button_add_to_cart_hide": false
+          }
+        },
+        "description_zzQLwa": {
+          "type": "description",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "heading": "Description",
+            "opened": true
+          }
+        },
+        "collapsible_tab_dkNbn8": {
+          "type": "collapsible_tab",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "opened": true,
+            "heading": "Design For",
+            "content": "<p>{{ product.metafields.custom.for | metafield_tag }}</p>",
+            "page": ""
+          }
+        },
+        "collapsible_tab_NJUYbM": {
+          "type": "collapsible_tab",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "opened": true,
+            "heading": "Material Tech",
+            "content": "",
+            "page": "material-nomad-x-hydro"
+          }
+        }
+      },
+      "block_order": [
+        "bb4d64a3-e671-4e68-a82b-040cd63b5066",
+        "b9205a37-550c-4593-81b2-3b63ca982935",
+        "14d99583-84dc-4dae-aec3-8f51bd93b1a6",
+        "99f0f2da-d3ea-474c-b74a-2eedb6bb3849",
+        "b7f80323-d148-407e-88e9-b918d1c12ffa",
+        "2f540e78-040a-4fc2-a26e-8063b6bd5043",
+        "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
+        "description_zzQLwa",
+        "collapsible_tab_dkNbn8",
+        "collapsible_tab_NJUYbM"
+      ],
+      "custom_css": [
+        ".holder {--margin-top-desktop: 30px; --margin-top-mobile: 20px;}"
+      ],
+      "settings": {
+        "section_width": "global",
+        "container_max_width": 1762,
+        "spacing_sections": 50,
+        "use_global_desktop_space": false,
+        "spacing_sections_mobile": 20,
+        "use_global_mobile_space": false,
+        "spacing_padding_sections": 100,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "background": false,
+        "bottom_tabs": false,
+        "inner_tabs_to_horizontal": false,
+        "apps_placement": "default",
+        "media_layout": "thumbs",
+        "thumbs_position": "right",
+        "thumbs_cover": true,
+        "product_media_main_fill_color": "bg-white",
+        "pjpg": true,
+        "enable_video_looping": false,
+        "thumbs": true,
+        "show_social": false,
+        "payment_enable": false,
+        "availability_output": "simple",
+        "availability_status_low": 8,
+        "availability_status_low_custom_text": "Hurry, only left [X] in stock!",
+        "availability_status_low_default_text": true,
+        "availability_status_low_color_schema": "none",
+        "availability_status_many_custom_text": "Many in Stock",
+        "availability_status_many_default_text": true,
+        "availability_status_many_color_schema": "none",
+        "availability_status_variant_title": true,
+        "availability_variants_map": true,
+        "availability_width": 500,
+        "availability_variant_image": false,
+        "availability_add_to_cart": true,
+        "color_title": "",
+        "color_price_regular": "",
+        "color_price_old": ""
+      }
+    },
+    "product_snap_card_RymQEU": {
+      "type": "product-snap-card",
+      "name": "Product Snap Card",
+      "settings": {
+        "margin_top": 0,
+        "margin_bottom": 0
+      }
+    },
+    "product-related": {
+      "type": "product-related",
+      "settings": {
+        "section_width": "global",
+        "container_max_width": 1178,
+        "spacing_sections": 100,
+        "use_global_desktop_space": true,
+        "spacing_sections_mobile": 70,
+        "use_global_mobile_space": true,
+        "spacing_padding_sections": 100,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "background": false,
+        "title": "Recommended",
+        "subtitle": ""
+      }
+    },
+    "product-recommendations": {
+      "type": "product-recommendations",
+      "disabled": true,
+      "settings": {
+        "section_width": "global",
+        "container_max_width": 1178,
+        "spacing_sections": 100,
+        "use_global_desktop_space": true,
+        "spacing_sections_mobile": 70,
+        "use_global_mobile_space": true,
+        "spacing_padding_sections": 100,
+        "use_global_desktop_space_padding": true,
+        "spacing_padding_sections_mobile": 70,
+        "use_global_mobile_space_padding": true,
+        "background": false,
+        "heading": "Customers also purchased",
+        "subtitle": ""
+      }
+    }
+  },
+  "order": [
+    "main",
+    "product_snap_card_RymQEU",
+    "product-related",
+    "product-recommendations"
+  ]
+}
