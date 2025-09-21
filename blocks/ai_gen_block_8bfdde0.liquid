@@ -119,38 +119,7 @@
       <h2 class="ai-page-data__title-{{ ai_gen_id }}">{{ page.title }}</h2>
     {% endif %}
 
-    {% if block.settings.show_meta %}
-      <div class="ai-page-data__meta-{{ ai_gen_id }}">
-        {% comment %} {% if page.created_at %}
-          <div class="ai-page-data__meta-item-{{ ai_gen_id }}">
-            <span class="ai-page-data__meta-label-{{ ai_gen_id }}">Created:</span>
-            <span>{{ page.created_at | date: '%B %d, %Y' }}</span>
-          </div>
-        {% endif %} {% endcomment %}
-        
-        {% if page.updated_at %}
-          <div class="ai-page-data__meta-item-{{ ai_gen_id }}">
-            <span class="ai-page-data__meta-label-{{ ai_gen_id }}">Updated:</span>
-            <span>{{ page.updated_at | date: '%B %d, %Y' }}</span>
-          </div>
-        {% endif %}
-
-        {% if page.handle %}
-          <div class="ai-page-data__meta-item-{{ ai_gen_id }}">
-            <span class="ai-page-data__meta-label-{{ ai_gen_id }}">Handle:</span>
-            <span>{{ page.handle }}</span>
-          </div>
-        {% endif %}
-
-        {% if page.id %}
-          <div class="ai-page-data__meta-item-{{ ai_gen_id }}">
-            <span class="ai-page-data__meta-label-{{ ai_gen_id }}">ID:</span>
-            <span>{{ page.id }}</span>
-          </div>
-        {% endif %}
-      </div>
-    {% endif %}
-
+  
     {% if block.settings.show_content and page.content != blank %}
       <div class="ai-page-data__content-{{ ai_gen_id }}">
         {% if block.settings.content_limit > 0 %}
