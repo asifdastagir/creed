@@ -27,9 +27,14 @@
 }
 
 .mmenu>li {
-  display     : inline-block;
+  display     : inline-flex;
   margin-right: -4px;
-  white-space : normal
+  white-space : normal;
+  align-items : center;
+}
+
+.mmenu>li:first-child::before {
+  display: none;
 }
 
 .mmenu>li .top-level-link {
@@ -46,6 +51,18 @@
   text-transform : uppercase;
   letter-spacing : 0.1px;
 }
+
+
+.mmenu>li:before {
+  content: '';
+  width       : 7px;
+  height      : 7px;
+  mask        : url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='w-1.75 h-1.75 text-grey' viewBox='0 0 7 7' fill='currentColor'%3E%3Cpath d='M4 0H3V3H0V4H3V7H4V4H7V3H4V0Z'%3E%3C/path%3E%3C/svg%3E");
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' class='w-1.75 h-1.75 text-grey' viewBox='0 0 7 7' fill='currentColor'%3E%3Cpath d='M4 0H3V3H0V4H3V7H4V4H7V3H4V0Z'%3E%3C/path%3E%3C/svg%3E");
+  display: inline-block;
+  background-color: var(--desktop-menu-color);
+}
+
 
 .mmenu>li .top-level-link .menu-item-actions {
   right: 26px
