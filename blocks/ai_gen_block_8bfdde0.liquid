@@ -121,12 +121,12 @@
 
     {% if block.settings.show_meta %}
       <div class="ai-page-data__meta-{{ ai_gen_id }}">
-        {% if page.created_at %}
+        {% comment %} {% if page.created_at %}
           <div class="ai-page-data__meta-item-{{ ai_gen_id }}">
             <span class="ai-page-data__meta-label-{{ ai_gen_id }}">Created:</span>
             <span>{{ page.created_at | date: '%B %d, %Y' }}</span>
           </div>
-        {% endif %}
+        {% endif %} {% endcomment %}
         
         {% if page.updated_at %}
           <div class="ai-page-data__meta-item-{{ ai_gen_id }}">
