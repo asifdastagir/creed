@@ -550,39 +550,39 @@
           {%- when 'collapsible_tab' -%}
             {%- if section.settings.bottom_tabs == false and section.settings.inner_tabs_to_horizontal == false -%}
               <div class="block-accordion  mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
-                <div class="tab-accordion-item">
-                  <input type="checkbox" name="tab-accordion" id="tabAccordion{{ block.id }}" {% if block.settings.opened %}checked{% endif %}>
-                  <label for="tabAccordion{{ block.id }}" class="text-uppercase">{{ block.settings.heading | default: block.settings.page.title }}<span class="toggle-arrow"></span></label>
-                  <div class='tab-accordion-item-content js-set-height'>
-                    <div class="tab-accordion-item-content-inside">
-                      <div class="rte">
-                        {{ block.settings.content | replace: '&lt;', '<' | replace: '&gt;', '>' | replace: '&amp;', '&' | replace: '&quot;', '"' }}
-                        {{ block.settings.page.content }}
+                  <div class="tab-accordion-item">
+                    <input type="checkbox" name="tab-accordion" id="tabAccordion{{ block.id }}" {% if block.settings.opened %}checked{% endif %}>
+                    <label for="tabAccordion{{ block.id }}" class="text-uppercase">{{ block.settings.heading | default: block.settings.page.title }}<span class="toggle-arrow"></span></label>
+                    <div class='tab-accordion-item-content js-set-height'>
+                      <div class="tab-accordion-item-content-inside">
+                        <div class="rte">
+                          {{ block.settings.content | replace: '&lt;', '<' | replace: '&gt;', '>' | replace: '&amp;', '&' | replace: '&quot;', '"' }}
+                          {{ block.settings.page.content }}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
               </div>
             {%- endif -%}
           {%- when 'collapsible_tab_apps' -%}
             {%- if section.settings.bottom_tabs == false and section.settings.inner_tabs_to_horizontal == false -%}
               <div class="block-accordion  mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
-                <div class="tab-accordion-item">
-                  <input type="checkbox" name="tab-accordion" id="tabAccordion{{ tab_apps.first.id }}" {% if tab_apps.first.settings.opened %}checked{% endif %}>
-                  <label for="tabAccordion{{ tab_apps.first.id }}" class="text-uppercase">{{ tab_apps.first.settings.heading }}<span class="toggle-arrow"></span></label>
-                  {%- if section.settings.apps_placement == 'tab' -%}
-                    <div class='tab-accordion-item-content js-set-height'>
-                      <div class="tab-accordion-item-content-inside">
-                        {%- liquid
-                          assign apps = section.blocks | where: 'type', '@app'
-                          for app in apps
-                            render app
-                          endfor
-                        -%}
+                  <div class="tab-accordion-item">
+                    <input type="checkbox" name="tab-accordion" id="tabAccordion{{ tab_apps.first.id }}" {% if tab_apps.first.settings.opened %}checked{% endif %}>
+                    <label for="tabAccordion{{ tab_apps.first.id }}" class="text-uppercase">{{ tab_apps.first.settings.heading }}<span class="toggle-arrow"></span></label>
+                    {%- if section.settings.apps_placement == 'tab' -%}
+                      <div class='tab-accordion-item-content js-set-height'>
+                        <div class="tab-accordion-item-content-inside">
+                          {%- liquid
+                            assign apps = section.blocks | where: 'type', '@app'
+                            for app in apps
+                              render app
+                            endfor
+                          -%}
+                        </div>
                       </div>
-                    </div>
-                  {%- endif -%}
-                </div>
+                    {%- endif -%}
+                  </div>
               </div>
             {%- endif -%}
           {%- when 'page_source' -%}
@@ -604,130 +604,163 @@
           {%- when 'dynamic_accordion' -%}
             {%- if section.settings.bottom_tabs == false and section.settings.inner_tabs_to_horizontal == false -%}
               <div class="block-accordion  mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
-                {%- liquid
-                  assign accordion_items = ''
-                  assign item_count = 0
-                  
-                  # Collect product description
-                  if block.settings.show_product_description and product.description != blank
-                    assign item_count = item_count | plus: 1
-                    assign accordion_items = accordion_items | append: 'product_description|' | append: item_count | append: '|'
-                  endif
-                  
-                  # Collect meta fields
-                  if block.settings.show_meta_fields
-                    for meta_field in product.metafields
-                      if meta_field.value != blank and meta_field.value != null
-                        assign item_count = item_count | plus: 1
-                        assign accordion_items = accordion_items | append: 'meta_field|' | append: item_count | append: '|' | append: meta_field.key | append: '|' | append: meta_field.namespace | append: '|'
-                      endif
-                    endfor
-                  endif
-                  
-                  # Collect page data
-                  if block.settings.show_page_data and block.settings.page != blank
-                    assign item_count = item_count | plus: 1
-                    assign accordion_items = accordion_items | append: 'page_data|' | append: item_count | append: '|'
-                  endif
-                  
-                  # Collect custom content
-                  if block.settings.show_custom_content and block.settings.custom_content != blank
-                    assign item_count = item_count | plus: 1
-                    assign accordion_items = accordion_items | append: 'custom_content|' | append: item_count | append: '|'
-                  endif
-                  
-                  # Collect product specifications
-                  if block.settings.show_specifications
-                    for spec in product.metafields.specifications
-                      if spec.value != blank and spec.value != null
-                        assign item_count = item_count | plus: 1
-                        assign accordion_items = accordion_items | append: 'specification|' | append: item_count | append: '|' | append: spec.key | append: '|'
-                      endif
-                    endfor
-                  endif
-                  
-                  # Collect product features
-                  if block.settings.show_features
-                    for feature in product.metafields.features
-                      if feature.value != blank and feature.value != null
-                        assign item_count = item_count | plus: 1
-                        assign accordion_items = accordion_items | append: 'feature|' | append: item_count | append: '|' | append: feature.key | append: '|'
-                      endif
-                    endfor
-                  endif
-                  
-                  assign items_array = accordion_items | split: '|'
-                  assign current_item = 0
-                -%}
+                {%- assign item_count = 0 -%}
                 
-                {%- for item in items_array -%}
-                  {%- if item != blank -%}
-                    {%- assign item_parts = item | split: '|' -%}
-                    {%- assign item_type = item_parts[0] -%}
-                    {%- assign item_id = item_parts[1] -%}
-                    {%- assign current_item = current_item | plus: 1 -%}
-                    
-                    <div class="tab-accordion-item">
-                      <input type="checkbox" name="tab-accordion" id="tabAccordion{{ block.id }}_{{ current_item }}" {% if block.settings.opened or current_item == 1 %}checked{% endif %}>
-                      <label for="tabAccordion{{ block.id }}_{{ current_item }}" class="text-uppercase">
-                        {%- case item_type -%}
-                          {%- when 'product_description' -%}
-                            {{ block.settings.product_description_heading | default: 'Product Description' }}
-                          {%- when 'meta_field' -%}
-                            {{ item_parts[2] | replace: '_', ' ' | capitalize }}
-                          {%- when 'page_data' -%}
-                            {{ block.settings.page_data_heading | default: block.settings.page.title | default: 'Page Information' }}
-                          {%- when 'custom_content' -%}
-                            {{ block.settings.custom_content_heading | default: 'Additional Information' }}
-                          {%- when 'specification' -%}
-                            {{ item_parts[2] | replace: '_', ' ' | capitalize }}
-                          {%- when 'feature' -%}
-                            {{ item_parts[2] | replace: '_', ' ' | capitalize }}
-                        {%- endcase -%}
-                        <span class="toggle-arrow"></span>
-                      </label>
-                      <div class='tab-accordion-item-content js-set-height'>
-                        <div class="tab-accordion-item-content-inside">
-                          <div class="rte">
-                            {%- case item_type -%}
-                              {%- when 'product_description' -%}
-                                {{ product.description }}
-                              {%- when 'meta_field' -%}
-                                {%- assign meta_key = item_parts[2] -%}
-                                {%- assign meta_namespace = item_parts[3] -%}
-                                {%- assign meta_value = product.metafields[meta_namespace][meta_key] -%}
-                                {%- if meta_value.value -%}
-                                  {{ meta_value.value }}
-                                {%- else -%}
-                                  {{ meta_value }}
-                                {%- endif -%}
-                              {%- when 'page_data' -%}
-                                {{ block.settings.page.content }}
-                              {%- when 'custom_content' -%}
-                                {{ block.settings.custom_content | replace: '&lt;', '<' | replace: '&gt;', '>' | replace: '&amp;', '&' | replace: '&quot;', '"' }}
-                              {%- when 'specification' -%}
-                                {%- assign spec_key = item_parts[2] -%}
-                                {%- assign spec_value = product.metafields.specifications[spec_key] -%}
-                                {%- if spec_value.value -%}
-                                  {{ spec_value.value }}
-                                {%- else -%}
-                                  {{ spec_value }}
-                                {%- endif -%}
-                              {%- when 'feature' -%}
-                                {%- assign feature_key = item_parts[2] -%}
-                                {%- assign feature_value = product.metafields.features[feature_key] -%}
-                                {%- if feature_value.value -%}
-                                  {{ feature_value.value }}
-                                {%- else -%}
-                                  {{ feature_value }}
-                                {%- endif -%}
-                            {%- endcase -%}
-                          </div>
+                {%- comment -%} Debug information - remove in production {%- endcomment -%}
+                {%- if block.settings.show_debug -%}
+                  <div style="background: #f0f0f0; padding: 10px; margin: 10px 0; border: 1px solid #ccc;">
+                    <strong>Debug Info:</strong><br>
+                    Product Description: {{ product.description | truncate: 50 }}<br>
+                    Selected Page: {{ block.settings.page.title | default: 'No page selected' }}<br>
+                    Page Meta Fields Count: {{ block.settings.page.metafields.size | default: 0 }}<br>
+                    Page Specifications Count: {{ block.settings.page.metafields.specifications.size | default: 0 }}<br>
+                    Page Features Count: {{ block.settings.page.metafields.features.size | default: 0 }}<br>
+                    Show Product Description: {{ block.settings.show_product_description }}<br>
+                    Show Meta Fields: {{ block.settings.show_meta_fields }}<br>
+                    Show Specifications: {{ block.settings.show_specifications }}<br>
+                    Show Features: {{ block.settings.show_features }}<br>
+                    Show Page Data: {{ block.settings.show_page_data }}<br>
+                    Show Custom Content: {{ block.settings.show_custom_content }}<br>
+                  </div>
+                {%- endif -%}
+                
+                {%- comment -%} Product Description {%- endcomment -%}
+                {%- if block.settings.show_product_description and product.description != blank -%}
+                  {%- assign item_count = item_count | plus: 1 -%}
+                  <div class="tab-accordion-item">
+                    <input type="checkbox" name="tab-accordion" id="tabAccordion{{ block.id }}_{{ item_count }}" {% if block.settings.opened or item_count == 1 %}checked{% endif %}>
+                    <label for="tabAccordion{{ block.id }}_{{ item_count }}" class="text-uppercase">
+                      {{ block.settings.product_description_heading | default: 'Product Description' }}
+                      <span class="toggle-arrow"></span>
+                    </label>
+                    <div class='tab-accordion-item-content js-set-height'>
+                      <div class="tab-accordion-item-content-inside">
+                        <div class="rte">
+                          {{ product.description }}
                         </div>
                       </div>
                     </div>
-                  {%- endif -%}
-                {%- endfor -%}
+                  </div>
+                {%- endif -%}
+                
+                {%- comment -%} Page Meta Fields {%- endcomment -%}
+                {%- if block.settings.show_meta_fields and block.settings.page != blank -%}
+                  {%- for meta_field in block.settings.page.metafields -%}
+                    {%- if meta_field.value != blank and meta_field.value != null -%}
+                      {%- assign item_count = item_count | plus: 1 -%}
+                      <div class="tab-accordion-item">
+                        <input type="checkbox" name="tab-accordion" id="tabAccordion{{ block.id }}_{{ item_count }}" {% if block.settings.opened and item_count == 1 %}checked{% endif %}>
+                        <label for="tabAccordion{{ block.id }}_{{ item_count }}" class="text-uppercase">
+                          {{ meta_field.key | replace: '_', ' ' | capitalize }}
+                          <span class="toggle-arrow"></span>
+                        </label>
+                        <div class='tab-accordion-item-content js-set-height'>
+                          <div class="tab-accordion-item-content-inside">
+                            <div class="rte">
+                              {%- if meta_field.value.value -%}
+                                {{ meta_field.value.value }}
+                              {%- else -%}
+                                {{ meta_field.value }}
+                              {%- endif -%}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
+                
+                {%- comment -%} Page Specifications {%- endcomment -%}
+                {%- if block.settings.show_specifications and block.settings.page != blank -%}
+                  {%- for spec in block.settings.page.metafields.specifications -%}
+                    {%- if spec.value != blank and spec.value != null -%}
+                      {%- assign item_count = item_count | plus: 1 -%}
+                      <div class="tab-accordion-item">
+                        <input type="checkbox" name="tab-accordion" id="tabAccordion{{ block.id }}_{{ item_count }}" {% if block.settings.opened and item_count == 1 %}checked{% endif %}>
+                        <label for="tabAccordion{{ block.id }}_{{ item_count }}" class="text-uppercase">
+                          {{ spec.key | replace: '_', ' ' | capitalize }}
+                          <span class="toggle-arrow"></span>
+                        </label>
+                        <div class='tab-accordion-item-content js-set-height'>
+                          <div class="tab-accordion-item-content-inside">
+                            <div class="rte">
+                              {%- if spec.value.value -%}
+                                {{ spec.value.value }}
+                              {%- else -%}
+                                {{ spec.value }}
+                              {%- endif -%}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
+                
+                {%- comment -%} Page Features {%- endcomment -%}
+                {%- if block.settings.show_features and block.settings.page != blank -%}
+                  {%- for feature in block.settings.page.metafields.features -%}
+                    {%- if feature.value != blank and feature.value != null -%}
+                      {%- assign item_count = item_count | plus: 1 -%}
+                      <div class="tab-accordion-item">
+                        <input type="checkbox" name="tab-accordion" id="tabAccordion{{ block.id }}_{{ item_count }}" {% if block.settings.opened and item_count == 1 %}checked{% endif %}>
+                        <label for="tabAccordion{{ block.id }}_{{ item_count }}" class="text-uppercase">
+                          {{ feature.key | replace: '_', ' ' | capitalize }}
+                          <span class="toggle-arrow"></span>
+                        </label>
+                        <div class='tab-accordion-item-content js-set-height'>
+                          <div class="tab-accordion-item-content-inside">
+                            <div class="rte">
+                              {%- if feature.value.value -%}
+                                {{ feature.value.value }}
+                              {%- else -%}
+                                {{ feature.value }}
+                              {%- endif -%}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    {%- endif -%}
+                  {%- endfor -%}
+                {%- endif -%}
+                
+                {%- comment -%} Page Data {%- endcomment -%}
+                {%- if block.settings.show_page_data and block.settings.page != blank -%}
+                  {%- assign item_count = item_count | plus: 1 -%}
+                  <div class="tab-accordion-item">
+                    <input type="checkbox" name="tab-accordion" id="tabAccordion{{ block.id }}_{{ item_count }}" {% if block.settings.opened and item_count == 1 %}checked{% endif %}>
+                    <label for="tabAccordion{{ block.id }}_{{ item_count }}" class="text-uppercase">
+                      {{ block.settings.page_data_heading | default: block.settings.page.title | default: 'Page Information' }}
+                      <span class="toggle-arrow"></span>
+                    </label>
+                    <div class='tab-accordion-item-content js-set-height'>
+                      <div class="tab-accordion-item-content-inside">
+                        <div class="rte">
+                          {{ block.settings.page.content }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {%- endif -%}
+                
+                {%- comment -%} Custom Content {%- endcomment -%}
+                {%- if block.settings.show_custom_content and block.settings.custom_content != blank -%}
+                  {%- assign item_count = item_count | plus: 1 -%}
+                  <div class="tab-accordion-item">
+                    <input type="checkbox" name="tab-accordion" id="tabAccordion{{ block.id }}_{{ item_count }}" {% if block.settings.opened and item_count == 1 %}checked{% endif %}>
+                    <label for="tabAccordion{{ block.id }}_{{ item_count }}" class="text-uppercase">
+                      {{ block.settings.custom_content_heading | default: 'Additional Information' }}
+                      <span class="toggle-arrow"></span>
+                    </label>
+                    <div class='tab-accordion-item-content js-set-height'>
+                      <div class="tab-accordion-item-content-inside">
+                        <div class="rte">
+                          {{ block.settings.custom_content | replace: '&lt;', '<' | replace: '&gt;', '>' | replace: '&amp;', '&' | replace: '&quot;', '"' }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {%- endif -%}
               </div>
             {%- endif -%}
           {%- when 'ask_about_the_product' -%}
@@ -3231,34 +3264,36 @@
         {
           "type": "checkbox",
           "id": "show_meta_fields",
-          "label": "Show product meta fields",
+          "label": "Show page meta fields",
           "default": true,
-          "info": "Automatically displays all product meta fields with content"
+          "info": "Automatically displays all meta fields from the selected page"
         },
         {
           "type": "checkbox",
           "id": "show_specifications",
-          "label": "Show product specifications",
+          "label": "Show page specifications",
           "default": true,
-          "info": "Shows meta fields from 'specifications' namespace"
+          "info": "Shows meta fields from 'specifications' namespace of the selected page"
         },
         {
           "type": "checkbox",
           "id": "show_features",
-          "label": "Show product features",
+          "label": "Show page features",
           "default": true,
-          "info": "Shows meta fields from 'features' namespace"
+          "info": "Shows meta fields from 'features' namespace of the selected page"
         },
         {
           "type": "checkbox",
           "id": "show_page_data",
-          "label": "Show page data",
-          "default": false
+          "label": "Show page content",
+          "default": false,
+          "info": "Shows the main content of the selected page"
         },
         {
           "type": "page",
           "id": "page",
-          "label": "Page to display"
+          "label": "Page to use for meta fields and content",
+          "info": "Select a page to pull meta fields, specifications, features, and content from"
         },
         {
           "type": "text",
@@ -3292,6 +3327,13 @@
           "id": "opened",
           "label": "First item opened by default",
           "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "show_debug",
+          "label": "Show debug information",
+          "default": false,
+          "info": "Shows debug information to help troubleshoot content issues"
         }
       ]
     },

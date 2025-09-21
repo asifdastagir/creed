@@ -39,17 +39,41 @@
                     # For horizontal tabs, we'll show a summary of available content
                     echo '<div class="dynamic-accordion-summary">'
                     if block.settings.show_product_description and product.description != blank
-                        echo '<h4>Product Description</h4>'
+                        echo '<h4>' | append: block.settings.product_description_heading | default: 'Product Description' | append: '</h4>'
                         echo product.description
                     endif
-                    if block.settings.show_meta_fields
-                        for meta_field in product.metafields
+                    if block.settings.show_meta_fields and block.settings.page != blank
+                        for meta_field in block.settings.page.metafields
                             if meta_field.value != blank and meta_field.value != null
                                 echo '<h4>' | append: meta_field.key | replace: '_', ' ' | capitalize | append: '</h4>'
                                 if meta_field.value.value
                                     echo meta_field.value.value
                                 else
                                     echo meta_field.value
+                                endif
+                            endif
+                        endfor
+                    endif
+                    if block.settings.show_specifications and block.settings.page != blank
+                        for spec in block.settings.page.metafields.specifications
+                            if spec.value != blank and spec.value != null
+                                echo '<h4>' | append: spec.key | replace: '_', ' ' | capitalize | append: '</h4>'
+                                if spec.value.value
+                                    echo spec.value.value
+                                else
+                                    echo spec.value
+                                endif
+                            endif
+                        endfor
+                    endif
+                    if block.settings.show_features and block.settings.page != blank
+                        for feature in block.settings.page.metafields.features
+                            if feature.value != blank and feature.value != null
+                                echo '<h4>' | append: feature.key | replace: '_', ' ' | capitalize | append: '</h4>'
+                                if feature.value.value
+                                    echo feature.value.value
+                                else
+                                    echo feature.value
                                 endif
                             endif
                         endfor
