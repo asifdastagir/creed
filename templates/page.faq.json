@@ -96,7 +96,7 @@
           "type": "qa",
           "settings": {
             "title": "Shop",
-            "answer": "<p><span style=\"text-decoration:underline\"><strong>Shop</strong></span></p>",
+            "answer": "<p><a href=\"/collections/all\" title=\"All products\"><span style=\"text-decoration:underline\"><strong>Shop</strong></span></a></p>",
             "category": "Contact"
           }
         }
