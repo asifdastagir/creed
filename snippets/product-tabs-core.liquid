@@ -31,6 +31,38 @@
                     for app in apps
                     render app
                     endfor
+                elsif block.type == 'page_source'
+                    echo '<pre style="background: #f5f5f5; padding: 15px; border-radius: 5px; overflow-x: auto; font-size: 12px; line-height: 1.4; white-space: pre-wrap; word-wrap: break-word;"><code>'
+                    echo content_for_layout | escape
+                    echo '</code></pre>'
+                elsif block.type == 'dynamic_accordion'
+                    # For horizontal tabs, we'll show a summary of available content
+                    echo '<div class="dynamic-accordion-summary">'
+                    if block.settings.show_product_description and product.description != blank
+                        echo '<h4>Product Description</h4>'
+                        echo product.description
+                    endif
+                    if block.settings.show_meta_fields
+                        for meta_field in product.metafields
+                            if meta_field.value != blank and meta_field.value != null
+                                echo '<h4>' | append: meta_field.key | replace: '_', ' ' | capitalize | append: '</h4>'
+                                if meta_field.value.value
+                                    echo meta_field.value.value
+                                else
+                                    echo meta_field.value
+                                endif
+                            endif
+                        endfor
+                    endif
+                    if block.settings.show_page_data and block.settings.page != blank
+                        echo '<h4>' | append: block.settings.page_data_heading | default: block.settings.page.title | default: 'Page Information' | append: '</h4>'
+                        echo block.settings.page.content
+                    endif
+                    if block.settings.show_custom_content and block.settings.custom_content != blank
+                        echo '<h4>' | append: block.settings.custom_content_heading | default: 'Additional Information' | append: '</h4>'
+                        echo block.settings.custom_content | replace: '&lt;', '<' | replace: '&gt;', '>' | replace: '&amp;', '&' | replace: '&quot;', '"'
+                    endif
+                    echo '</div>'
                 else
                     echo block.settings.content | replace: '&lt;', '<' | replace: '&gt;', '>' | replace: '&amp;', '&' | replace: '&quot;', '"'
                     echo block.settings.page.content
