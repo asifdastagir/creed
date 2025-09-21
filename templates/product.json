@@ -94,24 +94,22 @@
             "opened": true
           }
         },
-        "collapsible_tab_Lwj3YR": {
-          "type": "collapsible_tab",
+        "collapsible_tab_apps_MGiDHc": {
+          "type": "collapsible_tab_apps",
           "settings": {
             "spacing_blocks": 30,
             "use_global_blocks_desktop_space": true,
-            "opened": true,
-            "heading": "Design For",
-            "content": "",
-            "page": "material-tech-form-one"
+            "opened": false,
+            "heading": "Apps collapsible tab"
           }
         },
-        "collapsible_tab_ccqrPJ": {
+        "collapsible_tab_dkNbn8": {
           "type": "collapsible_tab",
           "settings": {
             "spacing_blocks": 30,
             "use_global_blocks_desktop_space": true,
             "opened": true,
-            "heading": "DESIGN MARATIAL",
+            "heading": "Collapsible html tab",
             "content": "",
             "page": "material-tech-form-one"
           }
@@ -126,8 +124,8 @@
         "2f540e78-040a-4fc2-a26e-8063b6bd5043",
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
         "description_zzQLwa",
-        "collapsible_tab_Lwj3YR",
-        "collapsible_tab_ccqrPJ"
+        "collapsible_tab_apps_MGiDHc",
+        "collapsible_tab_dkNbn8"
       ],
       "custom_css": [
         ".holder {--margin-top-desktop: 30px; --margin-top-mobile: 20px;}"
