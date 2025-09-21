@@ -1,6 +1,406 @@
+{% doc %}
+  @prompt
+    get page data
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-page-data-{{ ai_gen_id }} {
+    padding: {{ block.settings.padding }}px;
+    background-color: {{ block.settings.background_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    max-width: 100%;
+  }
+
+  .ai-page-data__title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    color: {{ block.settings.title_color }};
+    margin: 0 0 {{ block.settings.spacing }}px 0;
+    font-weight: {{ block.settings.title_weight }};
+  }
+
+  .ai-page-data__content-{{ ai_gen_id }} {
+    color: {{ block.settings.content_color }};
+    font-size: {{ block.settings.content_size }}px;
+    line-height: 1.6;
+  }
+
+  .ai-page-data__content-{{ ai_gen_id }} h1,
+  .ai-page-data__content-{{ ai_gen_id }} h2,
+  .ai-page-data__content-{{ ai_gen_id }} h3,
+  .ai-page-data__content-{{ ai_gen_id }} h4,
+  .ai-page-data__content-{{ ai_gen_id }} h5,
+  .ai-page-data__content-{{ ai_gen_id }} h6 {
+    color: {{ block.settings.heading_color }};
+    margin-top: {{ block.settings.spacing }}px;
+    margin-bottom: calc({{ block.settings.spacing }}px / 2);
+  }
+
+  .ai-page-data__content-{{ ai_gen_id }} p {
+    margin-bottom: {{ block.settings.spacing }}px;
+  }
+
+  .ai-page-data__content-{{ ai_gen_id }} a {
+    color: {{ block.settings.link_color }};
+    text-decoration: underline;
+  }
+
+  .ai-page-data__content-{{ ai_gen_id }} a:hover {
+    color: {{ block.settings.link_hover_color }};
+  }
+
+  .ai-page-data__meta-{{ ai_gen_id }} {
+    display: flex;
+    flex-wrap: wrap;
+    gap: {{ block.settings.spacing }}px;
+    margin-bottom: {{ block.settings.spacing }}px;
+    font-size: {{ block.settings.meta_size }}px;color: {{ block.settings.meta_color }};
+  }
+
+  .ai-page-data__meta-item-{{ ai_gen_id }} {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .ai-page-data__meta-label-{{ ai_gen_id }} {
+    font-weight: 600;
+  }
+
+  .ai-page-data__empty-state-{{ ai_gen_id }} {
+    text-align: center;
+    padding: 40px 20px;
+    color: {{ block.settings.meta_color }};
+    font-style: italic;
+  }
+
+  .ai-page-data__link-{{ ai_gen_id }} {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: {{ block.settings.spacing }}px;
+    padding: 12px 24px;
+    background-color: {{ block.settings.button_color }};
+    color: {{ block.settings.button_text_color }};
+    text-decoration: none;
+    border-radius: {{ block.settings.button_border_radius }}px;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-page-data__link-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_color }};color: {{ block.settings.button_text_color }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-page-data-{{ ai_gen_id }} {
+      padding: {{ block.settings.padding | times: 0.7 }}px;
+    }
+
+    .ai-page-data__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.title_size | times: 0.9 }}px;
+    }
+
+    .ai-page-data__content-{{ ai_gen_id }} {
+      font-size: {{ block.settings.content_size | times: 0.9 }}px;
+    }
+
+    .ai-page-data__meta-{{ ai_gen_id }} {
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+{% endstyle %}<div class="ai-page-data-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.selected_page != blank %}
+    {% assign page = block.settings.selected_page %}
+    
+    {% if block.settings.show_title and page.title != blank %}
+      <h2 class="ai-page-data__title-{{ ai_gen_id }}">{{ page.title }}</h2>
+    {% endif %}
+
+    {% if block.settings.show_meta %}
+      <div class="ai-page-data__meta-{{ ai_gen_id }}">
+        {% if page.created_at %}
+          <div class="ai-page-data__meta-item-{{ ai_gen_id }}">
+            <span class="ai-page-data__meta-label-{{ ai_gen_id }}">Created:</span>
+            <span>{{ page.created_at | date: '%B %d, %Y' }}</span>
+          </div>
+        {% endif %}
+        
+        {% if page.updated_at %}
+          <div class="ai-page-data__meta-item-{{ ai_gen_id }}">
+            <span class="ai-page-data__meta-label-{{ ai_gen_id }}">Updated:</span>
+            <span>{{ page.updated_at | date: '%B %d, %Y' }}</span>
+          </div>
+        {% endif %}
+
+        {% if page.handle %}
+          <div class="ai-page-data__meta-item-{{ ai_gen_id }}">
+            <span class="ai-page-data__meta-label-{{ ai_gen_id }}">Handle:</span>
+            <span>{{ page.handle }}</span>
+          </div>
+        {% endif %}
+
+        {% if page.id %}
+          <div class="ai-page-data__meta-item-{{ ai_gen_id }}">
+            <span class="ai-page-data__meta-label-{{ ai_gen_id }}">ID:</span>
+            <span>{{ page.id }}</span>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if block.settings.show_content and page.content != blank %}
+      <div class="ai-page-data__content-{{ ai_gen_id }}">
+        {% if block.settings.content_limit > 0 %}
+          {{ page.content | truncate: block.settings.content_limit }}
+        {% else %}
+          {{ page.content }}
+        {% endif %}
+      </div>
+    {% endif %}
+
+    {% if block.settings.show_link %}
+      <a href="{{ page.url }}" class="ai-page-data__link-{{ ai_gen_id }}">
+        {{ block.settings.link_text }}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7 17L17 7"></path>
+          <path d="M7 7h10v10"></path>
+        </svg>
+      </a>
+    {% endif %}
+
+  {% else %}
+    <div class="ai-page-data__empty-state-{{ ai_gen_id }}">
+      <p>Select a page to display its data</p>
+    </div>
+  {% endif %}
+</div>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Page data display",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Page selection"
+    },
+    {
+      "type": "page",
+      "id": "selected_page",
+      "label": "Select page"
+    },
+    {
+      "type": "header",
+      "content": "Display options"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_title",
+      "label": "Show page title",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_meta",
+      "label": "Show page metadata",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_content",
+      "label": "Show page content",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "content_limit",
+      "label": "Content character limit",
+      "min": 0,
+      "max": 1000,
+      "step": 50,
+      "default": 0,
+      "info": "Set to 0 for no limit"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_link",
+      "label": "Show link to page",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link text",
+      "default": "View page"
+    },
+    {
+      "type": "header",
+      "content": "Style"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "label": "Padding",
+      "min": 0,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "spacing",
+      "label": "Element spacing",
+      "min": 5,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "label": "Title size",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "600",
+          "label": "Semi-bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "content_color",
+      "label": "Content color",
+      "default": "#333333"
+    },
+    {
+      "type": "range",
+      "id": "content_size",
+      "label": "Content size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Content heading color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "link_color",
+      "label": "Content link color",
+      "default": "#0066cc"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_color",
+      "label": "Content link hover color",
+      "default": "#004499"
+    },
+    {
+      "type": "color",
+      "id": "meta_color",
+      "label": "Metadata color",
+      "default": "#666666"
+    },
+    {
+      "type": "range",
+      "id": "meta_size",
+      "label": "Metadata size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "default": 14
+    },
+    {
+      "type": "header",
+      "content": "Button style"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Background color",
+      "default": "#000f9f"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Hover background color",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Border radius",
+      "min": 0,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 6
+    }
+  ],
+  "presets": [
+    {
+      "name": "Page data display"
+    }
+  ]
+}
 {% endschema %}
