@@ -646,11 +646,12 @@
       "megamenu": {
         "type": "megamenu",
         "blocks": {
-          "0c97bd19-e1b4-4e65-9647-dc374f5fad59": {
+          "megamenu_YBhGqV": {
             "type": "megamenu",
             "settings": {
               "layout": "default",
               "boxed_columns_count": 3,
+              "image_1_boxed": "shopify://shop_images/Parallax_01.jpg",
               "color_placeholder_image_1_boxed": "",
               "image_1_href_boxed": "",
               "image_1_caption_1_boxed": "SELECTED SHIRTS",
@@ -674,10 +675,10 @@
           }
         },
         "block_order": [
-          "0c97bd19-e1b4-4e65-9647-dc374f5fad59"
+          "megamenu_YBhGqV"
         ],
         "settings": {
-          "upcase": true
+          "upcase": false
         }
       },
       "main-password": {
