@@ -645,37 +645,6 @@
       },
       "megamenu": {
         "type": "megamenu",
-        "blocks": {
-          "0c97bd19-e1b4-4e65-9647-dc374f5fad59": {
-            "type": "megamenu",
-            "settings": {
-              "layout": "default",
-              "boxed_columns_count": 3,
-              "color_placeholder_image_1_boxed": "",
-              "image_1_href_boxed": "",
-              "image_1_caption_1_boxed": "SELECTED SHIRTS",
-              "image_1_caption_2_boxed": "Summer Sale",
-              "image_1_captions_invert_boxed": false,
-              "button_text": "View all products",
-              "button_url": "",
-              "brands": "automatic",
-              "color_placeholder_image_1_fullwidth": "",
-              "image_1_href_fullwidth": "",
-              "image_1_caption_1_fullwidth": "SELECTED SHIRTS",
-              "image_1_caption_2_fullwidth": "Summer Sale",
-              "image_1_captions_invert_fullwidth": false,
-              "color_placeholder_image_2_fullwidth": "",
-              "image_2_href_fullwidth": "",
-              "image_2_caption_1_fullwidth": "SELECTED SHIRTS",
-              "image_2_caption_2_fullwidth": "Summer Sale",
-              "image_2_captions_invert_fullwidth": false,
-              "columns_columns_count": 4
-            }
-          }
-        },
-        "block_order": [
-          "0c97bd19-e1b4-4e65-9647-dc374f5fad59"
-        ],
         "settings": {
           "upcase": true
         }
