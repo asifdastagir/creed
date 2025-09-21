@@ -101,7 +101,7 @@
             "use_global_blocks_desktop_space": true,
             "opened": true,
             "heading": "Design For",
-            "content": "",
+            "content": "<p>{{ block.settings.page.metafields.custom.design_for | metafield_tag }}</p>",
             "page": "material-tech-form-one"
           }
         },
