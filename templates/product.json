@@ -104,6 +104,17 @@
             "content": "",
             "page": "material-tech-form-one"
           }
+        },
+        "collapsible_tab_ccqrPJ": {
+          "type": "collapsible_tab",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "opened": true,
+            "heading": "DESIGN MARATIAL",
+            "content": "",
+            "page": ""
+          }
         }
       },
       "block_order": [
@@ -115,7 +126,8 @@
         "2f540e78-040a-4fc2-a26e-8063b6bd5043",
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
         "description_zzQLwa",
-        "collapsible_tab_Lwj3YR"
+        "collapsible_tab_Lwj3YR",
+        "collapsible_tab_ccqrPJ"
       ],
       "custom_css": [
         ".holder {--margin-top-desktop: 30px; --margin-top-mobile: 20px;}"
