@@ -649,7 +649,7 @@
           "megamenu_YBhGqV": {
             "type": "megamenu",
             "settings": {
-              "layout": "boxed",
+              "layout": "default",
               "boxed_columns_count": 3,
               "image_1_boxed": "shopify://shop_images/Parallax_01.jpg",
               "color_placeholder_image_1_boxed": "",
