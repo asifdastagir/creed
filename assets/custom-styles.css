@@ -5004,12 +5004,14 @@ html {
 
 }
 
-.material ul li{
-    list-style: circle;
+.material ul {
+    list-style: disc;
     padding-left:20px;
 }
 
-.material .box{
-    bolder: solid 1px #000;
+.material .grid > div{
+    border: solid 1px #000;
     padding: 20px;
 }
+
+
