@@ -100,7 +100,7 @@
             "spacing_blocks": 30,
             "use_global_blocks_desktop_space": true,
             "opened": true,
-            "heading": "Collapsible html tab",
+            "heading": "Design For",
             "content": "<p>{{ product.metafields.custom.for | metafield_tag }}</p>",
             "page": ""
           }
