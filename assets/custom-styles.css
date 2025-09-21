@@ -5015,3 +5015,9 @@ html {
 }
 
 
+
+
+.content ul{
+    padding-left: 30px;
+    list-style: disc;
+}

@@ -121,7 +121,7 @@
 
   
     {% if block.settings.show_content and page.content != blank %}
-      <div class="ai-page-data__content-{{ ai_gen_id }}">
+      <div class="content ai-page-data__content-{{ ai_gen_id }}">
         {% if block.settings.content_limit > 0 %}
           {{ page.content | truncate: block.settings.content_limit }}
         {% else %}
