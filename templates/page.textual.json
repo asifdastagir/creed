@@ -9,6 +9,21 @@
  */
 {
   "sections": {
+    "page_heading_wmadk6": {
+      "type": "page-heading",
+      "name": "Page Heading",
+      "settings": {
+        "style": "style1",
+        "heading_line1": "The{{ page.title }}",
+        "heading_line2": "",
+        "description": "",
+        "overlay": true,
+        "padding_top_style1": 60,
+        "padding_bottom_style1": 60,
+        "padding_top_style2": 80,
+        "padding_bottom_style2": 80
+      }
+    },
     "1758466955c0ce580b": {
       "type": "_blocks",
       "blocks": {
@@ -68,6 +83,7 @@
     }
   },
   "order": [
+    "page_heading_wmadk6",
     "1758466955c0ce580b",
     "main"
   ]
