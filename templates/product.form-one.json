@@ -178,7 +178,7 @@
       "type": "product-snap-card",
       "name": "Product Snap Card",
       "settings": {
-        "margin_top": 0,
+        "margin_top": 100,
         "margin_bottom": 0
       }
     },
