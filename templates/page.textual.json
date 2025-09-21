@@ -20,8 +20,6 @@
             "show_meta": true,
             "show_content": true,
             "content_limit": 0,
-            "show_link": true,
-            "link_text": "View page",
             "background_color": "#ffffff",
             "padding": 30,
             "border_radius": 8,
