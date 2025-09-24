@@ -8,20 +8,20 @@
 {% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
 
 {% style %}
-  .ai-dynamic-content-{{ ai_gen_id }} {
+  /* .ai-dynamic-content-{{ ai_gen_id }} {
     padding: {{ block.settings.padding }}px;
     background-color: {{ block.settings.background_color }};
     border-radius: {{ block.settings.border_radius }}px;
     border: 1px solid {{ block.settings.border_color }};
-  }
+  } */
 
-  .ai-dynamic-title-{{ ai_gen_id }} {
+  /* .ai-dynamic-title-{{ ai_gen_id }} {
     font-size: {{ block.settings.title_size }}px;
     font-weight: {{ block.settings.title_weight }};
     color: {{ block.settings.title_color }};
     margin:0 0 {{ block.settings.title_spacing }}px 0;
     text-align: {{ block.settings.title_alignment }};
-  }
+  } */
 
   .ai-dynamic-data-{{ ai_gen_id }} {
     font-size: {{ block.settings.content_size }}px;
@@ -51,12 +51,19 @@
   }
 {% endstyle %}
 
-<div class="ai-dynamic-content-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+<div class="container ai-dynamic-content-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
   {% if block.settings.title != blank %}
-    <h2 class="ai-dynamic-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+    <div class="block-accordion">
+     <div class="tab-accordion-item">
+      <label>
+        {{ block.settings.title }}
+      </label>
+     </div>
+    </div>
+        
   {% endif %}
   
-  <div class="ai-dynamic-data-{{ ai_gen_id }}">
+  <div class="flex ai-dynamic-data-{{ ai_gen_id }}">
     {% case block.settings.data_source %}
       {% when 'current_page_title' %}
         {% if page %}
