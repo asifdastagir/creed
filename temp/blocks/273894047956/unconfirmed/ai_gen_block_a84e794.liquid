@@ -1,6 +1,212 @@
+{% doc %}
+  @prompt
+    make the component i want get data from page source, i want just render data only no other thing
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-data-display-{{ ai_gen_id }} {
+    font-family: monospace;
+    font-size: {{ block.settings.font_size }}px;
+    line-height:1.4;
+    color: {{ block.settings.text_color }};
+    background-color: {{ block.settings.background_color }};
+    padding: {{ block.settings.padding }}px;
+    border-radius: {{ block.settings.border_radius }}px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: auto;
+  }
+
+  .ai-data-item-{{ ai_gen_id }} {
+    margin-bottom: {{ block.settings.item_spacing }}px;
+  }
+
+  .ai-data-key-{{ ai_gen_id }} {
+    color: {{ block.settings.key_color }};
+    font-weight: bold;
+  }
+
+  .ai-data-value-{{ ai_gen_id }} {
+    color: {{ block.settings.value_color }};
+  }
+
+  .ai-data-separator-{{ ai_gen_id }} {
+    color: {{ block.settings.separator_color }};
+  }
+{% endstyle %}
+
+<div class="ai-data-display-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+{% if block.settings.show_page_info %}
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">page_title</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ page_title | escape }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">canonical_url</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ canonical_url }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">template</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ template.name }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">page_description</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ page_description | escape | default: 'null' }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">locale</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ request.locale.iso_code }}</span></div>
+{% endif %}
+
+{% if block.settings.show_shop_info %}
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">shop.name</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ shop.name }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">shop.domain</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ shop.domain }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">shop.currency</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ cart.currency.iso_code }}</span></div>
+{% endif %}
+
+{% if block.settings.show_customer_info %}
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">customer</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{% if customer %}{{ customer.email }}{% else %}null{% endif %}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">cart.item_count</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ cart.item_count }}</span></div>
+{% endif %}
+
+{% if block.settings.show_content_data %}
+{% if page %}
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">page.handle</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ page.handle }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">page.created_at</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ page.created_at | date: '%Y-%m-%d %H:%M:%S' }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">page.content</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ page.content | strip_html | truncate: 200 }}</span></div>
+{% elsif product %}
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">product.handle</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ product.handle }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">product.type</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ product.type }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">product.vendor</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ product.vendor }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">product.price</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ product.price | money }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">product.tags</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ product.tags | join: ', ' }}</span></div>
+{% elsif collection %}
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">collection.handle</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ collection.handle }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">collection.products_count</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ collection.products_count }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">collection.description</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ collection.description | strip_html | truncate: 200 }}</span></div>
+{% elsif article %}
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">article.handle</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ article.handle }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">article.author</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ article.author }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">article.published_at</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ article.published_at | date: '%Y-%m-%d %H:%M:%S' }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">article.summary</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ article.summary | strip_html | truncate: 200 }}</span></div>
+{% elsif blog %}
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">blog.handle</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ blog.handle }}</span></div>
+{% endif %}
+{% endif %}
+
+{% if block.settings.show_request_info %}
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">request.host</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ request.host }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">request.path</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ request.path }}</span></div>
+<div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">request.page_type</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ request.page_type }}</span></div>
+{% endif %}
+</div>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Raw data display",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Data to display"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_page_info",
+      "label": "Page information",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_shop_info",
+      "label": "Shop information",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_customer_info",
+      "label": "Customer information",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_content_data",
+      "label": "Content data",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_request_info",
+      "label": "Request information",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#212529"
+    },
+    {
+      "type": "color",
+      "id": "key_color",
+      "label": "Key",
+      "default": "#0d6efd"
+    },
+    {
+      "type": "color",
+      "id": "value_color",
+      "label": "Value",
+      "default": "#198754"
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator",
+      "default": "#6c757d"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 10,
+      "max": 20,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "min": 2,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Item spacing",
+      "default": 8
+    }
+  ],
+  "presets": [
+    {
+      "name": "Raw data display"
+    }
+  ],
+  "tag": null
+}
 {% endschema %}
