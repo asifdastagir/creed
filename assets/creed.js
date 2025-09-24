@@ -1,7 +1,18 @@
-// Init Lenis
+// Check if device is mobile/tablet for performance optimization
+const isMobile = window.matchMedia('(max-width: 1024px)').matches;
+const isTouch = 'ontouchstart' in window;
+
+// Init Lenis with optimized settings
 const lenis = new Lenis({
-    duration: 1.2,
-    smooth: true
+    duration: isMobile ? 0.8 : 1.2, // Shorter duration on mobile
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Custom easing
+    smooth: true,
+    smoothTouch: !isTouch, // Disable on touch devices for better performance
+    touchMultiplier: 2,
+    infinite: false,
+    syncTouch: false, // Better mobile experience
+    syncTouchLerp: 0.1,
+    __iosNoInertiaTouchstart: true // Better iOS experience
 });
 
 // Hook Lenis with requestAnimationFrame
@@ -14,6 +25,57 @@ requestAnimationFrame(raf);
 // GSAP setup
 gsap.registerPlugin(ScrollTrigger);
 lenis.on('scroll', ScrollTrigger.update);
+
+// Stop Lenis during resize to prevent issues
+let resizeTimer;
+window.addEventListener('resize', () => {
+    lenis.stop();
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        lenis.start();
+    }, 200);
+});
+
+// Handle anchor links with Lenis (only for links not handled by existing system)
+document.addEventListener('click', (e) => {
+    const link = e.target.closest('a[href^="#"]');
+    if (link && !link.classList.contains('js-scroll-to') && !link.classList.contains('js-scroll-to-bottom')) {
+        const href = link.getAttribute('href');
+        const target = document.querySelector(href);
+
+        if (target && href !== '#') {
+            e.preventDefault();
+
+            // Calculate offset for sticky header
+            const headerWrap = document.querySelector('.hdr-wrap');
+            const headerSticky = document.querySelector('.hdr-content-sticky');
+            let offset = 0;
+
+            if (headerWrap) {
+                offset = window.matchMedia(`(max-width:1024px)`).matches
+                    ? headerWrap.offsetHeight
+                    : (headerSticky ? headerSticky.offsetHeight : 0);
+            }
+
+            // Use Lenis scrollTo for smooth animation
+            lenis.scrollTo(target, {
+                offset: -offset,
+                duration: isMobile ? 0.8 : 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
+            });
+        }
+    }
+});
+
+// Expose lenis globally for integration with existing code
+window.lenis = lenis;
+
+// Add method to scroll to top smoothly
+window.scrollToTop = () => {
+    lenis.scrollTo(0, {
+        duration: isMobile ? 0.6 : 1.0
+    });
+};
 
 // Loop through each section and animate independently
 gsap.utils.toArray(".component-animation").forEach(section => {
@@ -223,3 +285,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+
+

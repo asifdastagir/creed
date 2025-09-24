@@ -506,6 +506,43 @@ html.lenis body {
     overscroll-behavior: contain;
 }
 
+/* Enhanced smooth scrolling styles */
+html.lenis {
+    height: auto;
+}
+
+.lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+}
+
+.lenis.lenis-scrolling iframe {
+    pointer-events: none;
+}
+
+/* Improve performance on mobile */
+@media (max-width: 1024px) {
+    .lenis.lenis-smooth {
+        scroll-behavior: smooth !important;
+    }
+}
+
+/* Ensure smooth scrolling for reduced motion users */
+@media (prefers-reduced-motion: reduce) {
+    .lenis.lenis-smooth {
+        scroll-behavior: auto !important;
+    }
+
+    * {
+        animation-duration       : 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration      : 0.01ms !important;
+    }
+}
+
 .lenis.lenis-stopped {
     overflow    : hidden;
     border-right: 0 solid transparent;
@@ -2708,7 +2745,7 @@ summary::marker {
     clip-path: inset(0 0 100vh 0);
 }
 
-.\[clip-path\:inset\(0_var\(--rating\, 100\%\)_0_0\)\] {
+.\[clip-path\:inset\(0_var\(--rating\,100\%\)_0_0\)\] {
     clip-path: inset(0 100% 0 0);
     clip-path: inset(0 var(--rating, 100%) 0 0);
 }
@@ -2717,7 +2754,7 @@ summary::marker {
     font-size: 1rem;
 }
 
-.\[opacity\:var\(--hero-opacity\, 1\)\; \] {
+.\[opacity\:var\(--hero-opacity\,1\)\] {
     opacity: 1;
     opacity: var(--hero-opacity, 1);
 }
