@@ -32,7 +32,7 @@
           "type": "feature",
           "settings": {
             "image": "shopify://shop_images/catelog01.png",
-            "title": "FROM ONE",
+            "title": "FORM ONE",
             "description": "Essential oversized long hem, pure cotton tee"
           }
         },
@@ -94,7 +94,7 @@
       "name": "Text + Parallax Component",
       "settings": {
         "subtitle": "ABOUT US",
-        "heading": "Creed Label was born from MΛSS AWΛKΞNІИG— The idea of being fully awake: in movement, in discipline, and in the choices we make.",
+        "heading": "Creed Label was born from <br> MΛSS AWΛKΞNІИG — The idea of being fully awake: in movement, in discipline, and in the choices we make.",
         "description": "",
         "cta_label": "Discover the Science",
         "cta_url": "shopify://products/nomad-x-hydro-black-copy",
