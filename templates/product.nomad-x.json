@@ -186,14 +186,6 @@
         "color_price_old": ""
       }
     },
-    "product_snap_card_RymQEU": {
-      "type": "product-snap-card",
-      "name": "Product Snap Card",
-      "settings": {
-        "margin_top": 100,
-        "margin_bottom": 0
-      }
-    },
     "blocks_ehgzYX": {
       "type": "_blocks",
       "blocks": {
@@ -264,6 +256,14 @@
       ],
       "settings": {}
     },
+    "product_snap_card_RymQEU": {
+      "type": "product-snap-card",
+      "name": "Product Snap Card",
+      "settings": {
+        "margin_top": 100,
+        "margin_bottom": 0
+      }
+    },
     "product-related": {
       "type": "product-related",
       "settings": {
@@ -304,8 +304,8 @@
   },
   "order": [
     "main",
-    "product_snap_card_RymQEU",
     "blocks_ehgzYX",
+    "product_snap_card_RymQEU",
     "product-related",
     "product-recommendations"
   ]
