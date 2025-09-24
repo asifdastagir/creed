@@ -115,6 +115,17 @@
             "content": "<ul><li>Oversized fit with rounded hem“Mass Awakening” front print</li><li>Shoulder-to-shoulder Creed Label logo on back</li><li>100% mid-weight cotton</li><li>Pre-shrunk for consistent fit</li><li>Engineered for motion, fit, and comfort<br/><br/></li></ul>",
             "page": ""
           }
+        },
+        "collapsible_tab_J9gEzJ": {
+          "type": "collapsible_tab",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "opened": true,
+            "heading": "Material Tech",
+            "content": "<p><br/>• 100% Cotton: Natural softness, breathable structure<br/>• Oversized Fit: Relaxed silhouette, free movement<br/>• Curved Hem: Added coverage, modern finish<br/>• Premium Weight: Durable fabric with refined drape<br/><br/><br/></p>",
+            "page": ""
+          }
         }
       },
       "block_order": [
@@ -127,7 +138,8 @@
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
         "description_zzQLwa",
         "collapsible_tab_dkNbn8",
-        "collapsible_tab_y7Nrpq"
+        "collapsible_tab_y7Nrpq",
+        "collapsible_tab_J9gEzJ"
       ],
       "custom_css": [
         ".holder {--margin-top-desktop: 30px; --margin-top-mobile: 20px;}"
@@ -174,14 +186,6 @@
         "color_price_old": ""
       }
     },
-    "product_snap_card_RymQEU": {
-      "type": "product-snap-card",
-      "name": "Product Snap Card",
-      "settings": {
-        "margin_top": 100,
-        "margin_bottom": 0
-      }
-    },
     "1758683458dd0092c3": {
       "type": "_blocks",
       "blocks": {
@@ -215,6 +219,14 @@
         "ai_gen_block_74ea8dd_p6LFxj"
       ],
       "settings": {}
+    },
+    "product_snap_card_RymQEU": {
+      "type": "product-snap-card",
+      "name": "Product Snap Card",
+      "settings": {
+        "margin_top": 100,
+        "margin_bottom": 0
+      }
     },
     "product-related": {
       "type": "product-related",
