@@ -100,7 +100,25 @@ function initLenis() {
     };
 
     console.log('Lenis smooth scroll initialized');
-});
+}
+
+// Try to initialize immediately if Lenis is already loaded
+if (typeof Lenis !== 'undefined') {
+    initLenis();
+} else {
+    // Wait for DOM and scripts to load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Wait a bit for deferred scripts to load
+        setTimeout(initLenis, 100);
+    });
+    
+    // Also try on window load as a fallback
+    window.addEventListener('load', function() {
+        if (typeof window.lenis === 'undefined') {
+            initLenis();
+        }
+    });
+}
 
 // Loop through each section and animate independently
 gsap.utils.toArray(".component-animation").forEach(section => {
