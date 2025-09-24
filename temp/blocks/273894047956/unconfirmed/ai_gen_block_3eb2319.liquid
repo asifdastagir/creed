@@ -1,6 +1,496 @@
+{% doc %}
+  @prompt
+    make the component i want get data from page source, i want just render data only no other thing, where is page source i need to get dynamic data, i have option to select the data source like the above tab, ahh i dont needs tabs I want 
+    one title field 
+    and one dynamic field so i set the source from page to render the page content, how do i select page the data source is page
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-dynamic-content-{{ ai_gen_id }} {
+    padding: {{ block.settings.padding }}px;
+    background-color: {{ block.settings.background_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    border: 1px solid {{ block.settings.border_color }};
+  }
+
+  .ai-dynamic-title-{{ ai_gen_id }} {
+    font-size: {{ block.settings.title_size }}px;
+    font-weight: {{ block.settings.title_weight }};
+    color: {{ block.settings.title_color }};
+    margin: 0 0 {{ block.settings.title_spacing }}px 0;
+    text-align: {{ block.settings.title_alignment }};
+  }
+
+  .ai-dynamic-data-{{ ai_gen_id }} {
+    font-size: {{ block.settings.content_size }}px;
+    line-height: {{ block.settings.line_height }};
+    color: {{ block.settings.content_color }};
+    font-family: {{ block.settings.content_font }};
+    text-align: {{ block.settings.content_alignment }};
+    white-space: pre-wrap;word-break: break-word;
+  }
+
+  .ai-dynamic-data-{{ ai_gen_id }} * {
+    margin-bottom: 0.5em;
+  }
+
+  .ai-dynamic-data-{{ ai_gen_id }} *:last-child {
+    margin-bottom: 0;
+  }
+
+  .ai-empty-state-{{ ai_gen_id }} {
+    color: {{ block.settings.border_color }};
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+  }
+{% endstyle %}
+
+<div class="ai-dynamic-content-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.title != blank %}
+    <h2 class="ai-dynamic-title-{{ ai_gen_id }}">{{ block.settings.title }}</h2>
+  {% endif %}<div class="ai-dynamic-data-{{ ai_gen_id }}">
+    {% case block.settings.data_source %}
+      {% when 'current_page_title' %}
+        {{ page.title }}
+      {% when 'current_page_content' %}
+        {% if page %}
+          {{ page.content }}
+        {% else %}
+          <div class="ai-empty-state-{{ ai_gen_id }}">No page content available</div>
+        {% endif %}
+      {% when 'selected_page_title' %}
+        {% if block.settings.selected_page %}
+          {{ block.settings.selected_page.title }}
+        {% else %}
+          <div class="ai-empty-state-{{ ai_gen_id }}">Please select a page</div>
+        {% endif %}
+      {% when 'selected_page_content' %}
+        {% if block.settings.selected_page %}
+          {{ block.settings.selected_page.content }}
+        {% else %}
+          <div class="ai-empty-state-{{ ai_gen_id }}">Please select a page</div>
+        {% endif %}
+      {% when 'product_title' %}
+        {% if product %}
+          {{ product.title }}
+        {% else %}
+          <div class="ai-empty-state-{{ ai_gen_id }}">No product available</div>
+        {% endif %}
+      {% when 'product_description' %}
+        {% if product %}
+          {{ product.description }}
+        {% else %}
+          <div class="ai-empty-state-{{ ai_gen_id }}">No product available</div>
+        {% endif %}
+      {% when 'collection_title' %}
+        {% if collection %}
+          {{ collection.title }}
+        {% else %}
+          <div class="ai-empty-state-{{ ai_gen_id }}">No collection available</div>
+        {% endif %}
+      {% when 'collection_description' %}
+        {% if collection %}
+          {{ collection.description }}
+        {% else %}
+          <div class="ai-empty-state-{{ ai_gen_id }}">No collection available</div>
+        {% endif %}
+      {% when 'article_title' %}
+        {% if article %}
+          {{ article.title }}
+        {% else %}
+          <div class="ai-empty-state-{{ ai_gen_id }}">No article available</div>
+        {% endif %}
+      {% when 'article_content' %}
+        {% if article %}
+          {{ article.content }}
+        {% else %}
+          <div class="ai-empty-state-{{ ai_gen_id }}">No article available</div>
+        {% endif %}
+      {% when 'article_excerpt' %}
+        {% if article %}
+          {{ article.excerpt }}
+        {% else %}
+          <div class="ai-empty-state-{{ ai_gen_id }}">No article available</div>
+        {% endif %}
+      {% when 'shop_name' %}
+        {{ shop.name }}
+      {% when 'shop_description' %}
+        {{ shop.description }}
+      {% when 'customer_name' %}
+        {% if customer %}
+          {{ customer.first_name }} {{ customer.last_name }}
+        {% else %}
+          <div class="ai-empty-state-{{ ai_gen_id }}">Customer not logged in</div>
+        {% endif %}
+      {% when 'customer_email' %}
+        {% if customer %}
+          {{ customer.email }}
+        {% else %}
+          <div class="ai-empty-state-{{ ai_gen_id }}">Customer not logged in</div>
+        {% endif %}
+      {% when 'current_date' %}
+        {{ 'now' | date: '%B %d, %Y' }}
+      {% when 'current_time' %}
+        {{ 'now' | date: '%I:%M %p' }}
+      {% when 'template_name' %}
+        {{ template }}
+      {% when 'canonical_url' %}
+        {{ canonical_url }}
+      {% when 'request_path' %}
+        {{ request.path }}
+      {% when 'current_tags' %}
+        {{ current_tags | join: ', ' }}
+      {% when 'custom_metafield' %}
+        {% if block.settings.metafield_namespace != blank and block.settings.metafield_key != blank %}
+          {% if page %}
+            {{ page.metafields[block.settings.metafield_namespace][block.settings.metafield_key] }}
+          {% elsif product %}
+            {{ product.metafields[block.settings.metafield_namespace][block.settings.metafield_key] }}
+          {% elsif collection %}
+            {{ collection.metafields[block.settings.metafield_namespace][block.settings.metafield_key] }}
+          {% elsif article %}
+            {{ article.metafields[block.settings.metafield_namespace][block.settings.metafield_key] }}
+          {% else %}
+            <div class="ai-empty-state-{{ ai_gen_id }}">No metafield available for this page type</div>
+          {% endif %}
+        {% else %}
+          <div class="ai-empty-state-{{ ai_gen_id }}">Please configure metafield namespace and key</div>
+        {% endif %}
+      {% else %}
+        <div class="ai-empty-state-{{ ai_gen_id }}">Please select a data source</div>
+    {% endcase %}
+  </div>
+</div>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Dynamic content",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "select",
+      "id": "data_source",
+      "label": "Data source",
+      "options": [
+        {
+          "value": "current_page_title",
+          "label": "Current page title"
+        },
+        {
+          "value": "current_page_content",
+          "label": "Current page content"
+        },
+        {
+          "value": "selected_page_title",
+          "label": "Selected page title"
+        },
+        {
+          "value": "selected_page_content",
+          "label": "Selected page content"
+        },
+        {
+          "value": "product_title",
+          "label": "Product title"
+        },
+        {
+          "value": "product_description",
+          "label": "Product description"
+        },
+        {
+          "value": "collection_title",
+          "label": "Collection title"
+        },
+        {
+          "value": "collection_description",
+          "label": "Collection description"
+        },
+        {
+          "value": "article_title",
+          "label": "Article title"
+        },
+        {
+          "value": "article_content",
+          "label": "Article content"
+        },
+        {
+          "value": "article_excerpt",
+          "label": "Article excerpt"
+        },
+        {
+          "value": "shop_name",
+          "label": "Shop name"
+        },
+        {
+          "value": "shop_description",
+          "label": "Shop description"
+        },
+        {
+          "value": "customer_name",
+          "label": "Customer name"
+        },
+        {
+          "value": "customer_email",
+          "label": "Customer email"
+        },
+        {
+          "value": "current_date",
+          "label": "Current date"
+        },
+        {
+          "value": "current_time",
+          "label": "Current time"
+        },
+        {
+          "value": "template_name",
+          "label": "Template name"
+        },
+        {
+          "value": "canonical_url",
+          "label": "Canonical URL"
+        },
+        {
+          "value": "request_path",
+          "label": "Request path"
+        },
+        {
+          "value": "current_tags",
+          "label": "Current tags"
+        },
+        {
+          "value": "custom_metafield",
+          "label": "Custom metafield"
+        }
+      ],
+      "default": "current_page_content"
+    },
+    {
+      "type": "page",
+      "id": "selected_page",
+      "label": "Select page",
+      "info": "Only used when'Selected page title' or 'Selected page content' is chosen"
+    },
+    {
+      "type": "header",
+      "content": "Metafield settings"
+    },
+    {
+      "type": "text",
+      "id": "metafield_namespace",
+      "label": "Metafield namespace",
+      "info": "Only used when 'Custom metafield' is selected"
+    },
+    {
+      "type": "text",
+      "id": "metafield_key",
+      "label": "Metafield key",
+      "info": "Only used when 'Custom metafield' is selected"
+    },
+    {
+      "type": "header",
+      "content": "Title style"
+    },
+    {
+      "type": "range",
+      "id": "title_size",
+      "min": 14,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Title size",
+      "default": 24
+    },
+    {
+      "type": "select",
+      "id": "title_weight",
+      "label": "Title weight",
+      "options": [
+        {
+          "value": "300",
+          "label": "Light"
+        },
+        {
+          "value": "400",
+          "label": "Normal"
+        },
+        {
+          "value": "600",
+          "label": "Semi bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
+      ],
+      "default": "600"
+    },
+    {
+      "type": "color",
+      "id": "title_color",
+      "label": "Title color",
+      "default": "#000000"
+    },
+    {
+      "type": "select",
+      "id": "title_alignment",
+      "label": "Title alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "range",
+      "id": "title_spacing",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "label": "Title bottom spacing",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Content style"
+    },
+    {
+      "type": "range",
+      "id": "content_size",
+      "min": 12,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Content size",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "line_height",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "label": "Line height",
+      "default": 1.5
+    },
+    {
+      "type": "color",
+      "id": "content_color",
+      "label": "Content color",
+      "default": "#333333"
+    },
+    {
+      "type": "select",
+      "id": "content_font",
+      "label": "Content font",
+      "options": [
+        {
+          "value": "inherit",
+          "label": "Theme default"
+        },
+        {
+          "value": "monospace",
+          "label": "Monospace"
+        },
+        {
+          "value": "serif",
+          "label": "Serif"
+        },
+        {
+          "value": "sans-serif",
+          "label": "Sans serif"
+        }
+      ],
+      "default": "inherit"
+    },
+    {
+      "type": "select",
+      "id": "content_alignment",
+      "label": "Content alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        },
+        {
+          "value": "right",
+          "label": "Right"
+        },
+        {
+          "value": "justify",
+          "label": "Justify"
+        }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#e1e1e1"
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "px",
+      "label": "Padding",
+      "default": 20
+    }
+  ],
+  "presets": [
+    {
+      "name": "Dynamic content"
+    }
+  ],
+  "tag": null
+}
 {% endschema %}
