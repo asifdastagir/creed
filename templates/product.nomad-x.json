@@ -90,8 +90,19 @@
           "settings": {
             "spacing_blocks": 30,
             "use_global_blocks_desktop_space": true,
-            "heading": "Key Features",
+            "heading": "Description",
             "opened": true
+          }
+        },
+        "collapsible_tab_WTHRKm": {
+          "type": "collapsible_tab",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "opened": true,
+            "heading": "Key Features",
+            "content": "<ul><li>HydroTek™ Fabric Technology Moisture-wicking, quick-dry, and ultra-breathable — built for water and intensity</li><li>High-Waisted Full-Coverage Fit<br/>Secure, modest silhouette with added coverage for confidence in every motion</li><li>Streamlined inner liner features with Concealed Pocket</li><li>Four-Way Stretch Performance</li><li>Maximum flexibility and range of motion during training or swimming</li><li>Inlet EDM specially designed to counteract water swelling </li></ul><p><br/><br/><br/></p>",
+            "page": ""
           }
         },
         "collapsible_tab_dkNbn8": {
@@ -126,6 +137,7 @@
         "2f540e78-040a-4fc2-a26e-8063b6bd5043",
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
         "description_zzQLwa",
+        "collapsible_tab_WTHRKm",
         "collapsible_tab_dkNbn8",
         "collapsible_tab_NJUYbM"
       ],
