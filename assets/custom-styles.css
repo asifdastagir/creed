@@ -5004,6 +5004,7 @@ html {
 
 }
 
+.rte ul,
 .material ul {
     list-style  : disc;
     padding-left: 20px;
