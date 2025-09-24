@@ -186,76 +186,6 @@
         "color_price_old": ""
       }
     },
-    "1758683458dd0092c3": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_ffa57c4_Kimbpd": {
-          "type": "ai_gen_block_ffa57c4",
-          "settings": {
-            "section_margin_top": 100,
-            "section_margin_bottom": 0,
-            "section_padding_top": 0,
-            "section_padding_bottom": 0,
-            "section_padding_horizontal": 20,
-            "columns_desktop": "3",
-            "columns_mobile": "1",
-            "mobile_layout": "column",
-            "text_alignment": "left",
-            "column_spacing": 30,
-            "content_spacing": 20,
-            "text_spacing": 12,
-            "column_padding": 15,
-            "image_width": 120,
-            "image_border_radius": 8,
-            "column_border_radius": 0,
-            "background_color": "#ffffff",
-            "column_background_color": "#ffffff",
-            "title_color": "#000000",
-            "description_color": "#666666",
-            "button_color": "#000f9f",
-            "button_hover_color": "#000000",
-            "button_text_color": "#ffffff",
-            "title_size": 18,
-            "title_weight": "600",
-            "description_size": 14,
-            "button_size": 13,
-            "button_border_radius": 6,
-            "image_1": "shopify://shop_images/72926.png",
-            "title_1": "Hydro-Tek™",
-            "description_1": "",
-            "button_text_1": "",
-            "button_link_1": "",
-            "image_2": "shopify://shop_images/72928.png",
-            "title_2": "High Waistband",
-            "description_2": "",
-            "button_text_2": "Aesthetic coverage",
-            "button_link_2": "",
-            "image_3": "shopify://shop_images/72927.png",
-            "title_3": "Durable Build",
-            "description_3": "",
-            "button_text_3": "",
-            "button_link_3": "",
-            "title_4": "",
-            "description_4": "",
-            "button_text_4": "",
-            "button_link_4": "",
-            "title_5": "",
-            "description_5": "",
-            "button_text_5": "",
-            "button_link_5": "",
-            "title_6": "",
-            "description_6": "",
-            "button_text_6": "",
-            "button_link_6": ""
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_ffa57c4_Kimbpd"
-      ],
-      "settings": {}
-    },
     "blocks_FqCJcH": {
       "type": "_blocks",
       "blocks": {
@@ -374,7 +304,6 @@
   },
   "order": [
     "main",
-    "1758683458dd0092c3",
     "blocks_FqCJcH",
     "product_snap_card_RymQEU",
     "product-related",
