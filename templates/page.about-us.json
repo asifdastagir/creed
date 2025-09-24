@@ -97,7 +97,7 @@
       "name": "Story Section",
       "settings": {
         "story_subtitle": "The Team",
-        "story_title": "Our people are motivated by detailand driven by performance in allaspects of life. Obsessed withlearning, anything that can optimiseoutput gets their attention."
+        "story_title": "Our people are motivated by details. driven by performance in allaspects of life. Obsessed withlearning, anything that can optimiseoutput gets their attention."
       }
     },
     "snap_card_component_hLcNFQ": {
@@ -105,7 +105,7 @@
       "name": "Snap Card Component",
       "settings": {
         "style": "style2",
-        "heading_line1": "A journey to develop ground-breaking athletic apparel",
+        "heading_line1": "A journey to develop ground-breaking athletic apparel that does not compromise on faith driven values",
         "heading_line2": "",
         "text": "",
         "image": "shopify://shop_images/section1.jpg",
@@ -146,7 +146,7 @@
       "name": "Text + Parallax Component",
       "settings": {
         "subtitle": "ABOUT US",
-        "heading": "Creed Label was born from<br> MΛSS AWΛKΞNІИG — The idea of being fully awake: in movement, in discipline, and in the choices we make.",
+        "heading": "Creed Label was born from MΛSS AWΛKΞNІИG — The idea of being fully awake: in movement, in discipline, and in the choices we make.",
         "description": "",
         "cta_label": "ABOUT US",
         "cta_url": "shopify://pages/about",
