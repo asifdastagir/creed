@@ -105,6 +105,17 @@
             "page": ""
           }
         },
+        "collapsible_tab_y7Nrpq": {
+          "type": "collapsible_tab",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "opened": true,
+            "heading": "Key Features",
+            "content": "<ul><li>Oversized fit with rounded hem“Mass Awakening” front print</li><li>Shoulder-to-shoulder Creed Label logo on back</li><li>100% mid-weight cotton</li><li>Pre-shrunk for consistent fit</li><li>Engineered for motion, fit, and comfort<br/><br/></li></ul>",
+            "page": ""
+          }
+        },
         "collapsible_tab_NJUYbM": {
           "type": "collapsible_tab",
           "settings": {
@@ -127,6 +138,7 @@
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
         "description_zzQLwa",
         "collapsible_tab_dkNbn8",
+        "collapsible_tab_y7Nrpq",
         "collapsible_tab_NJUYbM"
       ],
       "custom_css": [
