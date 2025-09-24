@@ -1,6 +1,447 @@
+{% doc %}
+  @prompt
+    make the component i want get data from page source, i want just render data only no other thing, where is page source i need to get dynamic data, i have option to select the data source like the above tab
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-dynamic-data-{{ ai_gen_id }} {
+    font-family: monospace;
+    font-size: {{ block.settings.font_size }}px;
+    line-height: 1.4;
+    color: {{ block.settings.text_color }};
+    background-color: {{ block.settings.background_color }};
+    border-radius: {{ block.settings.border_radius }}px;
+    border: 1px solid {{ block.settings.border_color }};
+    overflow: hidden;
+  }
+
+  .ai-data-tabs-{{ ai_gen_id }} {
+    display: flex;
+    flex-wrap: wrap;
+    border-bottom: 1px solid {{ block.settings.border_color }};
+    background-color: {{ block.settings.tab_background_color }};
+  }
+
+  .ai-data-tab-{{ ai_gen_id }} {
+    padding: 12px 16px;
+    cursor: pointer;
+    border: none;
+    background: none;
+    color: {{ block.settings.tab_text_color }};
+    font-size: {{ block.settings.font_size | minus: 1 }}px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+
+  .ai-data-tab-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.tab_hover_color }};
+  }
+
+  .ai-data-tab-{{ ai_gen_id }}.active {
+    color: {{ block.settings.tab_active_text_color }};
+    border-bottom-color: {{ block.settings.tab_active_border_color }};
+    background-color: {{ block.settings.tab_active_background_color }};
+  }
+
+  .ai-data-content-{{ ai_gen_id }} {
+    padding: {{ block.settings.padding }}px;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow-x: auto;
+    max-height: {{ block.settings.max_height }}px;
+    overflow-y: auto;
+  }
+
+  .ai-data-panel-{{ ai_gen_id }} {
+    display: none;}
+
+  .ai-data-panel-{{ ai_gen_id }}.active {
+    display: block;
+  }
+
+  .ai-data-item-{{ ai_gen_id }} {
+    margin-bottom: {{ block.settings.item_spacing }}px;
+    padding-left: 15px;
+  }
+
+  .ai-data-key-{{ ai_gen_id }} {
+    color: {{ block.settings.key_color }};
+    font-weight: bold;
+  }
+
+  .ai-data-value-{{ ai_gen_id }} {
+    color: {{ block.settings.value_color }};
+  }
+
+  .ai-data-separator-{{ ai_gen_id }} {
+    color: {{ block.settings.separator_color }};
+  }
+
+  .ai-section-title-{{ ai_gen_id }} {
+    color: {{ block.settings.section_title_color }};
+    font-weight: bold;
+    font-size: {{ block.settings.font_size | plus: 2 }}px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .ai-empty-state-{{ ai_gen_id }} {
+    color: {{ block.settings.separator_color }};
+    font-style: italic;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  @media screen and (max-width: 768px) {
+    .ai-data-tabs-{{ ai_gen_id }} {
+      overflow-x: auto;
+      flex-wrap: nowrap;
+    }
+    .ai-data-tab-{{ ai_gen_id }} {
+      flex-shrink: 0;
+    }
+  }
+{% endstyle %}
+
+<dynamic-data-viewer-{{ ai_gen_id }} class="ai-dynamic-data-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-data-tabs-{{ ai_gen_id }}">
+    <button class="ai-data-tab-{{ ai_gen_id }} active" data-tab="global">Global</button>
+    <button class="ai-data-tab-{{ ai_gen_id }}" data-tab="request">Request</button>
+    <button class="ai-data-tab-{{ ai_gen_id }}" data-tab="context">Context</button>
+    <button class="ai-data-tab-{{ ai_gen_id }}" data-tab="shop">Shop</button>
+    <button class="ai-data-tab-{{ ai_gen_id }}" data-tab="customer">Customer</button>
+    <button class="ai-data-tab-{{ ai_gen_id }}" data-tab="collections">Collections</button>
+    <button class="ai-data-tab-{{ ai_gen_id }}" data-tab="pages">Pages</button>
+    <button class="ai-data-tab-{{ ai_gen_id }}" data-tab="blogs">Blogs</button>
+    <button class="ai-data-tab-{{ ai_gen_id }}" data-tab="metafields">Metafields</button>
+    <button class="ai-data-tab-{{ ai_gen_id }}" data-tab="settings">Settings</button>
+  </div>
+
+  <div class="ai-data-content-{{ ai_gen_id }}">
+    <div class="ai-data-panel-{{ ai_gen_id }} active" data-panel="global">
+      <div class="ai-section-title-{{ ai_gen_id }}">Global Objects</div>
+      <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">template</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ template }}</span></div>
+      <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">page_title</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ page_title }}</span></div>
+      <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">canonical_url</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ canonical_url }}</span></div>
+      <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">current_page</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ current_page }}</span></div>
+      <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">current_tags</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ current_tags | join: ', ' }}</span></div>
+    </div>
+
+    <div class="ai-data-panel-{{ ai_gen_id }}" data-panel="request">
+      <div class="ai-section-title-{{ ai_gen_id }}">Request Data</div>
+      <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">request.host</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ request.host }}</span></div>
+      <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">request.path</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ request.path }}</span></div>
+      <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">request.page_type</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ request.page_type }}</span></div>
+      <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">request.locale</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ request.locale.iso_code }}</span></div></div>
+
+    <div class="ai-data-panel-{{ ai_gen_id }}" data-panel="context">
+      <div class="ai-section-title-{{ ai_gen_id }}">Context Objects</div>
+      {% if product %}
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">product.id</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ product.id }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">product.handle</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ product.handle }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">product.title</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ product.title }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">product.type</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ product.type }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">product.vendor</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ product.vendor }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">product.tags</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ product.tags | join: ', ' }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">product.price</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ product.price | money }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">product.available</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ product.available }}</span></div>
+      {% elsif collection %}
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">collection.id</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ collection.id }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">collection.handle</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ collection.handle }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">collection.title</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ collection.title }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">collection.products_count</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ collection.products_count }}</span></div>
+      {% elsif page %}
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">page.id</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ page.id }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">page.handle</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ page.handle }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">page.title</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ page.title }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">page.author</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ page.author }}</span></div>
+      {% elsif article %}
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">article.id</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ article.id }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">article.handle</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ article.handle }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">article.title</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ article.title }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">article.author</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ article.author }}</span></div>
+      {% else %}
+        <div class="ai-empty-state-{{ ai_gen_id }}">No context object available on this page</div>
+      {% endif %}
+    </div>
+
+    <div class="ai-data-panel-{{ ai_gen_id }}" data-panel="shop">
+      <div class="ai-section-title-{{ ai_gen_id }}">Shop Data</div>
+      <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">shop.name</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ shop.name }}</span></div>
+      <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">shop.domain</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ shop.domain }}</span></div>
+      <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">shop.currency</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ shop.currency }}</span></div>
+      <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">shop.money_format</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ shop.money_format }}</span></div>
+      <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">shop.email</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ shop.email }}</span></div>
+      <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">shop.phone</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ shop.phone }}</span></div>
+    </div>
+
+    <div class="ai-data-panel-{{ ai_gen_id }}" data-panel="customer">
+      <div class="ai-section-title-{{ ai_gen_id }}">Customer Data</div>
+      {% if customer %}
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">customer.id</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ customer.id }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">customer.email</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ customer.email }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">customer.first_name</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ customer.first_name }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">customer.last_name</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ customer.last_name }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">customer.orders_count</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ customer.orders_count }}</span></div>
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">customer.total_spent</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ customer.total_spent | money }}</span></div>{% else %}
+        <div class="ai-empty-state-{{ ai_gen_id }}">Customer not logged in</div>
+      {% endif %}
+    </div>
+
+    <div class="ai-data-panel-{{ ai_gen_id }}" data-panel="collections">
+      <div class="ai-section-title-{{ ai_gen_id }}">All Collections</div>
+      {% for collection in collections %}
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">{{ collection.handle }}</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ collection.title }} ({{ collection.products_count }} products)</span></div>
+      {% endfor %}
+    </div>
+
+    <div class="ai-data-panel-{{ ai_gen_id }}" data-panel="pages">
+      <div class="ai-section-title-{{ ai_gen_id }}">All Pages</div>
+      {% for page in pages %}
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">{{ page.handle }}</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ page.title }}</span></div>
+      {% endfor %}
+    </div>
+
+    <div class="ai-data-panel-{{ ai_gen_id }}" data-panel="blogs">
+      <div class="ai-section-title-{{ ai_gen_id }}">All Blogs</div>
+      {% for blog in blogs %}
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">{{ blog.handle }}</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ blog.title }} ({{ blog.articles_count }} articles)</span></div>
+      {% endfor %}
+    </div>
+
+    <div class="ai-data-panel-{{ ai_gen_id }}" data-panel="metafields">
+      <div class="ai-section-title-{{ ai_gen_id }}">Metafields</div>
+      {% if page %}
+        {% for metafield in page.metafields %}
+          {% for namespace in metafield %}
+            {% for field in namespace[1] %}
+              <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">page.{{ namespace[0] }}.{{ field[0] }}</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ field[1].value | truncate: 200 }}</span></div>
+            {% endfor %}
+          {% endfor %}
+        {% endfor %}
+      {% elsif product %}
+        {% for metafield in product.metafields %}
+          {% for namespace in metafield %}
+            {% for field in namespace[1] %}
+              <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">product.{{ namespace[0] }}.{{ field[0] }}</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ field[1].value | truncate: 200 }}</span></div>
+            {% endfor %}
+          {% endfor %}
+        {% endfor %}
+      {% elsif collection %}
+        {% for metafield in collection.metafields %}
+          {% for namespace in metafield %}
+            {% for field in namespace[1] %}
+              <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">collection.{{ namespace[0] }}.{{ field[0] }}</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ field[1].value | truncate: 200 }}</span></div>
+            {% endfor %}
+          {% endfor %}
+        {% endfor %}
+      {% else %}
+        <div class="ai-empty-state-{{ ai_gen_id }}">No metafields available for this page type</div>
+      {% endif %}
+    </div>
+
+    <div class="ai-data-panel-{{ ai_gen_id }}" data-panel="settings">
+      <div class="ai-section-title-{{ ai_gen_id }}">Theme Settings</div>
+      {% for setting in settings %}
+        <div class="ai-data-item-{{ ai_gen_id }}"><span class="ai-data-key-{{ ai_gen_id }}">{{ setting[0] }}</span><span class="ai-data-separator-{{ ai_gen_id }}">: </span><span class="ai-data-value-{{ ai_gen_id }}">{{ setting[1] | truncate: 100 }}</span></div>
+      {% endfor %}
+    </div>
+  </div>
+</dynamic-data-viewer-{{ ai_gen_id }}><script>
+(function() {
+  class DynamicDataViewer{{ ai_gen_id }} extends HTMLElement {
+    constructor() {
+      super();
+    }
+
+    connectedCallback() {
+      this.tabs = this.querySelectorAll('.ai-data-tab-{{ ai_gen_id }}');
+      this.panels = this.querySelectorAll('.ai-data-panel-{{ ai_gen_id }}');
+      this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+      this.tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const targetPanel = tab.dataset.tab;
+          this.switchTab(targetPanel);
+        });
+      });
+    }
+
+    switchTab(targetPanel) {
+      this.tabs.forEach(tab => {
+        tab.classList.remove('active');if (tab.dataset.tab === targetPanel) {
+          tab.classList.add('active');
+        }
+      });
+
+      this.panels.forEach(panel => {
+        panel.classList.remove('active');
+        if (panel.dataset.panel === targetPanel) {
+          panel.classList.add('active');
+        }
+      });
+    }
+  }
+
+  customElements.define('dynamic-data-viewer-{{ ai_gen_id }}', DynamicDataViewer{{ ai_gen_id }});
+})();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Dynamic data viewer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Appearance"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text",
+      "default": "#333333"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border",
+      "default": "#e1e1e1"
+    },
+    {
+      "type": "color",
+      "id": "section_title_color",
+      "label": "Section title",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "key_color",
+      "label": "Key",
+      "default": "#0066cc"
+    },
+    {
+      "type": "color",
+      "id": "value_color",
+      "label": "Value",
+      "default": "#006600"
+    },
+    {
+      "type": "color",
+      "id": "separator_color",
+      "label": "Separator",
+      "default": "#666666"
+    },
+    {
+      "type": "header",
+      "content": "Tab style"
+    },
+    {
+      "type": "color",
+      "id": "tab_background_color",
+      "label": "Tab background",
+      "default": "#f8f9fa"
+    },
+    {
+      "type": "color",
+      "id": "tab_text_color",
+      "label": "Tab text",
+      "default": "#666666"
+    },
+    {
+      "type": "color",
+      "id": "tab_hover_color",
+      "label": "Tab hover",
+      "default": "#e9ecef"
+    },
+    {
+      "type": "color",
+      "id": "tab_active_background_color",
+      "label": "Active tab background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "tab_active_text_color",
+      "label": "Active tab text",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "tab_active_border_color",
+      "label": "Active tab border",
+      "default": "#0066cc"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "font_size",
+      "min": 10,
+      "max": 18,
+      "step": 1,
+      "unit": "px",
+      "label": "Font size",
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "padding",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "label": "Content padding",
+      "default": 20
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "min": 0,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "item_spacing",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Item spacing",
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "max_height",
+      "min": 200,
+      "max": 800,
+      "step": 50,
+      "unit": "px",
+      "label": "Maximum height",
+      "default": 400
+    }
+  ],
+  "presets": [
+    {
+      "name": "Dynamic data viewer"
+    }
+  ],
+  "tag": null
+}
 {% endschema %}
