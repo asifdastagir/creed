@@ -194,6 +194,40 @@
         "margin_bottom": 0
       }
     },
+    "1758683458dd0092c3": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_74ea8dd_p6LFxj": {
+          "type": "ai_gen_block_74ea8dd",
+          "settings": {
+            "title": "Material Tech",
+            "data_source": "selected_page_content",
+            "selected_page": "material-nomad-x-hydro",
+            "metafield_namespace": "",
+            "metafield_key": "",
+            "title_size": 24,
+            "title_weight": "600",
+            "title_color": "#000000",
+            "title_alignment": "left",
+            "title_spacing": 16,
+            "content_size": 16,
+            "line_height": 1.5,
+            "content_color": "#333333",
+            "content_font": "inherit",
+            "content_alignment": "left",
+            "background_color": "#ffffff",
+            "border_color": "#e1e1e1",
+            "border_radius": 8,
+            "padding": 20
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_74ea8dd_p6LFxj"
+      ],
+      "settings": {}
+    },
     "product-related": {
       "type": "product-related",
       "settings": {
@@ -235,6 +269,7 @@
   "order": [
     "main",
     "product_snap_card_RymQEU",
+    "1758683458dd0092c3",
     "product-related",
     "product-recommendations"
   ]
