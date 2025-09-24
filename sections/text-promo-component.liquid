@@ -11,7 +11,7 @@
     <span class="col-start-1 col-end-7 lg:col-end-5">
       <span class="block break-words w-full">{{ section.settings.heading }}</span>
     </span>
-    <span class="col-start-7 lg:col-start-9 col-end-13 text-right">
+    <span class="col-start-7 lg:col-start-10 col-end-13 text-right">
       <span class="flex break-words w-full justify-end">
         {% if section.settings.image != blank %}
           <img 
@@ -30,8 +30,8 @@
     </svg>
 
     <div class="lg:my-auto py-16 flex flex-col items-center justify-center text-center">
-      <div class="rich-text text-h2">
-        <p>{{ section.settings.text }}</p>
+      <div class="rich-text">
+        <p class="text-[2rem] xl:text-[4rem] font-[500]">{{ section.settings.text }}</p>
       </div>
 
       {% if section.settings.cta_text != blank and section.settings.cta_url != blank %}

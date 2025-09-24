@@ -28,9 +28,9 @@ document.addEventListener('click', function (e) {
         if (targetId.indexOf('#') !== -1 && document.querySelector(targetId)) {
             e.preventDefault();
             const bottomSticky = document.querySelector('.hdr-mobile-bottom'),
-              bottomStickyH = (bottomSticky && bottomSticky.classList.contains('scroll-up')) ? 140 : 75,
-              headerWrap = document.querySelector('.hdr-wrap'),
-              headerSticky = document.querySelector('.hdr-content-sticky');
+                bottomStickyH = (bottomSticky && bottomSticky.classList.contains('scroll-up')) ? 140 : 75,
+                headerWrap = document.querySelector('.hdr-wrap'),
+                headerSticky = document.querySelector('.hdr-content-sticky');
             let headerH = 0;
             if (headerWrap) {
                 headerH = window.matchMedia(`(max-width:1024px)`).matches ? headerWrap.offsetHeight : (headerSticky ? headerSticky.offsetHeight : 0)
@@ -119,7 +119,7 @@ const docCookies = {
 const checkDevice = function () {
     let isTouchDevice = 'ontouchstart' in window || navigator.msMaxTouchPoints;
     const body = document.body,
-      html = document.querySelector('html');
+        html = document.querySelector('html');
     body.classList.remove('android', 'win', 'mac', 'ie', 'safari', 'safari_version_below_14', 'touch');
     html.classList.remove('touch');
     body.dataset.damping = '0.1';
@@ -129,6 +129,11 @@ const checkDevice = function () {
         isTouchDevice = false;
     }
     if (isTouchDevice && window.matchMedia(`(max-width:1024px)`).matches) {
+        body.classList.add('touch');
+        html.classList.add('touch');
+    }
+    // Special handling for iPad landscape mode (1024px exactly)
+    if (isTouchDevice && window.matchMedia(`(width:1024px)`).matches) {
         body.classList.add('touch');
         html.classList.add('touch');
     }
@@ -221,24 +226,24 @@ function fadeOut(element, duration, callback = '') {
 
 function smoothScrollTo(to, duration) {
     const el = document.scrollingElement || document.documentElement,
-      start = el.scrollTop,
-      change = to - start,
-      startTs = performance.now(),
-      easeInOutQuad = function (t, b, c, d) {
-          t /= d / 2;
-          if (t < 1) return c / 2 * t * t + b;
-          t--;
-          return -c / 2 * (t * (t - 2) - 1) + b;
-      },
-      animateScroll = function (ts) {
-          let currentTime = ts - startTs;
-          el.scrollTop = parseInt(easeInOutQuad(currentTime, start, change, duration));
-          if (currentTime < duration) {
-              requestAnimationFrame(animateScroll);
-          } else {
-              el.scrollTop = to;
-          }
-      };
+        start = el.scrollTop,
+        change = to - start,
+        startTs = performance.now(),
+        easeInOutQuad = function (t, b, c, d) {
+            t /= d / 2;
+            if (t < 1) return c / 2 * t * t + b;
+            t--;
+            return -c / 2 * (t * (t - 2) - 1) + b;
+        },
+        animateScroll = function (ts) {
+            let currentTime = ts - startTs;
+            el.scrollTop = parseInt(easeInOutQuad(currentTime, start, change, duration));
+            if (currentTime < duration) {
+                requestAnimationFrame(animateScroll);
+            } else {
+                el.scrollTop = to;
+            }
+        };
     if (document.body.classList.contains('has-hdr_sticky') && customElements.get('header-sticky')) document.body.querySelector('header-sticky')?.destroySticky();
     document.body.classList.add('blockSticky');
     setTimeout(() => {
@@ -251,7 +256,7 @@ function debounce(func, wait, immediate) {
     let timeout;
     return function () {
         const context = this,
-          args = arguments;
+            args = arguments;
         const later = function () {
             timeout = null;
             if (!immediate) func.apply(context, args);
@@ -301,9 +306,9 @@ function calcScrollWidth() {
 function setVHStart(resize) {
     if (!document.getElementById('control-height')) return;
     const actualHeight = window.innerHeight,
-      controlH = document.getElementById('control-height').offsetHeight,
-      html = document.getElementsByTagName('html')[0],
-      vhStart = actualHeight * 0.01;
+        controlH = document.getElementById('control-height').offsetHeight,
+        html = document.getElementsByTagName('html')[0],
+        vhStart = actualHeight * 0.01;
     if (!resize) {
         const bodyElement = document.body;
         html.style.setProperty('--bar-start-height', (controlH - actualHeight) + 'px');
@@ -317,17 +322,17 @@ function setVHStart(resize) {
 
 function setVH() {
     const html = document.getElementsByTagName('html')[0],
-      header = document.querySelector('.hdr-transparent') ? document.querySelector('.hdr .hdr-content') : document.querySelector('.hdr'),
-      headerBottom = document.querySelector('.hdr-mobile-bottom'),
-      underSlider = document.querySelector('[data-slider-under]'),
-      actualHeight = window.innerHeight,
-      vh = actualHeight * 0.01,
-      barHeight = document.getElementById('control-height') ? document.getElementById('control-height').offsetHeight - actualHeight : 0,
-      hPromoH = document.querySelector('.hdr-promoline') ? document.querySelector('.hdr-promoline').offsetHeight : 0,
-      hToplineH = document.querySelector('.hdr-topline') ? document.querySelector('.hdr-topline').offsetHeight : 0,
-      hSliderUnder = underSlider ? underSlider.offsetHeight + parseInt(window.getComputedStyle(underSlider).getPropertyValue('margin-top'), 10) : 0;
+        header = document.querySelector('.hdr-transparent') ? document.querySelector('.hdr .hdr-content') : document.querySelector('.hdr'),
+        headerBottom = document.querySelector('.hdr-mobile-bottom'),
+        underSlider = document.querySelector('[data-slider-under]'),
+        actualHeight = window.innerHeight,
+        vh = actualHeight * 0.01,
+        barHeight = document.getElementById('control-height') ? document.getElementById('control-height').offsetHeight - actualHeight : 0,
+        hPromoH = document.querySelector('.hdr-promoline') ? document.querySelector('.hdr-promoline').offsetHeight : 0,
+        hToplineH = document.querySelector('.hdr-topline') ? document.querySelector('.hdr-topline').offsetHeight : 0,
+        hSliderUnder = underSlider ? underSlider.offsetHeight + parseInt(window.getComputedStyle(underSlider).getPropertyValue('margin-top'), 10) : 0;
     let hHeight = header ? (header.offsetHeight + hPromoH) : 0,
-      mobilePanelH = 0;
+        mobilePanelH = 0;
     if (window.matchMedia(`(max-width:1024px)`).matches) {
         hHeight = header ? (header.offsetHeight + hToplineH) : 0;
         mobilePanelH = headerBottom ? headerBottom.offsetHeight : 0;
@@ -363,36 +368,36 @@ function inViewportBottom(el) {
     if (!el) return false;
     if (1 !== el.nodeType) return false;
     let html = document.documentElement,
-      rect = el.getBoundingClientRect();
+        rect = el.getBoundingClientRect();
     return !!rect && rect.top <= html.clientHeight;
 }
 
 function getCoords(el) {
     const box = el.getBoundingClientRect(),
-      body = document.body,
-      docEl = document.documentElement,
-      scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop,
-      scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft,
-      clientTop = docEl.clientTop || body.clientTop || 0,
-      clientLeft = docEl.clientLeft || body.clientLeft || 0;
+        body = document.body,
+        docEl = document.documentElement,
+        scrollTop = window.pageYOffset || docEl.scrollTop || body.scrollTop,
+        scrollLeft = window.pageXOffset || docEl.scrollLeft || body.scrollLeft,
+        clientTop = docEl.clientTop || body.clientTop || 0,
+        clientLeft = docEl.clientLeft || body.clientLeft || 0;
     return {
         top: Math.round(box.top + scrollTop - clientTop),
         left: Math.round(box.left + scrollLeft - clientLeft)
     };
 }
 
-function scrollSearchSection(id){
+function scrollSearchSection(id) {
     const html = document.documentElement,
-      sectionElement = document.getElementById(id);
+        sectionElement = document.getElementById(id);
     if (sectionElement) {
         const popupElement = sectionElement.querySelector('.predictive-search_'),
-          searchInput = sectionElement.querySelector('.search-input-group'),
-          topPos = searchInput.getBoundingClientRect().top,
-          popupHeight = popupElement.clientHeight + searchInput.clientHeight + 10,
-          windowHeight = html.clientHeight,
-          delta = (topPos + popupHeight) - windowHeight + 15;
+            searchInput = sectionElement.querySelector('.search-input-group'),
+            topPos = searchInput.getBoundingClientRect().top,
+            popupHeight = popupElement.clientHeight + searchInput.clientHeight + 10,
+            windowHeight = html.clientHeight,
+            delta = (topPos + popupHeight) - windowHeight + 15;
         if (delta > 0 && topPos > 20) {
-            smoothScrollTo(window.scrollY + Math.min(delta,topPos), 500)
+            smoothScrollTo(window.scrollY + Math.min(delta, topPos), 500)
         }
     }
 }
@@ -408,8 +413,8 @@ function highlightText(what, node) {
         if (nodeList[x].nodeType == 3) {
             if (nodeList[x].textContent.toLowerCase().indexOf(what.toLowerCase()) >= 0) {
                 let replacement = '<mark>' + what + '</mark>',
-                  textBlock = nodeList[x].textContent,
-                  searchIndex = nodeList[x].textContent.toLowerCase().indexOf(what.toLowerCase());
+                    textBlock = nodeList[x].textContent,
+                    searchIndex = nodeList[x].textContent.toLowerCase().indexOf(what.toLowerCase());
                 while (searchIndex >= 0) {
                     cut = textBlock.substring(searchIndex, searchIndex + what.length);
                     replacement = '<mark>' + cut + '</mark>';
@@ -452,8 +457,8 @@ class ImageCompare {
         this.animationFrameId = null;
 
         this.safariAgent =
-          navigator.userAgent.indexOf("Safari") != -1 &&
-          navigator.userAgent.indexOf("Chrome") == -1;
+            navigator.userAgent.indexOf("Safari") != -1 &&
+            navigator.userAgent.indexOf("Chrome") == -1;
 
         this.el = el;
         this.images = {};
@@ -488,12 +493,12 @@ class ImageCompare {
         this.el.addEventListener("mousedown", (ev) => {
             this._activate(true);
             document.body.classList.add("icv__body");
-            bodyScrollLock.disableBodyScroll(this.el, {reserveScrollBarGap: true});
+            bodyScrollLock.disableBodyScroll(this.el, { reserveScrollBarGap: true });
             this._slideCompare(ev);
         });
         this.el.addEventListener(
-          "mousemove",
-          (ev) => this.active && this._slideCompare(ev)
+            "mousemove",
+            (ev) => this.active && this._slideCompare(ev)
         );
 
         this.el.addEventListener("mouseup", () => this._activate(false));
@@ -506,7 +511,7 @@ class ImageCompare {
         this.control.addEventListener("touchstart", (e) => {
             this._activate(true);
             document.body.classList.add("icv__body");
-            bodyScrollLock.disableBodyScroll(this.el, {reserveScrollBarGap: true});
+            bodyScrollLock.disableBodyScroll(this.el, { reserveScrollBarGap: true });
         });
 
         this.el.addEventListener("touchmove", (ev) => {
@@ -521,42 +526,38 @@ class ImageCompare {
         this.el.addEventListener("mouseenter", () => {
             this.settings.hoverStart && this._activate(true);
             let coord = this.settings.addCircle
-              ? this.arrowCoordinates.circle
-              : this.arrowCoordinates.standard;
+                ? this.arrowCoordinates.circle
+                : this.arrowCoordinates.standard;
 
             this.arrowAnimator.forEach((anim, i) => {
                 anim.style.cssText = `
-        ${
-                  this.settings.verticalMode
-                    ? `transform: translateY(${coord[1] * (i === 0 ? 1 : -1)}px);`
-                    : `transform: translateX(${coord[1] * (i === 0 ? 1 : -1)}px);`
-                }
+        ${this.settings.verticalMode
+                        ? `transform: translateY(${coord[1] * (i === 0 ? 1 : -1)}px);`
+                        : `transform: translateX(${coord[1] * (i === 0 ? 1 : -1)}px);`
+                    }
         `;
             });
         });
 
         this.el.addEventListener("mouseleave", () => {
             let coord = this.settings.addCircle
-              ? this.arrowCoordinates.circle
-              : this.arrowCoordinates.standard;
+                ? this.arrowCoordinates.circle
+                : this.arrowCoordinates.standard;
 
             this.arrowAnimator.forEach((anim, i) => {
                 anim.style.cssText = `
-        ${
-                  this.settings.verticalMode
-                    ? `transform: translateY(${
-                      i === 0 ? `${coord[0]}px` : `-${coord[0]}px`
-                    });`
-                    : `transform: translateX(${
-                      i === 0 ? `${coord[0]}px` : `-${coord[0]}px`
-                    });`
-                }
+        ${this.settings.verticalMode
+                        ? `transform: translateY(${i === 0 ? `${coord[0]}px` : `-${coord[0]}px`
+                        });`
+                        : `transform: translateX(${i === 0 ? `${coord[0]}px` : `-${coord[0]}px`
+                        });`
+                    }
         `;
             });
         });
     }
 
-    _slideCompare (ev) {
+    _slideCompare(ev) {
         if (this.animationFrameId === null) {
             this.animationFrameId = requestAnimationFrame(() => {
                 const bounds = this.el.getBoundingClientRect();
@@ -566,17 +567,17 @@ class ImageCompare {
 
                 if (position >= 0 && position <= 100) {
                     this.settings.verticalMode
-                      ? (this.control.style.top = `calc(${position}% - ${this.slideWidth / 2}px)`)
-                      : (this.control.style.left = `calc(${position}% - ${this.slideWidth / 2}px)`);
+                        ? (this.control.style.top = `calc(${position}% - ${this.slideWidth / 2}px)`)
+                        : (this.control.style.left = `calc(${position}% - ${this.slideWidth / 2}px)`);
 
                     if (this.settings.fluidMode) {
                         this.settings.verticalMode
-                          ? (this.wrapper.style.clipPath = `inset(0 0 ${100 - position}% 0)`)
-                          : (this.wrapper.style.clipPath = `inset(0 0 0 ${position}%)`);
+                            ? (this.wrapper.style.clipPath = `inset(0 0 ${100 - position}% 0)`)
+                            : (this.wrapper.style.clipPath = `inset(0 0 0 ${position}%)`);
                     } else {
                         this.settings.verticalMode
-                          ? (this.wrapper.style.height = `calc(${position}%)`)
-                          : (this.wrapper.style.width = `calc(${100 - position}%)`);
+                            ? (this.wrapper.style.height = `calc(${position}%)`)
+                            : (this.wrapper.style.width = `calc(${100 - position}%)`);
                     }
                 }
 
@@ -616,11 +617,11 @@ class ImageCompare {
         }
 
         this.el.classList.add(
-          `icv`,
-          this.settings.verticalMode
-            ? `icv__icv--vertical`
-            : `icv__icv--horizontal`,
-          this.settings.fluidMode ? `icv__is--fluid` : `standard`
+            `icv`,
+            this.settings.verticalMode
+                ? `icv__icv--vertical`
+                : `icv__icv--horizontal`,
+            this.settings.fluidMode ? `icv__is--fluid` : `standard`
         );
 
         imposter.classList.add("icv__imposter");
@@ -647,33 +648,29 @@ class ImageCompare {
        style="
        transform: 
        scale(${this.settings.addCircle ? 0.7 : 1.5})  
-       rotateZ(${
-              idx === 0
-                ? this.settings.verticalMode
-                  ? `-90deg`
-                  : `180deg`
-                : this.settings.verticalMode
-                  ? `90deg`
-                  : `0deg`
-            }); height: ${arrowSize}px; width: ${arrowSize}px;
+       rotateZ(${idx === 0
+                    ? this.settings.verticalMode
+                        ? `-90deg`
+                        : `180deg`
+                    : this.settings.verticalMode
+                        ? `90deg`
+                        : `0deg`
+                }); height: ${arrowSize}px; width: ${arrowSize}px;
        
-       ${
-              this.settings.controlShadow
-                ? `
+       ${this.settings.controlShadow
+                    ? `
        -webkit-filter: drop-shadow( 0px 3px 5px rgba(0, 0, 0, .33));
-       filter: drop-shadow( 0px ${
-                  idx === 0 ? "-3px" : "3px"
-                } 5px rgba(0, 0, 0, .33));
+       filter: drop-shadow( 0px ${idx === 0 ? "-3px" : "3px"
+                    } 5px rgba(0, 0, 0, .33));
        `
-                : ``
-            }
+                    : ``
+                }
        "
        xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 15 15">
-       <path ${
-              this.settings.addCircle
-                ? `fill="transparent"`
-                : `fill="${this.settings.controlColor}"`
-            }
+       <path ${this.settings.addCircle
+                    ? `fill="transparent"`
+                    : `fill="${this.settings.controlColor}"`
+                }
        stroke="${this.settings.controlColor}"
        stroke-linecap="round"
        stroke-width="${this.settings.addCircle ? 3 : 0}"
@@ -687,22 +684,19 @@ class ImageCompare {
         }
 
         let coord = this.settings.addCircle
-          ? this.arrowCoordinates.circle
-          : this.arrowCoordinates.standard;
+            ? this.arrowCoordinates.circle
+            : this.arrowCoordinates.standard;
 
         this.arrowAnimator.forEach((anim, i) => {
             anim.classList.add("icv__arrow-wrapper");
 
             anim.style.cssText = `
-      ${
-              this.settings.verticalMode
-                ? `transform: translateY(${
-                  i === 0 ? `${coord[0]}px` : `-${coord[0]}px`
-                });`
-                : `transform: translateX(${
-                  i === 0 ? `${coord[0]}px` : `-${coord[0]}px`
-                });`
-            }
+      ${this.settings.verticalMode
+                    ? `transform: translateY(${i === 0 ? `${coord[0]}px` : `-${coord[0]}px`
+                    });`
+                    : `transform: translateX(${i === 0 ? `${coord[0]}px` : `-${coord[0]}px`
+                    });`
+                }
       `;
         });
 
@@ -710,16 +704,14 @@ class ImageCompare {
 
         control.style.cssText = `
     ${this.settings.verticalMode ? `height` : `width `}: ${this.slideWidth}px;
-    ${this.settings.verticalMode ? `top` : `left `}: calc(${
-          this.settings.startingPoint
-        }% - ${this.slideWidth / 2}px);
-    ${
-          "ontouchstart" in document.documentElement
-            ? ``
-            : this.settings.smoothing
-              ? `transition: ${this.settings.smoothingAmount}ms ease-out;`
-              : ``
-        }
+    ${this.settings.verticalMode ? `top` : `left `}: calc(${this.settings.startingPoint
+            }% - ${this.slideWidth / 2}px);
+    ${"ontouchstart" in document.documentElement
+                ? ``
+                : this.settings.smoothing
+                    ? `transition: ${this.settings.smoothingAmount}ms ease-out;`
+                    : ``
+            }
     `;
 
         uiLine.classList.add("icv__control-line");
@@ -727,11 +719,10 @@ class ImageCompare {
         uiLine.style.cssText = `
       ${this.settings.verticalMode ? `height` : `width `}: ${this.lineWidth}px;
       background: ${this.settings.controlColor};
-        ${
-          this.settings.controlShadow
-            ? `box-shadow: 0px 0px 15px rgba(0,0,0,0.33);`
-            : ``
-        }
+        ${this.settings.controlShadow
+                ? `box-shadow: 0px 0px 15px rgba(0,0,0,0.33);`
+                : ``
+            }
     `;
 
         let uiLine2 = uiLine.cloneNode(true);
@@ -739,16 +730,14 @@ class ImageCompare {
         circle.classList.add("icv__circle");
         circle.style.cssText = `
 
-      ${
-          this.settings.addCircleBlur &&
-          `-webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px)`
-        };
+      ${this.settings.addCircleBlur &&
+            `-webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px)`
+            };
       
       border: ${this.lineWidth}px solid ${this.settings.controlColor};
-      ${
-          this.settings.controlShadow &&
-          `box-shadow: 0px 0px 15px rgba(0,0,0,0.33)`
-        };
+      ${this.settings.controlShadow &&
+            `box-shadow: 0px 0px 15px rgba(0,0,0,0.33)`
+            };
     `;
 
         control.appendChild(uiLine);
@@ -770,7 +759,7 @@ class ImageCompare {
         });
 
         let childrenImages = [...children].filter(
-          (element) => ["img", "video"].includes(element.nodeName.toLowerCase())
+            (element) => ["img", "video"].includes(element.nodeName.toLowerCase())
         );
 
         //  this.settings.verticalMode && [...children].reverse();
@@ -790,21 +779,18 @@ class ImageCompare {
             width: ${100 - this.settings.startingPoint}%; 
             height: ${this.settings.startingPoint}%;
 
-            ${
-                  "ontouchstart" in document.documentElement
-                    ? ``
-                    : this.settings.smoothing
-                      ? `transition: ${this.settings.smoothingAmount}ms ease-out;`
-                      : ``
-                }
-            ${
-                  this.settings.fluidMode &&
-                  `background-image: url(${afterUrl}); clip-path: inset(${
-                    this.settings.verticalMode
-                      ? ` 0 0 ${100 - this.settings.startingPoint}% 0`
-                      : `0 0 0 ${this.settings.startingPoint}%`
-                  })`
-                }
+            ${"ontouchstart" in document.documentElement
+                        ? ``
+                        : this.settings.smoothing
+                            ? `transition: ${this.settings.smoothingAmount}ms ease-out;`
+                            : ``
+                    }
+            ${this.settings.fluidMode &&
+                    `background-image: url(${afterUrl}); clip-path: inset(${this.settings.verticalMode
+                        ? ` 0 0 ${100 - this.settings.startingPoint}% 0`
+                        : `0 0 0 ${this.settings.startingPoint}%`
+                    })`
+                    }
         `;
 
                 wrapper.appendChild(child);
@@ -838,25 +824,25 @@ class MasonryGrid extends HTMLElement {
         this._removeListener = null;
         this._rtl = document.body.classList.contains('rtl-mode') ? true : false;
         this._resizeTimeout = null,
-          this.initialized = false,
-          this.conf = {
-              baseWidth: +this.dataset.masonrySize || 300,
-              gutterX: +this.dataset.masonryGutter || 30,
-              gutterY: +this.dataset.masonryGutter || 30,
-              container: '.masonry-grid-container',
-              minify: true,
-              ultimateGutter: 15,
-              surroundingGutter: false,
-              direction: 'ltr',
-              wedge: false
-          };
+            this.initialized = false,
+            this.conf = {
+                baseWidth: +this.dataset.masonrySize || 300,
+                gutterX: +this.dataset.masonryGutter || 30,
+                gutterY: +this.dataset.masonryGutter || 30,
+                container: '.masonry-grid-container',
+                minify: true,
+                ultimateGutter: 15,
+                surroundingGutter: false,
+                direction: 'ltr',
+                wedge: false
+            };
         this.init(0);
         window.addEventListener('resize', debounce(() => {
             this.init(100)
         }, 15));
         this.addEventListener('lazyloaded', () => {
             this.layout()
-        }, {once: true});
+        }, { once: true });
         const lazyImages = this.querySelectorAll('.lazyload');
         if (lazyImages.length) {
             lazyImages[lazyImages.length - 1].addEventListener('lazyloaded', () => {
@@ -969,9 +955,9 @@ class MasonryGrid extends HTMLElement {
         }
         for (let index = 0; index < children.length; index++) {
             const nextColumn = this.conf.minify ? this.getShortest() : this.getNextColumn(index),
-              childrenGutter = (this.conf.surroundingGutter || nextColumn != this._columns.length) ? this._gutterX : 0,
-              x = this.conf.direction == 'ltr' ? startX + ((colWidth + childrenGutter) * (nextColumn)) : startX - ((colWidth + childrenGutter) * (nextColumn)) - colWidth,
-              y = this._columns[nextColumn];
+                childrenGutter = (this.conf.surroundingGutter || nextColumn != this._columns.length) ? this._gutterX : 0,
+                x = this.conf.direction == 'ltr' ? startX + ((colWidth + childrenGutter) * (nextColumn)) : startX - ((colWidth + childrenGutter) * (nextColumn)) - colWidth,
+                y = this._columns[nextColumn];
             children[index].style.transform = 'translate3d(' + (this._rtl ? -Math.round(x) : Math.round(x)) + 'px,' + Math.round(y) + 'px,0)';
             this._columns[nextColumn] += this._sizes[index] + (this._count > 1 ? this.conf.gutterY : this.conf.ultimateGutter)
         }
@@ -1026,7 +1012,7 @@ class RotateAside extends HTMLElement {
         super();
 
         this.elements = this.querySelectorAll('.rotate-aside-item');
-        this.screensNumber = document.body.offsetHeight/window.innerHeight;
+        this.screensNumber = document.body.offsetHeight / window.innerHeight;
         this.startSide = Math.round(Math.random());
 
         const defaultSettings = {
@@ -1041,14 +1027,14 @@ class RotateAside extends HTMLElement {
 
         if (this.dataset.settings) {
             const dataSettings = JSON.parse(this.dataset.settings);
-            this.settings = {...defaultSettings, ...dataSettings}
+            this.settings = { ...defaultSettings, ...dataSettings }
         }
 
         this.itemWidth = this.settings.itemWidth;
 
         this.elements.forEach((elem, i) => {
-            elem.style.width = this.settings.itemWidthRandom ? this.getRandomNumber(this.itemWidth,.3) +'px' : this.itemWidth +'px';
-            this.setPosition(elem,i);
+            elem.style.width = this.settings.itemWidthRandom ? this.getRandomNumber(this.itemWidth, .3) + 'px' : this.itemWidth + 'px';
+            this.setPosition(elem, i);
             elem.dataset.speed = Math.random() * 10 + 30;
             elem.style.opacity = '1'
         })
@@ -1066,7 +1052,7 @@ class RotateAside extends HTMLElement {
         const observer = new ResizeObserver(entries => {
             for (const entry of entries) {
                 const newHeight = entry.contentRect.height;
-                this.screensNumber = newHeight/window.innerHeight;
+                this.screensNumber = newHeight / window.innerHeight;
                 this.dublicateItems();
             }
         })
@@ -1074,7 +1060,7 @@ class RotateAside extends HTMLElement {
     }
 
     setPosition(elem, i) {
-        let percentageTop = i * 100 / this.settings.itemsPerScreen + 15 +  Math.random() * 5;
+        let percentageTop = i * 100 / this.settings.itemsPerScreen + 15 + Math.random() * 5;
         const persentageSide = Math.random() * 3;
         elem.style.top = `${percentageTop}%`;
         elem.dataset.top = percentageTop;
@@ -1100,7 +1086,7 @@ class RotateAside extends HTMLElement {
                 const elem = this.elements[i];
                 elem.style.left = '';
                 elem.style.right = '';
-                this.setPosition(elem,i)
+                this.setPosition(elem, i)
             }
         }
     }
@@ -1136,24 +1122,24 @@ class FaqSection extends HTMLElement {
         })
 
         this.querySelectorAll('.js-tab-faq a').forEach(
-          (link) => link.addEventListener('click', (e) => {
-              let li = link.closest('li'),
-                parent = li.closest('.js-tab-faq'),
-                tab_id = link.dataset.tab;
-              if (this.searchInput) {
-                  this.searchInput.value = '';
-                  this.resetSearch();
-              }
-              this.querySelectorAll('.faq-tab-content').forEach(
-                (tab) => tab.classList.remove('opened')
-              )
-              this.querySelector(`#${tab_id}`).classList.add('opened');
-              parent.querySelectorAll('li').forEach(
-                (li) => li.classList.remove('is-current')
-              )
-              li.classList.add('is-current');
-              e.preventDefault();
-          })
+            (link) => link.addEventListener('click', (e) => {
+                let li = link.closest('li'),
+                    parent = li.closest('.js-tab-faq'),
+                    tab_id = link.dataset.tab;
+                if (this.searchInput) {
+                    this.searchInput.value = '';
+                    this.resetSearch();
+                }
+                this.querySelectorAll('.faq-tab-content').forEach(
+                    (tab) => tab.classList.remove('opened')
+                )
+                this.querySelector(`#${tab_id}`).classList.add('opened');
+                parent.querySelectorAll('li').forEach(
+                    (li) => li.classList.remove('is-current')
+                )
+                li.classList.add('is-current');
+                e.preventDefault();
+            })
         )
     }
 
@@ -1168,13 +1154,13 @@ class FaqSection extends HTMLElement {
 
     searchIt() {
         const input = this.querySelector('.js-faq-input'),
-          infoSuccess = this.querySelector('.form-message--success'),
-          infoError = this.querySelector('.form-message--error'),
-          searchResult = this.querySelector('.search-result'),
-          searchResultAccordion = this.querySelector('.search-result-accordion form'),
-          tabsContent = this.querySelector('.tabs-content'),
-          tabs = this.querySelectorAll('.faq-tab-content'),
-          item = tabsContent.querySelectorAll('.faq-item');
+            infoSuccess = this.querySelector('.form-message--success'),
+            infoError = this.querySelector('.form-message--error'),
+            searchResult = this.querySelector('.search-result'),
+            searchResultAccordion = this.querySelector('.search-result-accordion form'),
+            tabsContent = this.querySelector('.tabs-content'),
+            tabs = this.querySelectorAll('.faq-tab-content'),
+            item = tabsContent.querySelectorAll('.faq-item');
         if (searchResult) searchResult.innerHTML = '';
         if (searchResultAccordion) searchResultAccordion.innerHTML = '';
         let v = input.value;
@@ -1183,7 +1169,7 @@ class FaqSection extends HTMLElement {
             return false;
         }
         let text = tabsContent.innerText,
-          letterCount = this.countInstances(text.toLowerCase(), v.toLowerCase());
+            letterCount = this.countInstances(text.toLowerCase(), v.toLowerCase());
         if (letterCount > 0) {
             if (searchResult) searchResult.classList.remove('d-none');
             if (searchResultAccordion) searchResultAccordion.closest('.search-result-accordion')?.classList.remove('d-none');
@@ -1205,7 +1191,7 @@ class FaqSection extends HTMLElement {
                     if (searchResultAccordion) {
                         let itemText = item.outerHTML;
                         const pattern = /(id|for)="([^"]+)"/g;
-                        itemText = itemText.replace(pattern, function(match, p1, p2) {
+                        itemText = itemText.replace(pattern, function (match, p1, p2) {
                             return p1 + '="' + p2 + '_search"'
                         });
                         searchResultAccordion.innerHTML += itemText;
@@ -1238,7 +1224,7 @@ class CatalogSection extends HTMLElement {
     constructor() {
         super();
         this.searchInput = this.querySelector('.js-catalog-input');
-        if(this.searchInput) {
+        if (this.searchInput) {
             this.searchInput.addEventListener('change', () => {
                 this.searchIt();
             })
@@ -1261,9 +1247,9 @@ class CatalogSection extends HTMLElement {
     }
     resetSearch() {
         let s = this.querySelector('.form-message--success'),
-          e = this.querySelector('.form-message--error'),
-          r = this.querySelector('.search-result'),
-          c = this.querySelector('.tabs-content');
+            e = this.querySelector('.form-message--error'),
+            r = this.querySelector('.search-result'),
+            c = this.querySelector('.tabs-content');
         e?.classList.add('d-none');
         s?.classList.add('d-none');
         r?.classList.add('d-none');
@@ -1273,26 +1259,26 @@ class CatalogSection extends HTMLElement {
     }
     searchIt() {
         const input = this.querySelector('.js-catalog-input'),
-          infoSuccess = this.querySelector('.form-message--success'),
-          infoError = this.querySelector('.form-message--error'),
-          searchResult = this.querySelector('.search-result'),
-          tabsContent = this.querySelector('.tabs-content'),
-          item = tabsContent.querySelectorAll('.col');
+            infoSuccess = this.querySelector('.form-message--success'),
+            infoError = this.querySelector('.form-message--error'),
+            searchResult = this.querySelector('.search-result'),
+            tabsContent = this.querySelector('.tabs-content'),
+            item = tabsContent.querySelectorAll('.col');
         searchResult.innerHTML = '';
         let v = input.value;
-        if(v.length < 2) {
+        if (v.length < 2) {
             this.resetSearch(this)
             return false;
         }
         let text = tabsContent.innerText,
-          letterCount = this.countInstances(text.toLowerCase(), v.toLowerCase());
-        if (letterCount > 0){
+            letterCount = this.countInstances(text.toLowerCase(), v.toLowerCase());
+        if (letterCount > 0) {
             searchResult.classList.remove('d-none');
             tabsContent.classList.add('d-none');
             infoSuccess.querySelector('b').innerHTML = letterCount;
             infoSuccess.classList.remove('d-none');
             infoError.classList.add('d-none');
-            if(letterCount > 1){
+            if (letterCount > 1) {
                 infoSuccess.classList.add('has-plural');
                 infoSuccess.classList.remove('has-single');
             } else {
@@ -1301,7 +1287,7 @@ class CatalogSection extends HTMLElement {
             }
             item.forEach((item) => {
                 let text = item.innerText.toLowerCase();
-                if (text.includes(v.toLowerCase())){
+                if (text.includes(v.toLowerCase())) {
                     searchResult.innerHTML += item.outerHTML;
                 }
             });
@@ -1325,11 +1311,11 @@ class CatalogSection extends HTMLElement {
             if (target.querySelector('.submenu-list-wrap')) {
                 let elm = target.querySelector('.mmenu-submenu') || target.querySelector('.submenu-list-wrap');
                 if (!elm) return;
-                if(target.closest('.modal-wrap')) {
+                if (target.closest('.modal-wrap')) {
                     let wrapper = target.closest('.mmenu-submenu');
                     let offset = wrapper.clientHeight - target.offsetTop - elm.clientHeight;
                     if (offset < 0) {
-                        if(wrapper.clientHeight*.6 < elm.clientHeight) {
+                        if (wrapper.clientHeight * .6 < elm.clientHeight) {
                             target.classList.add('two-columns');
                             offset = wrapper.clientHeight - target.offsetTop - elm.clientHeight;
                             if (offset < 0) elm.style.marginTop = offset + 'px';
@@ -1337,8 +1323,8 @@ class CatalogSection extends HTMLElement {
                     }
                 }
                 let elmLeft = elm.getBoundingClientRect().left + pageXOffset,
-                  popupWidth = this.closest('.modal-wrap').offsetWidth,
-                  popupLeft = this.closest('.modal-wrap').getBoundingClientRect().left;
+                    popupWidth = this.closest('.modal-wrap').offsetWidth,
+                    popupLeft = this.closest('.modal-wrap').getBoundingClientRect().left;
                 let isXvisible = document.body.classList.contains('rtl-mode') ? elmLeft >= popupLeft : (elmLeft + elm.offsetWidth) <= (popupWidth + popupLeft);
                 if (!isXvisible) {
                     target.classList.add('to-right');
@@ -1351,7 +1337,7 @@ class CatalogSection extends HTMLElement {
     onSubmenuMouseLeave(e) {
         if (window.matchMedia(`(min-width:1025px)`).matches) {
             let target = e.currentTarget;
-            target.classList.remove('hovered','to-right','two-columns');
+            target.classList.remove('hovered', 'to-right', 'two-columns');
             let elm = target.querySelector('.mmenu-submenu') || target.querySelector('.submenu-list-wrap');
             if (!elm) return;
             elm.style.marginTop = '';
@@ -1361,7 +1347,7 @@ class CatalogSection extends HTMLElement {
         if (window.matchMedia(`(max-width:1024px)`).matches) {
             e.preventDefault();
             let target = e.currentTarget,
-              parent = target.closest('li');
+                parent = target.closest('li');
             if (parent) {
                 let submenu = parent.querySelector('.submenu-list-wrap');
                 if (submenu) submenu.style.setProperty('--maxheight', submenu.scrollHeight + 'px');
@@ -1479,7 +1465,7 @@ class InstagramFeed extends HTMLElement {
     groupItems() {
         const items = this.querySelectorAll('.instagram-item');
         let newGrid = document.createElement('div'),
-          wrapper = null;
+            wrapper = null;
 
         for (let i = 0; i < items.length; i++) {
             if (i % 3 === 0) {
@@ -1528,15 +1514,15 @@ class MenuCategories extends HTMLElement {
     onSubmenuMouseEnter(e) {
         const target = e.currentTarget;
         const link = target.querySelector('a'),
-          previewImage = link.dataset.preview;
+            previewImage = link.dataset.preview;
         if (target.querySelector('.submenu-list-wrap--image') && previewImage && !link.dataset.loaded) {
             preloadImage(previewImage)
-              .then(img => {
-                  target.querySelector('.submenu-list-wrap--image .image-container')?.append(img);
-                  target.querySelector('[data-load]')?.setAttribute('data-load', 'loaded');
-                  link.dataset.loaded = true
-              })
-              .catch(error => console.error('error', error));
+                .then(img => {
+                    target.querySelector('.submenu-list-wrap--image .image-container')?.append(img);
+                    target.querySelector('[data-load]')?.setAttribute('data-load', 'loaded');
+                    link.dataset.loaded = true
+                })
+                .catch(error => console.error('error', error));
         }
     }
 }
@@ -1664,27 +1650,27 @@ class TabSlider extends HTMLElement {
         if (!target.classList.contains('ajax-loaded') && !target.hasAttribute('data-empty')) {
             let urlAjax = target.getAttribute('href');
             fetch(urlAjax).then((response) => response.text())
-              .then((data) => {
-                  const shopifySection = new DOMParser().parseFromString(data, 'text/html').querySelector('.shopify-section'),
-                    innerData = shopifySection ? shopifySection.innerHTML : data;
-                  if (currentTab) currentTab.querySelector('.swiper-wrapper').innerHTML = innerData;
-                  target.classList.add('ajax-loaded');
-                  setTimeout(() => {
-                      const prdCarousel = currentTab.querySelector('swiper-carousel');
-                      if (prdCarousel) {
-                          prdCarousel.destroy();
-                          prdCarousel.init();
-                      }
-                      currentTab.querySelector('[data-load]').setAttribute('data-load', 'loaded');
-                      this.setTabWrapHeight(true);
-                  }, 1000)
-              })
-              .catch((error) => {
-                  console.error('error', error);
-                  setTimeout(() => {
-                      this.fancybox?.close()
-                  }, 2000)
-              })
+                .then((data) => {
+                    const shopifySection = new DOMParser().parseFromString(data, 'text/html').querySelector('.shopify-section'),
+                        innerData = shopifySection ? shopifySection.innerHTML : data;
+                    if (currentTab) currentTab.querySelector('.swiper-wrapper').innerHTML = innerData;
+                    target.classList.add('ajax-loaded');
+                    setTimeout(() => {
+                        const prdCarousel = currentTab.querySelector('swiper-carousel');
+                        if (prdCarousel) {
+                            prdCarousel.destroy();
+                            prdCarousel.init();
+                        }
+                        currentTab.querySelector('[data-load]').setAttribute('data-load', 'loaded');
+                        this.setTabWrapHeight(true);
+                    }, 1000)
+                })
+                .catch((error) => {
+                    console.error('error', error);
+                    setTimeout(() => {
+                        this.fancybox?.close()
+                    }, 2000)
+                })
         } else if (currentTab && target.hasAttribute('data-empty') && currentTab.querySelector('[data-load]').getAttribute('data-load') != 'loaded') {
             setTimeout(() => {
                 const prdCarousel = currentTab.querySelector('swiper-carousel');
@@ -1708,9 +1694,9 @@ class TabSlider extends HTMLElement {
     shiftSelector() {
         if (this.trackAfter) {
             const activeItem = this.tabs.querySelector('.active'),
-              tabsParent = this.querySelector('.tabs-wrap-track');
+                tabsParent = this.querySelector('.tabs-wrap-track');
             let correctionLeft = (activeItem == tabsParent.firstElementChild) ? -1 : (activeItem == tabsParent.lastElementChild) ? 2 : 0,
-              correctionWidth = (this.tab.length == 1) ? 4 : 1;
+                correctionWidth = (this.tab.length == 1) ? 4 : 1;
             if (document.body.classList.contains('rtl-mode')) correctionLeft = -correctionLeft;
             this.trackAfter.style.left = activeItem.offsetLeft + correctionLeft + 'px';
             this.trackAfter.style.width = activeItem.clientWidth + correctionWidth + 'px';
@@ -1758,7 +1744,7 @@ class ImagesAccordion extends HTMLElement {
         });
         let isTouchDevice = 'ontouchstart' in window || navigator.msMaxTouchPoints;
         if (isTouchDevice && window.matchMedia(`(max-width:1024px)`).matches) {
-            this.items.forEach(link => link.addEventListener('click',  this.handlerClick));
+            this.items.forEach(link => link.addEventListener('click', this.handlerClick));
         } else {
             this.items.forEach(link => link.addEventListener('mouseenter', this.handlerHover));
         }
@@ -1770,13 +1756,13 @@ class ImagesAccordion extends HTMLElement {
     }
     setStyle(item) {
         const title = item.querySelector('.col-category-name');
-        setStyle(item, {'flex': 'auto'});
-        setStyle(title, {'height': 'auto'});
-        const height =  item.offsetHeight,
-          titleHeight = title ? title.offsetHeight : 0;
-        setStyle(item, {'flex': ''});
-        setStyle(title, {'height': ''});
-        item.style.setProperty('--height',  Math.max(height, titleHeight) + 'px');
+        setStyle(item, { 'flex': 'auto' });
+        setStyle(title, { 'height': 'auto' });
+        const height = item.offsetHeight,
+            titleHeight = title ? title.offsetHeight : 0;
+        setStyle(item, { 'flex': '' });
+        setStyle(title, { 'height': '' });
+        item.style.setProperty('--height', Math.max(height, titleHeight) + 'px');
         item.style.setProperty('--title-height', titleHeight + 'px');
     }
     onImageEnter(e) {
@@ -1794,7 +1780,7 @@ class ImagesAccordion extends HTMLElement {
     onImageClick(e) {
         e.preventDefault();
         const target = e.currentTarget,
-          wrapper = target.closest('.col');
+            wrapper = target.closest('.col');
         if (target && wrapper) {
             if (wrapper.classList.contains('is-opened')) {
                 window.location.href = target.href;
@@ -1832,21 +1818,21 @@ class FrequentlyBoughtTogether extends HTMLElement {
             const urlAjax = this.dataset.ajax;
             if (!ajaxContainer.querySelector('[data-load]')) ajaxContainer.innerHTML = this.loaderTemplate;
             fetch(urlAjax).then((response) => response.text())
-              .then((data) => {
-                  ajaxContainer.querySelector('[data-load]')?.remove();
-                  ajaxContainer.innerHTML = data;
-                  const h = this.scrollHeight;
-                  this.style.transitionDuration = h / 1200 + 's';
-                  this.style.height = h + 'px';
-                  setTimeout(() => {
-                      this.classList.remove('ajax-loading');
-                      this.classList.add('ajax-loaded')
-                  }, 1000)
-              })
-              .catch((error) => {
-                  console.error('error', error);
-                  this.classList.remove('ajax-loading')
-              })
+                .then((data) => {
+                    ajaxContainer.querySelector('[data-load]')?.remove();
+                    ajaxContainer.innerHTML = data;
+                    const h = this.scrollHeight;
+                    this.style.transitionDuration = h / 1200 + 's';
+                    this.style.height = h + 'px';
+                    setTimeout(() => {
+                        this.classList.remove('ajax-loading');
+                        this.classList.add('ajax-loaded')
+                    }, 1000)
+                })
+                .catch((error) => {
+                    console.error('error', error);
+                    this.classList.remove('ajax-loading')
+                })
         }
     }
 }
@@ -1865,7 +1851,7 @@ class ProductsCardCompact extends HTMLElement {
 
     productWidth() {
         let wrap = this.querySelector('.products-card-compact'),
-          productWidth = this.hasAttribute('data-grid') ? (this.offsetWidth / 2 - 10) : this.querySelector('.minicart-prd').offsetWidth;
+            productWidth = this.hasAttribute('data-grid') ? (this.offsetWidth / 2 - 10) : this.querySelector('.minicart-prd').offsetWidth;
         productWidth < 265 ? wrap.classList.add('bw--listing') : wrap.classList.remove('bw--listing');
     }
 }
@@ -2003,7 +1989,7 @@ class ButtonAnimated extends HTMLElement {
 
     onesAnimate() {
         let btn = this.btn,
-          styleClass = 'btn--animated-' + this.dataset.style;
+            styleClass = 'btn--animated-' + this.dataset.style;
         this.btn.classList.add(styleClass);
         setTimeout(() => {
             btn.classList.remove(styleClass)
@@ -2012,8 +1998,8 @@ class ButtonAnimated extends HTMLElement {
 
     start(delay) {
         let btn = this.btn,
-          styleClass = 'btn--animated-' + this.dataset.style,
-          that = this;
+            styleClass = 'btn--animated-' + this.dataset.style,
+            that = this;
         that.animatedButton = setTimeout(function toggleClass() {
             btn.classList.add(styleClass);
             setTimeout(() => {
@@ -2127,7 +2113,7 @@ class StickySections extends HTMLElement {
 customElements.define('sticky-sections', StickySections)
 
 let productWidthCache = {},
-  productWidthCacheHor = {};
+    productWidthCacheHor = {};
 
 class ProductCard extends HTMLElement {
     constructor() {
@@ -2144,7 +2130,7 @@ class ProductCard extends HTMLElement {
                 if (this.querySelector('.scroll-content')) {
                     this.dataScrollbar.innerHTML = this.querySelector('.scroll-content').innerHTML;
                 }
-                this.scrollbar = Scrollbar.init(this.dataScrollbar, {alwaysShowTracks: true})
+                this.scrollbar = Scrollbar.init(this.dataScrollbar, { alwaysShowTracks: true })
             }
             this.addEventListener('mouseenter', () => {
                 this.enableHover();
@@ -2229,20 +2215,20 @@ class ProductCard extends HTMLElement {
             const urlAjax = this.dataset.ajax;
             if (!ajaxContainer.querySelector('[data-load]')) ajaxContainer.innerHTML = this.loaderTemplate;
             fetch(urlAjax).then((response) => response.text())
-              .then((data) => {
-                  ajaxContainer.querySelector('[data-load]')?.remove();
-                  ajaxContainer.innerHTML = data;
-                  ajaxContainer.replaceWith(...ajaxContainer.childNodes);
-                  const swatches = this.querySelector('.shopify-section');
-                  if (swatches) swatches.style.height = swatches.scrollHeight + 'px';
-                  this.classList.remove('ajax-loading');
-                  this.classList.add('ajax-loaded');
-                  this.disableSelect();
-              })
-              .catch((error) => {
-                  console.error('error', error);
-                  this.classList.remove('ajax-loading')
-              })
+                .then((data) => {
+                    ajaxContainer.querySelector('[data-load]')?.remove();
+                    ajaxContainer.innerHTML = data;
+                    ajaxContainer.replaceWith(...ajaxContainer.childNodes);
+                    const swatches = this.querySelector('.shopify-section');
+                    if (swatches) swatches.style.height = swatches.scrollHeight + 'px';
+                    this.classList.remove('ajax-loading');
+                    this.classList.add('ajax-loaded');
+                    this.disableSelect();
+                })
+                .catch((error) => {
+                    console.error('error', error);
+                    this.classList.remove('ajax-loading')
+                })
         }
     }
 
@@ -2256,7 +2242,7 @@ class ProductCard extends HTMLElement {
                 input.addEventListener('mouseleave', () => {
                     this.selectBlockTimer = setTimeout(() => {
                         this.enableHover();
-                        if(!this.matches(':hover')) {
+                        if (!this.matches(':hover')) {
                             this.onProductUnHover()
                         }
                     }, 100)
@@ -2291,9 +2277,9 @@ class ProductCard extends HTMLElement {
             this.classList.add('hovered')
         } else {
             const h = this.getBoundingClientRect().height,
-              hn = this.querySelector('.prd-hover .prd-name') ? this.querySelector('.prd-hover .prd-name').getBoundingClientRect().height : 0,
-              ha = this.querySelector('.prd-hover .prd-action') ? this.querySelector('.prd-hover .prd-action').getBoundingClientRect().height : 0,
-              hMax = `${h - hn - ha - 50}px`;
+                hn = this.querySelector('.prd-hover .prd-name') ? this.querySelector('.prd-hover .prd-name').getBoundingClientRect().height : 0,
+                ha = this.querySelector('.prd-hover .prd-action') ? this.querySelector('.prd-hover .prd-action').getBoundingClientRect().height : 0,
+                hMax = `${h - hn - ha - 50}px`;
             this.style.setProperty('height', `${h}px`);
             this.style.setProperty('--maxheight', hMax);
             this.classList.add('hovered');
@@ -2326,19 +2312,19 @@ class ProductCard extends HTMLElement {
             for (let i = 0; i < this.preloadedImages.length; i++) {
                 let src = this.preloadedImages[i];
                 preloadImage(src)
-                  .then(img => {
-                      this.colors.append(img);
-                      this.preloadedImages.push(src);
-                      img.classList.add('js-prd-img');
-                  })
-                  .catch(error => console.error("error", error));
+                    .then(img => {
+                        this.colors.append(img);
+                        this.preloadedImages.push(src);
+                        img.classList.add('js-prd-img');
+                    })
+                    .catch(error => console.error("error", error));
             }
         }
     }
 
     productWidth() {
         let w = this.offsetWidth,
-          wClass;
+            wClass;
         if (w == 0) return;
         this.style.setProperty('height', '');
         this.querySelector('.shopify-section')?.style.setProperty('height', 'auto');
@@ -2368,15 +2354,15 @@ class ProductCard extends HTMLElement {
     updateImage(id) {
         if (!this.productJson) this.parseJson();
         const variants = this.productJson,
-          currentVariant = variants.find(variant => variant.id == id);
+            currentVariant = variants.find(variant => variant.id == id);
         const url = currentVariant.featured_image.src;
         const currentURL = this.querySelector(`.prd-image > .js-prd-img:nth-child(${this.querySelectorAll('.prd-image > .js-prd-img').length})`).src;
         if (url.split("&width=")[0] == currentURL.split("&width=")[0]) return;
         this.image = this.querySelector('.prd-image');
         this.imageColors = this.colors.querySelectorAll('img');
         let preloaded = false,
-          newImg,
-          preloadedImg = this.colors.querySelectorAll('img');
+            newImg,
+            preloadedImg = this.colors.querySelectorAll('img');
         for (let i = 0; i < preloadedImg.length; ++i) {
             if (preloadedImg[i].src.split('&width=')[0] == url.split('&width=')[0]) {
                 preloaded = true;
@@ -2391,13 +2377,13 @@ class ProductCard extends HTMLElement {
             if (!preloaded) {
                 this.querySelector('[data-load]').setAttribute('data-load', 'loading');
                 loadImage(url)
-                  .then(newImg => {
-                      newImg.classList.add('js-prd-img');
-                      this.querySelector('[data-load]').setAttribute('data-load', 'loaded');
-                      currentImg.parentNode?.insertBefore(newImg, currentImg.nextSibling);
-                      this.animateImage(currentImg, newImg, false);
-                  })
-                  .catch(error => console.error(error));
+                    .then(newImg => {
+                        newImg.classList.add('js-prd-img');
+                        this.querySelector('[data-load]').setAttribute('data-load', 'loaded');
+                        currentImg.parentNode?.insertBefore(newImg, currentImg.nextSibling);
+                        this.animateImage(currentImg, newImg, false);
+                    })
+                    .catch(error => console.error(error));
             } else {
                 currentImg.parentNode?.insertBefore(newImg, currentImg.nextSibling);
                 this.animateImage(currentImg, newImg, false)
@@ -2416,19 +2402,19 @@ class ProductCard extends HTMLElement {
                 this.cloneImage();
                 this.querySelector('[data-load]')?.setAttribute('data-load', 'loading');
                 loadImage(url)
-                  .then(newImg => {
-                      newImg.classList.add('js-prd-img');
-                      this.processing = false;
-                      return newImg;
-                  })
-                  .then(newImg => {
-                      if (!this.processing) {
-                          currentImg.parentNode?.insertBefore(newImg, currentImg.nextSibling);
-                          this.animateImage(currentImg, newImg, true);
-                      }
-                      this.querySelector('[data-load]')?.setAttribute('data-load', 'loaded');
-                  })
-                  .catch(error => console.error(error));
+                    .then(newImg => {
+                        newImg.classList.add('js-prd-img');
+                        this.processing = false;
+                        return newImg;
+                    })
+                    .then(newImg => {
+                        if (!this.processing) {
+                            currentImg.parentNode?.insertBefore(newImg, currentImg.nextSibling);
+                            this.animateImage(currentImg, newImg, true);
+                        }
+                        this.querySelector('[data-load]')?.setAttribute('data-load', 'loaded');
+                    })
+                    .catch(error => console.error(error));
             } else {
                 this.querySelectorAll('.prd-image > .js-prd-img').length > 1 && this.querySelector('.prd-image > .js-prd-img:nth-child(2)')?.remove();
                 currentImg.parentNode?.insertBefore(newImg, currentImg.nextSibling);
@@ -2491,7 +2477,7 @@ class LookbookButton extends HTMLElement {
     constructor() {
         super();
         let url = this.dataset.ajax,
-          loader = this.querySelector('[data-load]');
+            loader = this.querySelector('[data-load]');
         tippy(this.querySelector('.lookbook-popup-btn'), {
             content: '',
             theme: 'loading',
@@ -2508,7 +2494,7 @@ class LookbookButton extends HTMLElement {
                 instance.error = null;
             },
             onShow(instance) {
-                tippy.hideAll({exclude: instance});
+                tippy.hideAll({ exclude: instance });
                 if (instance.isFetching || instance.error) {
                     instance.popper.querySelector('wishlist-button')?.render();
                     const tippyNode = instance.popper.querySelector('wishlist-button>a');
@@ -2517,25 +2503,25 @@ class LookbookButton extends HTMLElement {
                     loader.setAttribute('data-load', 'loading');
                     instance.isFetching = true;
                     fetch(url)
-                      .then((response) => response.text())
-                      .then((data) => {
-                          const shopifySection = new DOMParser().parseFromString(data, 'text/html').querySelector('.shopify-section'),
-                            innerText = shopifySection ? shopifySection.innerHTML : data;
-                          instance.setContent(innerText);
-                          instance.hide();
-                          instance.setProps({
-                              theme: 'lookbook',
-                          });
-                          instance.show();
-                          instance.popper.querySelector('wishlist-button')?.render();
-                      })
-                      .catch((error) => {
-                          instance.error = error;
-                          instance.setContent(`Lookbook request failed. ${error}`);
-                      })
-                      .finally(() => {
-                          loader.setAttribute('data-load', 'loaded')
-                      })
+                        .then((response) => response.text())
+                        .then((data) => {
+                            const shopifySection = new DOMParser().parseFromString(data, 'text/html').querySelector('.shopify-section'),
+                                innerText = shopifySection ? shopifySection.innerHTML : data;
+                            instance.setContent(innerText);
+                            instance.hide();
+                            instance.setProps({
+                                theme: 'lookbook',
+                            });
+                            instance.show();
+                            instance.popper.querySelector('wishlist-button')?.render();
+                        })
+                        .catch((error) => {
+                            instance.error = error;
+                            instance.setContent(`Lookbook request failed. ${error}`);
+                        })
+                        .finally(() => {
+                            loader.setAttribute('data-load', 'loaded')
+                        })
                 }
             }
         })
@@ -2549,7 +2535,7 @@ class CategoryChangeImage extends HTMLElement {
         super();
         let startImage = this.querySelector('[data-image-start]');
         this.querySelectorAll('[data-image]').forEach(
-          button => button.addEventListener('mouseenter', this.onLinkHover.bind(this))
+            button => button.addEventListener('mouseenter', this.onLinkHover.bind(this))
         )
         if (startImage && startImage.dataset.image) {
             this.lastURL = startImage.dataset.image;
@@ -2576,19 +2562,19 @@ class CategoryChangeImage extends HTMLElement {
         const currentImg = this.querySelector('.image-container img');
         this.querySelector('[data-load]')?.setAttribute('data-load', 'loading');
         loadImage(url)
-          .then(newImg => {
-              newImg.classList.add('w-100');
-              this.processing = false;
-              return newImg;
-          })
-          .then(newImg => {
-              if (!this.processing) {
-                  currentImg.parentNode?.insertBefore(newImg, currentImg.nextSibling);
-                  this.animateImage(currentImg, newImg, true);
-              }
-              this.querySelector('[data-load]')?.setAttribute('data-load', 'loaded');
-          })
-          .catch(error => console.error(error));
+            .then(newImg => {
+                newImg.classList.add('w-100');
+                this.processing = false;
+                return newImg;
+            })
+            .then(newImg => {
+                if (!this.processing) {
+                    currentImg.parentNode?.insertBefore(newImg, currentImg.nextSibling);
+                    this.animateImage(currentImg, newImg, true);
+                }
+                this.querySelector('[data-load]')?.setAttribute('data-load', 'loaded');
+            })
+            .catch(error => console.error(error));
     }
 
     animateImage(firstImage, lastImage, remove) {
@@ -2658,11 +2644,11 @@ class DeferredMedia extends HTMLElement {
     stopAllVideos() {
         if (this.closest('.bnr-img')) return;
         document.querySelectorAll('deferred-media').forEach(
-          (video) => {
-              if (video.querySelector('.is-playing') && !video.closest('.bnr-img')) {
-                  video.pauseVideo()
-              }
-          }
+            (video) => {
+                if (video.querySelector('.is-playing') && !video.closest('.bnr-img')) {
+                    video.pauseVideo()
+                }
+            }
         )
     }
 
@@ -2833,7 +2819,7 @@ class PriceSlider extends HTMLElement {
             this.minInputCustom.addEventListener('change', () => {
                 this.minInputCustomEvent()
             });
-            this.minInputCustom.addEventListener('keyup', ({key}) => {
+            this.minInputCustom.addEventListener('keyup', ({ key }) => {
                 this.minInputCustomEvent(key)
             });
             this.maxInputCustom.addEventListener('input', () => {
@@ -2848,7 +2834,7 @@ class PriceSlider extends HTMLElement {
             this.maxInputCustom.addEventListener('change', () => {
                 this.maxInputCustomEvent()
             });
-            this.maxInputCustom.addEventListener('keyup', ({key}) => {
+            this.maxInputCustom.addEventListener('keyup', ({ key }) => {
                 this.maxInputCustomEvent(key)
             })
         }
@@ -3068,11 +3054,11 @@ class ScrollItems extends HTMLElement {
 
     setHeight() {
         let parentHeight = 20,
-          max = Math.min(this.dataset.count, this.items.length);
+            max = Math.min(this.dataset.count, this.items.length);
         for (let i = 0; i < max; i++) {
             const item = this.items[i],
-              style = item.currentStyle || window.getComputedStyle(item),
-              margin = (i + 1 == max) ? 0 : parseInt(style.marginBottom, 10);
+                style = item.currentStyle || window.getComputedStyle(item),
+                margin = (i + 1 == max) ? 0 : parseInt(style.marginBottom, 10);
             parentHeight += item.offsetHeight + margin;
         }
         this.style.setProperty('--scroll-height', parentHeight + 'px');
@@ -3090,9 +3076,9 @@ class QuantityInput extends HTMLElement {
     constructor() {
         super();
         this.input = this.querySelector('input');
-        this.changeEvent = new Event('change', {bubbles: true})
+        this.changeEvent = new Event('change', { bubbles: true })
         this.querySelectorAll('button').forEach(
-          button => button.addEventListener('click', this.onButtonClick.bind(this))
+            button => button.addEventListener('click', this.onButtonClick.bind(this))
         );
         this.input.addEventListener('paste', (e) => {
             e.preventDefault()
@@ -3120,7 +3106,7 @@ class QuantityInput extends HTMLElement {
 
     updateStatus(val) {
         const value = parseFloat(val),
-          persent = this.max ? value * 100 / this.max : 100;
+            persent = this.max ? value * 100 / this.max : 100;
         let statusClass = 'qs--start';
 
         if (this.max) {
@@ -3166,8 +3152,8 @@ class NumberCounter extends HTMLElement {
 
     init() {
         const start = 0,
-          endNumber = this.getAttribute('data-count'),
-          duration = Math.min(this.getAttribute('data-count'), 2000) + 3000;
+            endNumber = this.getAttribute('data-count'),
+            duration = Math.min(this.getAttribute('data-count'), 2000) + 3000;
         this.classList.add('counter-initialized');
         let startTimestamp = null;
         const step = (timestamp) => {
@@ -3222,7 +3208,7 @@ class FlowType extends HTMLElement {
     init() {
         if (this.banner) {
             let data = (window.matchMedia(`(max-width:767px)`).matches && this.banner.getAttribute('data-fontratio-mobile')) ? this.banner.getAttribute('data-fontratio-mobile') : this.banner.getAttribute('data-fontratio'),
-              fontratio = Math.round(data * 100) / 100;
+                fontratio = Math.round(data * 100) / 100;
             if (fontratio > 0) {
                 this._changes(fontratio)
             }
@@ -3252,13 +3238,13 @@ class FlowType extends HTMLElement {
         this.button && this.button.classList.remove('d-none');
         new Promise(resolve => {
             let elw = this.banner.offsetWidth,
-              cacheKey = elw + '_' + fontRatio,
-              fontSize;
+                cacheKey = elw + '_' + fontRatio,
+                fontSize;
             if (cacheKey in flowtypeCache) {
                 fontSize = flowtypeCache[cacheKey];
             } else {
                 let width = elw > this.options.maximum ? this.options.maximum : elw < this.options.minimum ? this.options.minimum : elw,
-                  fontBase = width / fontRatio;
+                    fontBase = width / fontRatio;
                 fontSize = fontBase > this.options.maxFont ? this.options.maxFont : fontBase < this.options.minFont ? this.options.minFont : fontBase;
                 flowtypeCache[elw + '_' + fontRatio] = fontSize;
 
@@ -3293,7 +3279,7 @@ class ImagesCompare extends HTMLElement {
         };
         const imageCompareElement = this.querySelector('.image-compare');
         const additionalOptions = JSON.parse(this.getAttribute('data-options'));
-        new ImageCompare(imageCompareElement, { ...defaultOptions, ...additionalOptions}).mount();
+        new ImageCompare(imageCompareElement, { ...defaultOptions, ...additionalOptions }).mount();
     }
 }
 customElements.define('image-compare', ImagesCompare);
@@ -3404,7 +3390,7 @@ class MainSlider extends HTMLElement {
             watchSlidesVisibility: true,
             autoplay: this.singleSlide ? false : this.autoplay,
             loop: this.singleSlide ? false : true,
-            loopAdditionalSlides: this.boxed ? 1 :0,
+            loopAdditionalSlides: this.boxed ? 1 : 0,
             speed: this.boxed ? 600 : 300,
             'pagination': {
                 'el': this.querySelector('.swiper-pagination'),
@@ -3557,8 +3543,8 @@ class SwiperCarousel extends HTMLElement {
 
     centerArrows() {
         const arrows = this.querySelector('.swiper-arrows-carousel'),
-          imageContainer = this.querySelector('.image-container'),
-          imageInside = this.querySelector('img');
+            imageContainer = this.querySelector('.image-container'),
+            imageInside = this.querySelector('img');
         if (!arrows || this.querySelector('.prd--style1.prd--style3')) return;
         if (imageContainer || imageInside) {
             let h = imageContainer ? imageContainer.offsetHeight / 2 + 15 : imageInside.offsetHeight / 2;
@@ -3683,7 +3669,7 @@ class SwiperCarousel extends HTMLElement {
 
         }
 
-        Object.assign(options_default,this.options);
+        Object.assign(options_default, this.options);
         this.carousel = new Swiper(this.querySelector('.swiper-container'), this.options);
     }
 
@@ -3735,11 +3721,11 @@ class CustomSwiperNavigation extends HTMLElement {
 
     setSyncronize() {
         const sliderOne = this.closest('.holder').querySelectorAll('swiper-carousel')[0],
-          sliderTwo = this.closest('.holder').querySelectorAll('swiper-carousel')[1];
+            sliderTwo = this.closest('.holder').querySelectorAll('swiper-carousel')[1];
 
         if (sliderOne && sliderTwo) {
             const sliderOneCarousel = sliderOne.carousel,
-              sliderTwoCarousel = sliderTwo.carousel;
+                sliderTwoCarousel = sliderTwo.carousel;
             if (sliderOneCarousel && sliderTwoCarousel) {
                 sliderOneCarousel.controller.control = sliderTwoCarousel;
                 sliderTwoCarousel.controller.control = sliderOneCarousel;
@@ -3835,13 +3821,13 @@ class CountDown extends HTMLElement {
         this.timer = setInterval(() => {
 
             const date = new Date().getTime(),
-              diff = this.endDate - date + 1000,
-              calcDate = {
-                  days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-                  hours: Math.floor(diff % (1000 * 60 * 60 * 24) / (1000 * 60 * 60)),
-                  minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
-                  seconds: Math.floor((diff % (1000 * 60)) / 1000)
-              }
+                diff = this.endDate - date + 1000,
+                calcDate = {
+                    days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+                    hours: Math.floor(diff % (1000 * 60 * 60 * 24) / (1000 * 60 * 60)),
+                    minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+                    seconds: Math.floor((diff % (1000 * 60)) / 1000)
+                }
 
             for (const [key, value] of Object.entries(calcDate)) {
                 if (this.querySelector(`[data-${key}]`)) this.querySelector(`[data-${key}]`).innerHTML = value < 10 ? '0' + value : value
@@ -3871,16 +3857,16 @@ class ImageOnHover extends HTMLElement {
     constructor() {
         super();
         const link = this.querySelector('a'),
-          previewImage = link.dataset.preview;
+            previewImage = link.dataset.preview;
         this.addEventListener('mouseenter', () => {
             if (previewImage && !link.dataset.loaded) {
                 preloadImage(previewImage)
-                  .then(img => {
-                      this.querySelector('.submenu-list-wrap--image .image-container')?.append(img);
-                      this.querySelector('[data-load]')?.setAttribute('data-load', 'loaded');
-                      link.dataset.loaded = true
-                  })
-                  .catch(err => console.error('error', err));
+                    .then(img => {
+                        this.querySelector('.submenu-list-wrap--image .image-container')?.append(img);
+                        this.querySelector('[data-load]')?.setAttribute('data-load', 'loaded');
+                        link.dataset.loaded = true
+                    })
+                    .catch(err => console.error('error', err));
             }
         })
     }
@@ -3895,8 +3881,8 @@ class ReviewsTab extends HTMLElement {
             el.addEventListener('click', function (e) {
                 e.preventDefault();
                 const parent = el.closest('.reviews-tab-row'),
-                  holder = el.closest('.holder'),
-                  swiper = holder.querySelector('swiper-carousel');
+                    holder = el.closest('.holder'),
+                    swiper = holder.querySelector('swiper-carousel');
                 parent.querySelectorAll('span').forEach(el => {
                     el.classList.remove('active')
                 })
@@ -3916,8 +3902,8 @@ class ProductSinglePreviews extends HTMLElement {
             el.addEventListener('click', function (e) {
                 e.preventDefault();
                 const parent = el.closest('.ps-tabs'),
-                  holder = el.closest('.holder'),
-                  swiper = holder.querySelector('.ps-main-gallery swiper-carousel');
+                    holder = el.closest('.holder'),
+                    swiper = holder.querySelector('.ps-main-gallery swiper-carousel');
                 parent.querySelectorAll('.js-ps-tab').forEach(el => {
                     el.classList.remove('active')
                 })
@@ -4045,7 +4031,7 @@ class AgreementCheckbox {
 
     checkAgreement(el) {
         const groupCheckbox = document.querySelectorAll('[data-button="' + el.dataset.button + '"]'),
-          groupButtons = document.querySelectorAll(el.dataset.button);
+            groupButtons = document.querySelectorAll(el.dataset.button);
         if (el.checked) {
             groupCheckbox.forEach(checkbox => {
                 checkbox.checked = true
@@ -4124,14 +4110,14 @@ class DemoPanel extends HTMLElement {
         this.init();
         document.addEventListener('DOMContentLoaded', () => {
             this.querySelectorAll('label-animated').forEach(
-              label => label.classList.add('is-appeared')
+                label => label.classList.add('is-appeared')
             )
         })
     }
 
     init() {
         this.querySelectorAll('[data-new]').forEach(
-          button => button.addEventListener('mouseenter', this.onLinkHover.bind(this))
+            button => button.addEventListener('mouseenter', this.onLinkHover.bind(this))
         )
         this.querySelector('[data-close]')?.addEventListener('click', this.onCloseButtonClick.bind(this));
         this.decorSelect();
@@ -4140,7 +4126,7 @@ class DemoPanel extends HTMLElement {
 
 
     lazyloadImage() {
-        this.querySelectorAll('li.demo-popup').forEach( link => {
+        this.querySelectorAll('li.demo-popup').forEach(link => {
             link.addEventListener('mouseenter', () => {
                 this.querySelectorAll('img:not(.lazyloaded)').forEach(image => {
                     image.classList.add('lazyload');
@@ -4212,11 +4198,11 @@ class SliderEffect extends HTMLElement {
     }
     createSnow() {
         const c = this.querySelector('canvas'),
-          context = c.getContext("2d");
+            context = c.getContext("2d");
 
         let w = c.width = this.offsetWidth,
-          h = c.height = this.offsetHeight;
-        let num = Math.floor(w/30), tsc = 1, sp = .1, sc = 5, mv = 1, min = .1, ksz = 100, ksp = .15;
+            h = c.height = this.offsetHeight;
+        let num = Math.floor(w / 30), tsc = 1, sp = .1, sc = 5, mv = 1, min = .1, ksz = 100, ksp = .15;
         if (this.effect == 'heart') {
             num /= 2;
             sc = 10;
@@ -4259,7 +4245,7 @@ class SliderEffect extends HTMLElement {
             }
         }
         function flake() {
-            this.draw = function() {
+            this.draw = function () {
                 this.g = context.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.sz);
                 this.g.addColorStop(0, 'hsla(255,255%,255%,1)');
                 if (this.effect == 'snowing2') {
@@ -4276,7 +4262,7 @@ class SliderEffect extends HTMLElement {
         }
 
         function heart() {
-            this.draw = function() {
+            this.draw = function () {
 
                 const x = this.x;
                 const y = this.y;
@@ -4290,9 +4276,9 @@ class SliderEffect extends HTMLElement {
                 let topCurveHeight = height * 0.3;
                 context.moveTo(x, y + topCurveHeight);
 
-                context.bezierCurveTo( x, y,x - width / 2, y,x - width / 2, y + topCurveHeight);
-                context.bezierCurveTo(x - width / 2, y + (height + topCurveHeight) / 2,x, y + (height + topCurveHeight) / 2, x, y + height);
-                context.bezierCurveTo(x, y + (height + topCurveHeight) / 2,x + width / 2, y + (height + topCurveHeight) / 2,x + width / 2, y + topCurveHeight);
+                context.bezierCurveTo(x, y, x - width / 2, y, x - width / 2, y + topCurveHeight);
+                context.bezierCurveTo(x - width / 2, y + (height + topCurveHeight) / 2, x, y + (height + topCurveHeight) / 2, x, y + height);
+                context.bezierCurveTo(x, y + (height + topCurveHeight) / 2, x + width / 2, y + (height + topCurveHeight) / 2, x + width / 2, y + topCurveHeight);
                 context.bezierCurveTo(x + width / 2, y, x, y, x, y + topCurveHeight);
 
                 context.closePath();
@@ -4307,7 +4293,7 @@ class SliderEffect extends HTMLElement {
         const template = document.createElement('div');
         template.classList.add('template');
 
-        const items = Math.floor(this.offsetWidth/8);
+        const items = Math.floor(this.offsetWidth / 8);
         const sparkle = 10;
         let size = 'small';
 
@@ -4353,9 +4339,9 @@ class SmartRow extends HTMLElement {
         const totalItems = this.row.childElementCount / 2;
         removeClassByPrefix(this.row, 'col-break-after-', '');
         const baseOffset = this.grid[0].offsetTop,
-          breakIndex = this.grid.findIndex(item => item.offsetTop > baseOffset),
-          numPerRow = (breakIndex === -1 ? this.grid.length : breakIndex) / 2,
-          numRows = Math.ceil(totalItems / numPerRow);
+            breakIndex = this.grid.findIndex(item => item.offsetTop > baseOffset),
+            numPerRow = (breakIndex === -1 ? this.grid.length : breakIndex) / 2,
+            numRows = Math.ceil(totalItems / numPerRow);
         this.row.classList.add(`col-break-after-${Math.ceil(totalItems / numRows)}`);
     }
 }
@@ -4372,61 +4358,61 @@ class ShowOnScroll {
                     if (section.getAttribute('data-ajax-section-scroll')) {
                         let urlAjax = section.dataset.ajaxSectionScroll;
                         fetch(urlAjax).then((response) => response.text())
-                          .then((data) => {
-                              section.innerHTML = data;
-                              if (document.querySelector('sections-rename')) document.querySelector('sections-rename').init(section.querySelector('.shopify-section'));
-                              setTimeout(() => {
-                                  addResponsive(section);
-                                  section.querySelectorAll('swiper-carousel').forEach(carousel => {
-                                      carousel.destroy();
-                                      carousel.init()
-                                  });
-                                  section.querySelectorAll('tab-slider').forEach(element => {
-                                      element.shiftSelector()
-                                  });
-                                  section.querySelector('.show-on-scroll')?.classList.add('is-visible');
-                                  section.querySelectorAll('masonry-grid').forEach((element) => {
-                                      element.reInit()
-                                  });
-                                  section.querySelectorAll('.lazyload').forEach(el => {
-                                      const wrapper = el.closest('.image-container');
-                                      if (wrapper) {
-                                          el.addEventListener('load', () => {
-                                              wrapper.classList.add('ic--image-loaded')
-                                          })
-                                      }
-                                  });
-                                  section.querySelectorAll('.lazyloaded').forEach(el => {
-                                      const wrapper = el.closest('.image-container');
-                                      if (wrapper) wrapper.classList.add('ic--image-loaded')
-                                  });
-                                  section.querySelectorAll('[name="tab-accordion"]').forEach(el => {
-                                      const tab = el.closest('.tab-accordion-item').querySelector('.js-set-height');
-                                      if (tab) {
-                                          el.addEventListener('change', function () {
-                                              tab.style.setProperty('--tab-height', tab.scrollHeight + 'px');
-                                          })
-                                          const observer = new ResizeObserver(function () {
-                                              tab.style.setProperty('--tab-height', tab.scrollHeight + 'px')
-                                          })
-                                          for (let i = 0; i < tab.children.length; i++) {
-                                              observer.observe(tab.children[i])
-                                          }
-                                      }
-                                  });
-                                  section.querySelectorAll('images-accordion').forEach(element => {
-                                      element.reInit()
-                                  });
+                            .then((data) => {
+                                section.innerHTML = data;
+                                if (document.querySelector('sections-rename')) document.querySelector('sections-rename').init(section.querySelector('.shopify-section'));
+                                setTimeout(() => {
+                                    addResponsive(section);
+                                    section.querySelectorAll('swiper-carousel').forEach(carousel => {
+                                        carousel.destroy();
+                                        carousel.init()
+                                    });
+                                    section.querySelectorAll('tab-slider').forEach(element => {
+                                        element.shiftSelector()
+                                    });
+                                    section.querySelector('.show-on-scroll')?.classList.add('is-visible');
+                                    section.querySelectorAll('masonry-grid').forEach((element) => {
+                                        element.reInit()
+                                    });
+                                    section.querySelectorAll('.lazyload').forEach(el => {
+                                        const wrapper = el.closest('.image-container');
+                                        if (wrapper) {
+                                            el.addEventListener('load', () => {
+                                                wrapper.classList.add('ic--image-loaded')
+                                            })
+                                        }
+                                    });
+                                    section.querySelectorAll('.lazyloaded').forEach(el => {
+                                        const wrapper = el.closest('.image-container');
+                                        if (wrapper) wrapper.classList.add('ic--image-loaded')
+                                    });
+                                    section.querySelectorAll('[name="tab-accordion"]').forEach(el => {
+                                        const tab = el.closest('.tab-accordion-item').querySelector('.js-set-height');
+                                        if (tab) {
+                                            el.addEventListener('change', function () {
+                                                tab.style.setProperty('--tab-height', tab.scrollHeight + 'px');
+                                            })
+                                            const observer = new ResizeObserver(function () {
+                                                tab.style.setProperty('--tab-height', tab.scrollHeight + 'px')
+                                            })
+                                            for (let i = 0; i < tab.children.length; i++) {
+                                                observer.observe(tab.children[i])
+                                            }
+                                        }
+                                    });
+                                    section.querySelectorAll('images-accordion').forEach(element => {
+                                        element.reInit()
+                                    });
 
-                                  section.querySelectorAll('.menu-label').forEach(label => label.closest('a')?.style.setProperty('--label-width', label.offsetWidth + 'px'));
-                                  Waypoint.refreshAll();
-                                  section.classList.add('is-visible');
-                              }, 500)
-                          })
-                          .catch((error) => {
-                              section.remove();
-                              console.error('error', error);
-                          })
+                                    section.querySelectorAll('.menu-label').forEach(label => label.closest('a')?.style.setProperty('--label-width', label.offsetWidth + 'px'));
+                                    Waypoint.refreshAll();
+                                    section.classList.add('is-visible');
+                                }, 500)
+                            })
+                            .catch((error) => {
+                                section.remove();
+                                console.error('error', error);
+                            })
                     } else section.classList.add('is-visible');
                     this.destroy();
                 },
@@ -4451,7 +4437,7 @@ function playPauseVideo(el, slider, control, mainSlider = false, manual = false,
     if (control === 'pauseAll') {
         slider.querySelectorAll('[data-video]').forEach(slide => {
             const slideType = slide.dataset.video || false,
-              player = slide.querySelector('iframe');
+                player = slide.querySelector('iframe');
             if (slide.classList.contains('init-video')) {
                 if (slideType === 'vimeo' && player) {
                     postMessageToPlayer(player, {
@@ -4664,18 +4650,18 @@ class StickyAddtocart extends HTMLElement {
                 const urlAjax = this.dataset.ajax;
                 this.classList.add('ajax-loading');
                 fetch(urlAjax).then((response) => response.text())
-                  .then((data) => {
-                      ajaxContainer.innerHTML = data;
-                      this.classList.remove('ajax-loading');
-                      this.classList.add('ajax-loaded');
-                      setTimeout(() => {
-                          this.openPopup()
-                      }, 500)
-                  })
-                  .catch((error) => {
-                      console.error('error', error);
-                      this.classList.remove('ajax-loading')
-                  })
+                    .then((data) => {
+                        ajaxContainer.innerHTML = data;
+                        this.classList.remove('ajax-loading');
+                        this.classList.add('ajax-loaded');
+                        setTimeout(() => {
+                            this.openPopup()
+                        }, 500)
+                    })
+                    .catch((error) => {
+                        console.error('error', error);
+                        this.classList.remove('ajax-loading')
+                    })
             }
         } else this.openPopup()
     }
@@ -4707,11 +4693,11 @@ class StickyAddtocart extends HTMLElement {
 
     initScroll() {
         const stickyMarker = document.querySelector('.js-sticky-add-to-cart-marker'),
-          bottomMarker = document.querySelector('.page-footer'),
-          backToTop = document.querySelector('.js-back-to-top'),
-          promoPopup = document.querySelector('.payment-notification');
+            bottomMarker = document.querySelector('.page-footer'),
+            backToTop = document.querySelector('.js-back-to-top'),
+            promoPopup = document.querySelector('.payment-notification');
         const cookieBanner = document.querySelector('#pandectes-banner'),
-          cookieBannerVisible = cookieBanner && !cookieBanner.style.display == 'none' && !cookieBanner.classList.contains('cc-invisible');
+            cookieBannerVisible = cookieBanner && !cookieBanner.style.display == 'none' && !cookieBanner.classList.contains('cc-invisible');
         if (cookieBannerVisible || (stickyMarker && inViewportTop(stickyMarker)) || (bottomMarker && inViewportBottom(bottomMarker))) {
             this.closePopup();
             backToTop?.classList.remove('hidden');
@@ -4742,7 +4728,7 @@ class ProductGallery extends HTMLElement {
             } else if (this.classList.contains('layout-grid2')) {
                 this.gridLayout2 = true
             }
-            if (this.breakpoint.matches === true ) {
+            if (this.breakpoint.matches === true) {
                 this.dataset.previousMode = 'grid';
                 this.dataset.mode = 'grid'
             } else {
@@ -4809,7 +4795,7 @@ class ProductGallery extends HTMLElement {
     }
 
     breakpointChecker(currentIndex) {
-        if (this.breakpoint.matches === true ) {
+        if (this.breakpoint.matches === true) {
             if (this.carousel) this.destroyAll();
             this.lazyLoadImageGrid();
             this.buildGallery();
@@ -4829,28 +4815,28 @@ class ProductGallery extends HTMLElement {
     events() {
         if (this.previews && !this.scrollSync) {
             this.previews.querySelectorAll('.swiper-slide')?.forEach(
-              slide => slide.addEventListener('click', (e) => {
-                  e.preventDefault();
-                  this.previews.querySelector('.swiper-slide-thumb--active')?.classList.remove(('swiper-slide-thumb--active'));
-                  slide.classList.add(('swiper-slide-thumb--active'));
-                  let mediaId = slide.dataset.mediaId,
-                    slideMain = this.carousel.querySelector(`[data-media-id="${mediaId}"]`);
-                  if (slideMain) {
-                      this.galleryMain.slideTo([...slideMain.parentElement.children].indexOf(slideMain), 300);
-                  }
-              })
+                slide => slide.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.previews.querySelector('.swiper-slide-thumb--active')?.classList.remove(('swiper-slide-thumb--active'));
+                    slide.classList.add(('swiper-slide-thumb--active'));
+                    let mediaId = slide.dataset.mediaId,
+                        slideMain = this.carousel.querySelector(`[data-media-id="${mediaId}"]`);
+                    if (slideMain) {
+                        this.galleryMain.slideTo([...slideMain.parentElement.children].indexOf(slideMain), 300);
+                    }
+                })
             )
         }
         if (this.previews) {
             this.previews.querySelectorAll('.swiper-slide')?.forEach(
-              slide => slide.addEventListener('mouseenter', (e) => {
-                  let mediaId = slide.dataset.mediaId,
-                    slideMain = this.carousel.querySelector(`[data-media-id="${mediaId}"]`);
-                  if (slideMain) {
-                      if (!slideMain.querySelector('lazyloaded')) slideMain.querySelector('img')?.classList.add('lazyload');
-                      if (this.zoom) this.addZoomImage(slideMain)
-                  }
-              })
+                slide => slide.addEventListener('mouseenter', (e) => {
+                    let mediaId = slide.dataset.mediaId,
+                        slideMain = this.carousel.querySelector(`[data-media-id="${mediaId}"]`);
+                    if (slideMain) {
+                        if (!slideMain.querySelector('lazyloaded')) slideMain.querySelector('img')?.classList.add('lazyload');
+                        if (this.zoom) this.addZoomImage(slideMain)
+                    }
+                })
             )
         }
     }
@@ -4963,7 +4949,7 @@ class ProductGallery extends HTMLElement {
         }
     }
 
-    lazyLoadImageGrid () {
+    lazyLoadImageGrid() {
         this.querySelectorAll('.swiper-slide').forEach((el) => {
             if (!el.querySelector('.lazyloaded')) {
                 el.querySelector('.image-container img')?.classList.add('lazyload');
@@ -5010,14 +4996,14 @@ class ProductGallery extends HTMLElement {
 
     verticalGetCount(windowsWidth) {
         const arrowsHeight = 40,
-          itemsCount = Math.floor(((windowsWidth / 2 - 30 - this.previews.parentElement.offsetWidth) * this.aspectRatio - arrowsHeight + 10) / (this.previews.offsetWidth * this.aspectRatio + 10));
+            itemsCount = Math.floor(((windowsWidth / 2 - 30 - this.previews.parentElement.offsetWidth) * this.aspectRatio - arrowsHeight + 10) / (this.previews.offsetWidth * this.aspectRatio + 10));
         return (itemsCount)
     }
 
     verticalGetCountQw(windowsWidth) {
         const arrowsHeight = 40,
-          mainGalleryWidth = windowsWidth >= 1160 ? 386 : 340,
-          itemsCount = Math.floor((mainGalleryWidth * this.aspectRatio - arrowsHeight + 10) / (this.previews.offsetWidth * this.aspectRatio + 10));
+            mainGalleryWidth = windowsWidth >= 1160 ? 386 : 340,
+            itemsCount = Math.floor((mainGalleryWidth * this.aspectRatio - arrowsHeight + 10) / (this.previews.offsetWidth * this.aspectRatio + 10));
         return (itemsCount)
     }
 
@@ -5143,7 +5129,7 @@ class ProductGallery extends HTMLElement {
         } else {
             const containerMax = getComputedStyle(document.querySelector('.product-section .holder > .container')).getPropertyValue('--container-max-width');
             const maxWidth = containerMax ? containerMax.slice(0, -2) : 1178,
-              step = Math.floor((maxWidth - 1025) / 6);
+                step = Math.floor((maxWidth - 1025) / 6);
             const galleryPreviewsOptionsVert = {
                 slidesPerView: 4,
                 spaceBetween: 10,
@@ -5229,7 +5215,7 @@ class ProductGallery extends HTMLElement {
                     const activeSlide = slider.el.querySelector('.swiper-slide-active');
                     if (this.previews && !this.scrollSync) {
                         const mediaId = activeSlide.dataset.mediaId,
-                          slideThumb = this.previews.querySelector(`[data-media-id="${mediaId}"]`);
+                            slideThumb = this.previews.querySelector(`[data-media-id="${mediaId}"]`);
                         this.previews.querySelector('.swiper-slide-thumb--active')?.classList.remove(('swiper-slide-thumb--active'));
                         if (slideThumb) {
                             if (!slideThumb.classList.contains('swiper-slide-visible')) this.galleryPreviews.slideTo([...slideThumb.parentElement.children].indexOf(slideThumb), 300);
@@ -5339,13 +5325,13 @@ class ProductGallery extends HTMLElement {
 
         let _galleryObj = [];
         const productName = this.closest('.prd-block').querySelector('.prd-block-name'),
-          productNameInner = productName ? (this.dataset.quickview ? productName.querySelector('a').innerHTML : productName.innerHTML) : '';
+            productNameInner = productName ? (this.dataset.quickview ? productName.querySelector('a').innerHTML : productName.innerHTML) : '';
         this.carousel.querySelectorAll('img').forEach((image, i) => {
             if (image.closest('.swiper-slide--video')) return;
             if (image.closest('.swiper-slide')) {
                 const caption = (this.colorOptionName && image.alt.split('-')[0] == this.colorOptionName) ? productNameInner + '&nbsp;/&nbsp;' + this.colorOptionName + '&nbsp;' + image.alt.split('-')[1] : productNameInner;
                 let src = (image.dataset.fancyboxImage == '' || !image.dataset.fancyboxImage) ? (image.dataset.src || image.src || image.srcset) : image.dataset.fancyboxImage,
-                  images = {};
+                    images = {};
                 images['src'] = src;
                 images['opts'] = {
                     thumb: src,
@@ -5440,11 +5426,11 @@ document.addEventListener('click', (e) => {
     e.preventDefault();
     if (window.matchMedia(`(min-width:992px)`).matches) {
         const target = e.target,
-          targetsArray = target.getAttribute('data-targets') ? JSON.parse(target.getAttribute('data-targets')) : false,
-          tabNavs = document.querySelector('.product-tab-wrap'),
-          productTabs = 'product-tabs',
-          tabAccordeon = '.tab-accordion-item',
-          offset = 60;
+            targetsArray = target.getAttribute('data-targets') ? JSON.parse(target.getAttribute('data-targets')) : false,
+            tabNavs = document.querySelector('.product-tab-wrap'),
+            productTabs = 'product-tabs',
+            tabAccordeon = '.tab-accordion-item',
+            offset = 60;
         let panReview = false;
         if (targetsArray) {
             targetsArray.forEach((id) => {
@@ -5617,7 +5603,7 @@ document.addEventListener('DOMContentLoaded', () => {
         zIndex: 99999
     });
 
-    Scrollbar.initAll({alwaysShowTracks: true});
+    Scrollbar.initAll({ alwaysShowTracks: true });
 
     document.querySelectorAll('.menu-label').forEach(label => label.closest('a')?.style.setProperty('--label-width', label.offsetWidth + 'px'));
 
@@ -5652,6 +5638,8 @@ window.addEventListener('resize', debounce(() => {
         if (window.matchMedia(`(max-width:1024px)`).matches) {
             document.body.dataset.mobile = true
         } else delete document.body.dataset.mobile;
+        // Re-apply touch detection for iPad orientation changes
+        checkDevice();
         if (!window.matchMedia(`(max-width:1024px)`).matches) {
             if (document.querySelector('.fancybox-container.fancybox-is-open .filter-mobile-content:not(.filter-desktop-slide)') || document.querySelector('.fancybox-container.fancybox-is-open .mobilemenu-content')) {
                 jq_lumia.fancybox.close()

@@ -2550,7 +2550,7 @@ summary::marker {
     line-height   : 1;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1200px) {
     .text-h1 {
         font-size     : 5rem;
         letter-spacing: -0.025em;
@@ -2565,7 +2565,7 @@ summary::marker {
     line-height   : 1;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1200px) {
     .text-h2 {
         font-size     : 4rem;
         letter-spacing: -0.03125em;
@@ -2894,7 +2894,7 @@ button[disabled] {
     line-height   : 1;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1200px) {
     .rich-text h3 {
         font-size     : 2.75rem;
         letter-spacing: -0.0227272727em;
@@ -4921,7 +4921,7 @@ button[disabled] {
 }
 
 html {
-    background: #000;
+    background: #FFF;
     font-size : 14px;
 }
 
@@ -5005,21 +5005,22 @@ html {
 }
 
 .material ul {
-    list-style: disc;
-    padding-left:20px;
+    list-style  : disc;
+    padding-left: 20px;
 }
 
-.material .grid > div{
-    border: solid 1px #000;
+.material .grid>div {
+    border : solid 1px #000;
     padding: 20px;
 }
 
 
 
-.content h2{
+.content h2 {
     font-size: 30px;
 }
-.content ul{
+
+.content ul {
     padding-left: 30px;
-    list-style: disc;
+    list-style  : disc;
 }
