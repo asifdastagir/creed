@@ -1,124 +1,19 @@
-// Check if device is mobile/tablet for performance optimization
-const isMobile = window.matchMedia('(max-width: 1024px)').matches;
-const isTouch = 'ontouchstart' in window;
+// Init Lenis
+const lenis = new Lenis({
+    duration: 1.2,
+    smooth: true
+});
 
-// Function to initialize Lenis
-function initLenis() {
-    // Check if Lenis is available
-    if (typeof Lenis === 'undefined') {
-        console.warn('Lenis is not loaded, falling back to native smooth scroll');
-        document.documentElement.style.scrollBehavior = 'smooth';
-        return;
-    }
-
-    // Init Lenis with optimized settings
-    const lenis = new Lenis({
-        duration: isMobile ? 0.8 : 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        smooth: true,
-        smoothTouch: false, // Always disable for better mobile performance
-        touchMultiplier: 2,
-        infinite: false,
-        syncTouch: false,
-        syncTouchLerp: 0.1,
-        __iosNoInertiaTouchstart: true
-    });
-
-    // Hook Lenis with requestAnimationFrame
-    function raf(time) {
-        lenis.raf(time);
-        requestAnimationFrame(raf);
-    }
+// Hook Lenis with requestAnimationFrame
+function raf(time) {
+    lenis.raf(time);
     requestAnimationFrame(raf);
-
-    // GSAP setup
-    if (typeof gsap !== 'undefined' && gsap.registerPlugin) {
-        gsap.registerPlugin(ScrollTrigger);
-        lenis.on('scroll', ScrollTrigger.update);
-    }
-
-    // Stop Lenis during resize to prevent issues
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-        lenis.stop();
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-            lenis.start();
-        }, 200);
-    });
-
-    // Override the existing smoothScrollTo function to use Lenis
-    window.smoothScrollTo = function(to, duration) {
-        if (lenis && typeof to === 'number') {
-            lenis.scrollTo(to, {
-                duration: (duration || 500) / 1000,
-                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
-            });
-        }
-    };
-
-    // Handle all anchor links with Lenis
-    document.addEventListener('click', (e) => {
-        const link = e.target.closest('a[href^="#"]');
-        if (link) {
-            const href = link.getAttribute('href');
-            const target = document.querySelector(href);
-            
-            if (target && href !== '#' && href !== '#!') {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                // Calculate offset for sticky header
-                const headerWrap = document.querySelector('.hdr-wrap');
-                const headerSticky = document.querySelector('.hdr-content-sticky');
-                let offset = 0;
-                
-                if (headerWrap) {
-                    offset = window.matchMedia(`(max-width:1024px)`).matches 
-                        ? headerWrap.offsetHeight 
-                        : (headerSticky ? headerSticky.offsetHeight : 0);
-                }
-                
-                // Use Lenis scrollTo for smooth animation
-                lenis.scrollTo(target, {
-                    offset: -offset,
-                    duration: isMobile ? 0.8 : 1.2,
-                    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t))
-                });
-            }
-        }
-    }, true); // Use capture to ensure we get the event first
-
-    // Expose lenis globally
-    window.lenis = lenis;
-
-    // Add method to scroll to top smoothly
-    window.scrollToTop = () => {
-        lenis.scrollTo(0, {
-            duration: isMobile ? 0.6 : 1.0
-        });
-    };
-
-    console.log('Lenis smooth scroll initialized');
 }
+requestAnimationFrame(raf);
 
-// Try to initialize immediately if Lenis is already loaded
-if (typeof Lenis !== 'undefined') {
-    initLenis();
-} else {
-    // Wait for DOM and scripts to load
-    document.addEventListener('DOMContentLoaded', function() {
-        // Wait a bit for deferred scripts to load
-        setTimeout(initLenis, 100);
-    });
-    
-    // Also try on window load as a fallback
-    window.addEventListener('load', function() {
-        if (typeof window.lenis === 'undefined') {
-            initLenis();
-        }
-    });
-}
+// GSAP setup
+gsap.registerPlugin(ScrollTrigger);
+lenis.on('scroll', ScrollTrigger.update);
 
 // Loop through each section and animate independently
 gsap.utils.toArray(".component-animation").forEach(section => {
@@ -173,9 +68,6 @@ gsap.fromTo(".textAndParallaxComponent .col-span-4:nth-child(2) img",
         }
     }
 );
-
-
-
 
 
 
@@ -329,5 +221,78 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
+// ===== SMOOTH SCROLL ENHANCEMENT =====
+// Added at the bottom to not interfere with existing animations
 
+// Check if device is mobile/tablet for performance optimization
+const isMobile = window.matchMedia('(max-width: 1024px)').matches;
 
+// Enhanced Lenis configuration for better smooth scrolling
+document.addEventListener('DOMContentLoaded', function () {
+    // Wait a bit for all scripts to load
+    setTimeout(function () {
+        // Re-initialize Lenis with better settings
+        if (typeof lenis !== 'undefined' && lenis) {
+            // Destroy existing instance
+            lenis.destroy();
+        }
+
+        // Create new optimized instance
+        const smoothLenis = new Lenis({
+            duration: isMobile ? 0.8 : 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smooth: true,
+            smoothTouch: false,
+            touchMultiplier: 2,
+            infinite: false,
+            syncTouch: false,
+            syncTouchLerp: 0.1
+        });
+
+        // Hook with RAF
+        function smoothRaf(time) {
+            smoothLenis.raf(time);
+            requestAnimationFrame(smoothRaf);
+        }
+        requestAnimationFrame(smoothRaf);
+
+        // Update ScrollTrigger
+        smoothLenis.on('scroll', ScrollTrigger.update);
+
+        // Handle anchor links smoothly
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a[href^="#"]');
+            if (link && !link.classList.contains('js-scroll-to') && !link.classList.contains('js-scroll-to-bottom')) {
+                const href = link.getAttribute('href');
+                const target = document.querySelector(href);
+
+                if (target && href !== '#' && href !== '#!') {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    // Calculate offset for sticky header
+                    const headerWrap = document.querySelector('.hdr-wrap');
+                    const headerSticky = document.querySelector('.hdr-content-sticky');
+                    let offset = 0;
+
+                    if (headerWrap) {
+                        offset = window.matchMedia(`(max-width:1024px)`).matches
+                            ? headerWrap.offsetHeight
+                            : (headerSticky ? headerSticky.offsetHeight : 0);
+                    }
+
+                    // Smooth scroll to target
+                    smoothLenis.scrollTo(target, {
+                        offset: -offset,
+                        duration: isMobile ? 0.8 : 1.2
+                    });
+                }
+            }
+        }, true);
+
+        // Expose globally
+        window.smoothLenis = smoothLenis;
+
+        console.log('Enhanced smooth scroll initialized');
+    }, 200);
+});

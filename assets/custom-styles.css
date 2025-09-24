@@ -530,6 +530,15 @@ html.lenis {
     }
 }
 
+/* Fallback smooth scrolling if Lenis is not available */
+html:not(.lenis) {
+    scroll-behavior: smooth;
+}
+
+html:not(.lenis) a[href^="#"] {
+    scroll-behavior: smooth;
+}
+
 /* Ensure smooth scrolling for reduced motion users */
 @media (prefers-reduced-motion: reduce) {
     .lenis.lenis-smooth {
