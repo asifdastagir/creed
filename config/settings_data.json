@@ -697,7 +697,7 @@
               "text": "<p>Be the first to know when we launch</p>"
             }
           },
-          "main-password-2": {
+          "email_form_LHJePJ": {
             "type": "email_form",
             "settings": {}
           }
@@ -705,7 +705,7 @@
         "block_order": [
           "main-password-0",
           "main-password-1",
-          "main-password-2"
+          "email_form_LHJePJ"
         ],
         "settings": {
           "style": "classic",
