@@ -694,13 +694,18 @@
           "main-password-1": {
             "type": "paragraph",
             "settings": {
-              "text": "<p>Be the first to know when we launch</p>"
+              "text": "<p>Be the first to know when we launch.</p>"
             }
+          },
+          "main-password-2": {
+            "type": "email_form",
+            "settings": {}
           }
         },
         "block_order": [
           "main-password-0",
-          "main-password-1"
+          "main-password-1",
+          "main-password-2"
         ],
         "settings": {
           "style": "classic",
@@ -708,14 +713,7 @@
         }
       }
     },
-    "content_for_index": [],
-    "blocks": {
-      "13768625480086291342": {
-        "type": "shopify://apps/forms/blocks/forms/8744a304-fcb1-4347-b211-bb6b4759a76a",
-        "disabled": false,
-        "settings": {}
-      }
-    }
+    "content_for_index": []
   },
   "presets": {
     "Announcement bar color dark": {
