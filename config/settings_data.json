@@ -696,16 +696,11 @@
             "settings": {
               "text": "<p>Be the first to know when we launch</p>"
             }
-          },
-          "email_form_LHJePJ": {
-            "type": "email_form",
-            "settings": {}
           }
         },
         "block_order": [
           "main-password-0",
-          "main-password-1",
-          "email_form_LHJePJ"
+          "main-password-1"
         ],
         "settings": {
           "style": "classic",
