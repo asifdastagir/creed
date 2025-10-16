@@ -694,7 +694,7 @@
           "main-password-1": {
             "type": "paragraph",
             "settings": {
-              "text": "<p>Be the first to know when we launch.</p>"
+              "text": "<p>Be the first to know when we launch</p>"
             }
           },
           "main-password-2": {
