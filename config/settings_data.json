@@ -590,9 +590,9 @@
             "settings": {
               "show_captions": false,
               "heading": "Contact us",
-              "phone": "+31 23 456 7890",
+              "phone": "",
               "email": "info@creedlabel.com",
-              "address": "​Lorem ipsum Low block, Grand Plaza 000 lorem ispsum Road.",
+              "address": "Sydney Australia",
               "column_width": 26,
               "column_opened": true
             }
