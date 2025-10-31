@@ -46,37 +46,37 @@
         "story_slide_xxdeNR": {
           "type": "story_slide",
           "settings": {
-            "image": "shopify://shop_images/Story-01-Frustration.jpg",
-            "date": "MAY 2017",
-            "category": "FRUSTRATION",
-            "description": "Lorem ipsum concept was born out of personal frustration with repetitive shoulder injury from competitive hockey and cricket."
+            "image": "shopify://shop_images/inception.jpg",
+            "date": "October 2024",
+            "category": "Inception",
+            "description": "Creed was born from Mass Awakening — an idea that challenged us to be fully present in\nmovement, in discipline, and in the choices we make. What started as a vision became the foundation for a new kind of activewear brand."
           }
         },
         "story_slide_3crLNJ": {
           "type": "story_slide",
           "settings": {
-            "image": "shopify://shop_images/Story-02-Conception.jpg",
-            "date": "JUNE 2017",
-            "category": "CONCEPTION",
-            "description": "Active barrier James sought a solution beyond kinesiology tape, aiming to integrate active shoulder support into a garment."
+            "image": "shopify://shop_images/design_prototype.jpg",
+            "date": "January 2025",
+            "category": "Design Prototype",
+            "description": "From the first sketches to early samples, we pursued clarity and purpose in design. Every cut, hem, and silhouette was considered — not just for style, but to reflect performance and the values we stand for."
           }
         },
         "story_slide_BGKWk4": {
           "type": "story_slide",
           "settings": {
             "image": "shopify://shop_images/Story-03-Collaboration.jpg",
-            "date": "JAN 2018",
-            "category": "COLLABORATION",
-            "description": "James teamed up with sports biomechanist Dr. Chris Peploe to transform his idea from concept into reality."
+            "date": "April 2025",
+            "category": "Collaboration",
+            "description": "A movement is never built alone. Designers, athletes, and creators came together to refine the product, ensuring every detail spoke the language of function, culture, and conviction. Creed became more than a label; it became a collective."
           }
         },
         "story_slide_dUcXbk": {
           "type": "story_slide",
           "settings": {
             "image": "shopify://shop_images/WhatsAppImage2025-06-28at4.52.39PM_2d4246b3-b517-4f97-abc8-34d8cdc23162.jpg",
-            "date": "APRIL 2019",
-            "category": "PRODUCTION",
-            "description": "Our patented technology was globally launched, revolutionizing athletic performance and injury prevention."
+            "date": "September 2025",
+            "category": "Production",
+            "description": "The awakening took form. Technical craft met principle in every stitch, producing garments built to endure, perform, and inspire. Creed’s first drop marked not just clothing — but the embodiment of\nan idea made real."
           }
         }
       },
@@ -88,8 +88,8 @@
       ],
       "name": "Story Section",
       "settings": {
-        "story_subtitle": "THE OVER+ABOVE STORY",
-        "story_title": "Step into our world, where passion meets innovation, fuelled by arelentless pursuit of greatness. Discover the roots of our brand, born from personal experience and a drive to push boundaries."
+        "story_subtitle": "The Team",
+        "story_title": "The Creed team is a union of designers and athletes who share one pursuit: refinement. Every detail matters. Every choice is intentional. Together, we shape apparel that balances form and function with discipline and restraint."
       }
     },
     "story_nKApV6": {
