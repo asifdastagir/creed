@@ -2605,10 +2605,11 @@ summary::marker {
 }
 
 .text-h2 {
-    font-size     : 2.5rem;
+    font-size     : 1.5rem;
     font-weight   : 500;
     letter-spacing: -0.025em;
     line-height   : 1;
+    margin-top: 1rem;
 }
 
 @media (min-width: 1200px) {
@@ -2934,7 +2935,7 @@ button[disabled] {
 
 .rich-text h3 {
     padding-top   : 2rem;
-    font-size     : 2rem;
+    font-size     : 1.5rem;
     font-weight   : 500;
     letter-spacing: -0.01875em;
     line-height   : 1;
