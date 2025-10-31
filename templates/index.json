@@ -215,7 +215,7 @@
       "name": "Text + Parallax Component",
       "settings": {
         "subtitle": "ABOUT US",
-        "heading": "Creed Label was born from  <br>MΛSS AWΛKΞNІИG <br> The idea of being fully awake: in movement, in discipline, and in the choices we make.",
+        "heading": "Creed Label was born from  MΛSS AWΛKΞNІИG  The idea of being fully awake: in movement, in discipline, and in the choices we make.",
         "description": "",
         "cta_label": "About US",
         "cta_url": "shopify://pages/about",
@@ -243,7 +243,7 @@
       "settings": {
         "margin_top": 0,
         "margin_bottom": 0,
-        "image": "shopify://shop_images/mass.jpg",
+        "image": "shopify://shop_images/Mass_awakening_banner.png",
         "video": "",
         "button_label": "About Us",
         "button_url": "shopify://pages/about"
