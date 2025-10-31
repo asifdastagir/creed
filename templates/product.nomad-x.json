@@ -94,17 +94,6 @@
             "opened": true
           }
         },
-        "collapsible_tab_WTHRKm": {
-          "type": "collapsible_tab",
-          "settings": {
-            "spacing_blocks": 30,
-            "use_global_blocks_desktop_space": true,
-            "opened": false,
-            "heading": "Key Features",
-            "content": "<ul><li>HydroTek™ Fabric Technology Moisture-wicking, quick-dry, and ultra-breathable — built for water and intensity</li><li>High-Waisted Full-Coverage Fit<br/>Secure, modest silhouette with added coverage for confidence in every motion</li><li>Streamlined inner liner features with Concealed Pocket</li><li>Four-Way Stretch Performance</li><li>Maximum flexibility and range of motion during training or swimming</li><li>Inlet EDM specially designed to counteract water swelling </li></ul><p><br/><br/><br/></p>",
-            "page": ""
-          }
-        },
         "collapsible_tab_dkNbn8": {
           "type": "collapsible_tab",
           "settings": {
@@ -112,7 +101,7 @@
             "use_global_blocks_desktop_space": true,
             "opened": true,
             "heading": "Design For",
-            "content": "<p>{{ product.metafields.custom.for | metafield_tag }}</p>",
+            "content": "<p>Hybrid performance — swimming, training, and everyday movement without compromise.</p>",
             "page": ""
           }
         },
@@ -122,8 +111,19 @@
             "spacing_blocks": 30,
             "use_global_blocks_desktop_space": true,
             "opened": false,
-            "heading": "Material Tech",
-            "content": "<ul><li> Hydro-Tek™ Fabric — advanced quick-dry material with moisture-wicking<br/>properties for lightweight comfort.</li><li>High Waistband — supportive build with added coverage for faith aligned<br/>movement.</li><li>Integrated Liner — provides stability, compression, and coverage just<br/>below the knee.</li><li>Breathable Build — keeps airflow steady for comfort during training and <br/><br/></li></ul>",
+            "heading": "Material tech",
+            "content": "<p>85% Polyester 15% spandex (Hydro-tekTM)<br/><strong><br/>Hydro-tekTM</strong></p><ul><li> Advanced quick-dry fabric engineered for both water and land.</li><li> Moisture-Wicking: Actively pulls sweat and water away to keep the body dry.</li><li>Lightweight Structure: Allows unrestricted movement while reducing drag in water.</li><li>Breathable Weave: Enhances airflow to maintain comfort during training.</li></ul>",
+            "page": ""
+          }
+        },
+        "collapsible_tab_WTHRKm": {
+          "type": "collapsible_tab",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "opened": false,
+            "heading": "Key Features (Design & Aesthetic Focus)",
+            "content": "<ul><li>High Waistband: Provides secure fit, added coverage, and stability during training or swimming.</li><li>Integrated Liner: Compression support with just-below-the-knee coverage.</li><li>Aesthetic Coverage: Modern silhouette designed for coverage without compromise.</li><li>Versatile Design: Built for the transition between gym, street, and water.</li><li>Premium Construction: Reinforced stitching for endurance and long-term wear.</li></ul>",
             "page": ""
           }
         }
@@ -137,9 +137,9 @@
         "2f540e78-040a-4fc2-a26e-8063b6bd5043",
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
         "description_zzQLwa",
-        "collapsible_tab_WTHRKm",
         "collapsible_tab_dkNbn8",
-        "collapsible_tab_NJUYbM"
+        "collapsible_tab_NJUYbM",
+        "collapsible_tab_WTHRKm"
       ],
       "custom_css": [
         ".holder {--margin-top-desktop: 30px; --margin-top-mobile: 20px;}"
