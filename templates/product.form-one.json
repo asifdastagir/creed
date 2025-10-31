@@ -105,25 +105,25 @@
             "page": ""
           }
         },
-        "collapsible_tab_y7Nrpq": {
-          "type": "collapsible_tab",
-          "settings": {
-            "spacing_blocks": 30,
-            "use_global_blocks_desktop_space": true,
-            "opened": false,
-            "heading": "Key Features",
-            "content": "<ul><li>Oversized fit with rounded hem“Mass Awakening” front print</li><li>Shoulder-to-shoulder Creed Label logo on back</li><li>100% mid-weight cotton</li><li>Pre-shrunk for consistent fit</li><li>Engineered for motion, fit, and comfort<br/><br/></li></ul>",
-            "page": ""
-          }
-        },
         "collapsible_tab_J9gEzJ": {
           "type": "collapsible_tab",
           "settings": {
             "spacing_blocks": 30,
             "use_global_blocks_desktop_space": true,
             "opened": false,
-            "heading": "Material Tech",
-            "content": "<ul><li>100% Cotton: Natural softness, breathable structure</li><li>Oversized Fit: Relaxed silhouette, free movement</li><li>Curved Hem: Added coverage, modern finish</li><li>Premium Weight: Durable fabric with refined drape<br/><br/><br/></li></ul>",
+            "heading": "Material Tech (Fabric Focus)",
+            "content": "<ul><li>100% Pure Cotton: Naturally breathable, hypoallergenic, and gentle on skin.</li><li>Moisture Regulation: Cotton fibres absorb and release moisture, keeping<br/>comfort steady.</li><li>Premium Drape: Mid-weight cotton offers flow without losing structure.</li></ul>",
+            "page": ""
+          }
+        },
+        "collapsible_tab_y7Nrpq": {
+          "type": "collapsible_tab",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "opened": false,
+            "heading": "Key Features (Design & Aesthetic Focus)",
+            "content": "<ul><li>Oversized Fit: Relaxed silhouette designed for freedom of movement.</li><li>Curved Hem: Extended length and rounded finish for modern coverage.</li><li>Minimalist Design: Clean aesthetic with subtle branding.</li><li>Durable Build: Reinforced seams for longevity and performance wear.</li><li>Everyday Versatility: Blends training functionality with essentials-ready style.</li></ul>",
             "page": ""
           }
         }
@@ -138,8 +138,8 @@
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
         "description_zzQLwa",
         "collapsible_tab_dkNbn8",
-        "collapsible_tab_y7Nrpq",
-        "collapsible_tab_J9gEzJ"
+        "collapsible_tab_J9gEzJ",
+        "collapsible_tab_y7Nrpq"
       ],
       "custom_css": [
         ".holder {--margin-top-desktop: 30px; --margin-top-mobile: 20px;}"
