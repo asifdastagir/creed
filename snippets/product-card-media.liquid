@@ -1,66 +1,46 @@
-<a href="{{ product_url_collection }}" class="prd-image {% if image == blank %}h-100{% endif %}"
-  title="{{ product.title }}" data-url>
+<a href="{{ product_url_collection }}" class="prd-image {% if image == blank %}h-100{% endif %}" title="{{ product.title }}" data-url>
   {%- liquid
-  assign store_width = settings.container_max_width
+    assign store_width = settings.container_max_width
 
-  if section.settings.section_width == 'custom'
-  assign store_width = section.settings.container_max_width
-  endif
+    if section.settings.section_width == 'custom'
+      assign store_width = section.settings.container_max_width
+    endif
 
-  if template.suffix contains 'store-width-'
-  assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
-  endif
+    if template.suffix contains 'store-width-'
+      assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+    endif
 
-  assign image_k = image_k | default: 1
+    assign image_k = image_k | default: 1
 
-  if store_width > 1178
-  assign image_k = store_width | divided_by: 1178.00 | round: 2
-  endif
+    if store_width > 1178
+      assign image_k = store_width | divided_by: 1178.00 | round: 2
+    endif
 
-  if image != blank
-  if widths == blank
-  assign sizes = '(min-width: 1400px) 600px, (min-width: 1200px) 580px, (min-width  : 992px) 550px, (min-width: 768px) 520px, calc(100vw)'
-  assign breakpoints = '1080,800,720,650,580,520' | split: ','
+    if image != blank
+      # --- ✅ Direct single image (no responsive srcset)
+      assign data_src = 'src'
+      assign class = 'js-prd-img '
 
-  for i in (1..2)
-  assign k = i
+      unless lazyload == false
+        assign data_src = 'data-src'
+        assign class = class | append: 'lazyload fade-up'
+      endunless
 
-  if i == 1
-  assign k = 1.4
-  endif
+      # --- ✅ Set direct width (change as needed)
+      assign image_width = 1000
 
-  assign k = k | times: image_k
+      # --- ✅ Render main image (no srcset, no sizes)
+      if fetchpriority
+        echo image | image_url: width: image_width | image_tag: class: class, fetchpriority: 'high' | replace: 'src', data_src
+      else
+        echo image | image_url: width: image_width | image_tag: class: class | replace: 'src', data_src
+      endif
 
-  for breakpoint in breakpoints
-  assign width_ = breakpoint | plus: 0 | times: k
-  assign widths = widths | append: width_ | append: ','
-  endfor
-  endfor
-  endif
-
-  assign data_src = 'src'
-
-  assign class = 'js-prd-img '
-
-  unless lazyload == false
-  assign data_src = 'data-src'
-  assign class = class | append: 'lazyload fade-up'
-  endunless
-
-
-  if fetchpriority
-  echo image | image_url: width: image.width | image_tag: class: class, widths: widths, sizes: sizes, fetchpriority:
-  'high' | replace: 'src', data_src
-  else
-  echo image | image_url: width: image.width | image_tag: class: class, widths: widths, sizes: sizes | replace: 'src',
-  data_src
-  endif
-
-  if settings.product_card_hover and product.media[1] != nil
-  echo product.media[1] | image_url: width: product.media[1].width | image_tag: class: 'js-prd-img lazyload fade-up',
-  widths: widths, sizes: sizes | replace: 'src', 'data-src'
-  endif
-  endif
+      # --- ✅ Render hover image if enabled
+      if settings.product_card_hover and product.media[1] != nil
+        echo product.media[1] | image_url: width: image_width | image_tag: class: 'js-prd-img lazyload fade-up' | replace: 'src', 'data-src'
+      endif
+    endif
   -%}
   <div class="prd-image-colors d-none"></div>
   <div data-load="loaded"></div>

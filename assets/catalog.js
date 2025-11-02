@@ -314,7 +314,7 @@ class ViewMode extends HTMLElement {
 			'(min-width: 1400px) 559px, (min-width: 1200px) 540px, (min-width: 992px) 450px, calc((100vw - 30px - 20px) / 2)',
 			'(min-width: 1400px) 362px, (min-width: 1200px) 350px, (min-width: 992px) 289px, (min-width: 768px) 210px, calc((100vw - 30px - 20px) / 2)',
 			'(min-width: 1400px) 264px, (min-width: 1200px) 255px, (min-width: 992px) 210px, (min-width: 768px) 150px, calc((100vw - 30px - 20px) / 2)',
-			'(min-width: 1400px) 205px, (min-width: 1200px) 198px, (min-width: 992px) 162px, (min-width: 768px) 210px, calc((100vw - 30px - 20px) / 2)'
+			'(min-width: 1400px) 505px, (min-width: 1200px) 198px, (min-width: 992px) 162px, (min-width: 768px) 210px, calc((100vw - 30px - 20px) / 2)'
 		]
 		const currentView = this.getCurrentBreakpointActive();
 		document.querySelector('[data-product-grid]').querySelectorAll('product-card .prd-image img').forEach(item => item.sizes = sizes[parseInt(currentView.dataset.view.split('_')[currentView.dataset.view.split('_').length-1])]);
