@@ -68,6 +68,7 @@
     "collection_out_of_stock_hide": false,
     "theme_custom_css": "@media (min-width: 1025px) {\nbody.has-transparent-hdr main-slider .swiper-slider-container.slider-fullheight,\nbody:not([data-set-root=\"true\"]) main-slider .swiper-slider-container.slider-fullheight {\nheight: calc(100vh - 174px) !important;\n}}\n\n@media (max-width: 1024px){\nmain-slider .swiper-slider-container.slider-fullheight-mobile {\nheight: calc(var(--vhStart, 1vh) * 100 - 158px)!important;\n}\n}",
     "dark_light_mode": false,
+    "theme_current_mode": "light",
     "theme_light_id": "121729974369,121713360993,120626380897",
     "theme_dark_id": "143566504221",
     "input_alt_border": "0",
@@ -504,8 +505,8 @@
           "announcement-bar-0": {
             "type": "link",
             "settings": {
-              "title": "\"Memory\" Collection available now Free delivery from 160€.",
-              "text_2": "",
+              "title": "Spring '25 out now",
+              "text_2": "welcome to the AWΛKΞNІИG",
               "url": "",
               "button_target_blank": true
             }
