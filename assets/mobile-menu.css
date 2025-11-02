@@ -33,7 +33,7 @@
   bottom          : 0;
   left            : 0;
   width           : 100%;
-  background-color: var(--mobile-menu-social-bg);
+  background-color: #000;
   transition      : height .5s
 }
 
@@ -569,7 +569,8 @@
   cursor          : pointer;
   border-bottom   : 1px solid var(--mobile-menu-border-color);
   background-color: var(--mobile-menu-nav-bg);
-  color           : var(--mobile-menu-nav-color)
+  color           : var(--mobile-menu-nav-color);
+  align-items: center;
 }
 
 .nav-wrapper .nav-toggle.back-visible {
@@ -758,7 +759,7 @@
 }
 
 .dropdn-modal-slide-title.is-current {
-  color  : var(--custom-color);
+  color  : #000;
   opacity: 1
 }
 
