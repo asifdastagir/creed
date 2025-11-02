@@ -62,7 +62,7 @@
     "collection_categories": "catalog",
     "show_colorpics": true,
     "show_sizes": true,
-    "products_per_row_sm": "2",
+    "products_per_row_sm": "1",
     "products_per_row_xl": "4",
     "collection_filters_hidden_list": "",
     "collection_out_of_stock_hide": false,
