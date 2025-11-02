@@ -1,26 +1,27 @@
 {% comment %}theme-check-disable NestedSnippet{% endcomment %}
 {%- liquid
-    assign sizes = '(min-width: 1400px) 264px, (min-width: 1200px) 255px, (min-width: 992px) 210px, (min-width: 768px) 150px, calc((100vw - 30px - 20px) / 2)'
-    assign widths = ''
-    assign breakpoints = '540,450,350,289,255,210,198,150' | split: ','
-    for i in (1..2)
-        assign k = i
+assign sizes = '(min-width: 1400px) 600px, (min-width: 1200px) 580px, (min-width: 992px) 550px, (min-width: 768px)
+520px, calc((100vw - 30px - 20px) / 2)'
+assign widths = ''
+assign breakpoints = '1080,800,720,650,580,520' | split: ','
+for i in (1..2)
+assign k = i
 
-        if i == 1
-            assign k = 1.4
-        endif
+if i == 1
+assign k = 1.4
+endif
 
-        for breakpoint in breakpoints
-            assign width_ = breakpoint | plus: 0 | times: k
-            assign widths = widths | append: width_ | append: ','
-        endfor
-    endfor
-    assign width_ = product.featured_media.preview_image.width
-    assign card_widths = widths | append: width_
+for breakpoint in breakpoints
+assign width_ = breakpoint | plus: 0 | times: k
+assign widths = widths | append: width_ | append: ','
+endfor
+endfor
+assign width_ = product.featured_media.preview_image.width
+assign card_widths = widths | append: width_
 -%}
 {% render 'product-card-horizontal',
-    product: product,
-    sizes: sizes,
-    widths: card_widths,
-    product_form_suffix: '-rv'
+product: product,
+sizes: sizes,
+widths: card_widths,
+product_form_suffix: '-rv'
 %}

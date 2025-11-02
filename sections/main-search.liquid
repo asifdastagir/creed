@@ -1,616 +1,532 @@
 {% comment %}theme-check-disable NestedSnippet, ContentForHeaderModification, UnusedAssign{% endcomment %}
 {%- liquid
-  if "ar he he-IL hi" contains localization.language.iso_code
-    assign rtl = '-rtl'
-  endif
+if "ar he he-IL hi" contains localization.language.iso_code
+assign rtl = '-rtl'
+endif
 
-  assign store_width = settings.container_max_width
+assign store_width = settings.container_max_width
 
-  if section.settings.section_width == 'custom'
-    assign store_width = section.settings.container_max_width
-  endif
+if section.settings.section_width == 'custom'
+assign store_width = section.settings.container_max_width
+endif
 
-  if template.suffix contains 'store-width-'
-    assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
-  endif
+if template.suffix contains 'store-width-'
+assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+endif
 
-  if section.settings.section_width == 'custom'
-    assign style_inline = '--container-max-width:' | append: store_width | append: 'px;'
-  endif
+if section.settings.section_width == 'custom'
+assign style_inline = '--container-max-width:' | append: store_width | append: 'px;'
+endif
 
-  assign aspect_ratio = settings.product_image_aspect_ratio
+assign aspect_ratio = settings.product_image_aspect_ratio
 
-  if aspect_ratio == 'custom'
-    assign aspect_ratio = settings.product_height_ratio | times: 100 | divided_by: settings.product_width_ratio
-  endif
+if aspect_ratio == 'custom'
+assign aspect_ratio = settings.product_height_ratio | times: 100 | divided_by: settings.product_width_ratio
+endif
 -%}
 {{ 'category-page' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
 {{ 'price-slider.css' | asset_url | stylesheet_tag }}
 {{ 'faq' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
 <script src="{{ 'facets.js' | asset_url }}" defer="defer"></script>
 {%- liquid
-  assign sort_by = search.sort_by | default: search.default_sort_by
-  assign terms = search.terms | escape
-  assign search_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
+assign sort_by = search.sort_by | default: search.default_sort_by
+assign terms = search.terms | escape
+assign search_url = '?q=' | append: terms | append: '&options%5Bprefix%5D=last&sort_by=' | append: sort_by
 
-  assign closed_filter = cart.attributes.closed_filter | default: settings.filter_close
-  if closed_filter == 'false' or closed_filter == false
-    assign closed_filter = false
-  else
-    assign closed_filter = true
-  endif
+assign closed_filter = cart.attributes.closed_filter | default: settings.filter_close
+if closed_filter == 'false' or closed_filter == false
+assign closed_filter = false
+else
+assign closed_filter = true
+endif
 
-  assign prd_per_row_sm = cart.attributes.prd_per_row_sm | default: settings.products_per_row_sm
-  assign prd_per_row_md = cart.attributes.prd_per_row_md | default: settings.products_per_row_md
-  assign prd_per_row_xl = cart.attributes.prd_per_row_xl | default: settings.products_per_row_xl
-  assign prd_per_row_xxl = cart.attributes.prd_per_row_xxl | default: settings.products_per_row_xxl
+assign prd_per_row_sm = cart.attributes.prd_per_row_sm | default: settings.products_per_row_sm
+assign prd_per_row_md = cart.attributes.prd_per_row_md | default: settings.products_per_row_md
+assign prd_per_row_xl = cart.attributes.prd_per_row_xl | default: settings.products_per_row_xl
+assign prd_per_row_xxl = cart.attributes.prd_per_row_xxl | default: settings.products_per_row_xxl
 
-  assign prd_per_row_sm = prd_per_row_sm | append: ''
-  assign prd_per_row_md = prd_per_row_md | append: ''
-  assign prd_per_row_xl = prd_per_row_xl | append: ''
-  assign prd_per_row_xxl = prd_per_row_xxl | append: ''
+assign prd_per_row_sm = prd_per_row_sm | append: ''
+assign prd_per_row_md = prd_per_row_md | append: ''
+assign prd_per_row_xl = prd_per_row_xl | append: ''
+assign prd_per_row_xxl = prd_per_row_xxl | append: ''
 
-  if prd_per_row_xxl == '6' and store_width < 1466
-    assign prd_per_row_xxl = '5'
-  endif
-
-  unless settings.collection_grid_list
-    if prd_per_row_sm == 'list'
-      assign prd_per_row_sm = '2'
-    endif
-
-    if prd_per_row_md == 'list'
-      assign prd_per_row_md = '3'
-    endif
-
-    if prd_per_row_xl == 'list'
-      assign prd_per_row_xl = '4'
-    endif
-
-    if prd_per_row_xxl == 'list'
-      assign prd_per_row_xxl = '6'
-    endif
-  endunless
-
-  case prd_per_row_sm
-    when 'list'
-      assign grid_class_on_prd_per_row_sm = 'grid_list_sm'
-    when '1'
-      assign grid_class_on_prd_per_row_sm = 'grid_1_sm'
-    when '2'
-      assign grid_class_on_prd_per_row_sm = 'grid_2_sm'
-  endcase
-
-  case prd_per_row_md
-    when 'list'
-      assign grid_class_on_prd_per_row_md = 'grid_list_md'
-    when '2'
-      assign grid_class_on_prd_per_row_md = 'grid_2_md'
-    when '3'
-      assign grid_class_on_prd_per_row_md = 'grid_3_md'
-    when '4'
-      assign grid_class_on_prd_per_row_md = 'grid_4_md'
-  endcase
-
-  case prd_per_row_xl
-    when 'list'
-      assign grid_class_on_prd_per_row_xl = 'grid_list_xl'
-    when '2'
-      assign grid_class_on_prd_per_row_xl = 'grid_2_xl'
-    when '3'
-      assign grid_class_on_prd_per_row_xl = 'grid_3_xl'
-    when '4'
-      assign grid_class_on_prd_per_row_xl = 'grid_4_xl'
-    when '5'
-      assign grid_class_on_prd_per_row_xl = 'grid_5_xl'
-  endcase
-
-  case prd_per_row_xxl
-    when 'list'
-      assign grid_class_on_prd_per_row_xxl = 'grid_list_xxl'
-    when '2'
-      assign grid_class_on_prd_per_row_xxl = 'grid_2_xxl'
-    when '3'
-      assign grid_class_on_prd_per_row_xxl = 'grid_3_xxl'
-    when '4'
-      assign grid_class_on_prd_per_row_xxl = 'grid_4_xxl'
-    when '5'
-      assign grid_class_on_prd_per_row_xxl = 'grid_5_xxl'
-    when '6'
-      assign grid_class_on_prd_per_row_xxl = 'grid_6_xxl'
-  endcase
-
-  if search.results_count == 1
-    assign prd_per_row_sm = '1'
-    assign grid_class_on_prd_per_row_sm = 'grid_1_sm'
-  endif
-
-  if search.filters.size < 1
-    assign closed_filter = true
-  endif
-
-  if settings.sidebar_always_visible
-    assign closed_filter = false
-  endif
-
-  assign navigation = settings.collection_categories
-  assign navigation_filter = false
-
-  if navigation != blank and navigation.links.size > 0
-    assign navigation_filter = true
+if prd_per_row_xxl == '6' and store_width < 1466 assign prd_per_row_xxl='5' endif unless settings.collection_grid_list
+  if prd_per_row_sm=='list' assign prd_per_row_sm='2' endif if prd_per_row_md=='list' assign prd_per_row_md='3' endif if
+  prd_per_row_xl=='list' assign prd_per_row_xl='4' endif if prd_per_row_xxl=='list' assign prd_per_row_xxl='6' endif
+  endunless case prd_per_row_sm when 'list' assign grid_class_on_prd_per_row_sm='grid_list_sm' when '1' assign
+  grid_class_on_prd_per_row_sm='grid_1_sm' when '2' assign grid_class_on_prd_per_row_sm='grid_2_sm' endcase case
+  prd_per_row_md when 'list' assign grid_class_on_prd_per_row_md='grid_list_md' when '2' assign
+  grid_class_on_prd_per_row_md='grid_2_md' when '3' assign grid_class_on_prd_per_row_md='grid_3_md' when '4' assign
+  grid_class_on_prd_per_row_md='grid_4_md' endcase case prd_per_row_xl when 'list' assign
+  grid_class_on_prd_per_row_xl='grid_list_xl' when '2' assign grid_class_on_prd_per_row_xl='grid_2_xl' when '3' assign
+  grid_class_on_prd_per_row_xl='grid_3_xl' when '4' assign grid_class_on_prd_per_row_xl='grid_4_xl' when '5' assign
+  grid_class_on_prd_per_row_xl='grid_5_xl' endcase case prd_per_row_xxl when 'list' assign
+  grid_class_on_prd_per_row_xxl='grid_list_xxl' when '2' assign grid_class_on_prd_per_row_xxl='grid_2_xxl' when '3'
+  assign grid_class_on_prd_per_row_xxl='grid_3_xxl' when '4' assign grid_class_on_prd_per_row_xxl='grid_4_xxl' when '5'
+  assign grid_class_on_prd_per_row_xxl='grid_5_xxl' when '6' assign grid_class_on_prd_per_row_xxl='grid_6_xxl' endcase
+  if search.results_count==1 assign prd_per_row_sm='1' assign grid_class_on_prd_per_row_sm='grid_1_sm' endif if
+  search.filters.size < 1 assign closed_filter=true endif if settings.sidebar_always_visible assign closed_filter=false
+  endif assign navigation=settings.collection_categories assign navigation_filter=false if navigation !=blank and
+  navigation.links.size> 0
+  assign navigation_filter = true
   endif
 
   assign grid_width_full = true
   assign enable_filtering = settings.enable_filtering
 
   if enable_filtering
-    if navigation_filter or search.filters.size > 0 and search.results_count > 0 and settings.filter_layout == 'inner' and search.filters != empty
-      assign grid_width_full = false
-    endif
+  if navigation_filter or search.filters.size > 0 and search.results_count > 0 and settings.filter_layout == 'inner' and
+  search.filters != empty
+  assign grid_width_full = false
   endif
--%}
-<div class="holder mt-global holder-search-page {% if store_width > 1465 %}use-grid-xxl{% endif %} {% if store_width > 1700 %}use-grid-xxxl{% endif %}" {% render 'section-style', section: section %}>
-  <div class="container show-on-scroll">
-    <div class="title-wrap text-center">
-      {%- if search.performed -%}
+  endif
+  -%}
+  <div
+    class="holder mt-global holder-search-page {% if store_width > 1465 %}use-grid-xxl{% endif %} {% if store_width > 1700 %}use-grid-xxxl{% endif %}"
+    {% render 'section-style' , section: section %}>
+    <div class="container show-on-scroll">
+      <div class="title-wrap text-center">
+        {%- if search.performed -%}
         <h1>{{ 'templates.search.title' | t }}</h1>
-      {%- else -%}
+        {%- else -%}
         <h1>{{ 'theme.general.search_products' | t }}</h1>
-      {%- endif -%}
-      {%- if settings.predictive_search_enabled -%}
+        {%- endif -%}
+        {%- if settings.predictive_search_enabled -%}
         <search-page data-section-id="{{ section.id }}">
-      {%- endif -%}
-      <form
-        action="{{ routes.search_url }}"
-        method="get"
-        role="search"
-        class="search">
-        <div class="field d-block">
-          <div class="search-input-group mt-3">
-            <input
-              class="form-control form-control--bg form-control--rounded shadow-none"
-              type="search"
-              name="q"
-              value="{{ search.terms | escape }}"
-              placeholder="{{ 'theme.general.search_by' | t }}"
-              {%- if settings.predictive_search_enabled -%}
-              role="combobox"
-              aria-expanded="false"
-              aria-owns="predictive-search-results-list"
-              aria-controls="predictive-search-results-list"
-              aria-haspopup="listbox"
-              aria-autocomplete="list"
-              autocorrect="off"
-              autocomplete="off"
-              autocapitalize="off"
-              spellcheck="false"
-              {%- endif -%}>
-            <input
-              name="options[prefix]"
-              type="hidden"
-              value="last">
-            {%- if settings.predictive_search_only_product -%}
-              <input
-                type="hidden"
-                name="type"
-                value="product,query" />
-            {%- endif -%}
-            <button class="btn position-relative" aria-label="{{ 'general.search.search' | t }}">
-              <div class="loading-overlay__spinner hidden">
-                <div data-load="loading"></div>
-              </div>
-              <span>{% render 'icon-search' %}</span>
-            </button>
-          </div>
-          {% render 'predictive-search-quick-tags' %}
-          {%- if settings.predictive_search_enabled -%}
-            {% render 'predictive-search-results' %}
           {%- endif -%}
-        </div>
-      </form>
-      {%- if settings.predictive_search_enabled -%}
+          <form action="{{ routes.search_url }}" method="get" role="search" class="search">
+            <div class="field d-block">
+              <div class="search-input-group mt-3">
+                <input class="form-control form-control--bg form-control--rounded shadow-none" type="search" name="q"
+                  value="{{ search.terms | escape }}" placeholder="{{ 'theme.general.search_by' | t }}" {%- if
+                  settings.predictive_search_enabled -%} role="combobox" aria-expanded="false"
+                  aria-owns="predictive-search-results-list" aria-controls="predictive-search-results-list"
+                  aria-haspopup="listbox" aria-autocomplete="list" autocorrect="off" autocomplete="off"
+                  autocapitalize="off" spellcheck="false" {%- endif -%}>
+                <input name="options[prefix]" type="hidden" value="last">
+                {%- if settings.predictive_search_only_product -%}
+                <input type="hidden" name="type" value="product,query" />
+                {%- endif -%}
+                <button class="btn position-relative" aria-label="{{ 'general.search.search' | t }}">
+                  <div class="loading-overlay__spinner hidden">
+                    <div data-load="loading"></div>
+                  </div>
+                  <span>{% render 'icon-search' %}</span>
+                </button>
+              </div>
+              {% render 'predictive-search-quick-tags' %}
+              {%- if settings.predictive_search_enabled -%}
+              {% render 'predictive-search-results' %}
+              {%- endif -%}
+            </div>
+          </form>
+          {%- if settings.predictive_search_enabled -%}
         </search-page>
-      {%- endif -%}
+        {%- endif -%}
+      </div>
     </div>
   </div>
-</div>
 
-<div
-  class="holder pt-2 pt-md-4 pt-xl-6 {% if store_width > 1465 %}use-grid-xxl{% endif %} {% if store_width > 1700 %}use-grid-xxxl{% endif %}"
-  id="main-collection-filters"
-  data-id="{{ section.id }}"
-  style="{{ style_inline }}"
-  data-search-page-results>
-  {%- if search.performed -%}
+  <div
+    class="holder pt-2 pt-md-4 pt-xl-6 {% if store_width > 1465 %}use-grid-xxl{% endif %} {% if store_width > 1700 %}use-grid-xxxl{% endif %}"
+    id="main-collection-filters" data-id="{{ section.id }}" style="{{ style_inline }}" data-search-page-results>
+    {%- if search.performed -%}
     {%- unless enable_filtering -%}
-      {%- if search.results_count > 0 -%}
-        <span role="status">{{ 'templates.search.results_with_count_and_term' | t: terms: search.terms, count: search.results_count }}</span>
-      {%- endif -%}
+    {%- if search.results_count > 0 -%}
+    <span role="status">{{ 'templates.search.results_with_count_and_term' | t: terms: search.terms, count:
+      search.results_count }}</span>
+    {%- endif -%}
     {%- endunless -%}
     {%- if search.results_count == 0 and search.filters == empty -%}
-      <span role="status">{{ 'templates.search.no_results' | t: terms: search.terms }}</span>
+    <span role="status">{{ 'templates.search.no_results' | t: terms: search.terms }}</span>
     {%- endif -%}
-  {%- endif -%}
-  {%- if search.performed -%}
+    {%- endif -%}
+    {%- if search.performed -%}
     <div class="container show-on-scroll">
       {% render 'collection-description'
-        , section: section
-        , results: search
+      , section: section
+      , results: search
       %}
       <!-- Two columns -->
       <div class="row category-page-block js-category-page-block {% if closed_filter %}has-filter-closed{% endif %}">
         {%- if search.results_count > 0 and enable_filtering -%}
-          <div id="filterColumn" class="{% if search.filters.size < 1 %}hidden{% endif %} col-lg-4 col-xl-3 aside aside--left filter-col filter-mobile-col filter-col--sticky js-sticky-collision js-filter-col filter-col--opened-desktop {% if settings.filter_layout == 'outer' %}hidden{% endif %}">
-            {% render 'facets'
-              , results: search
-              , enable_filtering: enable_filtering
-              , section: section
-              , id: 'FacetFiltersForm'
-              , show_sizes: settings.show_sizes
-              , size_options_name: settings.size_options_name
-              , color_options_name: settings.product_card_color_options_name
-              , show_colorpics: settings.show_colorpics
-            %}
-          </div>
+        <div id="filterColumn"
+          class="{% if search.filters.size < 1 %}hidden{% endif %} col-lg-4 col-xl-3 aside aside--left filter-col filter-mobile-col filter-col--sticky js-sticky-collision js-filter-col filter-col--opened-desktop {% if settings.filter_layout == 'outer' %}hidden{% endif %}">
+          {% render 'facets'
+          , results: search
+          , enable_filtering: enable_filtering
+          , section: section
+          , id: 'FacetFiltersForm'
+          , show_sizes: settings.show_sizes
+          , size_options_name: settings.size_options_name
+          , color_options_name: settings.product_card_color_options_name
+          , show_colorpics: settings.show_colorpics
+          %}
+        </div>
         {%- endif -%}
         <!-- Center column -->
         <div class="col-lg-{% if grid_width_full %}12{% else %}8 col-xl-9{% endif %} aside d-flex flex-column">
           <div id="ProductGridContainer" class="order-3">
             {% render 'facets-sorting'
-              , results: search
-              , closed_filter: closed_filter
-              , prd_per_row_sm: prd_per_row_sm
-              , prd_per_row_md: prd_per_row_md
-              , prd_per_row_xl: prd_per_row_xl
-              , prd_per_row_xxl: prd_per_row_xxl
-              , section: section
-              , store_width: store_width
+            , results: search
+            , closed_filter: closed_filter
+            , prd_per_row_sm: prd_per_row_sm
+            , prd_per_row_md: prd_per_row_md
+            , prd_per_row_xl: prd_per_row_xl
+            , prd_per_row_xxl: prd_per_row_xxl
+            , section: section
+            , store_width: store_width
             %}
             <div class="collection  position-relative">
               <div class="collection-loading-overlay"></div>
               <div id="product-grid" data-id="{{ section.id }}">
                 {% render 'facets-active'
-                  , results: search
-                  , section: section
-                  , show_sizes: settings.show_sizes size_options_name: settings.size_options_name color_options_name: settings.product_card_color_options_name show_colorpics: settings.show_colorpics %}
+                , results: search
+                , section: section
+                , show_sizes: settings.show_sizes size_options_name: settings.size_options_name color_options_name:
+                settings.product_card_color_options_name show_colorpics: settings.show_colorpics %}
                 {%- if search.results.size == 0 and search.filters != empty -%}
-                  <div class="category-empty text-center">
-                    <h2 class="category-empty-title">{{ 'theme-sections.sections.collection_template.empty' | t }}</h2>
-                    <div class="category-empty-text fw-light">{{ 'theme-sections.sections.collection_template.use_fewer_filters_html' | t: link: search_url, class: "underlined-link link" }}</div>
-                    <div class="mt-3">
-                      <a href="#" class="btn btn--showmore">{{ 'general.continue_shopping' | t }}</a>
-                    </div>
+                <div class="category-empty text-center">
+                  <h2 class="category-empty-title">{{ 'theme-sections.sections.collection_template.empty' | t }}</h2>
+                  <div class="category-empty-text fw-light">{{
+                    'theme-sections.sections.collection_template.use_fewer_filters_html' | t: link: search_url, class:
+                    "underlined-link link" }}</div>
+                  <div class="mt-3">
+                    <a href="#" class="btn btn--showmore">{{ 'general.continue_shopping' | t }}</a>
                   </div>
+                </div>
                 {%- else -%}
-                  {% paginate search.results by settings.search_products_per_page %}
-                    <div class="prd-grid-wrap">
-                      <div class="prd-grid list-options-in-row {% if closed_filter == true or settings.filter_layout == 'outer' %}justify-content-center{% endif %} row g-3 {% if settings.product_card_layout == '2' %}gy-4 gy-lg-5{% endif %}  {{ grid_class_on_prd_per_row_sm }} {{ grid_class_on_prd_per_row_md }} {{ grid_class_on_prd_per_row_xl }} {% if store_width > 1465 %}{{ grid_class_on_prd_per_row_xxl }}{% endif %} js-category-grid" data-product-grid>
-                        {%- liquid
-                          case prd_per_row_xl
-                            when '2'
-                              assign sizes = '(min-width: 1400px) 559px, (min-width: 1200px) 540px, (min-width: 992px) 450px, calc((100vw - 30px - 20px) / 2)'
-                            when '3'
-                              assign sizes = '(min-width: 1400px) 362px, (min-width: 1200px) 350px, (min-width: 992px) 289px, (min-width: 768px) 210px, calc((100vw - 30px - 20px) / 2)'
-                            when '4'
-                              assign sizes = '(min-width: 1400px) 264px, (min-width: 1200px) 255px, (min-width: 992px) 210px, (min-width: 768px) 150px, calc((100vw - 30px - 20px) / 2)'
-                            else
-                              assign sizes = '(min-width: 1400px) 205px, (min-width: 1200px) 198px, (min-width: 992px) 162px, (min-width: 768px) 210px, calc((100vw - 30px - 20px) / 2)'
-                          endcase
-                          assign widths = ''
-                          assign breakpoints = '540,450,350,289,255,210,198,150' | split: ','
-                          for i in (1..2)
-                            assign k = i
+                {% paginate search.results by settings.search_products_per_page %}
+                <div class="prd-grid-wrap">
+                  <div
+                    class="prd-grid list-options-in-row {% if closed_filter == true or settings.filter_layout == 'outer' %}justify-content-center{% endif %} row g-3 {% if settings.product_card_layout == '2' %}gy-4 gy-lg-5{% endif %}  {{ grid_class_on_prd_per_row_sm }} {{ grid_class_on_prd_per_row_md }} {{ grid_class_on_prd_per_row_xl }} {% if store_width > 1465 %}{{ grid_class_on_prd_per_row_xxl }}{% endif %} js-category-grid"
+                    data-product-grid>
+                    {%- liquid
+                    case prd_per_row_xl
+                    when '2'
+                    assign sizes = '(min-width: 1400px) 559px, (min-width: 1200px) 540px, (min-width: 992px) 450px,
+                    calc((100vw - 30px - 20px) / 2)'
+                    when '3'
+                    assign sizes = '(min-width: 1400px) 362px, (min-width: 1200px) 350px, (min-width: 992px) 289px,
+                    (min-width: 768px) 210px, calc((100vw - 30px - 20px) / 2)'
+                    when '4'
+                    assign sizes = '(min-width: 1400px) 600px, (min-width: 1200px) 580px, (min-width: 992px) 550px,
+                    (min-width: 768px) 520px, calc((100vw - 30px - 20px) / 2)'
+                    else
+                    assign sizes = '(min-width: 1400px) 520px, (min-width: 1200px) 520px, (min-width: 992px) 520px,
+                    (min-width: 768px) 520px, calc((100vw - 30px - 20px) / 2)'
+                    endcase
+                    assign widths = ''
+                    assign breakpoints = '1080,800,720,650,580,520' | split: ','
+                    for i in (1..2)
+                    assign k = i
 
-                            if i == 1
-                              assign k = 1.4
-                            endif
+                    if i == 1
+                    assign k = 1.4
+                    endif
 
-                            for breakpoint in breakpoints
-                              assign width_ = breakpoint | plus: 0 | times: k
-                              assign widths = widths | append: width_ | append: ','
-                            endfor
-                          endfor
-                        -%}
+                    for breakpoint in breakpoints
+                    assign width_ = breakpoint | plus: 0 | times: k
+                    assign widths = widths | append: width_ | append: ','
+                    endfor
+                    endfor
+                    -%}
 
-                        {%- assign products = search.results | where: 'object_type', 'product' -%}
-                        {%- for item in products -%}
-                          {%- liquid
-                            assign width_ = item.featured_media.preview_image.width
-                            assign card_widths = widths | append: width_
+                    {%- assign products = search.results | where: 'object_type', 'product' -%}
+                    {%- for item in products -%}
+                    {%- liquid
+                    assign width_ = item.featured_media.preview_image.width
+                    assign card_widths = widths | append: width_
 
-                            assign lazyload = false
-                            assign class_img_only = 'fade-up-none'
+                    assign lazyload = false
+                    assign class_img_only = 'fade-up-none'
 
-                            if forloop.index > 1
-                              assign lazyload = true
-                              assign class_img_only = 'lazyload fade-up'
-                            endif
+                    if forloop.index > 1
+                    assign lazyload = true
+                    assign class_img_only = 'lazyload fade-up'
+                    endif
 
-                            assign fetchpriority = false
-                            if forloop.first
-                              assign fetchpriority = true
-                            endif
+                    assign fetchpriority = false
+                    if forloop.first
+                    assign fetchpriority = true
+                    endif
 
-                            assign swatches_lazy = true
-                            if prd_per_row_sm == 'list' or prd_per_row_md == 'list' or prd_per_row_xl == 'list'
-                              if forloop.index < 4
-                                assign swatches_lazy = false
-                              endif
-                            endif
-                          -%}
-                          <div class="col">
-                            {% render 'product-card'
-                              , product: item
-                              , sizes: sizes
-                              , widths: card_widths
-                              , lazyload: lazyload
-                              , class_img_only: class_img_only
-                              , section_id: 'product-card'
-                              , fetchpriority: fetchpriority
-                              , swatches_lazy: swatches_lazy
-                            %}
-                          </div>
-                        {%- endfor -%}
-                        {%- for item in search.results -%}
-                          {%- case item.object_type -%}
-                            {%- when 'article' -%}
-                              <div class="col">
-                                <product-card class="post-search-grid style{{ settings.product_card_layout }}">
-                                  <a href="{{ item.url }}" class="post-search-grid-image">
-                                    {% capture style %}
-                                      --aspect-ratio: {{ aspect_ratio }};
-                                    {% endcapture %}
-                                    <span class="post-search-date">
-                                      <span>{{ item.published_at | date: "%y" }}</span>
-                                      <span>{{ item.published_at | date: "%b" }}</span>
-                                    </span>
-                                    {% render 'image-container'
-                                      , image: item.image
-                                      , product_aspect_ratio: true
-                                      , style: style
-                                      , hover_scale: true
-                                      , sizes: sizes image_ratio: "landscape"
-                                    %}
-                                  </a>
-                                  <div class="post-search-grid-bot">
-                                    <a class="post-search-grid-name" href="{{ item.url }}">{{ item.title | truncate: 50 | escape }}</a>
-                                  </div>
-                                  <div class="post-search-grid-hover text-center">
-                                    <a class="post-search-grid-name" href="{{ item.url }}">{{ item.title | truncate: 50 | escape }}</a>
-                                    <div class="post-search-description">{{ item.excerpt_or_content | strip_html | truncatewords: 75 }}</div>
-                                    <a href="{{ item.url }}" class="btn">{{ 'theme.general.read_more' | t }}</a>
-                                  </div>
-                                </product-card>
-                              </div>
-                            {%- when 'page' -%}
-                              <div class="col">
-                                <product-card class="page-search-grid style{{ settings.product_card_layout }}">
-                                  <a href="{{ item.url }}" class="page-icon">
-                                    <div class="image-container ic--bg" style="--aspect-ratio: {{ aspect_ratio }};">
-                                      {% render 'icon-article' %}
-                                    </div>
-                                  </a>
-                                  <div class="page-search-grid-bot">
-                                    <a class="page-search-grid-name" href="{{ item.url }}">
-                                      {{ item.title | truncate: 50 | escape }}
-                                    </a>
-                                  </div>
-                                  <div class="page-search-grid-hover text-center">
-                                    <a class="page-search-grid-name" href="{{ item.url }}">
-                                      {{ item.title | truncate: 50 | escape }}
-                                    </a>
-                                    <div class="page-search-description">{{ item.content | strip_html | truncatewords: 75 }}</div>
-                                    <a href="#" class="btn">{{ 'theme.general.read_more' | t }}</a>
-                                  </div>
-                                </product-card>
-                              </div>
-                          {%- endcase -%}
-                        {%- endfor -%}
-                      </div>
-                    </div>
-                    {%- if paginate.pages > 1 -%}
-                      {% render 'pagination'
-                        , paginate: paginate
-                        , anchor: '#ProductGridContainer'
-                        , results: search
-                        , section: section
-                        , container: '.prd-grid'
-                        , item: '.col'
-                        , section_id: section.id
-                        , infinite_scroll: section.settings.infinite_scroll
+                    assign swatches_lazy = true
+                    if prd_per_row_sm == 'list' or prd_per_row_md == 'list' or prd_per_row_xl == 'list'
+                    if forloop.index < 4 assign swatches_lazy=false endif endif -%} <div class="col">
+                      {% render 'product-card'
+                      , product: item
+                      , sizes: sizes
+                      , widths: card_widths
+                      , lazyload: lazyload
+                      , class_img_only: class_img_only
+                      , section_id: 'product-card'
+                      , fetchpriority: fetchpriority
+                      , swatches_lazy: swatches_lazy
                       %}
-                    {%- endif -%}
-                  {% endpaginate %}
-                {%- endif -%}
+                  </div>
+                  {%- endfor -%}
+                  {%- for item in search.results -%}
+                  {%- case item.object_type -%}
+                  {%- when 'article' -%}
+                  <div class="col">
+                    <product-card class="post-search-grid style{{ settings.product_card_layout }}">
+                      <a href="{{ item.url }}" class="post-search-grid-image">
+                        {% capture style %}
+                        --aspect-ratio: {{ aspect_ratio }};
+                        {% endcapture %}
+                        <span class="post-search-date">
+                          <span>{{ item.published_at | date: "%y" }}</span>
+                          <span>{{ item.published_at | date: "%b" }}</span>
+                        </span>
+                        {% render 'image-container'
+                        , image: item.image
+                        , product_aspect_ratio: true
+                        , style: style
+                        , hover_scale: true
+                        , sizes: sizes image_ratio: "landscape"
+                        %}
+                      </a>
+                      <div class="post-search-grid-bot">
+                        <a class="post-search-grid-name" href="{{ item.url }}">{{ item.title | truncate: 50 | escape
+                          }}</a>
+                      </div>
+                      <div class="post-search-grid-hover text-center">
+                        <a class="post-search-grid-name" href="{{ item.url }}">{{ item.title | truncate: 50 | escape
+                          }}</a>
+                        <div class="post-search-description">{{ item.excerpt_or_content | strip_html | truncatewords: 75
+                          }}</div>
+                        <a href="{{ item.url }}" class="btn">{{ 'theme.general.read_more' | t }}</a>
+                      </div>
+                    </product-card>
+                  </div>
+                  {%- when 'page' -%}
+                  <div class="col">
+                    <product-card class="page-search-grid style{{ settings.product_card_layout }}">
+                      <a href="{{ item.url }}" class="page-icon">
+                        <div class="image-container ic--bg" style="--aspect-ratio: {{ aspect_ratio }};">
+                          {% render 'icon-article' %}
+                        </div>
+                      </a>
+                      <div class="page-search-grid-bot">
+                        <a class="page-search-grid-name" href="{{ item.url }}">
+                          {{ item.title | truncate: 50 | escape }}
+                        </a>
+                      </div>
+                      <div class="page-search-grid-hover text-center">
+                        <a class="page-search-grid-name" href="{{ item.url }}">
+                          {{ item.title | truncate: 50 | escape }}
+                        </a>
+                        <div class="page-search-description">{{ item.content | strip_html | truncatewords: 75 }}</div>
+                        <a href="#" class="btn">{{ 'theme.general.read_more' | t }}</a>
+                      </div>
+                    </product-card>
+                  </div>
+                  {%- endcase -%}
+                  {%- endfor -%}
+                </div>
               </div>
+              {%- if paginate.pages > 1 -%}
+              {% render 'pagination'
+              , paginate: paginate
+              , anchor: '#ProductGridContainer'
+              , results: search
+              , section: section
+              , container: '.prd-grid'
+              , item: '.col'
+              , section_id: section.id
+              , infinite_scroll: section.settings.infinite_scroll
+              %}
+              {%- endif -%}
+              {% endpaginate %}
+              {%- endif -%}
             </div>
           </div>
         </div>
-      <!-- /Center column -->
       </div>
+      <!-- /Center column -->
+    </div>
     <!-- /Two columns -->
 
 
-    </div>
+  </div>
   {%- endif -%}
 
   {% render 'dark-light-switcher'
-    , show_wrapper: true
-    , demo: false
-    , class: 'hidden' %}
+  , show_wrapper: true
+  , demo: false
+  , class: 'hidden' %}
 
   {%- if section.settings.product_reviews -%}
-    {%- liquid
-      capture contentForQuerystring
-        echo content_for_header
-      endcapture
+  {%- liquid
+  capture contentForQuerystring
+  echo content_for_header
+  endcapture
 
-      assign pageUrl = contentForQuerystring | split: '"pageurl":"' | last | split: '"' | first | split: '.myshopify.com' | last | replace: '\/', '/' | replace: '%20', ' ' | replace: '\u0026', '&' | replace: request.host, '' | append: '&amp;'
+  assign pageUrl = contentForQuerystring | split: '"pageurl":"' | last | split: '"' | first | split: '.myshopify.com' |
+  last | replace: '\/', '/' | replace: '%20', ' ' | replace: '\u0026', '&' | replace: request.host, '' | append: '&amp;'
 
-      unless pageUrl contains "?"
-        assign pageUrl = request.path | append: '?'
-      endunless
+  unless pageUrl contains "?"
+  assign pageUrl = request.path | append: '?'
+  endunless
 
-      assign collectionRequestUrl = pageUrl | append: 'section_id=async-index-reviews'
-    -%}
-    <div data-render-facets="reviews" data-async-reload-required="reviews">
-      <intersection-observer
-        data-name="product-reviews"
-        data-url="{{ collectionRequestUrl }}"
-        data-ajax-container=".section-ajax-container"
-        data-margin="0px 0px 600px 0px"
-        data-threshold="0.1"
-        data-once>
-        <div class="section-ajax-container"></div>
-      </intersection-observer>
-    </div>
+  assign collectionRequestUrl = pageUrl | append: 'section_id=async-index-reviews'
+  -%}
+  <div data-render-facets="reviews" data-async-reload-required="reviews">
+    <intersection-observer data-name="product-reviews" data-url="{{ collectionRequestUrl }}"
+      data-ajax-container=".section-ajax-container" data-margin="0px 0px 600px 0px" data-threshold="0.1" data-once>
+      <div class="section-ajax-container"></div>
+    </intersection-observer>
+  </div>
   {%- endif -%}
 
-</div>
+  </div>
 
-{% render 'facets-mobile-popup-container' results: search
+  {% render 'facets-mobile-popup-container' results: search
   , sort_by: sort_by %}
 
-<script src="{{ 'catalog.js' | asset_url }}" defer></script>
+  <script src="{{ 'catalog.js' | asset_url }}" defer></script>
 
-{% schema %}
+  {% schema %}
   {
-    "name": "Search results",
-    "tag": "section",
-    "class": "spaced-section",
-    "settings": [
-      {
-        "type": "header",
-        "content": "SECTION WIDTH"
-      },
-      {
-        "type": "select",
-        "id": "section_width",
-        "label": "Select width source",
-        "options": [
-          {
-            "value": "global",
-            "label": "Use store width"
-          },
-          {
-            "value": "custom",
-            "label": "Custom width"
-          }
-        ],
-        "default": "global",
-        "info": "Store width you can set in Theme Settings / General"
-      },
-      {
-        "type": "range",
-        "id": "container_max_width",
-        "min": 1178,
-        "max": 1978,
-        "step": 8,
-        "unit": "px",
-        "label": "Custom width",
-        "default": 1178,
-        "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
-      },
-      {
-        "type": "header",
-        "content": "SECTION MARGIN"
-      },
-      {
-        "type": "range",
-        "id": "spacing_sections",
-        "min": 0,
-        "max": 200,
-        "step": 2,
-        "unit": "px",
-        "label": "Vertical space above the section on Desktop",
-        "default": 100
-      },
-      {
-        "type": "checkbox",
-        "id": "use_global_desktop_space",
-        "label": "Use global space on desktop",
-        "default": true,
-        "info": "from Theme Settings / General / Layout"
-      },
-      {
-        "type": "range",
-        "id": "spacing_sections_mobile",
-        "min": 0,
-        "max": 100,
-        "step": 1,
-        "unit": "px",
-        "label": "Vertical space above the section on Mobile",
-        "default": 70
-      },
-      {
-        "type": "checkbox",
-        "id": "use_global_mobile_space",
-        "label": "Use global space on mobile",
-        "default": true,
-        "info": "from Theme Settings / General / Layout"
-      },
-      {
-        "type": "header",
-        "content": "SECTION PADDING",
-        "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
-      },
-      {
-        "type": "range",
-        "id": "spacing_padding_sections",
-        "min": 0,
-        "max": 200,
-        "step": 2,
-        "unit": "px",
-        "label": "Vertical inner padding on Desktop",
-        "default": 100
-      },
-      {
-        "type": "checkbox",
-        "id": "use_global_desktop_space_padding",
-        "label": "Use global inner padding on desktop",
-        "default": true,
-        "info": "from Theme Settings / General / Layout"
-      },
-      {
-        "type": "range",
-        "id": "spacing_padding_sections_mobile",
-        "min": 0,
-        "max": 100,
-        "step": 1,
-        "unit": "px",
-        "label": "Vertical inner padding on Mobile",
-        "default": 70
-      },
-      {
-        "type": "checkbox",
-        "id": "use_global_mobile_space_padding",
-        "label": "Use global inner padding on Mobile",
-        "default": true,
-        "info": "from Theme Settings / General / Layout"
-      },
-      {
-        "type": "header",
-        "content": "SECTION BACKGROUND"
-      },
-      {
-        "type": "checkbox",
-        "id": "background",
-        "label": "Enable secondary background",
-        "default": false,
-        "info": "Theme Settings / Colors - General"
-      },
-      {
-        "type": "checkbox",
-        "id": "infinite_scroll",
-        "label": "Infinite scroll",
-        "default": true
-      },
-      {
-        "type": "checkbox",
-        "id": "product_reviews",
-        "label": "Show product reviews",
-        "default": false
-      }
-    ]
+  "name": "Search results",
+  "tag": "section",
+  "class": "spaced-section",
+  "settings": [
+  {
+  "type": "header",
+  "content": "SECTION WIDTH"
+  },
+  {
+  "type": "select",
+  "id": "section_width",
+  "label": "Select width source",
+  "options": [
+  {
+  "value": "global",
+  "label": "Use store width"
+  },
+  {
+  "value": "custom",
+  "label": "Custom width"
   }
-{% endschema %}
+  ],
+  "default": "global",
+  "info": "Store width you can set in Theme Settings / General"
+  },
+  {
+  "type": "range",
+  "id": "container_max_width",
+  "min": 1178,
+  "max": 1978,
+  "step": 8,
+  "unit": "px",
+  "label": "Custom width",
+  "default": 1178,
+  "info": "The specified width may differ from the actual width of the section because this section uses a smart grid
+  for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the
+  section width is increased."
+  },
+  {
+  "type": "header",
+  "content": "SECTION MARGIN"
+  },
+  {
+  "type": "range",
+  "id": "spacing_sections",
+  "min": 0,
+  "max": 200,
+  "step": 2,
+  "unit": "px",
+  "label": "Vertical space above the section on Desktop",
+  "default": 100
+  },
+  {
+  "type": "checkbox",
+  "id": "use_global_desktop_space",
+  "label": "Use global space on desktop",
+  "default": true,
+  "info": "from Theme Settings / General / Layout"
+  },
+  {
+  "type": "range",
+  "id": "spacing_sections_mobile",
+  "min": 0,
+  "max": 100,
+  "step": 1,
+  "unit": "px",
+  "label": "Vertical space above the section on Mobile",
+  "default": 70
+  },
+  {
+  "type": "checkbox",
+  "id": "use_global_mobile_space",
+  "label": "Use global space on mobile",
+  "default": true,
+  "info": "from Theme Settings / General / Layout"
+  },
+  {
+  "type": "header",
+  "content": "SECTION PADDING",
+  "info": "Only if SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+  },
+  {
+  "type": "range",
+  "id": "spacing_padding_sections",
+  "min": 0,
+  "max": 200,
+  "step": 2,
+  "unit": "px",
+  "label": "Vertical inner padding on Desktop",
+  "default": 100
+  },
+  {
+  "type": "checkbox",
+  "id": "use_global_desktop_space_padding",
+  "label": "Use global inner padding on desktop",
+  "default": true,
+  "info": "from Theme Settings / General / Layout"
+  },
+  {
+  "type": "range",
+  "id": "spacing_padding_sections_mobile",
+  "min": 0,
+  "max": 100,
+  "step": 1,
+  "unit": "px",
+  "label": "Vertical inner padding on Mobile",
+  "default": 70
+  },
+  {
+  "type": "checkbox",
+  "id": "use_global_mobile_space_padding",
+  "label": "Use global inner padding on Mobile",
+  "default": true,
+  "info": "from Theme Settings / General / Layout"
+  },
+  {
+  "type": "header",
+  "content": "SECTION BACKGROUND"
+  },
+  {
+  "type": "checkbox",
+  "id": "background",
+  "label": "Enable secondary background",
+  "default": false,
+  "info": "Theme Settings / Colors - General"
+  },
+  {
+  "type": "checkbox",
+  "id": "infinite_scroll",
+  "label": "Infinite scroll",
+  "default": true
+  },
+  {
+  "type": "checkbox",
+  "id": "product_reviews",
+  "label": "Show product reviews",
+  "default": false
+  }
+  ]
+  }
+  {% endschema %}
