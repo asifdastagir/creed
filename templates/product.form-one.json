@@ -111,7 +111,7 @@
             "spacing_blocks": 30,
             "use_global_blocks_desktop_space": true,
             "opened": false,
-            "heading": "Material Tech (Fabric Focus)",
+            "heading": "Material Tech",
             "content": "<ul><li>100% Pure Cotton: Naturally breathable, hypoallergenic, and gentle on skin.</li><li>Moisture Regulation: Cotton fibres absorb and release moisture, keeping<br/>comfort steady.</li><li>Premium Drape: Mid-weight cotton offers flow without losing structure.</li></ul>",
             "page": ""
           }
@@ -122,8 +122,8 @@
             "spacing_blocks": 30,
             "use_global_blocks_desktop_space": true,
             "opened": false,
-            "heading": "Key Features (Design & Aesthetic Focus)",
-            "content": "<ul><li>Oversized Fit: Relaxed silhouette designed for freedom of movement.</li><li>Curved Hem: Extended length and rounded finish for modern coverage.</li><li>Minimalist Design: Clean aesthetic with subtle branding.</li><li>Durable Build: Reinforced seams for longevity and performance wear.</li><li>Everyday Versatility: Blends training functionality with essentials-ready style.</li></ul>",
+            "heading": "Key Features",
+            "content": "<p>Oversized Fit: Relaxed silhouette designed for freedom of movement.</p><p>- Curved Hem: Extended length and rounded finish for modern coverage.</p><p>- Minimalist Design: Clean aesthetic with subtle branding.</p><p>- Durable Build: Reinforced seams for longevity and performance wear.</p><p>- Everyday Versatility: Blends training functionality with essentials-ready style.</p>",
             "page": ""
           }
         }
