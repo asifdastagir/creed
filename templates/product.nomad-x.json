@@ -101,7 +101,7 @@
             "use_global_blocks_desktop_space": true,
             "opened": true,
             "heading": "Design For",
-            "content": "<p>Hybrid performance — swimming, training, and everyday movement without compromise.</p>",
+            "content": "<p><em><strong>Hybrid performance</strong></em> — Swimming, training, and everyday movement without compromise.</p>",
             "page": ""
           }
         },
@@ -111,8 +111,8 @@
             "spacing_blocks": 30,
             "use_global_blocks_desktop_space": true,
             "opened": false,
-            "heading": "Material tech",
-            "content": "<p>85% Polyester 15% spandex (Hydro-tek™)<br/><strong><br/>Hydro-tek™</strong></p><ul><li> Advanced quick-dry fabric engineered for both water and land.</li><li> Moisture-Wicking: Actively pulls sweat and water away to keep the body dry.</li><li>Lightweight Structure: Allows unrestricted movement while reducing drag in water.</li><li>Breathable Weave: Enhances airflow to maintain comfort during training.</li></ul>",
+            "heading": "Material Tech",
+            "content": "<p>85% Polyester, 15% spandex (Hydro-tek™)<br/><strong><br/>Hydro-tek™</strong></p><ul><li> Advanced quick-dry fabric engineered for both water and land.</li><li> Moisture-Wicking: Actively pulls sweat and water away to keep the body dry.</li><li>Lightweight Structure: Allows unrestricted movement while reducing drag in water.</li><li>Breathable Weave: Enhances airflow to maintain comfort during training.</li></ul>",
             "page": ""
           }
         },
@@ -122,8 +122,8 @@
             "spacing_blocks": 30,
             "use_global_blocks_desktop_space": true,
             "opened": false,
-            "heading": "Key Features (Design & Aesthetic Focus)",
-            "content": "<ul><li>High Waistband: Provides secure fit, added coverage, and stability during training or swimming.</li><li>Integrated Liner: Compression support with just-below-the-knee coverage.</li><li>Aesthetic Coverage: Modern silhouette designed for coverage without compromise.</li><li>Versatile Design: Built for the transition between gym, street, and water.</li><li>Premium Construction: Reinforced stitching for endurance and long-term wear.</li></ul>",
+            "heading": "Key Features",
+            "content": "<ul><li><em>High Waistband:</em> Provides secure fit, added coverage, and stability during training or swimming.</li><li><em>Integrated Liner:</em> Compression support with just-below-the-knee coverage.</li><li><em>Aesthetic Coverage:</em> Modern silhouette designed for coverage without compromise.</li><li><em>Versatile Design:</em> Built for the transition between gym, street, and water.</li><li><em>Premium Construction:</em> Reinforced stitching for endurance and long-term wear.</li></ul>",
             "page": ""
           }
         }
