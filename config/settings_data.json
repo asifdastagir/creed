@@ -11,7 +11,7 @@
   "current": {
     "theme_uuid": "",
     "container_max_width": 1778,
-    "product_image_aspect_ratio": "custom",
+    "product_image_aspect_ratio": "80",
     "product_width_ratio": 446,
     "product_height_ratio": 595,
     "catalog_mode": false,
@@ -139,7 +139,7 @@
     "badge_sale_ticker_speed": 3,
     "product_card_layout": "1",
     "product_card_image_padding": "1",
-    "product_card_cover": true,
+    "product_card_cover": false,
     "product_card_image_rounded": "1",
     "product_card_description_source": "metafield",
     "product_card_title_truncate": 88,
