@@ -24,7 +24,7 @@
         "desktop_poster": "shopify://shop_images/692507_3.jpg"
       }
     },
-    "index_product_carousel_LmqA6z": {
+    "index_product_carousel_Mnqkxp": {
       "type": "index-product-carousel",
       "name": "Products carousel / preset 1 Default",
       "settings": {
@@ -37,14 +37,14 @@
         "heading_alignment": "left",
         "heading": "",
         "subtitle": "",
-        "collection": "frontpage",
+        "collection": "nomad-x-hydro",
         "banner": true,
         "banner_position": "flex-row",
         "layout": "compact",
-        "image": "shopify://shop_images/formOne.jpg",
-        "image_mobile": "shopify://shop_images/formOne.jpg",
+        "image": "shopify://shop_images/NomadXHydro.jpg",
+        "image_mobile": "shopify://shop_images/NomadXHydro.jpg",
         "color_placeholder": "",
-        "banner_title": "Form one",
+        "banner_title": "Nomad x  hydro",
         "banner_subtitle": "",
         "invert_color": false,
         "banner_text_decor": true,
@@ -82,7 +82,7 @@
         "section_decoration_bottom_color": ""
       }
     },
-    "index_product_carousel_Mnqkxp": {
+    "index_product_carousel_LmqA6z": {
       "type": "index-product-carousel",
       "name": "Products carousel / preset 1 Default",
       "settings": {
@@ -95,14 +95,14 @@
         "heading_alignment": "left",
         "heading": "",
         "subtitle": "",
-        "collection": "nomad-x-hydro",
+        "collection": "frontpage",
         "banner": true,
         "banner_position": "flex-row",
         "layout": "compact",
-        "image": "shopify://shop_images/NomadXHydro.jpg",
-        "image_mobile": "shopify://shop_images/NomadXHydro.jpg",
+        "image": "shopify://shop_images/formOne.jpg",
+        "image_mobile": "shopify://shop_images/formOne.jpg",
         "color_placeholder": "",
-        "banner_title": "Nomad x  hydro",
+        "banner_title": "Form one",
         "banner_subtitle": "",
         "invert_color": false,
         "banner_text_decor": true,
@@ -252,8 +252,8 @@
   },
   "order": [
     "hero_video_A3zCNf",
-    "index_product_carousel_LmqA6z",
     "index_product_carousel_Mnqkxp",
+    "index_product_carousel_LmqA6z",
     "snap_card_component_YLqD8W",
     "snap_card_component_4TfcKt",
     "snap_card_component_WkxQM4",
