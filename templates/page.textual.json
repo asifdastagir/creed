@@ -65,10 +65,52 @@
         "use_global_mobile_space_padding": true,
         "background": false
       }
+    },
+    "blocks_rHz7x4": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_8bfdde0_mEYFLR": {
+          "type": "ai_gen_block_8bfdde0",
+          "settings": {
+            "selected_page": "",
+            "show_title": true,
+            "show_meta": true,
+            "show_content": true,
+            "content_limit": 0,
+            "show_link": true,
+            "link_text": "View page",
+            "background_color": "#ffffff",
+            "padding": 30,
+            "border_radius": 8,
+            "spacing": 15,
+            "title_color": "#000000",
+            "title_size": 28,
+            "title_weight": "600",
+            "content_color": "#333333",
+            "content_size": 16,
+            "heading_color": "#000000",
+            "link_color": "#0066cc",
+            "link_hover_color": "#004499",
+            "meta_color": "#666666",
+            "meta_size": 14,
+            "button_color": "#000f9f",
+            "button_hover_color": "#000000",
+            "button_text_color": "#ffffff",
+            "button_border_radius": 6
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_8bfdde0_mEYFLR"
+      ],
+      "name": "Page data display",
+      "settings": {}
     }
   },
   "order": [
     "1758466955c0ce580b",
-    "main"
+    "main",
+    "blocks_rHz7x4"
   ]
 }
