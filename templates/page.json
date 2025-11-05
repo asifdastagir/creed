@@ -9,9 +9,49 @@
  */
 {
   "sections": {
+    "176237732766bb8693": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_a01a478_9pycDx": {
+          "type": "ai_gen_block_a01a478",
+          "settings": {
+            "heading": "Shipping & Delivery Policy",
+            "content": "<p>Last updated: [05/11/2025]<br/><br/><strong>Order Processing</strong><br/><br/>All orders are packed and shipped from Sydney, Australia.<br/></p><p>Orders are typically processed within 1–2 business days after purchase (excluding weekends and public holidays).<br/><br/>Cut-off time: 1:00 PM AEST<br/>Orders placed before 1:00 PM are processed the same business day.<br/>Orders placed after 1:00 PM or on weekends/public holidays will be processed on the next business day.<br/></p><p>During high-volume periods, processing may take longer.<br/><br/><strong>Shipping Rates & Delivery Times</strong><br/><br/>Australia (Standard): 5–10 business days<br/>International (Standard): 10–20 business days<br/><br/>Shipping times are estimates only and may vary due to courier delays, customs processing, or seasonal demand.<br/><br/><strong>Please note:</strong> Processing times are separate from shipping times.</p><p><strong>Tracking Information</strong><br/><br/>Once your order has been shipped, you will receive an email confirmation with a tracking link.</p><p>Tracking may take up to 24 hours to update once the courier has collected your parcel.<br/><br/><strong>Customs, Duties & Taxes (International Orders)</strong><br/><br/>International shipments may be subject to import duties, taxes, and customs fees once the parcel arrives in your country.<br/>These charges are determined by your local customs authority and are the responsibility of the customer.<br/>We recommend checking your country’s import policies before placing your order.<br/><br/><strong>Shipping Restrictions</strong><br/><br/>We currently ship worldwide from Sydney, Australia.<br/></p><p>Please note that we cannot deliver to PO Boxes, military addresses, or remote regions where courier access is unavailable.<br/></p><p>If your address is not serviceable, our team will contact you to arrange an alternative.<br/><br/><strong>Lost, Delayed or Damaged Parcels</strong><br/><br/>We are not liable for parcels delayed by courier networks or customs processing.<br/>If your order is lost or damaged in transit, please contact us at info@creedlabel.com within 7 days of the estimated delivery date.<br/>Include your order number and tracking information so our team can assist in resolving the issue promptly.<br/><br/><br/><strong>Pre-Orders & Backorders</strong><br/><br/>If an item is on pre-order, it will ship as soon as it becomes available.<br/>Estimated delivery times will be displayed on the product page at checkout.<br/></p><p><strong>Returns & Exchanges</strong><br/><br/>For details on returning or exchanging your order, please refer to our [Returns & Exchanges Policy].<br/><br/><strong>Consumer Rights</strong><br/><br/>We comply with the Australian Consumer Law (ACL).<br/>If your product is faulty, not as described, or fails to perform as expected, you are entitled to a replacement or refund in accordance with ACL standards.<br/><br/><strong>Contact Us</strong><br/><br/>For shipping questions or concerns, contact our customer support team:<br/><br/><a href=\"mailto:info@creedlabel.com\" title=\"mailto:info@creedlabel.com\">info@creedlabel.com</a><br/>Monday–Friday, 9am–5pm AEST</p>",
+            "max_width": 1200,
+            "text_alignment": "left",
+            "padding_top": 40,
+            "padding_bottom": 40,
+            "padding_horizontal": 30,
+            "heading_spacing": 20,
+            "paragraph_spacing": 16,
+            "padding_top_mobile": 30,
+            "padding_bottom_mobile": 30,
+            "padding_horizontal_mobile": 20,
+            "heading_size": 28,
+            "heading_size_mobile": 22,
+            "text_size": 16,
+            "text_size_mobile": 14,
+            "line_height": 1.6,
+            "background_color": "#f9f9f9",
+            "heading_color": "#000000",
+            "text_color": "#333333",
+            "link_color": "#0066cc",
+            "link_hover_color": "#004499",
+            "border_radius": 8
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_a01a478_9pycDx"
+      ],
+      "settings": {}
+    },
     "main": {
       "type": "main-page",
       "settings": {
+        "section_width": "global",
+        "container_max_width": 1178,
         "spacing_sections": 100,
         "use_global_desktop_space": true,
         "spacing_sections_mobile": 40,
@@ -25,6 +65,7 @@
     }
   },
   "order": [
+    "176237732766bb8693",
     "main"
   ]
 }
