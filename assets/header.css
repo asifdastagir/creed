@@ -909,7 +909,7 @@ search-toggle-mobile {
 
 .hdr-promoline .promoline-text .promoline-copy,
 .hdr-promoline .promoline-text a {
-  color: var(--header-promoline-text-span-color)
+  color: #FFF;
 }
 
 .hdr-promoline .promoline-text.js-promoline-text-carousel {
@@ -944,7 +944,11 @@ search-toggle-mobile {
   font-size  : var(--promoline-fontsize-desktop);
   line-height: 1.3em;
   font-weight: var(--font-weight-600);
-  text-align : center
+  text-align : center;
+      display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
 }
 
 @media (max-width:1024px) {

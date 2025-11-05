@@ -8718,6 +8718,14 @@ swiper-carousel.hover-off .prd {
   color             : var(--product-card-link-color)
 }
 
+
+@media (max-width:768px) {
+  .prd-name a {
+  font-size: 16px;
+  line-height: 20px;
+  }
+}
+
 .secondary-color .prd-name a {
   color: var(--product-card-link-color) !important
 }
@@ -9574,6 +9582,14 @@ ul.prd-option-list {
   line-height: 26px;
   font-family: 'Aeonik';
 
+}
+
+
+@media (max-width:768px) {
+  .prd.prd--style1 .prd-des {
+    font-size  : 13px;
+    line-height: 22px;
+  }
 }
 
 .prd.prd--style1 .prd-bot {
