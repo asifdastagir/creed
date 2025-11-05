@@ -69,26 +69,17 @@
     "main-contact": {
       "type": "index-contact",
       "blocks": {
-        "info_X6w7ea": {
-          "type": "info",
-          "settings": {
-            "icon": "icon-truck",
-            "title": "Title",
-            "description": "Description text goes here"
-          }
-        },
         "0273f6d3-f4e7-433d-a810-090db027fca9": {
           "type": "form",
           "settings": {
-            "heading": "",
-            "subtext": "",
+            "heading": "Contact Us",
+            "subtext": "Have a question? Fill out the form or drop us an email at info@creedlabel.com\n<br><br>\nWe’ll get back to you soon!",
             "link_text": "",
             "link_url": "shopify://pages/about"
           }
         }
       },
       "block_order": [
-        "info_X6w7ea",
         "0273f6d3-f4e7-433d-a810-090db027fca9"
       ],
       "settings": {
