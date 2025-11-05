@@ -109,6 +109,7 @@
         "heading_line2": "",
         "text": "",
         "image": "shopify://shop_images/section1.jpg",
+        "image_mobile": "shopify://shop_images/01.jpg",
         "image_logo": "shopify://shop_images/creed-logo.png",
         "link": "shopify://collections",
         "link_label": "Discover the Science",
