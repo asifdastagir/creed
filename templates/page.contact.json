@@ -33,7 +33,7 @@
           "type": "map",
           "settings": {
             "show_social": false,
-            "google_map": "<iframe title=\"Google Map\" src=\"https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d2201.3258493677126!2d-74.01291322172017!3d40.70657451080482!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sua!4v1492962272380\"></iframe>"
+            "google_map": "<iframe src=\"https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d503121.940510305!2d150.60233714782868!3d-33.847234937864414!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6b129838f39a743f%3A0x3017d681632a850!2sSydney%20NSW%2C%20Australia!5e1!3m2!1sen!2sru!4v1762325614712!5m2!1sen!2sru\" width=\"600\" height=\"450\" style=\"border:0;\" allowfullscreen=\"\" loading=\"lazy\" referrerpolicy=\"no-referrer-when-downgrade\"></iframe>"
           }
         }
       },
@@ -72,24 +72,15 @@
         "0273f6d3-f4e7-433d-a810-090db027fca9": {
           "type": "form",
           "settings": {
-            "heading": "Our Policy",
-            "subtext": "Make a statement with the Splat T-Shirt, available in Blue Grass, Black, and White, each with unique splat accents. This 100% cotton tee, made in Portugal from heavyweight 275gsm fabric, includes a small logo on the left chest and a dynamic splat graffiti design on the back with a \"flair\" definition. Add a bold splash of color to your wardrobe and showcase your individuality.",
-            "link_text": "Discover More",
+            "heading": "Contact Us",
+            "subtext": "Have a question? Fill out the form or drop us an email at info@creedlabel.com\n<br><br>\nWe’ll get back to you soon!",
+            "link_text": "",
             "link_url": "shopify://pages/about"
-          }
-        },
-        "info_X6w7ea": {
-          "type": "info",
-          "settings": {
-            "icon": "icon-truck",
-            "title": "Title",
-            "description": "Description text goes here"
           }
         }
       },
       "block_order": [
-        "0273f6d3-f4e7-433d-a810-090db027fca9",
-        "info_X6w7ea"
+        "0273f6d3-f4e7-433d-a810-090db027fca9"
       ],
       "settings": {
         "section_animation": true,
