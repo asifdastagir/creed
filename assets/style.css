@@ -18892,7 +18892,8 @@ dropdown-onclick .dropdown-content .dropdown-prd .product-form__error-message-wr
 
 @media (max-width:767px) {
   .block-accordion .tab-accordion-item>label {
-    padding: 20px 0
+    padding: 20px 0;
+      font-size  : 20px;
   }
 }
 
