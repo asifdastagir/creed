@@ -247,6 +247,7 @@
         "margin_top": 0,
         "margin_bottom": 0,
         "image": "shopify://shop_images/Mass_awakening_banner.png",
+        "image_mobile": "shopify://shop_images/Mass_5a01cd5b-b1e1-4562-9958-3be8b168c84b.jpg",
         "video": "",
         "button_label": "About Us",
         "button_url": "shopify://pages/about"
