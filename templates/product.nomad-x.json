@@ -62,7 +62,7 @@
             "spacing_blocks": 16,
             "use_global_blocks_desktop_space": false,
             "text": "Sizing guide",
-            "page": "sizing-guide",
+            "page": "nomad-size",
             "subtitle": "Set up an individual subtitle for each popup in the admin panel",
             "icon": "icon-size"
           }
