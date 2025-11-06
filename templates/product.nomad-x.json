@@ -63,7 +63,7 @@
             "use_global_blocks_desktop_space": false,
             "text": "Sizing guide",
             "page": "nomad-size",
-            "subtitle": "Set up an individual subtitle for each popup in the admin panel",
+            "subtitle": "",
             "icon": "icon-size"
           }
         },
