@@ -89,7 +89,7 @@ endif
 
 <!-- Custom Styles -->
 
-<script src="{{ 'demo-mode-override.js' | asset_url }}"></script>
+{% comment %} {% endcomment %}
 {%- if settings.use_bundles -%}
 <script src="{{ 'bundle-head.js' | asset_url }}" defer></script>
 {%- else -%}
