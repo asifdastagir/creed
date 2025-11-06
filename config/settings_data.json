@@ -121,7 +121,7 @@
     "mobile_bottom_navigation_wishlist": "default",
     "mobile_bottom_navigation_cart": "default",
     "product_card_color_options_name": "Color,اللون,Цвят,Barva,Farbe,Χρώμα,Color,Väri,Couleur,צֶבַע,रंग,Boja,Szín,Warna,Colore,色,Farge,Kleur,Farge,Kolor,顏色",
-    "newsletter_popup_yes": false,
+    "newsletter_popup_yes": true,
     "newsletter_popup_home_only_yes": false,
     "newsletter_popup_delay": 14,
     "newsletter_popup_expires": 1,
