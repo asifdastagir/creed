@@ -120,10 +120,10 @@
     "image_parallax_yDjGC9": {
       "type": "image-parallax",
       "blocks": {
-        "parallax_image_C7nqL8": {
+        "parallax_image_4zVjz9": {
           "type": "parallax_image",
           "settings": {
-            "image": "shopify://shop_images/Mask_group_1.png"
+            "image": "shopify://shop_images/Mask_group.jpg"
           }
         },
         "parallax_image_thFQat": {
@@ -132,17 +132,17 @@
             "image": "shopify://shop_images/Mask_group_dbbb69db-f508-43ad-be8f-2c615098f041.png"
           }
         },
-        "parallax_image_4zVjz9": {
+        "parallax_image_C7nqL8": {
           "type": "parallax_image",
           "settings": {
-            "image": "shopify://shop_images/Mask_group.jpg"
+            "image": "shopify://shop_images/Mask_group_1.png"
           }
         }
       },
       "block_order": [
-        "parallax_image_C7nqL8",
+        "parallax_image_4zVjz9",
         "parallax_image_thFQat",
-        "parallax_image_4zVjz9"
+        "parallax_image_C7nqL8"
       ],
       "name": "Text + Parallax Component",
       "settings": {
