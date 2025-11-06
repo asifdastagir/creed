@@ -194,19 +194,19 @@
         "parallax_image_prBGgd": {
           "type": "parallax_image",
           "settings": {
-            "image": "shopify://shop_images/Parallax_01.jpg"
+            "image": "shopify://shop_images/Mask_group.jpg"
           }
         },
         "parallax_image_BTcQB7": {
           "type": "parallax_image",
           "settings": {
-            "image": "shopify://shop_images/Parallax_02.jpg"
+            "image": "shopify://shop_images/Mask_group_dbbb69db-f508-43ad-be8f-2c615098f041.png"
           }
         },
         "parallax_image_qeeAm4": {
           "type": "parallax_image",
           "settings": {
-            "image": "shopify://shop_images/Parallax_03.jpg"
+            "image": "shopify://shop_images/Mask_group_1.png"
           }
         }
       },
@@ -218,7 +218,7 @@
       "name": "Text + Parallax Component",
       "settings": {
         "subtitle": "ABOUT US",
-        "heading": "Creed Label was born from <br>MΛSS AWΛKΞNІИG  — The idea of being fully awake: in movement, in discipline, and in the choices we make.",
+        "heading": "Creed Label was born from MΛSS AWΛKΞNІИG  — The idea of being fully awake: in movement, in discipline, and in the choices we make.",
         "description": "",
         "cta_label": "About US",
         "cta_url": "shopify://pages/about",
