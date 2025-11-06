@@ -2,8 +2,21 @@
   width: 1148px;
   max-width: calc(100% - 60px);
   padding: 0;
-  overflow: hidden
+  overflow: hidden;
+  border: 1px solid rgba(71, 85, 105, 0.5);
+  border-radius: 1rem;
+  background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(4px);
+    color: #FFF;
+
 }
+
+.modal-wrap.fancybox-content.newslettermodal input,
+.modal-wrap.fancybox-content.newslettermodal input::placeholder {
+  color: #FFF !important;
+  opacity: 1 !important;
+}
+
 @media (min-width:1025px) {
   .modal-wrap.fancybox-content.newslettermodal {
     transform: translateX(calc(-.5 * var(--scroll-width)))
@@ -94,3 +107,18 @@
     padding: 0 30px
   }
 }
+
+
+.nws-btn{
+      width: 100%;
+    background: #d4c5b9;
+    color: #0f172a;
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.75rem;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s  ease;
+    margin-top: 1.5rem;
+  }
