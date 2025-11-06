@@ -100,7 +100,7 @@
             "spacing_blocks": 30,
             "use_global_blocks_desktop_space": true,
             "opened": false,
-            "heading": "Design For",
+            "heading": "Designed For",
             "content": "<p>{{ product.metafields.custom.for | metafield_tag }}</p>",
             "page": ""
           }
