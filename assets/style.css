@@ -25632,8 +25632,8 @@ body.safari_version_below_14 .hdr-second-nav .menu-label {
 
 .recommended-product .prd.prd--style1 .prd-top {
   position       : absolute;
-  backdrop-filter: blur(31.462953567504883px);
-  background     : #FFFFFFCC;
+  /* backdrop-filter: blur(31.462953567504883px); */
+  background     : #ffffff14;
   bottom         : 10px;
   left           : 10px;
   right          : 10px;
@@ -25691,4 +25691,10 @@ body.safari_version_below_14 .hdr-second-nav .menu-label {
   .section-title {
     font-size: 2.5rem;
   }
+}
+
+
+#popupNewsletter .fancybox-button.fancybox-button--close svg path, 
+#popupNewsletter .fancybox-button.fancybox-close-small svg path{
+  fill: #FFF !important;
 }

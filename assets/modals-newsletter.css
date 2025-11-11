@@ -11,7 +11,7 @@
 
 }
 
-.modal-wrap.fancybox-content.newslettermodal input,
+.modal-wrap.fancybox-content.newslettermodal input, 
 .modal-wrap.fancybox-content.newslettermodal input::placeholder {
   color: #FFF !important;
   opacity: 1 !important;
