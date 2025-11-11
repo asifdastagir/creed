@@ -70,19 +70,19 @@
         "parallax_image_xJEzdW": {
           "type": "parallax_image",
           "settings": {
-            "image": "shopify://shop_images/Parallax_01.jpg"
+            "image": "shopify://shop_images/Mask_group.jpg"
           }
         },
         "parallax_image_qeih96": {
           "type": "parallax_image",
           "settings": {
-            "image": "shopify://shop_images/Parallax_02.jpg"
+            "image": "shopify://shop_images/Mask_group_dbbb69db-f508-43ad-be8f-2c615098f041.png"
           }
         },
         "parallax_image_UF4wrg": {
           "type": "parallax_image",
           "settings": {
-            "image": "shopify://shop_images/Parallax_03.jpg"
+            "image": "shopify://shop_images/Mask_group_1.png"
           }
         }
       },
