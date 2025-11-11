@@ -413,8 +413,8 @@
                     <div class="bnr to-center to-middle text-center image-hover-scale" data-fontratio="2.7">
                       {% render 'image-container',
                         image: section.settings.image,
-                        padding_no_bg: 158,
-                        padding: 158,
+                        padding_no_bg: section.settings.banner_padding | default: 158,
+                        padding: section.settings.banner_padding | default: 158,
                         sizes: '264px',
                         class_ic: 'bnr-img',
                         style: ic_style
@@ -823,7 +823,18 @@
       "type": "image_picker",
       "id": "image_mobile",
       "label": "Image for mobile",
-      "info": "recommended size for retina displays is 750x370px"
+      "info": "recommended size for retina displays is 750x370px",
+    },
+    {
+      "type": "range",
+      "id": "banner_padding",
+      "min": 0,
+      "max": 300,
+      "step": 3,
+      "unit": "px",
+      "label": "Banner image padding (Compact layout)",
+      "default": 159,
+      "info": "Padding value for banner image in compact layout"
     },
     {
       "type": "color",
