@@ -1,31 +1,32 @@
 {% comment %}theme-check-disable UnusedAssign{% endcomment %}
 {%- unless settings.catalog_mode -%}
 {%- liquid
-  assign layout = 'main-cart-items'
+assign layout = 'main-cart-items'
 
-  if "ar he he-IL hi" contains localization.language.iso_code
-    assign rtl = '-rtl'
-  endif
+if "ar he he-IL hi" contains localization.language.iso_code
+assign rtl = '-rtl'
+endif
 
-  assign store_width = settings.container_max_width
+assign store_width = settings.container_max_width
 
-  if section.settings.section_width == 'custom'
-    assign store_width = section.settings.container_max_width
-  endif
+if section.settings.section_width == 'custom'
+assign store_width = section.settings.container_max_width
+endif
 
-  if template.suffix contains 'store-width-'
-    assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
-  endif
+if template.suffix contains 'store-width-'
+assign store_width = template.suffix | split: 'store-width-' | last | plus: 0
+endif
 
-  assign hide_quantity = 1
+assign hide_quantity = 1
 
-  if settings.product_inventory_quantity and settings.product_inventory_quantity_on_main_cart
-    assign hide_quantity = 0
-  endif
+if settings.product_inventory_quantity and settings.product_inventory_quantity_on_main_cart
+assign hide_quantity = 0
+endif
 -%}
 {{ 'cart-page' | append: rtl | append: '.css' | asset_url | stylesheet_tag }}
-<cart-items class="page-width{% if cart == empty %} is-empty{% endif %}" id="main-cart-items" data-id="{{ section.id }}">
-  <div class="holder mt-global" {% render 'section-style', section: section %}>
+<cart-items class="page-width{% if cart == empty %} is-empty{% endif %}" id="main-cart-items"
+  data-id="{{ section.id }}">
+  <div class="holder mt-global" {% render 'section-style' , section: section %}>
     <div class="container show-on-scroll">
       <div class="js-contents-cart-items-empty">
         <div class="cart-empty text-center">
@@ -35,7 +36,8 @@
           <h2 class="cart-empty-title">{{ 'theme-sections.sections.cart.empty' | t }}</h2>
           <div class="cart-empty-text">{{ 'theme.general.empty_description' | t }}</div>
           <div class="mt-3">
-            <a href="{{ routes.all_products_collection_url }}" class="btn btn--showmore">{{ 'general.continue_shopping' | t }}</a>
+            <a href="{{ routes.all_products_collection_url }}" class="btn btn--showmore">{{ 'general.continue_shopping'
+              | t }}</a>
           </div>
         </div>
       </div>
@@ -50,256 +52,283 @@
             <form action="{{ routes.cart_url }}" class="critical-hidden" method="post" id="cart">
               <div data-id="{{ section.id }}">
                 {%- if cart != empty -%}
-                  <div class="cart-table border-bottom-0" id="cartTable">
-                    <div class="visually-hidden">{{ 'theme-sections.sections.cart.title' | t }}</div>
-                    {%- liquid
-                      assign cart_items = cart.items
+                <div class="cart-table border-bottom-0" id="cartTable">
+                  <div class="visually-hidden">{{ 'theme-sections.sections.cart.title' | t }}</div>
+                  {%- liquid
+                  assign cart_items = cart.items
 
-                      if settings.header_cart_order_reverted
-                        assign cart_items = cart.items | reverse
-                      endif
-                    -%}
-                    {%- for item in cart_items -%}
-                      {%- liquid
-                        assign product_url_collection = item.url
+                  if settings.header_cart_order_reverted
+                  assign cart_items = cart.items | reverse
+                  endif
+                  -%}
+                  {%- for item in cart_items -%}
+                  {%- liquid
+                  assign product_url_collection = item.url
 
-                        if settings.product_card_url_within_collection
-                          assign product_url_collection = item.url | within: collection
-                        endif
-                      -%}
-                      <div class="cart-table-prd" id="CartItem-{{ item.index | plus: 1 }}">
-                        <div class="cart-table-prd-image {% unless item.image %}d-none{% endunless %}">
-                          {% if item.image %}
-                            <a href="{{ product_url_collection }}">
-                              {% render 'image-container',
-                                image: item.image,
-                                product_aspect_ratio: true,
-                                padding_no_bg: 120,
-                                sizes: '100px',
-                                width_times: 3,
-                                cover: settings.product_card_cover
-                              %}
-                            </a>
-                            {%- if item.selling_plan_allocation != nil -%}
-                              <div class="subscription-label">{{ 'theme.general.badge_cart_subscription' | t }}</div>
-                            {%- endif -%}
-                          {% endif %}
-                        </div>
-                        <div class="cart-table-prd-content-wrap">
-                          <div class="cart-table-prd-info">
-                            {%- if section.settings.show_vendor -%}
-                              <p class="cart-table-vendor">{{ item.product.vendor }}</p>
-                            {%- endif -%}
-                            <h2 class="cart-table-prd-name">
-                              <a href="{{ product_url_collection }}">{{ item.product.title | escape }}</a>
-                            </h2>
-                            {%- if item.product.has_only_default_variant == false or item.properties.size != 0 -%}
-                              <dl>
-                                {%- if item.product.has_only_default_variant == false -%}
-                                  {%- for option in item.options_with_values -%}
-                                    <div class="cart-table-product-option">
-                                      <dt>{{ option.name }}:</dt>
-                                      <dd>{{ option.value }}</dd>
-                                    </div>
-                                  {%- endfor -%}
-                                {%- endif -%}
-                                {%- for property in item.properties -%}
-                                  {%- assign property_first_char = property.first | slice: 0 -%}
-                                  {%- if property.last != blank and property_first_char != '_' -%}
-                                    <div class="cart-table-product-option">
-                                      <dt>{{ property.first }}:</dt>
-                                      <dd>
-                                        {%- if property.last contains '/uploads/' -%}
-                                          <a href="{{ property.last }}" class="link" target="_blank">
-                                            {{ property.last | split: '/' | last }}
-                                          </a>
-                                        {%- else -%}
-                                          {{ property.last }}
-                                        {%- endif -%}
-                                      </dd>
-                                    </div>
-                                  {%- endif -%}
-                                {%- endfor -%}
-                              </dl>
-                            {%- endif -%}
-                            {%- if item.selling_plan_allocation.selling_plan.name != blank -%}
-                              <p class="prd-prepay-text"  data-tippy-placement="bottom" data-tippy-content="{{ item.selling_plan_allocation.selling_plan.description | escape }}">{{ item.selling_plan_allocation.selling_plan.name }}</p>
-                            {%- endif -%}
+                  if settings.product_card_url_within_collection
+                  assign product_url_collection = item.url | within: collection
+                  endif
+                  -%}
+                  <div class="cart-table-prd" id="CartItem-{{ item.index | plus: 1 }}">
+                    <div class="cart-table-prd-image {% unless item.image %}d-none{% endunless %}">
+                      {% if item.image %}
+                      <a href="{{ product_url_collection }}">
+                        {% render 'image-container',
+                        image: item.image,
+                        product_aspect_ratio: true,
+                        padding_no_bg: 120,
+                        sizes: '100px',
+                        width_times: 3,
+                        cover: settings.product_card_cover
+                        %}
+                      </a>
+                      {%- if item.selling_plan_allocation != nil -%}
+                      <div class="subscription-label">{{ 'theme.general.badge_cart_subscription' | t }}</div>
+                      {%- endif -%}
+                      {% endif %}
+                    </div>
+                    <div class="cart-table-prd-content-wrap">
+                      <div class="cart-table-prd-info">
+                        {%- if section.settings.show_vendor -%}
+                        <p class="cart-table-vendor">{{ item.product.vendor }}</p>
+                        {%- endif -%}
+                        <h2 class="cart-table-prd-name">
+                          <a href="{{ product_url_collection }}">{{ item.product.title | escape }}</a>
+                        </h2>
+                        {%- if item.product.has_only_default_variant == false or item.properties.size != 0 -%}
+                        <dl>
+                          {%- if item.product.has_only_default_variant == false -%}
+                          {%- for option in item.options_with_values -%}
+                          <div class="cart-table-product-option">
+                            <dt>{{ option.name }}:</dt>
+                            <dd>{{ option.value }}</dd>
                           </div>
-                          <div class="cart-table-prd-price">
-                            {% render 'main-cart-item-component-price', item: item %}
+                          {%- endfor -%}
+                          {%- endif -%}
+                          {%- for property in item.properties -%}
+                          {%- assign property_first_char = property.first | slice: 0 -%}
+                          {%- if property.last != blank and property_first_char != '_' -%}
+                          <div class="cart-table-product-option">
+                            <dt>{{ property.first }}:</dt>
+                            <dd>
+                              {%- if property.last contains '/uploads/' -%}
+                              <a href="{{ property.last }}" class="link" target="_blank">
+                                {{ property.last | split: '/' | last }}
+                              </a>
+                              {%- else -%}
+                              {{ property.last }}
+                              {%- endif -%}
+                            </dd>
                           </div>
-                          <div class="cart-table-prd-qty" data-node-desktop>
-                            {% render 'quantity',
-                              item: item,
-                              name: 'updates[]',
-                              value: item.quantity,
-                              min: 0,
-                              in_cart: true,
-                              product_title: item.product.title,
-                              current_variant: item.variant,
-                              layout: layout,
-                              hide_quantity: hide_quantity
-                            %}
-                          </div>
-                          <div class="cart-table-prd-price-total position-relative">
-                            {% render 'main-cart-item-component-final-price', item: item %}
-                          </div>
-                        </div>
-                        <div class="cart-table-prd-action">
-                          <cart-remove-button data-index="{{ item.index | plus: 1 }}">
-                            <a href="{{ item.url_to_remove }}" class="cart-table-prd-remove position-relative" aria-label="{{ 'theme-sections.sections.cart.remove_title' | t: title: item.title }}" title="{{ 'theme-sections.sections.cart.remove_title' | t: title: item.title }}">{% render 'icon-remove2' %}
-                              <div class="loading-overlay__spinner hidden">
-                                <div data-load="loading"></div>
-                              </div>
-                            </a>
-                          </cart-remove-button>
-                        </div>
-                        <div class="cart-table-prd-discount">
-                          <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
-                            {%- for discount in item.discounts -%}
-                              <li class="discounts__discount">
-                                {%- render 'icon-discount' -%}
-                                {{ discount.title }}
-                              </li>
-                            {%- endfor -%}
-                          </ul>
-                        </div>
-                        <div class="cart-table-mobile">
-                          <div class="cart-table-prd-price">
-                            {% render 'main-cart-item-component-price', item: item %}
-                          </div>
-                          <div class="cart-table-prd-qty" data-node-mobile></div>
-                          <div class="cart-table-prd-price-total">
-                            {% render 'main-cart-item-component-final-price', item: item %}
-                          </div>
-                        </div>
-                        <div class="cart-item__error hidden" id="Line-item-error-{{ item.index | plus: 1 }}" role="alert">
-                          <small class="cart-item__error-text"></small>
-                          {% render 'icon-alert' %}
-                        </div>
+                          {%- endif -%}
+                          {%- endfor -%}
+                        </dl>
+                        {%- endif -%}
+                        {%- if item.selling_plan_allocation.selling_plan.name != blank -%}
+                        <p class="prd-prepay-text" data-tippy-placement="bottom"
+                          data-tippy-content="{{ item.selling_plan_allocation.selling_plan.description | escape }}">{{
+                          item.selling_plan_allocation.selling_plan.name }}</p>
+                        {%- endif -%}
                       </div>
-                    {%- endfor -%}
+                      <div class="cart-table-prd-price">
+                        {% render 'main-cart-item-component-price', item: item %}
+                      </div>
+                      <div class="cart-table-prd-qty" data-node-desktop>
+                        {% render 'quantity',
+                        item: item,
+                        name: 'updates[]',
+                        value: item.quantity,
+                        min: 0,
+                        in_cart: true,
+                        product_title: item.product.title,
+                        current_variant: item.variant,
+                        layout: layout,
+                        hide_quantity: hide_quantity
+                        %}
+                      </div>
+                      <div class="cart-table-prd-price-total position-relative">
+                        {% render 'main-cart-item-component-final-price', item: item %}
+                      </div>
+                    </div>
+                    <div class="cart-table-prd-action">
+                      <cart-remove-button data-index="{{ item.index | plus: 1 }}">
+                        <a href="{{ item.url_to_remove }}" class="cart-table-prd-remove position-relative"
+                          aria-label="{{ 'theme-sections.sections.cart.remove_title' | t: title: item.title }}"
+                          title="{{ 'theme-sections.sections.cart.remove_title' | t: title: item.title }}">{% render
+                          'icon-remove2' %}
+                          <div class="loading-overlay__spinner hidden">
+                            <div data-load="loading"></div>
+                          </div>
+                        </a>
+                      </cart-remove-button>
+                    </div>
+                    <div class="cart-table-prd-discount">
+                      <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
+                        {%- for discount in item.discounts -%}
+                        <li class="discounts__discount">
+                          {%- render 'icon-discount' -%}
+                          {{ discount.title }}
+                        </li>
+                        {%- endfor -%}
+                      </ul>
+                    </div>
+                    <div class="cart-table-mobile">
+                      <div class="cart-table-prd-price">
+                        {% render 'main-cart-item-component-price', item: item %}
+                      </div>
+                      <div class="cart-table-prd-qty" data-node-mobile></div>
+                      <div class="cart-table-prd-price-total">
+                        {% render 'main-cart-item-component-final-price', item: item %}
+                      </div>
+                    </div>
+                    <div class="cart-item__error hidden" id="Line-item-error-{{ item.index | plus: 1 }}" role="alert">
+                      <small class="cart-item__error-text"></small>
+                      {% render 'icon-alert' %}
+                    </div>
                   </div>
-                  <div class="mt-3 text-center d-none d-lg-block">
-                    <a href="{{ routes.all_products_collection_url }}" class="btn btn--grey"><span>{{ 'general.continue_shopping' | t }}</span></a>
-                  </div>
+                  {%- endfor -%}
+                </div>
+                <div class="mt-3 text-center d-none d-lg-block">
+                  <a href="{{ routes.all_products_collection_url }}" class="btn btn--grey"><span>{{
+                      'general.continue_shopping' | t }}</span></a>
+                </div>
                 {%- endif -%}
               </div>
               <p class="visually-hidden" id="cart-live-region-text" aria-live="polite" role="status"></p>
-              <p class="visually-hidden" id="shopping-cart-line-item-status" aria-live="polite" aria-hidden="true" role="status">{{ 'accessibility.loading' | t }}</p>
+              <p class="visually-hidden" id="shopping-cart-line-item-status" aria-live="polite" aria-hidden="true"
+                role="status">{{ 'accessibility.loading' | t }}</p>
             </form>
           </div>
         </div>
-        <div class="cart-page-column aside aside--sidebar aside--right aside--sticky--xl js-sticky-collision" role="complementary">
+        <div class="cart-page-column aside aside--sidebar aside--right aside--sticky--xl js-sticky-collision"
+          role="complementary">
           <div class="aside-content">
             <div class="card-total bg-alt">
               <div class="card-total-inside">
                 {% for block in section.blocks %}
-                  {%- case block.type -%}
-                  {%- when '@app' -%}
-                  {% render block %}
-                  {%- when 'subtotal' -%}
-                    <div class="js-contents-subtotal" {{ block.shopify_attributes }}>
-                      <h4 class="card-total-title">{{ 'theme.general.your_order' | t }}</h4>
+                {%- case block.type -%}
+                {%- when '@app' -%}
+                {% render block %}
+                {%- when 'subtotal' -%}
+                <div class="js-contents-subtotal" {{ block.shopify_attributes }}>
+                  <h4 class="card-total-title">{{ 'theme.general.your_order' | t }}</h4>
 
-                      {%- if cart.cart_level_discount_applications.size > 0 -%}
-                      <div class="row mt-1">
-                        <div class="col-auto">
-                        <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
-                          {%- for discount in cart.cart_level_discount_applications -%}
-                            <li class="discounts__discount discounts__discount--end">
-                              {%- render 'icon-discount' -%}
-                              {{ discount.title }}
-                              (-{{ discount.total_allocated_amount | money }})
-                            </li>
-                          {%- endfor -%}
-                        </ul>
-                        </div>
-                      </div>
-                      {%- endif -%}
-
-                      <div class="row mt-1">
-                        <div class="col-auto">
-                          {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
-                            {{ 'theme-sections.sections.cart.taxes_included_and_shipping_policy_html' | t: link: shop.shipping_policy.url }}
-                            {%- elsif cart.taxes_included -%}
-                            {{ 'theme-sections.sections.cart.taxes_included_but_shipping_at_checkout' | t }}
-                            {%- elsif shop.shipping_policy.body != blank -%}
-                            {{ 'theme-sections.sections.cart.taxes_and_shipping_policy_at_checkout_html' | t: link: shop.shipping_policy.url }}
-                          {%- else -%}
-                            {{ 'theme-sections.sections.cart.taxes_and_shipping_at_checkout' | t }}
-                          {%- endif -%}
-                        </div>
-                      </div>
-
-                      <div class="row card-total-summa mt-1">
-                        <div class="col text-uppercase">{{ 'theme-sections.sections.cart.subtotal' | t }}:</div>
-                        <div class="col-auto">
-                          {% if settings.currency_code_enabled %}
-                            {{ cart.total_price | money_with_currency }}
-                          {% else %}
-                            {{ cart.total_price | money }}
-                          {% endif %}
-                        </div>
-                      </div>
+                  {%- if cart.cart_level_discount_applications.size > 0 -%}
+                  <div class="row mt-1">
+                    <div class="col-auto">
+                      <ul class="discounts list-unstyled" role="list" aria-label="{{ 'customer.order.discount' | t }}">
+                        {%- for discount in cart.cart_level_discount_applications -%}
+                        <li class="discounts__discount discounts__discount--end">
+                          {%- render 'icon-discount' -%}
+                          {{ discount.title }}
+                          (-{{ discount.total_allocated_amount | money }})
+                        </li>
+                        {%- endfor -%}
+                      </ul>
                     </div>
-                    {%- else -%}
-                    <div class="row flex-column" {{ block.shopify_attributes }}>
-                      <div class="col  position-relative">
-                        <button name="checkout"{% if cart == empty %} disabled{% endif %} form="cart" type="submit" data-button=".shopify-payment-agree" id="checkout" class="btn w-100 btn--cartpage-checkout {% if settings.checkout_agreement %}shopify-payment-agree disabled{% endif %}"><span>{{ 'theme-sections.sections.cart.checkout' | t }}</span></button>
-                        {% if settings.checkout_agreement %}<info-popup data-ajax="{{ routes.root_url }}?section_id=async-agreement-info" data-selector="#agreementInfo"><span></span></info-popup>{% endif %}
-                      </div>
-                      {%- if additional_checkout_buttons -%}
-                        <div class="col">
-                          <div class="additional-checkout-buttons {% if settings.checkout_agreement %}shopify-payment-agree disabled{% endif %}">
-                            {{ content_for_additional_checkout_buttons }}
-                          </div>
-                        </div>
-                      {%- endif -%}
-                      {%- if settings.checkout_agreement -%}
-                        <div id="prd-block-agreement" class="prd-block-agreement custom-form" data-agree>
-                          <input id="agreementCheckboxMaincart" class="js-agreement-checkbox" data-button=".shopify-payment-agree" name="agreementCheckboxProductPage" type="checkbox" {% if settings.checkout_agreement_check_by_default %}checked{% endif %}>
-                          <label for="agreementCheckboxMaincart"><info-popup data-ajax="{{ routes.root_url }}?section_id=async-agreement-info" data-selector="#agreementInfo"><a href="#" class="modal-info-link">{{ 'theme.general.agree_to_the_terms' | t }}</a></info-popup></label>
-                        </div>
+                  </div>
+                  {%- endif -%}
+
+                  <div class="row mt-1">
+                    <div class="col-auto">
+                      {%- if cart.taxes_included and shop.shipping_policy.body != blank -%}
+                      {{ 'theme-sections.sections.cart.taxes_included_and_shipping_policy_html' | t: link:
+                      shop.shipping_policy.url }}
+                      {%- elsif cart.taxes_included -%}
+                      {{ 'theme-sections.sections.cart.taxes_included_but_shipping_at_checkout' | t }}
+                      {%- elsif shop.shipping_policy.body != blank -%}
+                      {{ 'theme-sections.sections.cart.taxes_and_shipping_policy_at_checkout_html' | t: link:
+                      shop.shipping_policy.url }}
+                      {%- else -%}
+                      {{ 'theme-sections.sections.cart.taxes_and_shipping_at_checkout' | t }}
                       {%- endif -%}
                     </div>
-                  {%- endcase -%}
+                  </div>
+
+                  <div class="row card-total-summa mt-1">
+                    <div class="col text-uppercase">{{ 'theme-sections.sections.cart.subtotal' | t }}:</div>
+                    <div class="col-auto">
+                      {% if settings.currency_code_enabled %}
+                      {{ cart.total_price | money_with_currency }}
+                      {% else %}
+                      {{ cart.total_price | money }}
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+                {%- else -%}
+                <div class="row flex-column" {{ block.shopify_attributes }}>
+                  <div class="col  position-relative">
+                    <button name="checkout" {% if cart==empty %} disabled{% endif %} form="cart" type="submit"
+                      data-button=".shopify-payment-agree" id="checkout"
+                      class="btn btn--grey mb-10 w-100 btn--cartpage-checkout {% if settings.checkout_agreement %}shopify-payment-agree disabled{% endif %}"><span>{{
+                        'theme-sections.sections.cart.checkout' | t }}</span></button>
+                    {% if settings.checkout_agreement %}<info-popup
+                      data-ajax="{{ routes.root_url }}?section_id=async-agreement-info"
+                      data-selector="#agreementInfo"><span></span></info-popup>{% endif %}
+                  </div>
+                  {%- if additional_checkout_buttons -%}
+                  <div class="col">
+                    <div
+                      class="additional-checkout-buttons {% if settings.checkout_agreement %}shopify-payment-agree disabled{% endif %}">
+                      {{ content_for_additional_checkout_buttons }}
+                    </div>
+                  </div>
+                  {%- endif -%}
+                  {%- if settings.checkout_agreement -%}
+                  <div id="prd-block-agreement" class="prd-block-agreement custom-form" data-agree>
+                    <input id="agreementCheckboxMaincart" class="js-agreement-checkbox"
+                      data-button=".shopify-payment-agree" name="agreementCheckboxProductPage" type="checkbox" {% if
+                      settings.checkout_agreement_check_by_default %}checked{% endif %}>
+                    <label for="agreementCheckboxMaincart"><info-popup
+                        data-ajax="{{ routes.root_url }}?section_id=async-agreement-info"
+                        data-selector="#agreementInfo"><a href="#" class="modal-info-link">{{
+                          'theme.general.agree_to_the_terms' | t }}</a></info-popup></label>
+                  </div>
+                  {%- endif -%}
+                </div>
+                {%- endcase -%}
                 {% endfor %}
                 <div id="cart-errors"></div>
                 <div class="mt-3 d-lg-none">
-                  <a href="{{ routes.all_products_collection_url }}" class="btn btn--showmore w-100 btn btn--grey">{{ 'general.continue_shopping' | t }}</a>
+                  <a href="{{ routes.all_products_collection_url }}" class="btn btn--showmore w-100 btn btn--grey">{{
+                    'general.continue_shopping' | t }}</a>
                 </div>
               </div>
             </div>
             {%- if settings.show_cart_note -%}
-              <div class="block-accordion">
-                <form data-click="radio">
-                  <div class="tab-accordion-item card-tab-accordion-item">
-                    <input type="checkbox" name="tab-accordion" id="tabAccordion3" class="js-cart-page-note-checkbox">
-                    <label for="tabAccordion3" data-text="{{ 'theme.general.add_note' | t }}">{{ 'theme.general.add_note' | t }}
-                      <span></span></label>
-                    <div class='tab-accordion-item-content js-set-height'>
-                      <div class="tab-accordion-item-content-inside">
-                        <p>{{ 'theme.general.note_description' | t }}</p>
-                        <div class="mt-2"></div>
-                        <div class="form-group">
-                          <label>{{ 'theme.general.note' | t }}:</label>
-                          <div class="form-control-wrap">
-                            <cart-note>
-                              <textarea-autosize data-maxheight="87"><textarea class="form-control js-textarea-autosize" name="note" form="cart"  placeholder="{{ 'theme-sections.sections.cart.note' | t }}">{{ cart.note }}</textarea></textarea-autosize>
-                            </cart-note>
-                          </div>
+            <div class="block-accordion">
+              <form data-click="radio">
+                <div class="tab-accordion-item card-tab-accordion-item">
+                  <input type="checkbox" name="tab-accordion" id="tabAccordion3" class="js-cart-page-note-checkbox">
+                  <label for="tabAccordion3" data-text="{{ 'theme.general.add_note' | t }}">{{ 'theme.general.add_note'
+                    | t }}
+                    <span></span></label>
+                  <div class='tab-accordion-item-content js-set-height'>
+                    <div class="tab-accordion-item-content-inside">
+                      <p>{{ 'theme.general.note_description' | t }}</p>
+                      <div class="mt-2"></div>
+                      <div class="form-group">
+                        <label>{{ 'theme.general.note' | t }}:</label>
+                        <div class="form-control-wrap">
+                          <cart-note>
+                            <textarea-autosize data-maxheight="87"><textarea class="form-control js-textarea-autosize"
+                                name="note" form="cart"
+                                placeholder="{{ 'theme-sections.sections.cart.note' | t }}">{{ cart.note }}</textarea></textarea-autosize>
+                          </cart-note>
                         </div>
                       </div>
                     </div>
                   </div>
-                </form>
-              </div>
+                </div>
+              </form>
+            </div>
             {%- endif -%}
             <div class="mt-2 text-center">
               <cart-clear-button>
-                <a href="{{ routes.cart_clear_url }}" class="link-clear-cart btn-link btn-link--sm"><span class="icon-wrap">{% render 'icon-remove2' %}</span><span>{{ 'theme.general.clear_cart' | t }}</span>
+                <a href="{{ routes.cart_clear_url }}" class="link-clear-cart btn-link btn-link--sm"><span
+                    class="icon-wrap">{% render 'icon-remove2' %}</span><span>{{ 'theme.general.clear_cart' | t
+                    }}</span>
                   <div class="loading-overlay hidden">
                     <div data-load="loading"></div>
                   </div>
@@ -317,153 +346,155 @@
 
 {% schema %}
 {
-  "name": "Items",
-  "settings": [
-    {
-      "type": "header",
-      "content": "SECTION WIDTH"
-    },
-    {
-      "type": "select",
-      "id": "section_width",
-      "label": "Select width source",
-      "options": [
-        {
-          "value": "global",
-          "label": "Use store width"
-        },
-        {
-          "value": "custom",
-          "label": "Custom width"
-        }
-      ],
-      "default": "global",
-      "info": "Store width you can set in Theme Settings / General"
-    },
-    {
-      "type": "range",
-      "id": "container_max_width",
-      "min": 1178,
-      "max": 1978,
-      "step": 8,
-      "unit": "px",
-      "label": "Custom width",
-      "default": 1178,
-      "info": "The specified width may differ from the actual width of the section because this section uses a smart grid for the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section width is increased."
-    },
-    {
-      "type": "header",
-      "content": "SECTION MARGIN"
-    },
-    {
-      "type": "range",
-      "id": "spacing_sections",
-      "min": 0,
-      "max": 200,
-      "step": 2,
-      "unit": "px",
-      "label": "Vertical space above the section on Desktop",
-      "default": 100
-    },
-    {
-      "type": "checkbox",
-      "id": "use_global_desktop_space",
-      "label": "Use global space on desktop",
-      "default": true,
-      "info": "from Theme Settings / General / Layout"
-    },
-    {
-      "type": "range",
-      "id": "spacing_sections_mobile",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "label": "Vertical space above the section on Mobile",
-      "default": 70
-    },
-    {
-      "type": "checkbox",
-      "id": "use_global_mobile_space",
-      "label": "Use global space on mobile",
-      "default": true,
-      "info": "from Theme Settings / General / Layout"
-    },
-    {
-      "type": "header",
-      "content": "SECTION PADDING",
-      "info": "Only if  SECTION BACKGROUND or SECTION SEPARATOR was enabled"
-    },
-    {
-      "type": "range",
-      "id": "spacing_padding_sections",
-      "min": 0,
-      "max": 200,
-      "step": 2,
-      "unit": "px",
-      "label": "Vertical inner padding on Desktop",
-      "default": 100
-    },
-    {
-      "type": "checkbox",
-      "id": "use_global_desktop_space_padding",
-      "label": "Use global inner padding on desktop",
-      "default": true,
-      "info": "from Theme Settings / General / Layout"
-    },
-    {
-      "type": "range",
-      "id": "spacing_padding_sections_mobile",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "label": "Vertical inner padding on Mobile",
-      "default": 70
-    },
-    {
-      "type": "checkbox",
-      "id": "use_global_mobile_space_padding",
-      "label": "Use global inner padding on Mobile",
-      "default": true,
-      "info": "from Theme Settings / General / Layout"
-    },
-    {
-      "type": "header",
-      "content": "SECTION BACKGROUND"
-    },
-    {
-      "type": "checkbox",
-      "id": "background",
-      "label": "Enable secondary background",
-      "default": false,
-      "info": "Theme Settings / Colors - General"
-    },
-    {
-      "type": "header",
-      "content": "General"
-    },
-    {
-      "type": "checkbox",
-      "id": "show_vendor",
-      "default": false,
-      "label": "Show vendor"
-    }
-  ],
-  "blocks": [
-    {
-      "type": "subtotal",
-      "name": "Subtotal price",
-      "limit": 1
-    },
-    {
-      "type": "buttons",
-      "name": "Checkout button",
-      "limit": 1
-    },
-    {
-      "type": "@app"
-    }
-  ]
+"name": "Items",
+"settings": [
+{
+"type": "header",
+"content": "SECTION WIDTH"
+},
+{
+"type": "select",
+"id": "section_width",
+"label": "Select width source",
+"options": [
+{
+"value": "global",
+"label": "Use store width"
+},
+{
+"value": "custom",
+"label": "Custom width"
+}
+],
+"default": "global",
+"info": "Store width you can set in Theme Settings / General"
+},
+{
+"type": "range",
+"id": "container_max_width",
+"min": 1178,
+"max": 1978,
+"step": 8,
+"unit": "px",
+"label": "Custom width",
+"default": 1178,
+"info": "The specified width may differ from the actual width of the section because this section uses a smart grid for
+the most successful arrangement of columns in rows and for best view. Columns are not scaled, but added when the section
+width is increased."
+},
+{
+"type": "header",
+"content": "SECTION MARGIN"
+},
+{
+"type": "range",
+"id": "spacing_sections",
+"min": 0,
+"max": 200,
+"step": 2,
+"unit": "px",
+"label": "Vertical space above the section on Desktop",
+"default": 100
+},
+{
+"type": "checkbox",
+"id": "use_global_desktop_space",
+"label": "Use global space on desktop",
+"default": true,
+"info": "from Theme Settings / General / Layout"
+},
+{
+"type": "range",
+"id": "spacing_sections_mobile",
+"min": 0,
+"max": 100,
+"step": 1,
+"unit": "px",
+"label": "Vertical space above the section on Mobile",
+"default": 70
+},
+{
+"type": "checkbox",
+"id": "use_global_mobile_space",
+"label": "Use global space on mobile",
+"default": true,
+"info": "from Theme Settings / General / Layout"
+},
+{
+"type": "header",
+"content": "SECTION PADDING",
+"info": "Only if SECTION BACKGROUND or SECTION SEPARATOR was enabled"
+},
+{
+"type": "range",
+"id": "spacing_padding_sections",
+"min": 0,
+"max": 200,
+"step": 2,
+"unit": "px",
+"label": "Vertical inner padding on Desktop",
+"default": 100
+},
+{
+"type": "checkbox",
+"id": "use_global_desktop_space_padding",
+"label": "Use global inner padding on desktop",
+"default": true,
+"info": "from Theme Settings / General / Layout"
+},
+{
+"type": "range",
+"id": "spacing_padding_sections_mobile",
+"min": 0,
+"max": 100,
+"step": 1,
+"unit": "px",
+"label": "Vertical inner padding on Mobile",
+"default": 70
+},
+{
+"type": "checkbox",
+"id": "use_global_mobile_space_padding",
+"label": "Use global inner padding on Mobile",
+"default": true,
+"info": "from Theme Settings / General / Layout"
+},
+{
+"type": "header",
+"content": "SECTION BACKGROUND"
+},
+{
+"type": "checkbox",
+"id": "background",
+"label": "Enable secondary background",
+"default": false,
+"info": "Theme Settings / Colors - General"
+},
+{
+"type": "header",
+"content": "General"
+},
+{
+"type": "checkbox",
+"id": "show_vendor",
+"default": false,
+"label": "Show vendor"
+}
+],
+"blocks": [
+{
+"type": "subtotal",
+"name": "Subtotal price",
+"limit": 1
+},
+{
+"type": "buttons",
+"name": "Checkout button",
+"limit": 1
+},
+{
+"type": "@app"
+}
+]
 }
 {% endschema %}
