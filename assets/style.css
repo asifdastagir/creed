@@ -25713,5 +25713,12 @@ body.safari_version_below_14 .hdr-second-nav .menu-label {
 .card-total-inside .btn--cartpage-checkout {
   background   : #000 !important;
   border-radius: 5px !important;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
+  color        : #FFF;
+}
+
+
+.card-total-inside .btn--cartpage-checkout:hover {
+  background: gray !important;
+
 }
