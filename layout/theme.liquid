@@ -214,13 +214,6 @@ endif
     };
   </script>
   <script src="{{ 'creed.js' | asset_url }}" defer></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const licenseMsg = Array.from(document.querySelectorAll("body *"))
-        .find(el => el.textContent.includes("Store theme is not verified. License information is not found in the theme."));
-      if (licenseMsg) licenseMsg.remove();
-    });
-  </script>
 
 </body>
 
