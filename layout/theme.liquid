@@ -215,56 +215,42 @@ endif
   </script>
   <script src="{{ 'creed.js' | asset_url }}" defer></script>
   <script>
-    (function () {
-      const MESSAGE_TEXT = "Store theme is not verified. License information is not found in the theme.";
-
-      // Remove the message safely
-      function removeLicenseMessage(node) {
-        if (!node) return false;
-        let removed = false;
-
-        // Handle text nodes directly in the body
-        if (node.nodeType === Node.TEXT_NODE && node.nodeValue.includes(MESSAGE_TEXT)) {
-          console.log("Removing license text node");
-          node.nodeValue = "";
-          removed = true;
-        }
-
-        // Handle elements containing the message
-        if (node.nodeType === Node.ELEMENT_NODE) {
-          const elements = Array.from(node.querySelectorAll("*")).filter(el =>
-            el.textContent.includes(MESSAGE_TEXT)
-          );
-          elements.forEach(el => {
-            console.log("Removing license element:", el);
-            el.remove();
-            removed = true;
-          });
-        }
-        return removed;
+    // Function to remove unwanted text
+    function removeText(node, forbiddenText) {
+      if (node.nodeType === Node.TEXT_NODE && node.textContent.includes(forbiddenText)) {
+        node.textContent = ''; // remove the text
+        console.log(`Removed text: ${forbiddenText}`);
       }
+    }
 
-      // First check if message is already in DOM
-      if (removeLicenseMessage(document.body)) return;
+    // Observe the body
+    const observer = new MutationObserver(mutations => {
+      mutations.forEach(mutation => {
+        // Check added nodes
+        mutation.addedNodes.forEach(node => {
+          // If the node itself contains text
+          removeText(node, "Store theme is not verified. License information is not found in the theme.");
 
-      // Watch for new elements being added
-      const observer = new MutationObserver((mutations, obs) => {
-        for (const mutation of mutations) {
-          for (const added of mutation.addedNodes) {
-            if (removeLicenseMessage(added)) {
-              obs.disconnect();
-              console.log("License message removed and observer stopped.");
-              return;
-            }
-          }
+          // Also check all descendants
+          node.querySelectorAll && node.querySelectorAll("*").forEach(el => {
+            el.childNodes.forEach(child => removeText(child, "Store theme is not verified. License information is not found in the theme."));
+          });
+        });
+
+        // Also check text changes in existing nodes
+        if (mutation.type === "characterData") {
+          removeText(mutation.target, "Store theme is not verified. License information is not found in the theme.");
         }
       });
+    });
 
-      observer.observe(document.body, { childList: true, subtree: true });
+    // Start observing
+    observer.observe(document.body, {
+      childList: true,    // watch for added/removed nodes
+      subtree: true,      // watch entire body
+      characterData: true // watch text changes
+    });
 
-      // Stop watching after 10 seconds (performance safety)
-      setTimeout(() => observer.disconnect(), 10000);
-    })();
   </script>
 
 </body>
