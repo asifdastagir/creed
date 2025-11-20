@@ -14965,7 +14965,7 @@ product-single-previews {
 
 .modal-wrap.modal-wrap--alert.fancybox-content {
   width    : auto;
-  min-width: 420px
+  min-width: 375px
 }
 
 .fancybox-container [data-load],
