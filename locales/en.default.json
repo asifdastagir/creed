@@ -88,7 +88,7 @@
       "tags": "Tags",
       "someone_purchased": "Someone purchased",
       "min_ago": "min ago",
-      "newsletter_success_subtext": "From now you will receive special offers every week",
+      "newsletter_success_subtext": "Head to your Inbox to get your code.",
       "dont_show_popup": "Don't show this popup again",
       "got_it": "Got It",
       "adjust": "adjust",
@@ -385,7 +385,7 @@
   },
   "newsletter": {
     "label": "Email",
-    "success": "Thanks for subscribing",
+    "success": "YOU'RE ALL SIGNED UP!",
     "button_label": "Subscribe"
   },
   "accessibility": {
