@@ -5072,3 +5072,7 @@ html {
     padding-left: 30px;
     list-style  : disc;
 }
+
+#shop-hcaptcha-badge-container{
+    z-index: 1 !important;
+}
