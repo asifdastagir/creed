@@ -9750,7 +9750,11 @@ ul.prd-option-list {
 
   .prd.prd--style1:not(.mobile-rounded-on)> :not(.prd-image-wrap) {
     padding-left : 10px;
-    padding-right: 10px
+    padding-right: 10px;
+    padding-top: 0 !important;
+    position: static !important;
+    transform: none !important;
+    opacity: 1 !important;
   }
 
   .prd.prd--style1:not(.mobile-rounded-on) .prd-image-wrap {
@@ -25652,6 +25656,7 @@ body.safari_version_below_14 .hdr-second-nav .menu-label {
     flex-direction : column;
     gap            : 10px;
     padding        : 10px;
+    position: static;
   }
 }
 
