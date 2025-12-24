@@ -11,6 +11,20 @@
 
 {% render 'modal-newsletters-subscription' %}
 
+{%- if settings.newsletter_popup_yes -%}
+<!-- Floating Newsletter Button -->
+<div id="newsletter-floating-btn" class="newsletter-floating-btn" style="display: none;">
+  <button class="newsletter-floating-btn__content" id="newsletter-floating-btn-open">
+    <span class="newsletter-floating-btn__text">Get 10% Off</span>
+  </button>
+  <button class="newsletter-floating-btn__close" id="newsletter-floating-btn-close" aria-label="Close">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 4L4 12M4 4L12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    </svg>
+  </button>
+</div>
+{%- endif -%}
+
 <div id="popupSubscribeSuccess" class="modal-wrap modal-wrap--alert modal-wrap--success px-5 py-6"
   style="display: none;">
   <div class="modal-wrap-text text-center">
