@@ -66,7 +66,14 @@ const newsletterPopup = {
 	},
 	checkCookie() {
 		if (!docCookies.hasItem('lumiaNewsLetter') || document.body.classList.contains('demo') || this.expiresToSec == 0) {
-			this.openNewsletterPopup();
+			// Show floating button instead of opening popup automatically
+			this.showFloatingButton();
+		}
+	},
+	showFloatingButton() {
+		const floatingBtn = document.getElementById('newsletter-floating-btn');
+		if (floatingBtn) {
+			floatingBtn.style.display = 'flex';
 		}
 	},
 	openNewsletterModalDirectly() {
