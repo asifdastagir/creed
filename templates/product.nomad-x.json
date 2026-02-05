@@ -319,6 +319,24 @@
         "spacing_sections_mobile": 70,
         "use_global_mobile_space": true
       }
+    },
+    "17702881519b82c5fb": {
+      "type": "apps",
+      "blocks": {
+        "amazon_reviews_by_appio_reviews_widget_gJa9Kq": {
+          "type": "shopify://apps/amazon-reviews-by-appio/blocks/reviews-widget/569167b3-e5d6-4314-9866-f51281b506d7",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "amazon_reviews_by_appio_reviews_widget_gJa9Kq"
+      ],
+      "settings": {
+        "spacing_sections": 100,
+        "use_global_desktop_space": true,
+        "spacing_sections_mobile": 70,
+        "use_global_mobile_space": true
+      }
     }
   },
   "order": [
@@ -327,6 +345,7 @@
     "product_snap_card_RymQEU",
     "product-related",
     "product-recommendations",
-    "17702876217982c0b3"
+    "17702876217982c0b3",
+    "17702881519b82c5fb"
   ]
 }
