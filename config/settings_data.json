@@ -138,6 +138,8 @@
     "payment_image_4": "shopify://shop_images/paypal.png",
     "payment_image_5": "shopify://shop_images/google-pay.png",
     "pickup": false,
+    "badge_sale": false,
+    "badge_sale_ticker": false,
     "badge_sale_ticker_speed": 3,
     "product_card_layout": "1",
     "product_card_image_padding": "1",
