@@ -19,6 +19,7 @@
             "image_mobile": "shopify://shop_images/carousel-1.jpg",
             "heading_line_1": "Built for",
             "heading_line_2": "the Everyday",
+            "volume_label": "VOL. 02",
             "description": "Performance wear designed to move with you through every hour of the day",
             "button_label": "Explore",
             "button_url": ""
@@ -31,6 +32,18 @@
             "image_mobile": "shopify://shop_images/carousel-2.jpg",
             "heading_line_1": "Active for",
             "heading_line_2": "the Faithful",
+            "volume_label": "VOL. 02",
+            "description": "Technical training apparel which blends performance with faith conscious design",
+            "button_label": "Shop now",
+            "button_url": ""
+          }
+        },
+        "slide_3UfH9x": {
+          "type": "slide",
+          "settings": {
+            "heading_line_1": "Active for",
+            "heading_line_2": "the Faithful",
+            "volume_label": "VOL. 02",
             "description": "Technical training apparel which blends performance with faith conscious design",
             "button_label": "Shop now",
             "button_url": ""
@@ -43,6 +56,7 @@
             "image_mobile": "shopify://shop_images/carousel-3.jpg",
             "heading_line_1": "Winner '26",
             "heading_line_2": "NOCTURN",
+            "volume_label": "VOL. 02",
             "description": "Join the Awakening.",
             "button_label": "Shop now",
             "button_url": ""
@@ -52,6 +66,7 @@
       "block_order": [
         "slide_Uy9r9Y",
         "slide_DQKWEz",
+        "slide_3UfH9x",
         "slide_dBMJJf"
       ],
       "name": "Hero Carousel",
@@ -64,6 +79,7 @@
     },
     "hero_video_A3zCNf": {
       "type": "hero-video",
+      "disabled": true,
       "name": "Hero Video",
       "settings": {
         "heading_line_1": "Active for",
