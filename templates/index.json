@@ -24,6 +24,59 @@
         "desktop_poster": "shopify://shop_images/692507_3.jpg"
       }
     },
+    "hero_carousel_3CxJNQ": {
+      "type": "hero-carousel",
+      "blocks": {
+        "slide_dBMJJf": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/carousel-3.jpg",
+            "image_mobile": "shopify://shop_images/carousel-3.jpg",
+            "heading_line_1": "Active for",
+            "heading_line_2": "the Faithful",
+            "description": "Technical training apparel which blends performance with faith conscious design",
+            "button_label": "Shop now",
+            "button_url": ""
+          }
+        },
+        "slide_Uy9r9Y": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/carousel-1.jpg",
+            "image_mobile": "shopify://shop_images/carousel-1.jpg",
+            "heading_line_1": "Built for",
+            "heading_line_2": "the Everyday",
+            "description": "Performance wear designed to move with you through every hour of the day",
+            "button_label": "Explore",
+            "button_url": ""
+          }
+        },
+        "slide_DQKWEz": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/carousel-2.jpg",
+            "image_mobile": "shopify://shop_images/carousel-2.jpg",
+            "heading_line_1": "Active for",
+            "heading_line_2": "the Faithful",
+            "description": "Technical training apparel which blends performance with faith conscious design",
+            "button_label": "Shop now",
+            "button_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "slide_dBMJJf",
+        "slide_Uy9r9Y",
+        "slide_DQKWEz"
+      ],
+      "name": "Hero Carousel",
+      "settings": {
+        "enable_autoplay": true,
+        "autoplay_delay": 5000,
+        "transition_speed": 800,
+        "enable_loop": true
+      }
+    },
     "index_product_carousel_Mnqkxp": {
       "type": "index-product-carousel",
       "name": "Products carousel / preset 1 Default",
@@ -254,63 +307,11 @@
         "button_label": "About Us",
         "button_url": "shopify://pages/about"
       }
-    },
-    "hero_carousel_3CxJNQ": {
-      "type": "hero-carousel",
-      "blocks": {
-        "slide_dBMJJf": {
-          "type": "slide",
-          "settings": {
-            "image_desktop": "shopify://shop_images/carousel-3.jpg",
-            "image_mobile": "shopify://shop_images/carousel-3.jpg",
-            "heading_line_1": "Active for",
-            "heading_line_2": "the Faithful",
-            "description": "Technical training apparel which blends performance with faith conscious design",
-            "button_label": "Shop now",
-            "button_url": ""
-          }
-        },
-        "slide_Uy9r9Y": {
-          "type": "slide",
-          "settings": {
-            "image_desktop": "shopify://shop_images/carousel-1.jpg",
-            "image_mobile": "shopify://shop_images/carousel-1.jpg",
-            "heading_line_1": "Built for",
-            "heading_line_2": "the Everyday",
-            "description": "Performance wear designed to move with you through every hour of the day",
-            "button_label": "Explore",
-            "button_url": ""
-          }
-        },
-        "slide_DQKWEz": {
-          "type": "slide",
-          "settings": {
-            "image_desktop": "shopify://shop_images/carousel-2.jpg",
-            "image_mobile": "shopify://shop_images/carousel-2.jpg",
-            "heading_line_1": "Active for",
-            "heading_line_2": "the Faithful",
-            "description": "Technical training apparel which blends performance with faith conscious design",
-            "button_label": "Shop now",
-            "button_url": ""
-          }
-        }
-      },
-      "block_order": [
-        "slide_dBMJJf",
-        "slide_Uy9r9Y",
-        "slide_DQKWEz"
-      ],
-      "name": "Hero Carousel",
-      "settings": {
-        "enable_autoplay": true,
-        "autoplay_delay": 5000,
-        "transition_speed": 800,
-        "enable_loop": true
-      }
     }
   },
   "order": [
     "hero_video_A3zCNf",
+    "hero_carousel_3CxJNQ",
     "index_product_carousel_Mnqkxp",
     "index_product_carousel_LmqA6z",
     "snap_card_component_YLqD8W",
@@ -318,7 +319,6 @@
     "snap_card_component_WkxQM4",
     "image_parallax_zamTdA",
     "text_promo_component_XMEgYD",
-    "media_compnent_FBQaXr",
-    "hero_carousel_3CxJNQ"
+    "media_compnent_FBQaXr"
   ]
 }
