@@ -38,17 +38,6 @@
             "button_url": ""
           }
         },
-        "slide_3UfH9x": {
-          "type": "slide",
-          "settings": {
-            "heading_line_1": "Active for",
-            "heading_line_2": "the Faithful",
-            "volume_label": "VOL. 02",
-            "description": "Technical training apparel which blends performance with faith conscious design",
-            "button_label": "Shop now",
-            "button_url": ""
-          }
-        },
         "slide_dBMJJf": {
           "type": "slide",
           "settings": {
@@ -66,7 +55,6 @@
       "block_order": [
         "slide_Uy9r9Y",
         "slide_DQKWEz",
-        "slide_3UfH9x",
         "slide_dBMJJf"
       ],
       "name": "Hero Carousel",
