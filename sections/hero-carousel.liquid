@@ -57,43 +57,35 @@
           </div>
 
           <div class="relative z-10 px-gutter grid-layout h-full pointer-events-none">
-            <div class="row-start-1 col-start-1 col-end-8 sm:col-start-1 sm:col-end-5 md:col-start-1 md:col-end-6 flex items-end pb-20 lg:pb-8">
-              <div class="flex flex-col gap-5 pointer-events-auto">
+            <div class="row-start-1 col-start-1 col-end-8 sm:col-start-1 sm:col-end-5 md:col-start-1 md:col-end-6 flex items-end mb-[100px] lg:mb-[40px] pb-20 lg:pb-8">
+              <div class="flex flex-col gap-0 pointer-events-auto">
                 {% if block.settings.heading_line_1 != blank or block.settings.heading_line_2 != blank %}
-                  <h2 class="lead-text">
-                    {% if block.settings.heading_line_1 != blank %}
+                  <h4 class="text-[200] text-[20px] lg:text-[26px] tracking-[12px]">{% if block.settings.heading_line_1 != blank %}
                       <span class="flex">{{ block.settings.heading_line_1 }}</span>
                     {% endif %}
+                  </h4>
+                  <h2 class="lead-text">
                     {% if block.settings.heading_line_2 != blank %}
                       <span class="flex">{{ block.settings.heading_line_2 }}</span>
                     {% endif %}
                   </h2>
                 {% endif %}
 
+
+                <h6 class="w-full tracking-[0.15em]  mb-2 lg:mb-4 text-[18px] lg:text-[22px]">
+                  VOL. 02
+                </h6>
+
                 {% if block.settings.description != blank %}
-                  <p class="w-full text-pre large">{{ block.settings.description }}</p>
+                  <h6 class="w-full tracking-[0.15em] text-[18px] lg:text-[22px]">{{ block.settings.description }}</p>
                 {% endif %}
 
                 {% if block.settings.button_label != blank %}
                   <a
                     href="{{ block.settings.button_url | default: '#' }}"
-                    class="flex items-center gap-2 text-pre large group/play w-fit"
+                    class="flex items-center text-pre medium group/play w-fit px-[20px] py-[12px] bg-white text-black rounded-[3px]  mt-2"
                   >
-                    <span>{{ block.settings.button_label }}</span>
-                    <svg
-                      width="15"
-                      height="13"
-                      viewBox="0 0 15 13"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="transition-transform duration-500 ease-in-out group-hover/play:translate-x-2"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M8.75537 12.1578L7.654 11.0563L11.4614 7.26501H0V5.71969L1.54507 5.71994H11.4614L7.654 1.91263L8.73941 0.811523L14.4206 6.49247L8.75537 12.1578Z"
-                        fill="currentColor"
-                      />
-                    </svg>
+                    <span>{{ block.settings.button_label }}</span>                    
                   </a>
                 {% endif %}
               </div>
