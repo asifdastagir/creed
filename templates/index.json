@@ -9,21 +9,6 @@
  */
 {
   "sections": {
-    "hero_video_A3zCNf": {
-      "type": "hero-video",
-      "name": "Hero Video",
-      "settings": {
-        "heading_line_1": "Active for",
-        "heading_line_2": "the Faithful",
-        "description": "Technical training apparel which blends performance with faith concious design.",
-        "mobile_video": "https://cdn.shopify.com/videos/c/o/v/06aac801a0634f64aeee352ba298a2b1.mp4",
-        "mobile_video_mp4": "https://cdn.shopify.com/videos/c/o/v/06aac801a0634f64aeee352ba298a2b1.mp4",
-        "desktop_video": "https://cdn.shopify.com/videos/c/o/v/06aac801a0634f64aeee352ba298a2b1.mp4",
-        "desktop_video_mp4": "https://cdn.shopify.com/videos/c/o/v/06aac801a0634f64aeee352ba298a2b1.mp4",
-        "mobile_poster": "shopify://shop_images/692507_3.jpg",
-        "desktop_poster": "shopify://shop_images/692507_3.jpg"
-      }
-    },
     "hero_carousel_3CxJNQ": {
       "type": "hero-carousel",
       "blocks": {
@@ -75,6 +60,21 @@
         "autoplay_delay": 5000,
         "transition_speed": 800,
         "enable_loop": true
+      }
+    },
+    "hero_video_A3zCNf": {
+      "type": "hero-video",
+      "name": "Hero Video",
+      "settings": {
+        "heading_line_1": "Active for",
+        "heading_line_2": "the Faithful",
+        "description": "Technical training apparel which blends performance with faith concious design.",
+        "mobile_video": "https://cdn.shopify.com/videos/c/o/v/06aac801a0634f64aeee352ba298a2b1.mp4",
+        "mobile_video_mp4": "https://cdn.shopify.com/videos/c/o/v/06aac801a0634f64aeee352ba298a2b1.mp4",
+        "desktop_video": "https://cdn.shopify.com/videos/c/o/v/06aac801a0634f64aeee352ba298a2b1.mp4",
+        "desktop_video_mp4": "https://cdn.shopify.com/videos/c/o/v/06aac801a0634f64aeee352ba298a2b1.mp4",
+        "mobile_poster": "shopify://shop_images/692507_3.jpg",
+        "desktop_poster": "shopify://shop_images/692507_3.jpg"
       }
     },
     "index_product_carousel_Mnqkxp": {
@@ -310,8 +310,8 @@
     }
   },
   "order": [
-    "hero_video_A3zCNf",
     "hero_carousel_3CxJNQ",
+    "hero_video_A3zCNf",
     "index_product_carousel_Mnqkxp",
     "index_product_carousel_LmqA6z",
     "snap_card_component_YLqD8W",
