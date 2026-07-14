@@ -57,7 +57,7 @@
           </div>
 
           <div class="relative z-10 px-gutter grid-layout h-full pointer-events-none">
-            <div class="row-start-1 col-start-1 col-end-5 sm:col-start-1 sm:col-end-5 md:col-start-1 md:col-end-6 flex items-end pb-20 lg:pb-8">
+            <div class="row-start-1 col-start-1 col-end-8 sm:col-start-1 sm:col-end-5 md:col-start-1 md:col-end-6 flex items-end pb-20 lg:pb-8">
               <div class="flex flex-col gap-5 pointer-events-auto">
                 {% if block.settings.heading_line_1 != blank or block.settings.heading_line_2 != blank %}
                   <h2 class="lead-text">
@@ -102,10 +102,6 @@
         </div>
       {% endfor %}
     </div>
-
-    {% if section.blocks.size > 1 %}
-      <div class="hero-carousel-pagination absolute bottom-6 right-6 z-20 flex gap-2"></div>
-    {% endif %}
   </div>
 </section>
 
