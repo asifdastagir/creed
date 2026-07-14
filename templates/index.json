@@ -12,18 +12,6 @@
     "hero_carousel_3CxJNQ": {
       "type": "hero-carousel",
       "blocks": {
-        "slide_dBMJJf": {
-          "type": "slide",
-          "settings": {
-            "image_desktop": "shopify://shop_images/carousel-3.jpg",
-            "image_mobile": "shopify://shop_images/carousel-3.jpg",
-            "heading_line_1": "Winner '26",
-            "heading_line_2": "NOCTURN",
-            "description": "Join the Awakening.",
-            "button_label": "Shop now",
-            "button_url": ""
-          }
-        },
         "slide_Uy9r9Y": {
           "type": "slide",
           "settings": {
@@ -47,12 +35,24 @@
             "button_label": "Shop now",
             "button_url": ""
           }
+        },
+        "slide_dBMJJf": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/carousel-3.jpg",
+            "image_mobile": "shopify://shop_images/carousel-3.jpg",
+            "heading_line_1": "Winner '26",
+            "heading_line_2": "NOCTURN",
+            "description": "Join the Awakening.",
+            "button_label": "Shop now",
+            "button_url": ""
+          }
         }
       },
       "block_order": [
-        "slide_dBMJJf",
         "slide_Uy9r9Y",
-        "slide_DQKWEz"
+        "slide_DQKWEz",
+        "slide_dBMJJf"
       ],
       "name": "Hero Carousel",
       "settings": {
