@@ -56,7 +56,7 @@
       ],
       "name": "Hero Carousel",
       "settings": {
-        "enable_autoplay": true,
+        "enable_autoplay": false,
         "autoplay_delay": 5000,
         "transition_speed": 800,
         "enable_loop": true
