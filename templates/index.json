@@ -83,6 +83,7 @@
     },
     "product_carousel_LVc7kB": {
       "type": "product-carousel",
+      "disabled": true,
       "name": "Product Carousel",
       "settings": {
         "eyebrow": "NEW ARRIVALS",
