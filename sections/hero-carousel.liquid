@@ -1,0 +1,284 @@
+{% comment %}
+  Hero Carousel Section
+  Full-screen image carousel with responsive picture tag,
+  left-bottom text, and CTA button under the text.
+{% endcomment %}
+
+<section
+  id="heroCarousel-{{ section.id }}"
+  class="hero-carousel relative h-screen clip-container bg-black text-white overflow-hidden"
+>
+  <div class="swiper hero-carousel-swiper h-full" data-hero-carousel>
+    <div class="swiper-wrapper h-full">
+      {% for block in section.blocks %}
+        <div class="swiper-slide h-full relative" {{ block.shopify_attributes }}>
+          <div class="absolute inset-0 after:absolute after:inset-0 after:bg-black/30 after:z-[1]">
+            {% if block.settings.image_desktop != blank or block.settings.image_mobile != blank %}
+              <picture class="absolute inset-0 block w-full h-full">
+                {% if block.settings.image_mobile != blank %}
+                  <source
+                    media="(max-width: 767px)"
+                    srcset="{{ block.settings.image_mobile | image_url: width: 1000 }}"
+                  >
+                {% endif %}
+                {% if block.settings.image_desktop != blank %}
+                  <img
+                    src="{{ block.settings.image_desktop | image_url: width: 1920 }}"
+                    alt="{{ block.settings.image_desktop.alt | default: block.settings.heading_line_1 | escape }}"
+                    class="w-full h-full object-cover"
+                    {% if forloop.first %}
+                      loading="eager"
+                      fetchpriority="high"
+                    {% else %}
+                      loading="lazy"
+                    {% endif %}
+                    width="{{ block.settings.image_desktop.width }}"
+                    height="{{ block.settings.image_desktop.height }}"
+                  >
+                {% elsif block.settings.image_mobile != blank %}
+                  <img
+                    src="{{ block.settings.image_mobile | image_url: width: 1000 }}"
+                    alt="{{ block.settings.image_mobile.alt | default: block.settings.heading_line_1 | escape }}"
+                    class="w-full h-full object-cover"
+                    {% if forloop.first %}
+                      loading="eager"
+                      fetchpriority="high"
+                    {% else %}
+                      loading="lazy"
+                    {% endif %}
+                    width="{{ block.settings.image_mobile.width }}"
+                    height="{{ block.settings.image_mobile.height }}"
+                  >
+                {% endif %}
+              </picture>
+            {% else %}
+              <div class="absolute inset-0 bg-neutral-800"></div>
+            {% endif %}
+          </div>
+
+          <div class="relative z-10 px-gutter grid-layout h-full pointer-events-none">
+            <div class="row-start-1 col-start-1 col-end-5 sm:col-start-1 sm:col-end-5 md:col-start-1 md:col-end-6 flex items-end pb-20 lg:pb-8">
+              <div class="flex flex-col gap-5 pointer-events-auto">
+                {% if block.settings.heading_line_1 != blank or block.settings.heading_line_2 != blank %}
+                  <h2 class="lead-text">
+                    {% if block.settings.heading_line_1 != blank %}
+                      <span class="flex">{{ block.settings.heading_line_1 }}</span>
+                    {% endif %}
+                    {% if block.settings.heading_line_2 != blank %}
+                      <span class="flex">{{ block.settings.heading_line_2 }}</span>
+                    {% endif %}
+                  </h2>
+                {% endif %}
+
+                {% if block.settings.description != blank %}
+                  <p class="w-full text-pre large">{{ block.settings.description }}</p>
+                {% endif %}
+
+                {% if block.settings.button_label != blank %}
+                  <a
+                    href="{{ block.settings.button_url | default: '#' }}"
+                    class="flex items-center gap-2 text-pre large group/play w-fit"
+                  >
+                    <span>{{ block.settings.button_label }}</span>
+                    <svg
+                      width="15"
+                      height="13"
+                      viewBox="0 0 15 13"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="transition-transform duration-500 ease-in-out group-hover/play:translate-x-2"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M8.75537 12.1578L7.654 11.0563L11.4614 7.26501H0V5.71969L1.54507 5.71994H11.4614L7.654 1.91263L8.73941 0.811523L14.4206 6.49247L8.75537 12.1578Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if section.blocks.size > 1 %}
+      <div class="hero-carousel-pagination absolute bottom-6 right-6 z-20 flex gap-2"></div>
+    {% endif %}
+  </div>
+</section>
+
+{% if section.blocks.size > 1 %}
+  <style>
+    #heroCarousel-{{ section.id }} .swiper-pagination-bullet {
+      width: 8px;
+      height: 8px;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.4);
+      opacity: 1;
+      cursor: pointer;
+      transition: background 0.3s ease, width 0.3s ease;
+    }
+    #heroCarousel-{{ section.id }} .swiper-pagination-bullet-active {
+      background: #fff;
+      width: 24px;
+    }
+  </style>
+
+  <script>
+    (function () {
+      function initHeroCarousel() {
+        var root = document.getElementById('heroCarousel-{{ section.id }}');
+        if (!root || typeof Swiper === 'undefined') return;
+        var el = root.querySelector('[data-hero-carousel]');
+        if (!el || el.swiper) return;
+
+        new Swiper(el, {
+          slidesPerView: 1,
+          loop: {{ section.settings.enable_loop }},
+          speed: {{ section.settings.transition_speed }},
+          effect: 'fade',
+          fadeEffect: { crossFade: true },
+          autoplay: {% if section.settings.enable_autoplay %}{
+            delay: {{ section.settings.autoplay_delay }},
+            disableOnInteraction: false
+          }{% else %}false{% endif %},
+          pagination: {
+            el: root.querySelector('.hero-carousel-pagination'),
+            clickable: true
+          }
+        });
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initHeroCarousel);
+      } else {
+        initHeroCarousel();
+      }
+    })();
+  </script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Hero Carousel",
+  "tag": "section",
+  "class": "hero-carousel-section",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Carousel Settings"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_autoplay",
+      "label": "Enable autoplay",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "autoplay_delay",
+      "min": 2000,
+      "max": 9000,
+      "step": 500,
+      "unit": "ms",
+      "label": "Autoplay delay",
+      "default": 5000
+    },
+    {
+      "type": "range",
+      "id": "transition_speed",
+      "min": 300,
+      "max": 1500,
+      "step": 100,
+      "unit": "ms",
+      "label": "Transition speed",
+      "default": 800
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_loop",
+      "label": "Enable loop",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Images"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_desktop",
+          "label": "Desktop image"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_mobile",
+          "label": "Mobile image",
+          "info": "Shown below 768px via picture tag"
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "text",
+          "id": "heading_line_1",
+          "label": "Heading line 1",
+          "default": "Active for"
+        },
+        {
+          "type": "text",
+          "id": "heading_line_2",
+          "label": "Heading line 2",
+          "default": "the Faithful"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Technical training apparel which blends performance with faith conscious design"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label",
+          "default": "Shop now"
+        },
+        {
+          "type": "url",
+          "id": "button_url",
+          "label": "Button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Carousel",
+      "category": "Hero",
+      "blocks": [
+        {
+          "type": "slide"
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "heading_line_1": "Built for",
+            "heading_line_2": "the Everyday",
+            "description": "Performance wear designed to move with you through every hour of the day",
+            "button_label": "Explore"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
