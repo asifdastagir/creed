@@ -12,172 +12,174 @@
 
 <section
   id="productCarousel-{{ section.id }}"
-  class="product-carousel bg-white py-10 lg:py-16"
+  class="product-carousel component bg-white py-10 lg:py-16"
   style="margin-top: {{ section.settings.margin_top }}px; margin-bottom: {{ section.settings.margin_bottom }}px;"
 >
-  <div class="product-carousel__header text-center px-gutter mb-8 lg:mb-12">
-    {% if section.settings.eyebrow != blank %}
-      <p class="product-carousel__eyebrow tracking-[0.15em] uppercase text-[11px] lg:text-[12px] text-[#9A9A9A] mb-2">
-        {{ section.settings.eyebrow }}
-      </p>
-    {% endif %}
+  <div class="container">
+    <div class="product-carousel__header text-center mb-8 lg:mb-12">
+      {% if section.settings.eyebrow != blank %}
+        <p class="product-carousel__eyebrow tracking-[0.15em] uppercase text-[11px] lg:text-[12px] text-[#9A9A9A] mb-2">
+          {{ section.settings.eyebrow }}
+        </p>
+      {% endif %}
 
-    {% if section.settings.heading != blank %}
-      <h2 class="product-carousel__heading uppercase tracking-[0.04em] text-[28px] lg:text-[42px] font-semibold text-black leading-none mb-3">
-        {{ section.settings.heading }}
-      </h2>
-    {% endif %}
+      {% if section.settings.heading != blank %}
+        <h2 class="product-carousel__heading uppercase tracking-[0.04em] text-[28px] lg:text-[42px] font-semibold text-black leading-none mb-3">
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
 
-    {% if section.settings.swipe_label != blank %}
-      <p class="product-carousel__swipe tracking-[0.18em] uppercase text-[11px] lg:text-[12px] text-[#9A9A9A]">
-        {{ section.settings.swipe_label }}
-      </p>
-    {% endif %}
-  </div>
+      {% if section.settings.swipe_label != blank %}
+        <p class="product-carousel__swipe tracking-[0.18em] uppercase text-[11px] lg:text-[12px] text-[#9A9A9A]">
+          {{ section.settings.swipe_label }}
+        </p>
+      {% endif %}
+    </div>
 
-  <div class="product-carousel__slider pl-gutter pr-0 lg:px-gutter">
-    <swiper-carousel>
-      <div class="swiper-container product-carousel-swiper">
-        <div class="swiper-wrapper">
-          {%- if collection != blank and collection.products_count > 0 -%}
-            {%- for product in collection.products limit: product_limit -%}
-              <div class="swiper-slide product-carousel__slide">
-                <a href="{{ product.url }}" class="product-carousel__card block group">
-                  <div class="product-carousel__media relative overflow-hidden bg-[#EFEFEF] aspect-[3/4] mb-3 lg:mb-4">
-                    {% if product.featured_media != blank %}
-                      <img
-                        src="{{ product.featured_media | image_url: width: 800 }}"
-                        alt="{{ product.featured_media.alt | default: product.title | escape }}"
-                        class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
-                        loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
-                        width="{{ product.featured_media.width }}"
-                        height="{{ product.featured_media.height }}"
-                      >
-                    {% else %}
-                      {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover' }}
-                    {% endif %}
-                  </div>
-
-                  <div class="product-carousel__info">
-                    {%- assign category_label = product.type -%}
-                    {%- if category_label == blank and product.tags.size > 0 -%}
-                      {%- assign category_label = product.tags.first -%}
-                    {%- endif -%}
-
-                    {% if category_label != blank %}
-                      <p class="product-carousel__category tracking-[0.14em] uppercase text-[10px] lg:text-[11px] text-[#9A9A9A] mb-1">
-                        {{ category_label }}
-                      </p>
-                    {% endif %}
-
-                    <h3 class="product-carousel__title text-[15px] lg:text-[16px] text-black leading-snug mb-1">
-                      {{ product.title | escape }}
-                    </h3>
-
-                    <p class="product-carousel__price text-[14px] lg:text-[15px] text-[#8A8A8A] mb-2">
-                      {{ product.price | money }}
-                      {% if product.compare_at_price > product.price %}
-                        <span class="line-through ml-1 opacity-70">{{ product.compare_at_price | money }}</span>
+    <div class="product-carousel__slider">
+      <swiper-carousel>
+        <div class="swiper-container product-carousel-swiper">
+          <div class="swiper-wrapper">
+            {%- if collection != blank and collection.products_count > 0 -%}
+              {%- for product in collection.products limit: product_limit -%}
+                <div class="swiper-slide product-carousel__slide">
+                  <a href="{{ product.url }}" class="product-carousel__card group p-2">
+                    <div class="product-carousel__media relative overflow-hidden bg-[#EFEFEF] aspect-[3/4] mb-3 lg:mb-4 border border-black">
+                      {% if product.featured_media != blank %}
+                        <img
+                          src="{{ product.featured_media | image_url: width: 800 }}"
+                          alt="{{ product.featured_media.alt | default: product.title | escape }}"
+                          class="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-[1.03]"
+                          loading="{% if forloop.first %}eager{% else %}lazy{% endif %}"
+                          width="{{ product.featured_media.width }}"
+                          height="{{ product.featured_media.height }}"
+                        >
+                      {% else %}
+                        {{ 'product-1' | placeholder_svg_tag: 'w-full h-full object-cover' }}
                       {% endif %}
-                    </p>
+                    </div>
 
-                    {%- liquid
-                      assign color_option = blank
-                      assign color_option_index = 0
+                    <div class="product-carousel__info">
+                      {%- assign category_label = product.type -%}
+                      {%- if category_label == blank and product.tags.size > 0 -%}
+                        {%- assign category_label = product.tags.first -%}
+                      {%- endif -%}
 
-                      for option in product.options_with_values
-                        assign option_name_downcase = option.name | downcase | strip
-                        if color_options_name contains option_name_downcase
-                          assign color_option = option
-                          assign color_option_index = forloop.index0
-                          break
-                        endif
-                      endfor
-                    -%}
+                      {% if category_label != blank %}
+                        <p class="product-carousel__category tracking-[0.14em] uppercase text-[10px] lg:text-[11px] text-[#9A9A9A] mb-1">
+                          {{ category_label }}
+                        </p>
+                      {% endif %}
 
-                    {% if color_option != blank %}
-                      <div class="product-carousel__swatches flex items-center gap-1.5 mt-1" aria-label="Available colors">
-                        {% for value in color_option.values limit: 8 %}
-                          {%- liquid
-                            assign swatch_style = ''
-                            assign variant_for_color = blank
+                      <h3 class="product-carousel__title text-[15px] lg:text-[16px] text-black leading-snug mb-1">
+                        {{ product.title | escape }}
+                      </h3>
 
-                            for variant in product.variants
-                              if variant.options[color_option_index] == value
-                                assign variant_for_color = variant
-                                break
+                      <p class="product-carousel__price text-[14px] lg:text-[15px] text-[#8A8A8A] mb-2">
+                        {{ product.price | money }}
+                        {% if product.compare_at_price > product.price %}
+                          <span class="line-through ml-1 opacity-70">{{ product.compare_at_price | money }}</span>
+                        {% endif %}
+                      </p>
+
+                      {%- liquid
+                        assign color_option = blank
+                        assign color_option_index = 0
+
+                        for option in product.options_with_values
+                          assign option_name_downcase = option.name | downcase | strip
+                          if color_options_name contains option_name_downcase
+                            assign color_option = option
+                            assign color_option_index = forloop.index0
+                            break
+                          endif
+                        endfor
+                      -%}
+
+                      {% if color_option != blank %}
+                        <div class="product-carousel__swatches flex items-center gap-1.5 mt-1" aria-label="Available colors">
+                          {% for value in color_option.values limit: 8 %}
+                            {%- liquid
+                              assign swatch_style = ''
+                              assign variant_for_color = blank
+
+                              for variant in product.variants
+                                if variant.options[color_option_index] == value
+                                  assign variant_for_color = variant
+                                  break
+                                endif
+                              endfor
+
+                              if value.swatch.image != blank
+                                assign swatch_img = value.swatch.image | image_url: width: 50
+                                assign swatch_style = 'background-image: url(' | append: swatch_img | append: '); background-size: cover; background-position: center;'
+                              elsif value.swatch.color != blank
+                                assign swatch_style = 'background-color: ' | append: value.swatch.color | append: ';'
+                              elsif variant_for_color.featured_media != blank
+                                assign swatch_img = variant_for_color.featured_media | image_url: width: 50
+                                assign swatch_style = 'background-image: url(' | append: swatch_img | append: '); background-size: cover; background-position: center;'
+                              else
+                                assign named_color = value | handle | replace: '-', ''
+                                assign swatch_style = 'background-color: ' | append: named_color | append: ';'
                               endif
-                            endfor
-
-                            if value.swatch.image != blank
-                              assign swatch_img = value.swatch.image | image_url: width: 50
-                              assign swatch_style = 'background-image: url(' | append: swatch_img | append: '); background-size: cover; background-position: center;'
-                            elsif value.swatch.color != blank
-                              assign swatch_style = 'background-color: ' | append: value.swatch.color | append: ';'
-                            elsif variant_for_color.featured_media != blank
-                              assign swatch_img = variant_for_color.featured_media | image_url: width: 50
-                              assign swatch_style = 'background-image: url(' | append: swatch_img | append: '); background-size: cover; background-position: center;'
-                            else
-                              assign named_color = value | handle | replace: '-', ''
-                              assign swatch_style = 'background-color: ' | append: named_color | append: ';'
-                            endif
-                          -%}
-                          <span
-                            class="product-carousel__swatch inline-block w-[14px] h-[14px] rounded-full border border-[#D0D0D0] shrink-0"
-                            style="{{ swatch_style }}"
-                            title="{{ value | escape }}"
-                          ></span>
-                        {% endfor %}
-                      </div>
-                    {% endif %}
-                  </div>
-                </a>
-              </div>
-            {%- endfor -%}
-          {%- else -%}
-            {%- for i in (1..6) -%}
-              <div class="swiper-slide product-carousel__slide">
-                <div class="product-carousel__card">
-                  <div class="product-carousel__media bg-[#EFEFEF] aspect-[3/4] mb-3 lg:mb-4 flex items-center justify-center">
-                    {{ 'product-1' | placeholder_svg_tag: 'w-2/3 h-2/3 opacity-40' }}
-                  </div>
-                  <p class="product-carousel__category tracking-[0.14em] uppercase text-[10px] text-[#9A9A9A] mb-1">Category</p>
-                  <h3 class="product-carousel__title text-[15px] text-black mb-1">Product title</h3>
-                  <p class="product-carousel__price text-[14px] text-[#8A8A8A] mb-2">$00.00</p>
-                  <div class="product-carousel__swatches flex items-center gap-1.5">
-                    <span class="inline-block w-[14px] h-[14px] rounded-full bg-black border border-[#D0D0D0]"></span>
-                    <span class="inline-block w-[14px] h-[14px] rounded-full bg-white border border-[#D0D0D0]"></span>
+                            -%}
+                            <span
+                              class="product-carousel__swatch inline-block w-[14px] h-[14px] rounded-full shrink-0"
+                              style="{{ swatch_style }}"
+                              title="{{ value | escape }}"
+                            ></span>
+                          {% endfor %}
+                        </div>
+                      {% endif %}
+                    </div>
+                  </a>
+                </div>
+              {%- endfor -%}
+            {%- else -%}
+              {%- for i in (1..6) -%}
+                <div class="swiper-slide product-carousel__slide">
+                  <div class="product-carousel__card">
+                    <div class="product-carousel__media bg-[#EFEFEF] aspect-[3/4] mb-3 lg:mb-4 border border-black flex items-center justify-center">
+                      {{ 'product-1' | placeholder_svg_tag: 'w-2/3 h-2/3 opacity-40' }}
+                    </div>
+                    <p class="product-carousel__category tracking-[0.14em] uppercase text-[10px] text-[#9A9A9A] mb-1">Category</p>
+                    <h3 class="product-carousel__title text-[15px] text-black mb-1">Product title</h3>
+                    <p class="product-carousel__price text-[14px] text-[#8A8A8A] mb-2">$00.00</p>
+                    <div class="product-carousel__swatches flex items-center gap-1.5">
+                      <span class="product-carousel__swatch inline-block w-[14px] h-[14px] rounded-full bg-black border border-black"></span>
+                      <span class="product-carousel__swatch inline-block w-[14px] h-[14px] rounded-full bg-white border border-black"></span>
+                    </div>
                   </div>
                 </div>
-              </div>
-            {%- endfor -%}
-          {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
         </div>
-      </div>
 
-      <script type="application/json">
-        {
-          "slidesPerView": 1.2,
-          "spaceBetween": 12,
-          "watchOverflow": true,
-          "grabCursor": true,
-          "breakpoints": {
-            "768": {
-              "slidesPerView": 3,
-              "spaceBetween": 16
-            },
-            "1024": {
-              "slidesPerView": 4,
-              "spaceBetween": 18
-            },
-            "1280": {
-              "slidesPerView": 6,
-              "spaceBetween": 20
+        <script type="application/json">
+          {
+            "slidesPerView": 1.2,
+            "spaceBetween": 12,
+            "watchOverflow": true,
+            "grabCursor": true,
+            "breakpoints": {
+              "768": {
+                "slidesPerView": 3,
+                "spaceBetween": 16
+              },
+              "1024": {
+                "slidesPerView": 4,
+                "spaceBetween": 18
+              },
+              "1280": {
+                "slidesPerView": 6,
+                "spaceBetween": 20
+              }
             }
           }
-        }
-      </script>
-    </swiper-carousel>
+        </script>
+      </swiper-carousel>
+    </div>
   </div>
 </section>
 
@@ -186,14 +188,36 @@
     overflow: hidden;
   }
 
-  #productCarousel-{{ section.id }} .product-carousel__slide {
-    height: auto;
+  #productCarousel-{{ section.id }} .swiper-wrapper {
+    align-items: stretch;
   }
 
-  #productCarousel-{{ section.id }} .product-carousel__swatch[style*="ffffff"],
-  #productCarousel-{{ section.id }} .product-carousel__swatch[style*="white"],
-  #productCarousel-{{ section.id }} .product-carousel__swatch[style*="#fff"] {
-    box-shadow: inset 0 0 0 1px #d0d0d0;
+  #productCarousel-{{ section.id }} .product-carousel__slide {
+    height: auto;
+    display: flex;
+  }
+
+  #productCarousel-{{ section.id }} .product-carousel__card {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+
+  #productCarousel-{{ section.id }} .product-carousel__info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  #productCarousel-{{ section.id }} .product-carousel__swatches {
+    margin-top: auto;
+  }
+
+  #productCarousel-{{ section.id }} .product-carousel__media,
+  #productCarousel-{{ section.id }} .product-carousel__swatch {
+    border-color: #000;
+    box-sizing: border-box;
   }
 </style>
 

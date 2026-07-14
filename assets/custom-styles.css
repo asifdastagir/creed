@@ -1914,6 +1914,12 @@ summary::marker {
     border-top-width: 1px;
 }
 
+.border-black {
+    --tw-border-opacity: 1;
+    border-color       : #000;
+    border-color       : rgba(0, 0, 0, var(--tw-border-opacity));
+}
+
 .border-black\/20 {
     border-color: rgba(0, 0, 0, 0.2);
 }
@@ -5075,4 +5081,11 @@ html {
 
 #shop-hcaptcha-badge-container{
     z-index: 1 !important;
+}
+
+.product-carousel__card{
+    border:solid 1px rgb(216, 216, 216) !important;
+}
+.product-carousel__swatch{
+    border:solid 1px gray !important;
 }

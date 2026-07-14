@@ -157,7 +157,7 @@
     "product_card_add_to_cart": true,
     "product_card_one_in_row_width": 360,
     "product_card_vendor": true,
-    "product_card_rating": true,
+    "product_card_rating": false,
     "product_card_rating_vendor": "shopify",
     "product_card_countdown": true,
     "product_card_single_option": true,
