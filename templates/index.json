@@ -81,6 +81,19 @@
         "desktop_poster": "shopify://shop_images/692507_3.jpg"
       }
     },
+    "product_carousel_LVc7kB": {
+      "type": "product-carousel",
+      "name": "Product Carousel",
+      "settings": {
+        "eyebrow": "NEW ARRIVALS",
+        "heading": "SHOP NOCTURN",
+        "swipe_label": "SWIPE TO BROWSE →",
+        "collection": "form-one",
+        "limit": 12,
+        "margin_top": 0,
+        "margin_bottom": 40
+      }
+    },
     "index_product_carousel_Mnqkxp": {
       "type": "index-product-carousel",
       "name": "Products carousel / preset 1 Default",
@@ -316,6 +329,7 @@
   "order": [
     "hero_carousel_3CxJNQ",
     "hero_video_A3zCNf",
+    "product_carousel_LVc7kB",
     "index_product_carousel_Mnqkxp",
     "index_product_carousel_LmqA6z",
     "snap_card_component_YLqD8W",
