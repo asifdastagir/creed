@@ -218,7 +218,7 @@
       "name": "Snap Card Component",
       "settings": {
         "style": "style1",
-        "heading_line1": "Aeroweave&trade; 3D Knit",
+        "heading_line1": "Aeroweave™ 3D Knit",
         "heading_line2": "",
         "text": "Seamless construction with body-mapped ventilation. Built for compression, breathability, and everyday performance.",
         "image": "shopify://shop_images/Use_this_image_for_panel_1_28bdd414-163f-4f62-a9ad-edb4327d412e.jpg",
@@ -247,7 +247,6 @@
     },
     "snap_card_component_WkxQM4": {
       "type": "snap-card-component",
-      "disabled": true,
       "name": "Snap Card Component",
       "settings": {
         "style": "style1",
