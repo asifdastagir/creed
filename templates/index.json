@@ -57,6 +57,7 @@
         "slide_DQKWEz",
         "slide_dBMJJf"
       ],
+      "disabled": true,
       "name": "Hero Carousel",
       "settings": {
         "enable_autoplay": true,
@@ -67,7 +68,6 @@
     },
     "hero_video_A3zCNf": {
       "type": "hero-video",
-      "disabled": true,
       "name": "Hero Video",
       "settings": {
         "heading_line_1": "Active for",
