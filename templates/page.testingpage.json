@@ -33,6 +33,7 @@
           "type": "slide",
           "settings": {
             "image_desktop": "shopify://shop_images/carousel-1.jpg",
+            "image_mobile": "shopify://shop_images/carousel-1.jpg",
             "heading_line_1": "WINNER '26",
             "heading_line_2": "NOCTURN",
             "volume_label": "VOL. 01",
@@ -44,10 +45,12 @@
         "slide_a7wC38": {
           "type": "slide",
           "settings": {
-            "heading_line_1": "Built for",
-            "heading_line_2": "the Everyday",
-            "volume_label": "VOL. 02",
-            "description": "Performance wear designed to move with you through every hour of the day",
+            "image_desktop": "shopify://shop_images/carousel-2.jpg",
+            "image_mobile": "shopify://shop_images/carousel-2.jpg",
+            "heading_line_1": "WINNER '26",
+            "heading_line_2": "NOCTURN",
+            "volume_label": "VOL. 01",
+            "description": "Join the Awakening.",
             "button_label": "Explore",
             "button_url": ""
           }
