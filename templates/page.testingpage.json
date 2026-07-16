@@ -81,10 +81,24 @@
         "transition_speed": 800,
         "enable_loop": true
       }
+    },
+    "product_carousel_jUVG3A": {
+      "type": "product-carousel",
+      "name": "Product Carousel",
+      "settings": {
+        "eyebrow": "NEW ARRIVALS",
+        "heading": "SHOP NOCTURN",
+        "swipe_label": "SWIPE TO BROWSE →",
+        "collection": "form-one",
+        "limit": 12,
+        "margin_top": 0,
+        "margin_bottom": 40
+      }
     }
   },
   "order": [
     "main",
-    "hero_carousel_rGLMWU"
+    "hero_carousel_rGLMWU",
+    "product_carousel_jUVG3A"
   ]
 }
