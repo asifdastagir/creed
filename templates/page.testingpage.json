@@ -54,11 +54,25 @@
             "button_label": "Explore",
             "button_url": ""
           }
+        },
+        "slide_h7yXAj": {
+          "type": "slide",
+          "settings": {
+            "image_desktop": "shopify://shop_images/carousel-3.jpg",
+            "image_mobile": "shopify://shop_images/carousel-3.jpg",
+            "heading_line_1": "WINNER '26",
+            "heading_line_2": "NOCTURN",
+            "volume_label": "VOL. 01",
+            "description": "Join the Awakening.",
+            "button_label": "Shop now",
+            "button_url": ""
+          }
         }
       },
       "block_order": [
         "slide_TphADd",
-        "slide_a7wC38"
+        "slide_a7wC38",
+        "slide_h7yXAj"
       ],
       "name": "Hero Carousel",
       "settings": {
