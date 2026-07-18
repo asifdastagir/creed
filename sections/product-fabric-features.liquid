@@ -1,0 +1,426 @@
+{% comment %}
+  Product Fabric Features
+  Data from metafields:
+  - custom.features (list of metaobjects: feature_icon, feature_title, feature_description)
+  - custom.video (YouTube URL)
+  - custom.about_fabric (fabric heading + description text)
+{% endcomment %}
+
+{%- liquid
+  assign features = product.metafields.custom.features.value
+  assign video_url = product.metafields.custom.video.value | default: product.metafields.custom.video
+  assign about_fabric = product.metafields.custom.about_fabric.value | default: product.metafields.custom.about_fabric
+
+  assign fabric_heading = section.settings.heading
+  assign fabric_body = about_fabric
+
+  if about_fabric != blank
+    assign about_lines = about_fabric | newline_to_br | split: '<br />'
+    if about_lines.size > 1
+      if fabric_heading == blank
+        assign fabric_heading = about_lines.first | strip_html | strip
+      endif
+      assign fabric_body = ''
+      for line in about_lines offset: 1
+        assign fabric_body = fabric_body | append: line
+        unless forloop.last
+          assign fabric_body = fabric_body | append: ' '
+        endunless
+      endfor
+      assign fabric_body = fabric_body | strip_html | strip
+    endif
+  endif
+
+  if fabric_heading == blank and about_fabric != blank
+    assign fabric_heading = about_fabric | truncatewords: 4, ''
+  endif
+
+  assign video_id = blank
+  if video_url != blank
+    if video_url contains 'youtu.be/'
+      assign video_id = video_url | split: 'youtu.be/' | last | split: '?' | first | split: '&' | first
+    elsif video_url contains 'youtube.com/watch'
+      assign video_id = video_url | split: 'v=' | last | split: '&' | first
+    elsif video_url contains 'youtube.com/embed/'
+      assign video_id = video_url | split: 'embed/' | last | split: '?' | first | split: '&' | first
+    elsif video_url contains 'youtube.com/shorts/'
+      assign video_id = video_url | split: 'shorts/' | last | split: '?' | first | split: '&' | first
+    endif
+  endif
+
+  assign has_features = false
+  if features != blank and features.size > 0
+    assign has_features = true
+  endif
+
+  assign show_section = false
+  if has_features or fabric_body != blank or video_id != blank
+    assign show_section = true
+  endif
+-%}
+
+{% if show_section %}
+<section
+  id="productFabricFeatures-{{ section.id }}"
+  class="product-fabric-features"
+  style="
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+    background-color: {{ section.settings.background_color }};
+  "
+>
+  <div class="container product-fabric-features__inner">
+    <div class="product-fabric-features__grid">
+      {% if has_features %}
+        <div class="product-fabric-features__cards">
+          {% for feature in features %}
+            {%- liquid
+              assign feature_title = feature.feature_title.value | default: feature.feature_title
+              assign feature_description = feature.feature_description.value | default: feature.feature_description
+              assign feature_icon = feature.feature_icon.value | default: feature.feature_icon
+            -%}
+            <article class="product-fabric-features__card">
+              {% if feature_icon != blank %}
+                <div class="product-fabric-features__icon">
+                  <img
+                    src="{{ feature_icon | image_url: width: 80 }}"
+                    alt="{{ feature_title | escape }}"
+                    width="40"
+                    height="40"
+                    loading="lazy"
+                  >
+                </div>
+              {% endif %}
+
+              {% if feature_title != blank %}
+                <h3 class="product-fabric-features__card-title">{{ feature_title }}</h3>
+              {% endif %}
+
+              {% if feature_description != blank %}
+                <p class="product-fabric-features__card-text">{{ feature_description | newline_to_br }}</p>
+              {% endif %}
+            </article>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <div class="product-fabric-features__content">
+        <div class="product-fabric-features__intro">
+          {% if fabric_heading != blank %}
+            <h2 class="product-fabric-features__heading">{{ fabric_heading }}</h2>
+          {% endif %}
+
+          {% if fabric_body != blank %}
+            <div class="product-fabric-features__body">
+              {{ fabric_body | newline_to_br }}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="product-fabric-features__media">
+          {% if video_id != blank %}
+            <div class="product-fabric-features__video">
+              <iframe
+                src="https://www.youtube.com/embed/{{ video_id }}"
+                title="{{ fabric_heading | default: product.title | escape }}"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+                loading="lazy"
+              ></iframe>
+            </div>
+          {% endif %}
+
+          {% if section.settings.button_1_label != blank or section.settings.button_2_label != blank %}
+            <div class="product-fabric-features__actions">
+              {% if section.settings.button_1_label != blank %}
+                <a
+                  href="{{ section.settings.button_1_url | default: '#' }}"
+                  class="product-fabric-features__btn"
+                >
+                  {{ section.settings.button_1_label }}
+                </a>
+              {% endif %}
+              {% if section.settings.button_2_label != blank %}
+                <a
+                  href="{{ section.settings.button_2_url | default: '#' }}"
+                  class="product-fabric-features__btn"
+                >
+                  {{ section.settings.button_2_label }}
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__inner {
+    padding-top: 36px;
+    padding-bottom: 36px;
+  }
+
+  /* Mobile: heading + text first (centered), then feature cards, then video/buttons */
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__grid {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__content {
+    display: contents;
+  }
+
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__intro {
+    order: 1;
+    text-align: center;
+  }
+
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__cards {
+    order: 2;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__media {
+    order: 3;
+  }
+
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__card {
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    padding: 24px 22px;
+    text-align: left;
+  }
+
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__icon {
+    margin-bottom: 12px;
+  }
+
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__icon img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    display: block;
+  }
+
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__card-title {
+    margin: 0 0 8px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #111;
+  }
+
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__card-text {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #777;
+  }
+
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__heading {
+    margin: 0 0 14px;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #111;
+    line-height: 1.2;
+  }
+
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__body {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.65;
+    color: #555;
+  }
+
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__video {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__video iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 22px;
+    background: #2a2a2a;
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 12px;
+    font-weight: 600;
+    border: none;
+    transition: background 0.25s ease;
+  }
+
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__btn:hover {
+    background: #000;
+    color: #fff;
+  }
+
+  /* Desktop: cards left, content right */
+  @media (min-width: 992px) {
+    #productFabricFeatures-{{ section.id }} .product-fabric-features__inner {
+      padding-top: 60px;
+      padding-bottom: 60px;
+    }
+
+    #productFabricFeatures-{{ section.id }} .product-fabric-features__grid {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.4fr);
+      gap: 40px;
+      align-items: start;
+    }
+
+    #productFabricFeatures-{{ section.id }} .product-fabric-features__content {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    #productFabricFeatures-{{ section.id }} .product-fabric-features__intro,
+    #productFabricFeatures-{{ section.id }} .product-fabric-features__cards,
+    #productFabricFeatures-{{ section.id }} .product-fabric-features__media {
+      order: unset;
+    }
+
+    #productFabricFeatures-{{ section.id }} .product-fabric-features__intro {
+      text-align: left;
+    }
+
+    #productFabricFeatures-{{ section.id }} .product-fabric-features__heading {
+      font-size: 36px;
+      margin-bottom: 16px;
+    }
+
+    #productFabricFeatures-{{ section.id }} .product-fabric-features__body {
+      font-size: 15px;
+    }
+
+    #productFabricFeatures-{{ section.id }} .product-fabric-features__actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    #productFabricFeatures-{{ section.id }} .product-fabric-features__btn {
+      width: auto;
+    }
+
+    #productFabricFeatures-{{ section.id }} .product-fabric-features__card {
+      padding: 20px 22px;
+    }
+  }
+</style>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Fabric Features",
+  "tag": "section",
+  "class": "product-fabric-features-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Uses product metafields: Features, Video, About Fabric"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading override",
+      "info": "Optional. Leave blank to use the About Fabric text / first line."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#F3F3F3"
+    },
+    {
+      "type": "header",
+      "content": "Buttons"
+    },
+    {
+      "type": "text",
+      "id": "button_1_label",
+      "label": "Button 1 label",
+      "default": "SHOP TETRA-LITE"
+    },
+    {
+      "type": "url",
+      "id": "button_1_url",
+      "label": "Button 1 link"
+    },
+    {
+      "type": "text",
+      "id": "button_2_label",
+      "label": "Button 2 label",
+      "default": "EXPLORE ALL FABRICS"
+    },
+    {
+      "type": "url",
+      "id": "button_2_url",
+      "label": "Button 2 link"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin top",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 5,
+      "unit": "px",
+      "label": "Margin bottom",
+      "default": 0
+    }
+  ],
+  "presets": [
+    {
+      "name": "Fabric Features"
+    }
+  ]
+}
+{% endschema %}
