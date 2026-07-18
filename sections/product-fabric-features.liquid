@@ -113,27 +113,6 @@
               ></iframe>
             </div>
           {% endif %}
-
-          {% if section.settings.button_1_label != blank or section.settings.button_2_label != blank %}
-            <div class="product-fabric-features__actions">
-              {% if section.settings.button_1_label != blank %}
-                <a
-                  href="{{ section.settings.button_1_url | default: '#' }}"
-                  class="product-fabric-features__btn"
-                >
-                  {{ section.settings.button_1_label }}
-                </a>
-              {% endif %}
-              {% if section.settings.button_2_label != blank %}
-                <a
-                  href="{{ section.settings.button_2_url | default: '#' }}"
-                  class="product-fabric-features__btn"
-                >
-                  {{ section.settings.button_2_label }}
-                </a>
-              {% endif %}
-            </div>
-          {% endif %}
         </div>
       </div>
     </div>
