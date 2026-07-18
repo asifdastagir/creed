@@ -105,6 +105,17 @@
             "page": ""
           }
         },
+        "collapsible_tab_94PAyf": {
+          "type": "collapsible_tab",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "opened": true,
+            "heading": "Key Features",
+            "content": "<p>{{ product.metafields.custom.key_features | metafield_tag }}</p>",
+            "page": ""
+          }
+        },
         "collapsible_tab_dTVwH9": {
           "type": "model_details",
           "settings": {
@@ -121,7 +132,7 @@
             "use_global_blocks_desktop_space": true,
             "opened": true,
             "heading": "Material Tech ",
-            "content": "<p>{{ product.metafields.custom.material_tech | metafield_tag }}</p>",
+            "content": "{{ product.metafields.custom.material_tech | metafield_tag }}",
             "page": ""
           }
         }
@@ -136,6 +147,7 @@
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
         "description_zzQLwa",
         "collapsible_tab_dkNbn8",
+        "collapsible_tab_94PAyf",
         "collapsible_tab_dTVwH9",
         "collapsible_tab_DypnGi"
       ],
