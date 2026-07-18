@@ -3,36 +3,20 @@
   Data from metafields:
   - custom.features (list of metaobjects: feature_icon, feature_title, feature_description)
   - custom.video (YouTube URL)
-  - custom.about_fabric (fabric heading + description text)
+  - custom.video_and_textarea (About Fabric rich text)
 {% endcomment %}
 
 {%- liquid
   assign features = product.metafields.custom.features.value
   assign video_url = product.metafields.custom.video.value | default: product.metafields.custom.video
-  assign about_fabric = product.metafields.custom.about_fabric.value | default: product.metafields.custom.about_fabric
+  assign about_fabric_metafield = product.metafields.custom.video_and_textarea
+  assign about_fabric = about_fabric_metafield.value | default: about_fabric_metafield
 
   assign fabric_heading = section.settings.heading
-  assign fabric_body = about_fabric
+  assign fabric_body_html = blank
 
-  if about_fabric != blank
-    assign about_lines = about_fabric | newline_to_br | split: '<br />'
-    if about_lines.size > 1
-      if fabric_heading == blank
-        assign fabric_heading = about_lines.first | strip_html | strip
-      endif
-      assign fabric_body = ''
-      for line in about_lines offset: 1
-        assign fabric_body = fabric_body | append: line
-        unless forloop.last
-          assign fabric_body = fabric_body | append: ' '
-        endunless
-      endfor
-      assign fabric_body = fabric_body | strip_html | strip
-    endif
-  endif
-
-  if fabric_heading == blank and about_fabric != blank
-    assign fabric_heading = about_fabric | truncatewords: 4, ''
+  if about_fabric_metafield != blank
+    assign fabric_body_html = about_fabric_metafield | metafield_tag
   endif
 
   assign video_id = blank
@@ -54,7 +38,7 @@
   endif
 
   assign show_section = false
-  if has_features or fabric_body != blank or video_id != blank
+  if has_features or fabric_body_html != blank or video_id != blank
     assign show_section = true
   endif
 -%}
@@ -110,9 +94,9 @@
             <h2 class="product-fabric-features__heading">{{ fabric_heading }}</h2>
           {% endif %}
 
-          {% if fabric_body != blank %}
-            <div class="product-fabric-features__body">
-              {{ fabric_body | newline_to_br }}
+          {% if fabric_body_html != blank %}
+            <div class="product-fabric-features__body rte">
+              {{ fabric_body_html }}
             </div>
           {% endif %}
         </div>
@@ -352,13 +336,13 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Uses product metafields: Features, Video, About Fabric"
+      "content": "Uses product metafields: custom.features, custom.video, custom.video_and_textarea (About Fabric rich text)"
     },
     {
       "type": "text",
       "id": "heading",
       "label": "Heading override",
-      "info": "Optional. Leave blank to use the About Fabric text / first line."
+      "info": "Optional. Leave blank if the heading is already inside the About Fabric rich text (custom.video_and_textarea)."
     },
     {
       "type": "color",

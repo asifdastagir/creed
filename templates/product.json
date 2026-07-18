@@ -184,20 +184,6 @@
         "color_price_old": ""
       }
     },
-    "product_fabric_features_r3izBB": {
-      "type": "product-fabric-features",
-      "name": "Fabric Features",
-      "settings": {
-        "heading": "",
-        "background_color": "#F3F3F3",
-        "button_1_label": "SHOP TETRA-LITE",
-        "button_1_url": "",
-        "button_2_label": "EXPLORE ALL FABRICS",
-        "button_2_url": "",
-        "margin_top": 0,
-        "margin_bottom": 0
-      }
-    },
     "product_snap_card_RymQEU": {
       "type": "product-snap-card",
       "name": "Product Snap Card",
@@ -211,7 +197,7 @@
       "name": "Fabric Features",
       "settings": {
         "heading": "",
-        "background_color": "#f3f3f3",
+        "background_color": "#F3F3F3",
         "button_1_label": "SHOP TETRA-LITE",
         "button_1_url": "",
         "button_2_label": "EXPLORE ALL FABRICS",
@@ -260,7 +246,6 @@
   },
   "order": [
     "main",
-    "product_fabric_features_r3izBB",
     "product_snap_card_RymQEU",
     "product_fabric_features",
     "product-related",
