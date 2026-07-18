@@ -101,7 +101,7 @@
             "use_global_blocks_desktop_space": true,
             "opened": true,
             "heading": "Design For",
-            "content": "<p>{{ product.metafields.custom.for | metafield_tag }}</p>",
+            "content": "<p>{{ product.metafields.custom.design_for_product | metafield_tag }}</p>",
             "page": ""
           }
         },
