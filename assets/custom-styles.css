@@ -5057,14 +5057,245 @@ html {
 
 }
 
+/* =========================================================
+   Global richtext headings (h1–h6)
+   Matches theme .rich-text / .text-h* scale (Aeonik)
+   Applies to .rte, .rich-text, metafield rich text
+   ========================================================= */
+
+.rte,
+.rich-text,
+.metafield-rich_text_field,
+.product-fabric-features__body {
+    font-family: "Aeonik", sans-serif;
+}
+
+.rte h1,
+.rich-text h1,
+.metafield-rich_text_field h1,
+.product-fabric-features__body h1 {
+    margin: 0;
+    padding-top: 2rem;
+    color: var(--heading-color, #000);
+    font-family: "Aeonik", sans-serif;
+    font-size: 3rem;
+    font-weight: 500;
+    letter-spacing: -0.0291666667em;
+    line-height: 1;
+}
+
+@media (min-width: 1024px) {
+    .rte h1,
+    .rich-text h1,
+    .metafield-rich_text_field h1,
+    .product-fabric-features__body h1 {
+        font-size: 5rem;
+        letter-spacing: -0.025em;
+        line-height: 1;
+    }
+}
+
+.rte h1:first-child,
+.rich-text h1:first-child,
+.metafield-rich_text_field h1:first-child,
+.product-fabric-features__body h1:first-child {
+    padding-top: 0;
+}
+
+.rte h2,
+.rich-text h2,
+.metafield-rich_text_field h2,
+.product-fabric-features__body h2 {
+    margin: 0;
+    padding-top: 2rem;
+    color: var(--heading-color, #000);
+    font-family: "Aeonik", sans-serif;
+    font-size: 2.5rem;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    line-height: 1;
+}
+
+@media (min-width: 1024px) {
+    .rte h2,
+    .rich-text h2,
+    .metafield-rich_text_field h2,
+    .product-fabric-features__body h2 {
+        font-size: 4rem;
+        letter-spacing: -0.03125em;
+        line-height: 1;
+    }
+}
+
+.rte h2:first-child,
+.rich-text h2:first-child,
+.metafield-rich_text_field h2:first-child,
+.product-fabric-features__body h2:first-child {
+    padding-top: 0;
+}
+
+.rte h3,
+.rich-text h3,
+.metafield-rich_text_field h3,
+.product-fabric-features__body h3 {
+    margin: 0;
+    padding-top: 2rem;
+    color: var(--heading-color, #000);
+    font-family: "Aeonik", sans-serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: -0.01875em;
+    line-height: 1;
+}
+
+@media (min-width: 1200px) {
+    .rte h3,
+    .rich-text h3,
+    .metafield-rich_text_field h3,
+    .product-fabric-features__body h3 {
+        font-size: 2.75rem;
+        letter-spacing: -0.0227272727em;
+        line-height: 1;
+    }
+}
+
+.rte h3:first-child,
+.rich-text h3:first-child,
+.metafield-rich_text_field h3:first-child,
+.product-fabric-features__body h3:first-child {
+    padding-top: 0;
+}
+
+.rte h4,
+.rich-text h4,
+.metafield-rich_text_field h4,
+.product-fabric-features__body h4 {
+    margin: 0;
+    padding-top: 1.5rem;
+    color: var(--heading-color, #000);
+    font-family: "Aeonik", sans-serif;
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: -0.0166666667em;
+    line-height: 1;
+}
+
+@media (min-width: 1024px) {
+    .rte h4,
+    .rich-text h4,
+    .metafield-rich_text_field h4,
+    .product-fabric-features__body h4 {
+        font-size: 2rem;
+        letter-spacing: -0.01875em;
+        line-height: 1;
+    }
+}
+
+.rte h4:first-child,
+.rich-text h4:first-child,
+.metafield-rich_text_field h4:first-child,
+.product-fabric-features__body h4:first-child {
+    padding-top: 0;
+}
+
+.rte h5,
+.rich-text h5,
+.metafield-rich_text_field h5,
+.product-fabric-features__body h5 {
+    margin: 0;
+    padding-top: 1.5rem;
+    color: var(--heading-color, #000);
+    font-family: "Aeonik", sans-serif;
+    font-size: 1.125rem;
+    font-weight: 500;
+    letter-spacing: 0.0111111111em;
+    line-height: 1.1111111111;
+}
+
+@media (min-width: 1024px) {
+    .rte h5,
+    .rich-text h5,
+    .metafield-rich_text_field h5,
+    .product-fabric-features__body h5 {
+        font-size: 1.3125rem;
+        letter-spacing: -0.019047619em;
+        line-height: 1;
+    }
+}
+
+.rte h5:first-child,
+.rich-text h5:first-child,
+.metafield-rich_text_field h5:first-child,
+.product-fabric-features__body h5:first-child {
+    padding-top: 0;
+}
+
+.rte h6,
+.rich-text h6,
+.metafield-rich_text_field h6,
+.product-fabric-features__body h6 {
+    margin: 0;
+    padding-top: 2rem;
+    color: var(--heading-color, #000);
+    font-family: "Aeonik", sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 400;
+    letter-spacing: 0.1818181818em;
+    line-height: 1.3636363636;
+    text-transform: uppercase;
+}
+
+@media (min-width: 1024px) {
+    .rte h6,
+    .rich-text h6,
+    .metafield-rich_text_field h6,
+    .product-fabric-features__body h6 {
+        font-size: 0.75rem;
+        letter-spacing: 0.15em;
+        line-height: 1.3333333333;
+    }
+}
+
+.rte h6:first-child,
+.rich-text h6:first-child,
+.metafield-rich_text_field h6:first-child,
+.product-fabric-features__body h6:first-child {
+    padding-top: 0;
+}
+
+.rte p,
+.metafield-rich_text_field p,
+.product-fabric-features__body p {
+    margin: 0;
+    padding-top: 1rem;
+    font-family: "Aeonik", sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+@media (min-width: 1024px) {
+    .rte p,
+    .metafield-rich_text_field p,
+    .product-fabric-features__body p {
+        font-size: 1.125rem;
+        line-height: 1.3333333333;
+    }
+}
+
+.rte p:first-child,
+.metafield-rich_text_field p:first-child,
+.product-fabric-features__body p:first-child {
+    padding-top: 0;
+}
+
 .rte ul,
 .material ul {
-    list-style  : disc;
+    list-style: disc;
     padding-left: 20px;
 }
 
 .material .grid>div {
-    border : solid 1px #000;
+    border: solid 1px #000;
     padding: 20px;
 }
 
