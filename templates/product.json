@@ -121,7 +121,7 @@
             "use_global_blocks_desktop_space": true,
             "opened": true,
             "heading": "Material Tech ",
-            "content": "",
+            "content": "<p>{{ product.metafields.custom.material_tech | metafield_tag }}</p>",
             "page": ""
           }
         }
