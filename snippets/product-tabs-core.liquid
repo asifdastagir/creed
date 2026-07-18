@@ -26,6 +26,8 @@
                 {%- liquid
                 if block.type == 'description'
                     echo product.description
+                elsif block.type == 'model_details'
+                    render 'model-details', product: product
                 elsif block.type == 'collapsible_tab_apps'
                     assign apps = section.blocks | where: 'type', '@app'
                     for app in apps

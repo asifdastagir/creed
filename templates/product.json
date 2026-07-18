@@ -106,14 +106,12 @@
           }
         },
         "collapsible_tab_dTVwH9": {
-          "type": "collapsible_tab",
+          "type": "model_details",
           "settings": {
             "spacing_blocks": 30,
             "use_global_blocks_desktop_space": true,
             "opened": true,
-            "heading": "Models Details",
-            "content": "<p>{{ product.metafields.custom.models_details.value.model_height.value }}{{ product.metafields.custom.models_details.value.model_chest.value }}{{ product.metafields.custom.models_details.value.model_waist.value }}{{ product.metafields.custom.models_details.value.wears.value }}</p>",
-            "page": ""
+            "heading": "Models Details"
           }
         },
         "collapsible_tab_NJUYbM": {

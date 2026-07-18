@@ -143,10 +143,12 @@
     if section.settings.apps_placement == 'tab'
       assign blocks = section.blocks | where: 'type', 'collapsible_tab_apps'
       assign blocks = section.blocks | where: 'type', 'collapsible_tab' | concat: blocks
+      assign blocks = section.blocks | where: 'type', 'model_details' | concat: blocks
       assign blocks = section.blocks | where: 'type', 'page_source' | concat: blocks
       assign blocks = section.blocks | where: 'type', 'dynamic_accordion' | concat: blocks
     else
       assign blocks = section.blocks | where: 'type', 'collapsible_tab'
+      assign blocks = section.blocks | where: 'type', 'model_details' | concat: blocks
       assign blocks = section.blocks | where: 'type', 'page_source' | concat: blocks
       assign blocks = section.blocks | where: 'type', 'dynamic_accordion' | concat: blocks
     endif
@@ -562,6 +564,20 @@
                       </div>
                     </div>
                   </div>
+              </div>
+            {%- endif -%}
+          {%- when 'model_details' -%}
+            {%- if section.settings.bottom_tabs == false and section.settings.inner_tabs_to_horizontal == false -%}
+              <div class="block-accordion mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
+                <div class="tab-accordion-item">
+                  <input type="checkbox" name="tab-accordion" id="tabAccordion{{ block.id }}" {% if block.settings.opened %}checked{% endif %}>
+                  <label for="tabAccordion{{ block.id }}" class="text-uppercase">{{ block.settings.heading | default: 'Models Details' }}<span class="toggle-arrow"></span></label>
+                  <div class="tab-accordion-item-content js-set-height">
+                    <div class="tab-accordion-item-content-inside">
+                      {% render 'model-details', product: product %}
+                    </div>
+                  </div>
+                </div>
               </div>
             {%- endif -%}
           {%- when 'collapsible_tab_apps' -%}
@@ -3172,6 +3188,51 @@
           "type": "page",
           "id": "page",
           "label": "Row content from page"
+        }
+      ]
+    },
+    {
+      "type": "model_details",
+      "name": "Models Details",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "range",
+          "id": "spacing_blocks",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Vertical space above the section on Desktop",
+          "default": 30
+        },
+        {
+          "type": "checkbox",
+          "id": "use_global_blocks_desktop_space",
+          "label": "Use global space on desktop",
+          "default": true,
+          "info": "from Section settings / Layout"
+        },
+        {
+          "type": "header",
+          "content": "General"
+        },
+        {
+          "type": "checkbox",
+          "id": "opened",
+          "label": "Opened",
+          "default": true
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Models Details",
+          "label": "Heading",
+          "info": "Content comes from product metafield: custom.models_details"
         }
       ]
     },
