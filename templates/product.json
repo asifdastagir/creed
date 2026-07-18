@@ -172,14 +172,6 @@
         "color_price_old": ""
       }
     },
-    "product_snap_card_RymQEU": {
-      "type": "product-snap-card",
-      "name": "Product Snap Card",
-      "settings": {
-        "margin_top": 0,
-        "margin_bottom": 0
-      }
-    },
     "product_fabric_features": {
       "type": "product-fabric-features",
       "name": "Fabric Features",
@@ -190,6 +182,14 @@
         "button_1_url": "",
         "button_2_label": "EXPLORE ALL FABRICS",
         "button_2_url": "",
+        "margin_top": 0,
+        "margin_bottom": 0
+      }
+    },
+    "product_snap_card_RymQEU": {
+      "type": "product-snap-card",
+      "name": "Product Snap Card",
+      "settings": {
         "margin_top": 0,
         "margin_bottom": 0
       }
@@ -234,8 +234,8 @@
   },
   "order": [
     "main",
-    "product_snap_card_RymQEU",
     "product_fabric_features",
+    "product_snap_card_RymQEU",
     "product-related",
     "product-recommendations"
   ]
