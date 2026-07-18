@@ -53,7 +53,7 @@
     background-color: {{ section.settings.background_color }};
   "
 >
-  <div class="container product-fabric-features__inner">
+  <div class="product-fabric-features__inner">
     <div class="product-fabric-features__grid">
       {% if has_features %}
         <div class="product-fabric-features__cards">
@@ -121,8 +121,12 @@
 
 <style>
   #productFabricFeatures-{{ section.id }} .product-fabric-features__inner {
-    padding-top: 36px;
-    padding-bottom: 36px;
+    max-width: 1380px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 36px 20px;
+    box-sizing: border-box;
   }
 
   /* Mobile: heading + text first (centered), then feature cards, then video/buttons */
@@ -256,6 +260,8 @@
     #productFabricFeatures-{{ section.id }} .product-fabric-features__inner {
       padding-top: 60px;
       padding-bottom: 60px;
+      padding-left: 20px;
+      padding-right: 20px;
     }
 
     #productFabricFeatures-{{ section.id }} .product-fabric-features__grid {

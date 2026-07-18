@@ -7,6 +7,9 @@
             if block.type == 'description' and product.description == blank
             continue
             endif
+            if block.type == 'model_details' and product.metafields.custom.models_details.value == blank
+            continue
+            endif
         -%}
         <div class="swiper-slide">{{ block.settings.heading | default: block.settings.page.title }}</div>
         {%- endfor -%}
@@ -17,6 +20,9 @@
         {%- for block in blocks -%}
         {%- liquid
             if block.type == 'description' and product.description == blank
+            continue
+            endif
+            if block.type == 'model_details' and product.metafields.custom.models_details.value == blank
             continue
             endif
         -%}

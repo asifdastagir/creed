@@ -567,18 +567,20 @@
               </div>
             {%- endif -%}
           {%- when 'model_details' -%}
-            {%- if section.settings.bottom_tabs == false and section.settings.inner_tabs_to_horizontal == false -%}
-              <div class="block-accordion mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
-                <div class="tab-accordion-item">
-                  <input type="checkbox" name="tab-accordion" id="tabAccordion{{ block.id }}" {% if block.settings.opened %}checked{% endif %}>
-                  <label for="tabAccordion{{ block.id }}" class="text-uppercase">{{ block.settings.heading | default: 'Models Details' }}<span class="toggle-arrow"></span></label>
-                  <div class="tab-accordion-item-content js-set-height">
-                    <div class="tab-accordion-item-content-inside">
-                      {% render 'model-details', product: product %}
+            {%- if product.metafields.custom.models_details.value != blank -%}
+              {%- if section.settings.bottom_tabs == false and section.settings.inner_tabs_to_horizontal == false -%}
+                <div class="block-accordion mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
+                  <div class="tab-accordion-item">
+                    <input type="checkbox" name="tab-accordion" id="tabAccordion{{ block.id }}" {% if block.settings.opened %}checked{% endif %}>
+                    <label for="tabAccordion{{ block.id }}" class="text-uppercase">{{ block.settings.heading | default: 'Models Details' }}<span class="toggle-arrow"></span></label>
+                    <div class="tab-accordion-item-content js-set-height">
+                      <div class="tab-accordion-item-content-inside">
+                        {% render 'model-details', product: product %}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              {%- endif -%}
             {%- endif -%}
           {%- when 'collapsible_tab_apps' -%}
             {%- if section.settings.bottom_tabs == false and section.settings.inner_tabs_to_horizontal == false -%}
