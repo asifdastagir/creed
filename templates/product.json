@@ -113,6 +113,17 @@
             "opened": true,
             "heading": "Models Details"
           }
+        },
+        "collapsible_tab_NJUYbM": {
+          "type": "collapsible_tab",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "opened": true,
+            "heading": "Material Tech",
+            "content": "",
+            "page": "material-nomad-x-hydro"
+          }
         }
       },
       "block_order": [
@@ -125,7 +136,8 @@
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
         "description_zzQLwa",
         "collapsible_tab_dkNbn8",
-        "collapsible_tab_dTVwH9"
+        "collapsible_tab_dTVwH9",
+        "collapsible_tab_NJUYbM"
       ],
       "custom_css": [
         ".holder {--margin-top-desktop: 30px; --margin-top-mobile: 20px;}"
@@ -172,24 +184,24 @@
         "color_price_old": ""
       }
     },
+    "product_snap_card_RymQEU": {
+      "type": "product-snap-card",
+      "name": "Product Snap Card",
+      "settings": {
+        "margin_top": 0,
+        "margin_bottom": 0
+      }
+    },
     "product_fabric_features": {
       "type": "product-fabric-features",
       "name": "Fabric Features",
       "settings": {
         "heading": "",
-        "background_color": "#f3f3f3",
+        "background_color": "#F3F3F3",
         "button_1_label": "SHOP TETRA-LITE",
         "button_1_url": "",
         "button_2_label": "EXPLORE ALL FABRICS",
         "button_2_url": "",
-        "margin_top": 0,
-        "margin_bottom": 0
-      }
-    },
-    "product_snap_card_RymQEU": {
-      "type": "product-snap-card",
-      "name": "Product Snap Card",
-      "settings": {
         "margin_top": 0,
         "margin_bottom": 0
       }
@@ -234,8 +246,8 @@
   },
   "order": [
     "main",
-    "product_fabric_features",
     "product_snap_card_RymQEU",
+    "product_fabric_features",
     "product-related",
     "product-recommendations"
   ]
