@@ -82,11 +82,26 @@
         "margin_top": 0,
         "margin_bottom": 40
       }
+    },
+    "snap_card_component_fLfYKg": {
+      "type": "snap-card-component",
+      "name": "Snap Card Component",
+      "settings": {
+        "style": "style1",
+        "heading_line1": "Aerowave 3D Knit",
+        "heading_line2": "",
+        "text": "Seam",
+        "link": "",
+        "link_label": "Discover the Science",
+        "margin_top": 40,
+        "margin_bottom": 40
+      }
     }
   },
   "order": [
     "main",
     "hero_carousel_rGLMWU",
-    "product_carousel_jUVG3A"
+    "product_carousel_jUVG3A",
+    "snap_card_component_fLfYKg"
   ]
 }
