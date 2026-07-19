@@ -88,9 +88,10 @@
       "name": "Snap Card Component",
       "settings": {
         "style": "style1",
-        "heading_line1": "Aerowave 3D Knit",
+        "heading_line1": "Aeroweave™ 3D Knit",
         "heading_line2": "",
-        "text": "Seam",
+        "text": "Seamless construction with body-mapped ventilation. Built for compression, breathability, and everyday performance.",
+        "image": "shopify://shop_images/Use_this_image_for_panel_1.jpg",
         "link": "",
         "link_label": "Discover the Science",
         "margin_top": 40,
