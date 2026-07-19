@@ -95,7 +95,7 @@
         "link": "",
         "link_label": "Discover the Science",
         "margin_top": 40,
-        "margin_bottom": 40
+        "margin_bottom": 0
       }
     },
     "snap_card_component_qjkEPf": {
@@ -109,8 +109,8 @@
         "image": "shopify://shop_images/Use_this_image_for_panel_2.jpg",
         "link": "",
         "link_label": "Discover the Science",
-        "margin_top": 40,
-        "margin_bottom": 40
+        "margin_top": 0,
+        "margin_bottom": 0
       }
     }
   },
