@@ -33,39 +33,21 @@
           "type": "slide",
           "settings": {
             "image_desktop": "shopify://shop_images/carousel-1.jpg",
-            "image_mobile": "shopify://shop_images/carousel-1.jpg",
-            "heading_line_1": "WINNER '26",
-            "heading_line_2": "NOCTURN",
-            "volume_label": "VOL. 01",
-            "description": "Join the Awakening.",
-            "button_label": "Shop now",
-            "button_url": ""
+            "image_mobile": "shopify://shop_images/carousel-1.jpg"
           }
         },
         "slide_a7wC38": {
           "type": "slide",
           "settings": {
             "image_desktop": "shopify://shop_images/carousel-2.jpg",
-            "image_mobile": "shopify://shop_images/carousel-2.jpg",
-            "heading_line_1": "WINNER '26",
-            "heading_line_2": "NOCTURN",
-            "volume_label": "VOL. 01",
-            "description": "Join the Awakening.",
-            "button_label": "Explore",
-            "button_url": ""
+            "image_mobile": "shopify://shop_images/carousel-2.jpg"
           }
         },
         "slide_h7yXAj": {
           "type": "slide",
           "settings": {
             "image_desktop": "shopify://shop_images/carousel-3.jpg",
-            "image_mobile": "shopify://shop_images/carousel-3.jpg",
-            "heading_line_1": "WINNER '26",
-            "heading_line_2": "NOCTURN",
-            "volume_label": "VOL. 01",
-            "description": "Join the Awakening.",
-            "button_label": "Shop now",
-            "button_url": ""
+            "image_mobile": "shopify://shop_images/carousel-3.jpg"
           }
         }
       },
@@ -76,6 +58,12 @@
       ],
       "name": "Hero Carousel",
       "settings": {
+        "heading_line_1": "WINNER '26",
+        "heading_line_2": "NOCTURN",
+        "volume_label": "VOL. 01",
+        "description": "Join the Awakening.",
+        "button_label": "Shop now",
+        "button_url": "",
         "enable_autoplay": true,
         "autoplay_delay": 5000,
         "transition_speed": 800,

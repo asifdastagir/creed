@@ -16,39 +16,21 @@
           "type": "slide",
           "settings": {
             "image_desktop": "shopify://shop_images/carousel-1.jpg",
-            "image_mobile": "shopify://shop_images/carousel-1.jpg",
-            "heading_line_1": "Built for",
-            "heading_line_2": "the Everyday",
-            "volume_label": "VOL. 02",
-            "description": "Performance wear designed to move with you through every hour of the day",
-            "button_label": "Explore",
-            "button_url": ""
+            "image_mobile": "shopify://shop_images/carousel-1.jpg"
           }
         },
         "slide_DQKWEz": {
           "type": "slide",
           "settings": {
             "image_desktop": "shopify://shop_images/carousel-2.jpg",
-            "image_mobile": "shopify://shop_images/carousel-2.jpg",
-            "heading_line_1": "Active for",
-            "heading_line_2": "the Faithful",
-            "volume_label": "VOL. 02",
-            "description": "Technical training apparel which blends performance with faith conscious design",
-            "button_label": "Shop now",
-            "button_url": ""
+            "image_mobile": "shopify://shop_images/carousel-2.jpg"
           }
         },
         "slide_dBMJJf": {
           "type": "slide",
           "settings": {
             "image_desktop": "shopify://shop_images/carousel-3.jpg",
-            "image_mobile": "shopify://shop_images/carousel-3.jpg",
-            "heading_line_1": "Winner '26",
-            "heading_line_2": "NOCTURN",
-            "volume_label": "VOL. 02",
-            "description": "Join the Awakening.",
-            "button_label": "Shop now",
-            "button_url": ""
+            "image_mobile": "shopify://shop_images/carousel-3.jpg"
           }
         }
       },
@@ -60,6 +42,12 @@
       "disabled": true,
       "name": "Hero Carousel",
       "settings": {
+        "heading_line_1": "Built for",
+        "heading_line_2": "the Everyday",
+        "volume_label": "VOL. 02",
+        "description": "Performance wear designed to move with you through every hour of the day",
+        "button_label": "Explore",
+        "button_url": "",
         "enable_autoplay": true,
         "autoplay_delay": 5000,
         "transition_speed": 800,
