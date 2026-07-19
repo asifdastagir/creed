@@ -97,12 +97,28 @@
         "margin_top": 40,
         "margin_bottom": 40
       }
+    },
+    "snap_card_component_qjkEPf": {
+      "type": "snap-card-component",
+      "name": "Snap Card Component",
+      "settings": {
+        "style": "style1",
+        "heading_line1": "Nomad X Active™ Liner Short",
+        "heading_line2": "",
+        "text": "A performance shell over a built-in compression liner, 2-in-1, no compromise. Higher rise waistband, built to move with you.",
+        "image": "shopify://shop_images/Use_this_image_for_panel_2.jpg",
+        "link": "",
+        "link_label": "Discover the Science",
+        "margin_top": 40,
+        "margin_bottom": 40
+      }
     }
   },
   "order": [
     "main",
     "hero_carousel_rGLMWU",
     "product_carousel_jUVG3A",
-    "snap_card_component_fLfYKg"
+    "snap_card_component_fLfYKg",
+    "snap_card_component_qjkEPf"
   ]
 }
