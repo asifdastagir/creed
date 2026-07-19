@@ -9,15 +9,15 @@
 
   {% if section.settings.style == 'style1' %}
 
-    <div class="sticky z-10 top-header header-folded:top-0 grid-layout gap-y-5 px-gutter py-gutter transition-[top] ease-in-out duration-500">
+    <div class="sticky z-10 top-header header-folded:top-0 grid-layout gap-y-2 px-gutter py-gutter transition-[top] ease-in-out duration-500">
       <div class="col-start-1 col-end-12 lg:col-end-6 block text-h2 relative z-10">
-        <h2 class="flex flex-col">
+        <h2 class="flex flex-col font-extrabold tracking-[0.04em] leading-[1.2]">
           <span>{{ section.settings.heading_line1 }}</span>
           <span>{{ section.settings.heading_line2 }}</span>
         </h2>
       </div>
-      <div class="rich-text col-start-1 col-end-10 lg:col-end-13 lg:col-start-9 relative z-10">
-        <p class="text-[.9rem] xl:text-[1.714rem]">{{ section.settings.text }}</p>
+      <div class="rich-text col-start-1 col-end-12 lg:col-end-13 lg:col-start-9 relative z-10">
+        <p class="text-[.8rem] xl:text-[1.714rem] font-light">{{ section.settings.text }}</p>
       </div>
     </div>
 
@@ -54,14 +54,14 @@
 
   {% elsif section.settings.style == 'style2' %}
 
-    <div class="sticky z-10 top-header header-folded:top-0 mb-[100px] grid-layout gap-y-5 px-gutter py-gutter transition-[top] ease-in-out duration-500">
+    <div class="sticky z-10 top-header header-folded:top-0 mb-[100px] grid-layout gap-y-2 px-gutter py-gutter transition-[top] ease-in-out duration-500">
       <div class="col-start-1 col-end-12 lg:col-end-6 block text-h2 relative z-10">
-        <h2 class="flex flex-col">
+        <h2 class="flex flex-col font-extrabold tracking-[0.04em] leading-[1.2]">
           <span>{{ section.settings.heading_line1 }}</span>
           <span>{{ section.settings.heading_line2 }}</span>
         </h2>
       </div>
-      <div class="rich-text col-start-1 col-end-10 lg:col-end-13 lg:col-start-9 relative z-10">
+      <div class="rich-text col-start-1 col-end-12 lg:col-end-13 lg:col-start-9 relative z-10">
         <p class="text-[.9rem] lg:text-[1.714rem]">{{ section.settings.text }}</p>
       </div>
     </div>
