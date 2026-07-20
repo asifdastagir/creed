@@ -510,7 +510,7 @@
           "announcement-bar-0": {
             "type": "link",
             "settings": {
-              "title": "UP TO 25% OFF STOREWIDE",
+              "title": "",
               "text_2": "",
               "url": "",
               "button_target_blank": true
@@ -519,7 +519,7 @@
           "link_3Np8NQ": {
             "type": "link",
             "settings": {
-              "title": "UP TO 25% OFF STOREWIDE",
+              "title": "",
               "text_2": "",
               "url": "",
               "button_target_blank": true
