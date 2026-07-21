@@ -37,8 +37,13 @@
     assign has_features = true
   endif
 
+  assign has_right_content = false
+  if fabric_heading != blank or fabric_body_html != blank or video_id != blank
+    assign has_right_content = true
+  endif
+
   assign show_section = false
-  if has_features or fabric_body_html != blank or video_id != blank
+  if has_features or has_right_content
     assign show_section = true
   endif
 -%}
@@ -46,7 +51,7 @@
 {% if show_section %}
 <section
   id="productFabricFeatures-{{ section.id }}"
-  class="product-fabric-features"
+  class="product-fabric-features{% unless has_right_content %} product-fabric-features--cards-only{% endunless %}"
   style="
     margin-top: {{ section.settings.margin_top }}px;
     margin-bottom: {{ section.settings.margin_bottom }}px;
@@ -69,7 +74,7 @@
                   <img
                     src="{{ feature_icon | image_url: width: 80 }}"
                     alt="{{ feature_title | escape }}"
-                    width="80 "
+                    width="80"
                     height="80"
                     loading="lazy"
                   >
@@ -88,33 +93,35 @@
         </div>
       {% endif %}
 
-      <div class="product-fabric-features__content">
-        <div class="product-fabric-features__intro">
-          {% if fabric_heading != blank %}
-            <h2 class="product-fabric-features__heading">{{ fabric_heading }}</h2>
-          {% endif %}
+      {% if has_right_content %}
+        <div class="product-fabric-features__content">
+          <div class="product-fabric-features__intro">
+            {% if fabric_heading != blank %}
+              <h2 class="product-fabric-features__heading">{{ fabric_heading }}</h2>
+            {% endif %}
 
-          {% if fabric_body_html != blank %}
-            <div class="product-fabric-features__body rte">
-              {{ fabric_body_html }}
-            </div>
-          {% endif %}
-        </div>
+            {% if fabric_body_html != blank %}
+              <div class="product-fabric-features__body rte">
+                {{ fabric_body_html }}
+              </div>
+            {% endif %}
+          </div>
 
-        <div class="product-fabric-features__media">
           {% if video_id != blank %}
-            <div class="product-fabric-features__video">
-              <iframe
-                src="https://www.youtube.com/embed/{{ video_id }}"
-                title="{{ fabric_heading | default: product.title | escape }}"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-                loading="lazy"
-              ></iframe>
+            <div class="product-fabric-features__media">
+              <div class="product-fabric-features__video">
+                <iframe
+                  src="https://www.youtube.com/embed/{{ video_id }}"
+                  title="{{ fabric_heading | default: product.title | escape }}"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  loading="lazy"
+                ></iframe>
+              </div>
             </div>
           {% endif %}
         </div>
-      </div>
+      {% endif %}
     </div>
   </div>
 </section>
@@ -151,6 +158,20 @@
     display: grid;
     grid-template-columns: 1fr;
     gap: 14px;
+  }
+
+  /* Cards only: 2-column stacked grid, centered */
+  #productFabricFeatures-{{ section.id }}.product-fabric-features--cards-only .product-fabric-features__cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    width: 100%;
+    max-width: 920px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #productFabricFeatures-{{ section.id }}.product-fabric-features--cards-only .product-fabric-features__grid {
+    align-items: center;
   }
 
   #productFabricFeatures-{{ section.id }} .product-fabric-features__media {
@@ -269,6 +290,18 @@
       grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.4fr);
       gap: 40px;
       align-items: start;
+    }
+
+    #productFabricFeatures-{{ section.id }}.product-fabric-features--cards-only .product-fabric-features__grid {
+      grid-template-columns: 1fr;
+      justify-items: center;
+    }
+
+    #productFabricFeatures-{{ section.id }}.product-fabric-features--cards-only .product-fabric-features__cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 980px;
     }
 
     #productFabricFeatures-{{ section.id }} .product-fabric-features__content {
