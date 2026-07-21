@@ -19,6 +19,19 @@
             "use_global_blocks_desktop_space": false
           }
         },
+        "html_wyVfCz": {
+          "type": "html",
+          "settings": {
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "collapsible_tab": false,
+            "heading": "Custom HTML",
+            "opened": true,
+            "html": "",
+            "html_metafield": "{{ product.metafields.custom.sized | metafield_text: field: 'sized_list' }}",
+            "show_block_if_html_metafield": false
+          }
+        },
         "b9205a37-550c-4593-81b2-3b63ca982935": {
           "type": "price",
           "settings": {
@@ -150,6 +163,7 @@
       },
       "block_order": [
         "bb4d64a3-e671-4e68-a82b-040cd63b5066",
+        "html_wyVfCz",
         "b9205a37-550c-4593-81b2-3b63ca982935",
         "14d99583-84dc-4dae-aec3-8f51bd93b1a6",
         "99f0f2da-d3ea-474c-b74a-2eedb6bb3849",
