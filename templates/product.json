@@ -27,8 +27,8 @@
             "collapsible_tab": false,
             "heading": "Custom HTML",
             "opened": true,
-            "html": "{{ product.metafields.custom.sized | metafield_tag: field: 'sized_list' }}",
-            "html_metafield": "{{ product.metafields.custom.sized | metafield_text: field: 'sized_list' }}",
+            "html": "<p>&lt;p style=\"font-weight: 900; font-style: italic; margin: 0 0 12px; font-size: 15px; text-transform: uppercase; letter-spacing: 0.05em;\"&gt;</p>{{ product.metafields.custom.sized | metafield_tag: field: 'sized_list' }}<p>&lt;/p&gt;</p>",
+            "html_metafield": "",
             "show_block_if_html_metafield": false
           }
         },
