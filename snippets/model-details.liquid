@@ -39,17 +39,17 @@
         {% endif %}
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0px 40px; font-size: 13px; letter-spacing: 0.03em;">
-          {% if model.model_height.value != blank %}
-            <span><strong>HEIGHT:</strong> {{ model.model_height.value }}</span>
+          {% if model.model_height.value != blank or model.model_height != blank %}
+            <span><strong>Athlete HEIGHT:</strong> {{ model.model_height.value | default: model.model_height }}</span>
           {% endif %}
-          {% if model.model_chest.value != blank %}
-            <span><strong>CHEST:</strong> {{ model.model_chest.value }}</span>
+          {% if model.athlete_weight.value != blank or model.athlete_weight != blank %}
+            <span><strong>Athlete Weight:</strong> {{ model.athlete_weight.value | default: model.athlete_weight }}</span>
           {% endif %}
-          {% if model.model_waist.value != blank %}
-            <span><strong>WAIST:</strong> {{ model.model_waist.value }}</span>
+          {% if model.model_waist.value != blank or model.model_waist != blank %}
+            <span><strong>WAIST:</strong> {{ model.model_waist.value | default: model.model_waist }}</span>
           {% endif %}
-          {% if model.wears.value != blank %}
-            <span><strong>WEARS:</strong> {{ model.wears.value }}</span>
+          {% if model.wears.value != blank or model.wears != blank %}
+            <span><strong>WEARS:</strong> {{ model.wears.value | default: model.wears }}</span>
           {% endif %}
         </div>
       </div>
