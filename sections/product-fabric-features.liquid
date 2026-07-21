@@ -160,9 +160,9 @@
     gap: 14px;
   }
 
-  /* Cards only: 2-column stacked grid, centered */
+  /* Cards only: single column on mobile, 2-column centered on larger screens */
   #productFabricFeatures-{{ section.id }}.product-fabric-features--cards-only .product-fabric-features__cards {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
     gap: 14px;
     width: 100%;
     max-width: 920px;
@@ -172,6 +172,12 @@
 
   #productFabricFeatures-{{ section.id }}.product-fabric-features--cards-only .product-fabric-features__grid {
     align-items: center;
+  }
+
+  @media (min-width: 768px) {
+    #productFabricFeatures-{{ section.id }}.product-fabric-features--cards-only .product-fabric-features__cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
   }
 
   #productFabricFeatures-{{ section.id }} .product-fabric-features__media {
