@@ -12,6 +12,17 @@
     "main": {
       "type": "main-product",
       "blocks": {
+        "color_siblings_QPkNyf": {
+          "type": "color_siblings",
+          "settings": {
+            "spacing_blocks": 16,
+            "use_global_blocks_desktop_space": false,
+            "heading": "Color",
+            "metafield_namespace": "custom",
+            "metafield_key": "related_colors",
+            "swatch_size": 36
+          }
+        },
         "bb4d64a3-e671-4e68-a82b-040cd63b5066": {
           "type": "title",
           "settings": {
@@ -138,6 +149,7 @@
         }
       },
       "block_order": [
+        "color_siblings_QPkNyf",
         "bb4d64a3-e671-4e68-a82b-040cd63b5066",
         "b9205a37-550c-4593-81b2-3b63ca982935",
         "14d99583-84dc-4dae-aec3-8f51bd93b1a6",
