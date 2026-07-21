@@ -68,13 +68,12 @@
           }
         },
         "2f540e78-040a-4fc2-a26e-8063b6bd5043": {
-          "type": "popup",
+          "type": "sizing_guide_pdf",
           "settings": {
             "spacing_blocks": 16,
             "use_global_blocks_desktop_space": false,
             "text": "Sizing guide",
-            "page": "form-1-oversized-tee-size-guide-cm",
-            "subtitle": "",
+            "pdf_url": "",
             "icon": "icon-size"
           }
         },

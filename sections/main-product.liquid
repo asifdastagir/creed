@@ -814,6 +814,19 @@
               <info-popup data-subtitle="{{ block.settings.subtitle }}" data-ajax="{{ block.settings.page.url }}?section_id=async-info-popup" data-selector="#modalInfo{{ block.id }}"><a href="#" class="modal-info-link" aria-controls="modalInfo{{ block.id }}" aria-haspopup="dialog"><span class="icon-wrap">{% render 'icon', icon: block.settings.icon %} </span> <span>{{ block.settings.text | default: block.settings.page.title }}</span></a></info-popup>
               <div class="modal-wrap modal-info-content" style="display: none; width: 970px;" id="modalInfo{{ block.id }}" role="dialog" aria-label="{{ block.settings.text }}" aria-modal="true" tabindex="-1"> </div>
             </div>
+          {%- when 'sizing_guide_pdf' -%}
+            {%- liquid
+              assign sizing_modal_id = 'modalSizingPdf-' | append: block.id
+            -%}
+            <div class="mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
+              {% render 'sizing-guide-pdf',
+                product: product,
+                label: block.settings.text,
+                icon: block.settings.icon,
+                fallback_pdf_url: block.settings.pdf_url,
+                modal_id: sizing_modal_id
+              %}
+            </div>
           {%- when 'share' -%}
             <div class="text-start mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
             {% render 'share', section: section, block: block %}
@@ -927,6 +940,7 @@
   });
 </script>
 
+{% render 'sizing-guide-pdf-script' %}
 {% render 'product-sticky' product: product, section: section %}
 
 {%- liquid
@@ -3858,6 +3872,64 @@
             }
           ],
           "default": "icon-truck"
+        }
+      ]
+    },
+    {
+      "type": "sizing_guide_pdf",
+      "name": "Size Guide PDF",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "range",
+          "id": "spacing_blocks",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Vertical space above the section on Desktop",
+          "default": 16
+        },
+        {
+          "type": "checkbox",
+          "id": "use_global_blocks_desktop_space",
+          "label": "Use global space on desktop",
+          "default": false
+        },
+        {
+          "type": "header",
+          "content": "Size guide"
+        },
+        {
+          "type": "paragraph",
+          "content": "PDF comes from product metafield custom.size_guide (File). Upload the PDF on each product in Admin."
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Link label",
+          "default": "Sizing guide"
+        },
+        {
+          "type": "url",
+          "id": "pdf_url",
+          "label": "Fallback PDF URL (optional)",
+          "info": "Only used if custom.size_guide is empty"
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "icon-size", "label": "size" },
+            { "value": "icon-size2", "label": "size 2" },
+            { "value": "placeholder", "label": "none" }
+          ],
+          "default": "icon-size"
         }
       ]
     },

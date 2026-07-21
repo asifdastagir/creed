@@ -19,11 +19,17 @@
             "use_global_blocks_desktop_space": false
           }
         },
-        "product_sized_pdp": {
-          "type": "product_sized",
+        "html_T8g9Qx": {
+          "type": "html",
           "settings": {
-            "spacing_blocks": 0,
-            "use_global_blocks_desktop_space": false
+            "spacing_blocks": 30,
+            "use_global_blocks_desktop_space": true,
+            "collapsible_tab": false,
+            "heading": "Custom HTML",
+            "opened": true,
+            "html": "{{ product.metafields.custom.sized | metafield_tag: field: 'sized_list' }}",
+            "html_metafield": "",
+            "show_block_if_html_metafield": false
           }
         },
         "b9205a37-550c-4593-81b2-3b63ca982935": {
@@ -74,14 +80,20 @@
             "use_variants_media": true
           }
         },
-        "2f540e78-040a-4fc2-a26e-8063b6bd5043": {
-          "type": "popup",
+        "product_sized_pdp": {
+          "type": "product_sized",
+          "settings": {
+            "spacing_blocks": 0,
+            "use_global_blocks_desktop_space": false
+          }
+        },
+        "sizing_guide_pdf_pdp": {
+          "type": "sizing_guide_pdf",
           "settings": {
             "spacing_blocks": 16,
             "use_global_blocks_desktop_space": false,
             "text": "Sizing guide",
-            "page": "",
-            "subtitle": "Set up an individual subtitle for each popup in the admin panel",
+            "pdf_url": "",
             "icon": "icon-size"
           }
         },
@@ -157,13 +169,14 @@
       },
       "block_order": [
         "bb4d64a3-e671-4e68-a82b-040cd63b5066",
-        "product_sized_pdp",
+        "html_T8g9Qx",
         "b9205a37-550c-4593-81b2-3b63ca982935",
         "14d99583-84dc-4dae-aec3-8f51bd93b1a6",
         "99f0f2da-d3ea-474c-b74a-2eedb6bb3849",
         "color_siblings_pdp",
         "b7f80323-d148-407e-88e9-b918d1c12ffa",
-        "2f540e78-040a-4fc2-a26e-8063b6bd5043",
+        "product_sized_pdp",
+        "sizing_guide_pdf_pdp",
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
         "description_zzQLwa",
         "collapsible_tab_dTVwH9",
