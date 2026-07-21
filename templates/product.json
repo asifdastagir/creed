@@ -44,6 +44,16 @@
             "rating": true
           }
         },
+        "sizing_guide_pdf_pdp": {
+          "type": "sizing_guide_pdf",
+          "settings": {
+            "spacing_blocks": 16,
+            "use_global_blocks_desktop_space": false,
+            "text": "Sizing guide",
+            "pdf_url": "",
+            "icon": "icon-size"
+          }
+        },
         "99f0f2da-d3ea-474c-b74a-2eedb6bb3849": {
           "type": "short_description",
           "settings": {
@@ -72,16 +82,6 @@
             "picker_type": "button",
             "use_pics": true,
             "use_variants_media": true
-          }
-        },
-        "sizing_guide_pdf_pdp": {
-          "type": "sizing_guide_pdf",
-          "settings": {
-            "spacing_blocks": 16,
-            "use_global_blocks_desktop_space": false,
-            "text": "Sizing guide",
-            "pdf_url": "",
-            "icon": "icon-size"
           }
         },
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8": {
@@ -159,10 +159,10 @@
         "product_sized_pdp",
         "b9205a37-550c-4593-81b2-3b63ca982935",
         "14d99583-84dc-4dae-aec3-8f51bd93b1a6",
+        "sizing_guide_pdf_pdp",
         "99f0f2da-d3ea-474c-b74a-2eedb6bb3849",
         "color_siblings_pdp",
         "b7f80323-d148-407e-88e9-b918d1c12ffa",
-        "sizing_guide_pdf_pdp",
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8",
         "description_zzQLwa",
         "collapsible_tab_dTVwH9",
