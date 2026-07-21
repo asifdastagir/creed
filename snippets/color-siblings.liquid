@@ -1,6 +1,11 @@
 {% comment %}
   Color siblings — linked products via list.product_reference metafield.
-  Clicking a swatch navigates to that product (not a variant switch).
+  Swatches use solid colors (not product images). Click → other product.
+
+  Color resolution order:
+  1. custom.swatch_color (Color metafield) — best
+  2. Native Color option swatch on the sibling product
+  3. custom.color_name / handle / title (white, black, navy…)
 {% endcomment %}
 
 {%- liquid
@@ -11,12 +16,18 @@
   if siblings == blank and metafield_namespace != blank and metafield_key != blank
     assign siblings = product.metafields[metafield_namespace][metafield_key].value
   endif
+
+  if siblings != blank
+    assign siblings = siblings | sort: 'handle'
+  endif
+
+  assign color_options_name = settings.product_card_color_options_name | default: 'Color,Colour' | downcase | split: ','
 -%}
 
 {%- if siblings != blank -%}
-  <div class="color-siblings product-form__input">
+  <div class="color-siblings product-form__input mb-2">
     {%- if heading != blank -%}
-      <div class="option-name mb-2">
+      <div class="option-name mb-1">
         <span class="js-option-name">{{ heading }}</span>
       </div>
     {%- endif -%}
@@ -31,57 +42,134 @@
             endif
 
             assign swatch_label = sibling.title
+            assign swatch_style = 'background-color: #d1d5db;'
+            assign color_name = blank
+            assign found_option_swatch = false
+            assign is_light_swatch = false
+
             if sibling.metafields.custom.color_name.value != blank
-              assign swatch_label = sibling.metafields.custom.color_name.value
+              assign color_name = sibling.metafields.custom.color_name.value
+              assign swatch_label = color_name
             endif
 
-            assign swatch_image = sibling.featured_image
-            if swatch_image == blank and sibling.featured_media
-              assign swatch_image = sibling.featured_media.preview_image
+            if sibling.metafields.custom.swatch_color.value != blank
+              assign swatch_hex = sibling.metafields.custom.swatch_color.value
+              assign swatch_style = 'background-color: ' | append: swatch_hex | append: ';'
+              if color_name == blank
+                assign swatch_label = swatch_hex
+              endif
+              assign swatch_hex_down = swatch_hex | downcase
+              if swatch_hex_down == '#fff' or swatch_hex_down == '#ffffff' or swatch_hex_down == 'white'
+                assign is_light_swatch = true
+              endif
+            else
+              for option in sibling.options_with_values
+                assign option_name_downcase = option.name | downcase | strip
+                if color_options_name contains option_name_downcase
+                  assign option_value = option.values.first
+                  if option_value.swatch.color != blank
+                    assign swatch_style = 'background-color: ' | append: option_value.swatch.color | append: ';'
+                    assign swatch_label = option_value
+                    assign found_option_swatch = true
+                    assign opt_color_down = option_value.swatch.color | downcase
+                    if opt_color_down == '#fff' or opt_color_down == '#ffffff' or opt_color_down contains '255, 255, 255'
+                      assign is_light_swatch = true
+                    endif
+                  elsif option_value.swatch.image != blank
+                    assign swatch_img = option_value.swatch.image | image_url: width: 96
+                    assign swatch_style = 'background-image: url(' | append: swatch_img | append: '); background-size: cover; background-position: center;'
+                    assign swatch_label = option_value
+                    assign found_option_swatch = true
+                  elsif option_value != blank
+                    assign color_name = option_value
+                    assign swatch_label = option_value
+                  endif
+                  break
+                endif
+              endfor
+
+              if found_option_swatch == false
+                if color_name == blank
+                  assign handle_l = sibling.handle | downcase
+                  assign title_l = sibling.title | downcase
+                  if handle_l contains 'white' or title_l contains 'white'
+                    assign color_name = 'white'
+                  elsif handle_l contains 'black' or title_l contains 'black'
+                    assign color_name = 'black'
+                  elsif handle_l contains 'navy' or title_l contains 'navy'
+                    assign color_name = 'navy'
+                  elsif handle_l contains 'grey' or handle_l contains 'gray' or title_l contains 'grey' or title_l contains 'gray'
+                    assign color_name = 'gray'
+                  elsif handle_l contains 'beige' or title_l contains 'beige'
+                    assign color_name = 'beige'
+                  elsif handle_l contains 'olive' or title_l contains 'olive'
+                    assign color_name = 'olive'
+                  elsif handle_l contains 'red' or title_l contains 'red'
+                    assign color_name = 'red'
+                  elsif handle_l contains 'blue' or title_l contains 'blue'
+                    assign color_name = 'blue'
+                  elsif handle_l contains 'green' or title_l contains 'green'
+                    assign color_name = 'green'
+                  elsif handle_l contains 'brown' or title_l contains 'brown'
+                    assign color_name = 'brown'
+                  elsif handle_l contains 'cream' or title_l contains 'cream'
+                    assign color_name = 'cream'
+                  elsif handle_l contains 'khaki' or title_l contains 'khaki'
+                    assign color_name = 'khaki'
+                  endif
+                endif
+
+                if color_name != blank
+                  assign named = color_name | strip | downcase
+                  case named
+                    when 'white'
+                      assign swatch_style = 'background-color: #ffffff;'
+                      assign is_light_swatch = true
+                    when 'black'
+                      assign swatch_style = 'background-color: #111111;'
+                    when 'navy'
+                      assign swatch_style = 'background-color: #1a2a4a;'
+                    when 'grey'
+                      assign swatch_style = 'background-color: #9ca3af;'
+                    when 'gray'
+                      assign swatch_style = 'background-color: #9ca3af;'
+                    when 'beige'
+                      assign swatch_style = 'background-color: #e8dcc8;'
+                      assign is_light_swatch = true
+                    when 'olive'
+                      assign swatch_style = 'background-color: #6b6e3f;'
+                    when 'cream'
+                      assign swatch_style = 'background-color: #f5f0e6;'
+                      assign is_light_swatch = true
+                    when 'khaki'
+                      assign swatch_style = 'background-color: #c3b091;'
+                    else
+                      assign css_color = color_name | handle | replace: '-', ''
+                      assign swatch_style = 'background-color: ' | append: css_color | append: ';'
+                  endcase
+                  assign swatch_label = color_name
+                endif
+              endif
             endif
           -%}
 
           {%- if is_current -%}
             <span
-              class="label-radio label-option-color swatch-active color-siblings__swatch"
+              class="label-radio label-option-color swatch-active color-siblings__swatch{% if is_light_swatch %} is-light{% endif %}"
               role="listitem"
               aria-current="true"
               title="{{ swatch_label | escape }}"
-              style="--color-siblings-size: {{ swatch_size }}px;"
-            >
-              {%- if swatch_image != blank -%}
-                <img
-                  src="{{ swatch_image | image_url: width: 96 }}"
-                  alt="{{ swatch_label | escape }}"
-                  width="{{ swatch_size }}"
-                  height="{{ swatch_size }}"
-                  loading="lazy"
-                >
-              {%- else -%}
-                <span class="color-siblings__fallback">{{ swatch_label | slice: 0 }}</span>
-              {%- endif -%}
-            </span>
+              style="--color-siblings-size: {{ swatch_size }}px; {{ swatch_style }}"
+            ></span>
           {%- else -%}
             <a
               href="{{ sibling.url }}"
-              class="label-radio label-option-color color-siblings__swatch"
+              class="label-radio label-option-color color-siblings__swatch{% if is_light_swatch %} is-light{% endif %}"
               role="listitem"
               title="{{ swatch_label | escape }}"
               aria-label="{{ swatch_label | escape }}"
-              style="--color-siblings-size: {{ swatch_size }}px;"
-            >
-              {%- if swatch_image != blank -%}
-                <img
-                  src="{{ swatch_image | image_url: width: 96 }}"
-                  alt="{{ swatch_label | escape }}"
-                  width="{{ swatch_size }}"
-                  height="{{ swatch_size }}"
-                  loading="lazy"
-                >
-              {%- else -%}
-                <span class="color-siblings__fallback">{{ swatch_label | slice: 0 }}</span>
-              {%- endif -%}
-            </a>
+              style="--color-siblings-size: {{ swatch_size }}px; {{ swatch_style }}"
+            ></a>
           {%- endif -%}
         {%- endunless -%}
       {%- endfor -%}
@@ -111,6 +199,7 @@
       box-sizing: border-box;
       text-decoration: none;
       cursor: pointer;
+      background-repeat: no-repeat;
     }
     #shopify-section-{{ section.id }} a.color-siblings__swatch:hover {
       border-color: #000;
@@ -121,16 +210,11 @@
       cursor: default;
       pointer-events: none;
     }
-    #shopify-section-{{ section.id }} .color-siblings__swatch img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+    #shopify-section-{{ section.id }} .color-siblings__swatch.is-light {
+      border-color: #cdd8e1;
     }
-    #shopify-section-{{ section.id }} .color-siblings__fallback {
-      font-size: 11px;
-      line-height: 1;
-      text-transform: uppercase;
+    #shopify-section-{{ section.id }} .color-siblings__swatch.is-light.swatch-active {
+      border-color: #000;
     }
   </style>
 {%- endif -%}

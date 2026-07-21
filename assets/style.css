@@ -20304,7 +20304,7 @@ footer.bg-alt .footer-edge-top {
 .rte .table-responsive:not(:first-child),
 .rte blockquote:not(:first-child),
 .rte ol:not(:first-child),
-.rte p:not(:first-child),
+
 .rte table:not(:first-child),
 .rte ul:not(:first-child) {
   margin-top: 35px
@@ -20315,7 +20315,6 @@ footer.bg-alt .footer-edge-top {
   .rte .table-responsive:not(:first-child),
   .rte blockquote:not(:first-child),
   .rte ol:not(:first-child),
-  .rte p:not(:first-child),
   .rte table:not(:first-child),
   .rte ul:not(:first-child) {
     margin-top: 30px
@@ -20327,7 +20326,6 @@ footer.bg-alt .footer-edge-top {
   .rte .table-responsive:not(:first-child),
   .rte blockquote:not(:first-child),
   .rte ol:not(:first-child),
-  .rte p:not(:first-child),
   .rte table:not(:first-child),
   .rte ul:not(:first-child) {
     margin-top: 20px
