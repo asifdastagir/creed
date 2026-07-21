@@ -1,0 +1,34 @@
+{% comment %}
+  Product "Sized" metafield — list.metaobject_reference (custom.sized)
+  Renders sized_list text with PDP typography.
+{% endcomment %}
+
+{%- liquid
+  assign sized_items = product.metafields.custom.sized.value
+-%}
+
+{%- if sized_items != blank -%}
+  <div class="product-sized-metafield">
+    <ul class="product-sized-metafield__list" role="list">
+      {%- for item in sized_items -%}
+        {%- liquid
+          assign label = blank
+          if item.sized_list.value != blank
+            assign label = item.sized_list.value
+          elsif item.sized_list != blank
+            assign label = item.sized_list
+          elsif item.name.value != blank
+            assign label = item.name.value
+          elsif item.label.value != blank
+            assign label = item.label.value
+          elsif item.system.label != blank
+            assign label = item.system.label
+          endif
+        -%}
+        {%- if label != blank -%}
+          <li class="product-sized-metafield__item">{{ label }}</li>
+        {%- endif -%}
+      {%- endfor -%}
+    </ul>
+  </div>
+{%- endif -%}

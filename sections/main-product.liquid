@@ -266,6 +266,12 @@
                 </div>
               {%- endif -%}
             {%- endif -%}
+          {%- when 'product_sized' -%}
+            {%- if product.metafields.custom.sized.value != blank -%}
+              <div class="mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
+                {% render 'product-sized', product: product %}
+              </div>
+            {%- endif -%}
 
           {%- when 'icons' -%}
             <div class="prd-block-banners mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
@@ -1206,6 +1212,38 @@
           "id": "show_block_if_html_metafield",
           "label": "Show 'Row content' only if 'Dynamic source' is not empty",
           "default": false
+        }
+      ]
+    },
+    {
+      "type": "product_sized",
+      "name": "Sized metafield",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "range",
+          "id": "spacing_blocks",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Vertical space above the section on Desktop",
+          "default": 8
+        },
+        {
+          "type": "checkbox",
+          "id": "use_global_blocks_desktop_space",
+          "label": "Use global space on desktop",
+          "default": false,
+          "info": "from Section settings / Layout"
+        },
+        {
+          "type": "paragraph",
+          "content": "Shows product.metafields.custom.sized (Sized metaobjects → sized_list text)."
         }
       ]
     },

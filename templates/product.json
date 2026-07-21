@@ -19,17 +19,11 @@
             "use_global_blocks_desktop_space": false
           }
         },
-        "html_wyVfCz": {
-          "type": "html",
+        "product_sized_pdp": {
+          "type": "product_sized",
           "settings": {
-            "spacing_blocks": 30,
-            "use_global_blocks_desktop_space": true,
-            "collapsible_tab": false,
-            "heading": "Custom HTML",
-            "opened": true,
-            "html": "{{ product.metafields.custom.sized | metafield_tag: field: 'sized_list' }}",
-            "html_metafield": "",
-            "show_block_if_html_metafield": false
+            "spacing_blocks": 8,
+            "use_global_blocks_desktop_space": false
           }
         },
         "b9205a37-550c-4593-81b2-3b63ca982935": {
@@ -163,7 +157,7 @@
       },
       "block_order": [
         "bb4d64a3-e671-4e68-a82b-040cd63b5066",
-        "html_wyVfCz",
+        "product_sized_pdp",
         "b9205a37-550c-4593-81b2-3b63ca982935",
         "14d99583-84dc-4dae-aec3-8f51bd93b1a6",
         "99f0f2da-d3ea-474c-b74a-2eedb6bb3849",

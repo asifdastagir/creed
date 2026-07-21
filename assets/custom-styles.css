@@ -5320,3 +5320,37 @@ html {
 .product-carousel__swatch{
     border:solid 1px gray !important;
 }
+
+/* Product Sized metafield (custom.sized → sized_list) */
+.product-sized-metafield {
+    font-family: "Aeonik", sans-serif;
+    color: #000;
+    margin-bottom: 20px;
+}
+
+.product-sized-metafield__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35em 0.75em;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.product-sized-metafield__item {
+    margin: 0;
+    padding: 0;
+    font-size: 0.75rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    line-height: 1.4;
+    text-transform: uppercase;
+}
+
+@media (min-width: 1024px) {
+    .product-sized-metafield__item {
+        font-size: 0.8125rem;
+        letter-spacing: 0.1em;
+    }
+}
