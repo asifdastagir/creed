@@ -27,7 +27,7 @@
             "collapsible_tab": false,
             "heading": "Custom HTML",
             "opened": true,
-            "html": "",
+            "html": "{{ product.metafields.custom.sized | metafield_tag: field: 'sized_list' }}",
             "html_metafield": "{{ product.metafields.custom.sized | metafield_text: field: 'sized_list' }}",
             "show_block_if_html_metafield": false
           }
