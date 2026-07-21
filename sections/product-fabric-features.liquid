@@ -1,22 +1,30 @@
 {% comment %}
   Product Fabric Features
   Data from metafields:
-  - custom.features (list of metaobjects: feature_icon, feature_title, feature_description)
+  - custom.features (list of metaobjects)
   - custom.video (YouTube URL)
-  - custom.video_and_textarea (About Fabric rich text)
+  - custom.video_and_textarea (About Fabric Title — rich text)
+  - custom.about_fabric_desciption (About Fabric description)
 {% endcomment %}
 
 {%- liquid
   assign features = product.metafields.custom.features.value
   assign video_url = product.metafields.custom.video.value | default: product.metafields.custom.video
-  assign about_fabric_metafield = product.metafields.custom.video_and_textarea
-  assign about_fabric = about_fabric_metafield.value | default: about_fabric_metafield
+  assign about_title_metafield = product.metafields.custom.video_and_textarea
+  assign about_desc_metafield = product.metafields.custom.about_fabric_desciption
 
-  assign fabric_heading = section.settings.heading
-  assign fabric_body_html = blank
+  assign fabric_heading_html = blank
+  assign fabric_heading_text = section.settings.heading
+  assign fabric_body_text = blank
 
-  if about_fabric_metafield != blank
-    assign fabric_body_html = about_fabric_metafield | metafield_tag
+  if about_title_metafield != blank
+    assign fabric_heading_html = about_title_metafield | metafield_tag
+  endif
+
+  if about_desc_metafield != blank and about_desc_metafield.value != blank
+    assign fabric_body_text = about_desc_metafield.value
+  elsif about_desc_metafield != blank
+    assign fabric_body_text = about_desc_metafield
   endif
 
   assign video_id = blank
@@ -38,7 +46,7 @@
   endif
 
   assign has_right_content = false
-  if fabric_heading != blank or fabric_body_html != blank or video_id != blank
+  if fabric_heading_text != blank or fabric_heading_html != blank or fabric_body_text != blank or video_id != blank
     assign has_right_content = true
   endif
 
@@ -96,13 +104,22 @@
       {% if has_right_content %}
         <div class="product-fabric-features__content">
           <div class="product-fabric-features__intro">
-            {% if fabric_heading != blank %}
-              <h2 class="product-fabric-features__heading">{{ fabric_heading }}</h2>
+            {% if fabric_heading_text != blank %}
+              <h2 class="product-fabric-features__heading">{{ fabric_heading_text }}</h2>
+            {% elsif fabric_heading_html != blank %}
+              <div class="product-fabric-features__heading rte">
+                {{ fabric_heading_html }}
+              </div>
             {% endif %}
 
-            {% if fabric_body_html != blank %}
-              <div class="product-fabric-features__body rte">
-                {{ fabric_body_html }}
+            {% if fabric_body_text != blank %}
+              <div class="product-fabric-features__body">
+                <p>
+                  <svg style="display: inline-block; vertical-align: bottom;" width="48" height="30" viewBox="0 0 48 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M24.3594 0.373047L47.7568 25.2295C45.0244 22.6153 41.3241 22.3536 37.5381 22.7656C33.7289 23.1803 29.5534 24.6259 25.2207 26.0703C20.9168 27.5051 16.4673 28.934 12.207 29.2363C7.92587 29.5401 3.79996 28.7094 0.174805 25.6025L0 25.2207L0.138672 24.875L23.6396 0.375L23.998 0L24.3594 0.373047Z" fill="#D11C27"/>
+                  </svg>
+                  {{ fabric_body_text | escape | newline_to_br }}
+                </p>
               </div>
             {% endif %}
           </div>
@@ -112,7 +129,7 @@
               <div class="product-fabric-features__video">
                 <iframe
                   src="https://www.youtube.com/embed/{{ video_id }}"
-                  title="{{ fabric_heading | default: product.title | escape }}"
+                  title="{{ fabric_heading_text | default: product.title | escape }}"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen
                   loading="lazy"
@@ -227,6 +244,16 @@
     text-transform: uppercase;
     color: #111;
     line-height: 1.2;
+  }
+
+  #productFabricFeatures-{{ section.id }} .product-fabric-features__heading.rte :is(p, h1, h2, h3, h4, h5, h6) {
+    margin: 0;
+    font-size: inherit;
+    font-weight: inherit;
+    letter-spacing: inherit;
+    text-transform: inherit;
+    color: inherit;
+    line-height: inherit;
   }
 
   #productFabricFeatures-{{ section.id }} .product-fabric-features__body {
@@ -360,13 +387,13 @@
   "settings": [
     {
       "type": "paragraph",
-      "content": "Uses product metafields: custom.features, custom.video, custom.video_and_textarea (About Fabric rich text)"
+      "content": "Uses metafields: custom.features, custom.video, custom.video_and_textarea (About Fabric Title), custom.about_fabric_desciption (description)."
     },
     {
       "type": "text",
       "id": "heading",
       "label": "Heading override",
-      "info": "Optional. Leave blank if the heading is already inside the About Fabric rich text (custom.video_and_textarea)."
+      "info": "Optional. If set, replaces the About Fabric Title metafield."
     },
     {
       "type": "color",
