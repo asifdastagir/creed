@@ -5328,7 +5328,8 @@ html {
 
 .product-sized-metafield {
     font-family: "Aeonik", sans-serif;
-    color: #6b6b6b;
+    color: #000;
+    margin-bottom: 20px;
 }
 
 .product-sized-metafield ul,
