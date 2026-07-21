@@ -5366,38 +5366,37 @@ html {
     }
 }
 
-/* Sizing guide PDF popup */
-.modal-sizing-pdf__toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
+/* Sizing guide PDF popup — document only (no toolbar / sidebar chrome) */
+.modal-sizing-pdf {
+    padding: 40px !important;
+    box-sizing: border-box;
+}
+
+.modal-sizing-pdf__frame-wrap {
+    position: relative;
+    width: 100%;
+    height: min(80vh, 860px);
+    background: #fff;
+    overflow: hidden;
 }
 
 .modal-sizing-pdf__status {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
     font-family: "Aeonik", sans-serif;
     font-size: 0.75rem;
     letter-spacing: 0.06em;
     color: #6b6b6b;
+    background: #fff;
 }
 
-.modal-sizing-pdf__download {
-    font-family: "Aeonik", sans-serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    text-decoration: underline;
-    color: inherit;
-    margin-left: auto;
-}
-
-.modal-sizing-pdf__frame-wrap {
-    width: 100%;
-    height: min(75vh, 820px);
-    background: #f3f3f3;
-    border: 1px solid #e5e5e5;
-    overflow: hidden;
+.modal-sizing-pdf__status[hidden] {
+    display: none !important;
 }
 
 .modal-sizing-pdf__frame {
@@ -5408,8 +5407,32 @@ html {
     background: #fff;
 }
 
+/* Thin scrollbar inside size guide popup */
+.modal-sizing-pdf,
+.modal-sizing-pdf__frame-wrap {
+    scrollbar-width: thin;
+    scrollbar-color: #111 #e8e8e8;
+}
+
+.modal-sizing-pdf::-webkit-scrollbar,
+.modal-sizing-pdf__frame-wrap::-webkit-scrollbar {
+    width: 1px;
+    height: 1px;
+}
+
+.modal-sizing-pdf::-webkit-scrollbar-track,
+.modal-sizing-pdf__frame-wrap::-webkit-scrollbar-track {
+    background: #e8e8e8;
+}
+
+.modal-sizing-pdf::-webkit-scrollbar-thumb,
+.modal-sizing-pdf__frame-wrap::-webkit-scrollbar-thumb {
+    background: #111;
+    border-radius: 0;
+}
+
 @media (max-width: 767px) {
     .modal-sizing-pdf__frame-wrap {
-        height: min(70vh, 560px);
+        height: min(72vh, 580px);
     }
 }

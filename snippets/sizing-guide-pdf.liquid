@@ -59,18 +59,8 @@
       aria-modal="true"
       tabindex="-1"
     >
-      <div class="modal-sizing-pdf__toolbar">
-        <span class="modal-sizing-pdf__status" data-sizing-pdf-status>Loading size guide…</span>
-        <a
-          href="{{ sizing_pdf_url }}"
-          class="modal-sizing-pdf__download"
-          target="_blank"
-          rel="noopener"
-        >
-          Open / download PDF
-        </a>
-      </div>
       <div class="modal-sizing-pdf__frame-wrap" body-scroll-lock-ignore>
+        <span class="modal-sizing-pdf__status" data-sizing-pdf-status hidden>Loading size guide…</span>
         <iframe
           class="modal-sizing-pdf__frame"
           title="{{ sizing_label | escape }}"

@@ -1,14 +1,29 @@
 {% comment %}
-  Size Guide PDF popup loader — include once on product page
+  Size Guide PDF popup loader — clean document view (no PDF chrome)
 {% endcomment %}
 <script>
   (function () {
     if (window.__creedSizingPdfBound) return;
     window.__creedSizingPdfBound = true;
 
+    var PDF_VIEW_PARAMS = '#toolbar=0&navpanes=0&scrollbar=0&view=FitH&zoom=page-width';
+
     function setStatus(modal, text) {
       var status = modal.querySelector('[data-sizing-pdf-status]');
-      if (status) status.textContent = text || '';
+      if (!status) return;
+      if (text) {
+        status.hidden = false;
+        status.textContent = text;
+      } else {
+        status.hidden = true;
+        status.textContent = '';
+      }
+    }
+
+    function withCleanViewer(url) {
+      if (!url) return url;
+      var base = url.split('#')[0];
+      return base + PDF_VIEW_PARAMS;
     }
 
     function loadPdfIntoFrame(modal, pdfUrl) {
@@ -28,17 +43,48 @@
             blob.type && blob.type.indexOf('pdf') !== -1
               ? blob
               : new Blob([blob], { type: 'application/pdf' });
-          frame.setAttribute('src', URL.createObjectURL(pdfBlob));
+          var blobUrl = URL.createObjectURL(pdfBlob);
+          frame.setAttribute('src', withCleanViewer(blobUrl));
           frame.setAttribute('data-loaded', pdfUrl);
           setStatus(modal, '');
         })
         .catch(function () {
-          frame.setAttribute(
-            'src',
-            'https://docs.google.com/gview?embedded=true&url=' + encodeURIComponent(pdfUrl)
-          );
+          // Direct URL with chrome hidden (works in Chrome/Edge PDF viewer)
+          frame.setAttribute('src', withCleanViewer(pdfUrl));
           frame.setAttribute('data-loaded', pdfUrl);
           setStatus(modal, '');
+        });
+    }
+
+    function isMobile() {
+      return window.matchMedia('(max-width: 767px)').matches;
+    }
+
+    function downloadPdf(pdfUrl) {
+      // Force download / open as file on mobile (iframe PDF viewers are unreliable)
+      fetch(pdfUrl, { mode: 'cors', credentials: 'omit' })
+        .then(function (response) {
+          if (!response.ok) throw new Error('PDF fetch failed');
+          return response.blob();
+        })
+        .then(function (blob) {
+          var pdfBlob =
+            blob.type && blob.type.indexOf('pdf') !== -1
+              ? blob
+              : new Blob([blob], { type: 'application/pdf' });
+          var blobUrl = URL.createObjectURL(pdfBlob);
+          var link = document.createElement('a');
+          link.href = blobUrl;
+          link.download = 'size-guide.pdf';
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          setTimeout(function () {
+            URL.revokeObjectURL(blobUrl);
+          }, 1000);
+        })
+        .catch(function () {
+          window.open(pdfUrl, '_blank', 'noopener');
         });
     }
 
@@ -53,11 +99,18 @@
       event.stopPropagation();
 
       var pdfUrl = root.getAttribute('data-pdf-url') || trigger.getAttribute('href');
+      if (!pdfUrl) return;
+
+      if (isMobile()) {
+        downloadPdf(pdfUrl);
+        return;
+      }
+
       var modalId = trigger.getAttribute('aria-controls');
       var modal = modalId ? document.getElementById(modalId) : null;
 
-      if (!modal || !pdfUrl) {
-        if (pdfUrl) window.open(pdfUrl, '_blank', 'noopener');
+      if (!modal) {
+        window.open(pdfUrl, '_blank', 'noopener');
         return;
       }
 
