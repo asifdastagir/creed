@@ -5322,36 +5322,46 @@ html {
 }
 
 /* Product Sized metafield (custom.sized → sized_list) */
-.product-sized-metafield {
-    font-family: "Aeonik", sans-serif;
-    color: #000;
-    margin-bottom: 20px;
+.product-sized-metafield-wrap {
+    width: 100%;
 }
 
+.product-sized-metafield {
+    font-family: "Aeonik", sans-serif;
+    color: #6b6b6b;
+}
+
+.product-sized-metafield ul,
 .product-sized-metafield__list {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.35em 0.75em;
-    list-style: none;
+    gap: 0.35em 0.85em;
+    list-style: none !important;
     margin: 0;
     padding: 0;
 }
 
+.product-sized-metafield li,
+.product-sized-metafield .metafield-single_line_text_field,
 .product-sized-metafield__item {
     margin: 0;
     padding: 0;
-    font-size: 0.75rem;
+    font-size: 13px;
     font-weight: 400;
-    letter-spacing: 0.08em;
-    line-height: 1.4;
+    letter-spacing: 0.06em;
+    line-height: 1.45;
     text-transform: uppercase;
+    color: #6b6b6b;
+    list-style: none !important;
 }
 
 @media (min-width: 1024px) {
+    .product-sized-metafield li,
+    .product-sized-metafield .metafield-single_line_text_field,
     .product-sized-metafield__item {
-        font-size: 0.8125rem;
-        letter-spacing: 0.1em;
+        font-size: 14px;
+        letter-spacing: 0.08em;
     }
 }
 
