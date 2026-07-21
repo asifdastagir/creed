@@ -1,0 +1,102 @@
+{% comment %}
+  Size Guide PDF popup loader — include once on product page
+{% endcomment %}
+<script>
+  (function () {
+    if (window.__creedSizingPdfBound) return;
+    window.__creedSizingPdfBound = true;
+
+    function setStatus(modal, text) {
+      var status = modal.querySelector('[data-sizing-pdf-status]');
+      if (status) status.textContent = text || '';
+    }
+
+    function loadPdfIntoFrame(modal, pdfUrl) {
+      var frame = modal.querySelector('[data-sizing-pdf-frame]');
+      if (!frame || !pdfUrl) return;
+      if (frame.getAttribute('data-loaded') === pdfUrl) return;
+
+      setStatus(modal, 'Loading size guide…');
+
+      fetch(pdfUrl, { mode: 'cors', credentials: 'omit' })
+        .then(function (response) {
+          if (!response.ok) throw new Error('PDF fetch failed');
+          return response.blob();
+        })
+        .then(function (blob) {
+          var pdfBlob =
+            blob.type && blob.type.indexOf('pdf') !== -1
+              ? blob
+              : new Blob([blob], { type: 'application/pdf' });
+          frame.setAttribute('src', URL.createObjectURL(pdfBlob));
+          frame.setAttribute('data-loaded', pdfUrl);
+          setStatus(modal, '');
+        })
+        .catch(function () {
+          frame.setAttribute(
+            'src',
+            'https://docs.google.com/gview?embedded=true&url=' + encodeURIComponent(pdfUrl)
+          );
+          frame.setAttribute('data-loaded', pdfUrl);
+          setStatus(modal, '');
+        });
+    }
+
+    function openSizingPdf(event) {
+      var trigger = event.target.closest('.js-sizing-pdf-open');
+      if (!trigger) return;
+
+      var root = trigger.closest('[data-sizing-pdf-root]');
+      if (!root) return;
+
+      event.preventDefault();
+      event.stopPropagation();
+
+      var pdfUrl = root.getAttribute('data-pdf-url') || trigger.getAttribute('href');
+      var modalId = trigger.getAttribute('aria-controls');
+      var modal = modalId ? document.getElementById(modalId) : null;
+
+      if (!modal || !pdfUrl) {
+        if (pdfUrl) window.open(pdfUrl, '_blank', 'noopener');
+        return;
+      }
+
+      if (typeof jq_lumia === 'undefined' || !jq_lumia.fancybox) {
+        window.open(pdfUrl, '_blank', 'noopener');
+        return;
+      }
+
+      loadPdfIntoFrame(modal, pdfUrl);
+
+      jq_lumia.fancybox.open({
+        type: 'inline',
+        src: '#' + modal.id,
+        animationEffect: 'fade',
+        animationDuration: 200,
+        touch: false,
+        afterLoad: function () {
+          modal.classList.add('is-opened');
+          loadPdfIntoFrame(modal, pdfUrl);
+          if (typeof bodyScrollLock !== 'undefined') {
+            bodyScrollLock.disableBodyScroll(modal, {
+              allowTouchMove: function (el) {
+                while (el && el !== document.body) {
+                  if (el.getAttribute('body-scroll-lock-ignore') !== null) return true;
+                  el = el.parentElement;
+                }
+              }
+            });
+          }
+        },
+        afterClose: function () {
+          modal.classList.remove('is-opened');
+          if (typeof bodyScrollLock !== 'undefined') {
+            bodyScrollLock.clearAllBodyScrollLocks();
+          }
+        }
+      });
+    }
+
+    document.addEventListener('click', openSizingPdf, true);
+  })();
+</script>

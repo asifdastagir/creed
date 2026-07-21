@@ -1,0 +1,83 @@
+{% comment %}
+  Size Guide PDF — from product metafield custom.size_guide (file_reference)
+  Opens PDF in a fancybox popup.
+{% endcomment %}
+
+{%- liquid
+  assign sizing_pdf_url = blank
+  assign size_guide_file = product.metafields.custom.size_guide.value
+
+  if size_guide_file != blank
+    if size_guide_file.url != blank
+      assign sizing_pdf_url = size_guide_file.url
+    else
+      assign sizing_pdf_url = size_guide_file | file_url
+    endif
+  elsif product.metafields.custom.size_guide != blank
+    assign sizing_pdf_url = product.metafields.custom.size_guide | file_url
+  endif
+
+  if sizing_pdf_url == blank and fallback_pdf != blank
+    if fallback_pdf.url != blank
+      assign sizing_pdf_url = fallback_pdf.url
+    else
+      assign sizing_pdf_url = fallback_pdf | file_url
+    endif
+  endif
+
+  if sizing_pdf_url == blank and fallback_pdf_url != blank
+    assign sizing_pdf_url = fallback_pdf_url
+  endif
+
+  assign sizing_label = label | default: 'Sizing guide'
+  assign sizing_icon = icon | default: 'icon-size'
+  assign modal_id = modal_id | default: 'modalSizingPdf'
+-%}
+
+{%- if sizing_pdf_url != blank -%}
+  <div
+    class="prd-block-links"
+    data-sizing-pdf-root
+    data-pdf-url="{{ sizing_pdf_url | escape }}"
+  >
+    <a
+      href="{{ sizing_pdf_url }}"
+      class="modal-info-link js-sizing-pdf-open"
+      aria-haspopup="dialog"
+      aria-controls="{{ modal_id }}"
+    >
+      <span class="icon-wrap">{% render 'icon', icon: sizing_icon %}</span>
+      <span>{{ sizing_label }}</span>
+    </a>
+
+    <div
+      class="modal-wrap modal-info-content modal-sizing-pdf"
+      style="display: none; width: 970px; max-width: 96vw;"
+      id="{{ modal_id }}"
+      role="dialog"
+      aria-label="{{ sizing_label | escape }}"
+      aria-modal="true"
+      tabindex="-1"
+    >
+      <div class="modal-sizing-pdf__toolbar">
+        <span class="modal-sizing-pdf__status" data-sizing-pdf-status>Loading size guide…</span>
+        <a
+          href="{{ sizing_pdf_url }}"
+          class="modal-sizing-pdf__download"
+          target="_blank"
+          rel="noopener"
+        >
+          Open / download PDF
+        </a>
+      </div>
+      <div class="modal-sizing-pdf__frame-wrap" body-scroll-lock-ignore>
+        <iframe
+          class="modal-sizing-pdf__frame"
+          title="{{ sizing_label | escape }}"
+          data-sizing-pdf-frame
+          src="about:blank"
+        ></iframe>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
