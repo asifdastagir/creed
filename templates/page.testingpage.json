@@ -32,21 +32,21 @@
         "slide_TphADd": {
           "type": "slide",
           "settings": {
-            "image_desktop": "shopify://shop_images/01_jpg.jpg",
+            "image_desktop": "shopify://shop_images/carousel-1.jpg",
             "image_mobile": "shopify://shop_images/carousel-1.jpg"
           }
         },
         "slide_a7wC38": {
           "type": "slide",
           "settings": {
-            "image_desktop": "shopify://shop_images/02_jpg.jpg",
+            "image_desktop": "shopify://shop_images/carousel-2.jpg",
             "image_mobile": "shopify://shop_images/carousel-2.jpg"
           }
         },
         "slide_h7yXAj": {
           "type": "slide",
           "settings": {
-            "image_desktop": "shopify://shop_images/03_jpg.jpg",
+            "image_desktop": "shopify://shop_images/carousel-3.jpg",
             "image_mobile": "shopify://shop_images/carousel-3.jpg"
           }
         }

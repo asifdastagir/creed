@@ -480,6 +480,17 @@
                 {%- endform -%}
               {%- endif -%}
             </div>
+          {%- when 'color_siblings' -%}
+            <div class="mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
+              {%- render 'color-siblings',
+                product: product,
+                section: section,
+                heading: block.settings.heading,
+                metafield_namespace: block.settings.metafield_namespace,
+                metafield_key: block.settings.metafield_key,
+                swatch_size: block.settings.swatch_size
+              -%}
+            </div>
           {%- when 'fbt' -%}
             <div class="mt-product-global" {% render 'product-block-style', block: block %} {{ block.shopify_attributes }}>
               {%- liquid
@@ -2689,6 +2700,68 @@
         {
           "type": "paragraph",
           "content": "->-> If checked 'Use product variants images'"
+        }
+      ]
+    },
+    {
+      "type": "color_siblings",
+      "name": "Color siblings",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "header",
+          "content": "Layout"
+        },
+        {
+          "type": "range",
+          "id": "spacing_blocks",
+          "min": 0,
+          "max": 100,
+          "step": 1,
+          "unit": "px",
+          "label": "Vertical space above the section on Desktop",
+          "default": 16
+        },
+        {
+          "type": "checkbox",
+          "id": "use_global_blocks_desktop_space",
+          "label": "Use global space on desktop",
+          "default": false,
+          "info": "from Section settings / Layout"
+        },
+        {
+          "type": "header",
+          "content": "Content"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Color"
+        },
+        {
+          "type": "text",
+          "id": "metafield_namespace",
+          "label": "Metafield namespace",
+          "default": "custom",
+          "info": "Usually 'custom'"
+        },
+        {
+          "type": "text",
+          "id": "metafield_key",
+          "label": "Metafield key",
+          "default": "related_colors",
+          "info": "Must be a List of product references metafield"
+        },
+        {
+          "type": "range",
+          "id": "swatch_size",
+          "min": 24,
+          "max": 64,
+          "step": 2,
+          "unit": "px",
+          "label": "Swatch size",
+          "default": 36
         }
       ]
     },

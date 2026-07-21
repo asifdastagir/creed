@@ -1,0 +1,129 @@
+{% comment %}
+  Color siblings — linked products via list.product_reference metafield.
+  Clicking a swatch navigates to that product (not a variant switch).
+{% endcomment %}
+
+{%- liquid
+  assign metafield_namespace = metafield_namespace | default: 'custom'
+  assign metafield_key = metafield_key | default: 'related_colors'
+  assign siblings = product.metafields[metafield_namespace][metafield_key].value
+  assign heading = heading | default: 'Color'
+  assign swatch_size = swatch_size | default: 36
+-%}
+
+{%- if siblings != blank -%}
+  <div class="color-siblings product-form__input">
+    {%- if heading != blank -%}
+      <div class="option-name mb-2">
+        <span class="js-option-name">{{ heading }}</span>
+      </div>
+    {%- endif -%}
+
+    <div class="prd-option-list has-option-color color-siblings__list" role="list">
+      {%- for sibling in siblings -%}
+        {%- if sibling == blank -%}
+          {%- continue -%}
+        {%- endif -%}
+
+        {%- liquid
+          assign is_current = false
+          if sibling.id == product.id
+            assign is_current = true
+          endif
+
+          assign swatch_label = sibling.metafields.custom.color_name.value | default: sibling.title
+          assign swatch_image = sibling.featured_media | default: sibling.featured_image
+        -%}
+
+        {%- if is_current -%}
+          <span
+            class="label-radio label-option-color swatch-active color-siblings__swatch"
+            role="listitem"
+            aria-current="true"
+            title="{{ swatch_label | escape }}"
+            style="--color-siblings-size: {{ swatch_size }}px;"
+          >
+            {%- if swatch_image != blank -%}
+              <img
+                src="{{ swatch_image | image_url: width: 96 }}"
+                alt="{{ swatch_label | escape }}"
+                width="{{ swatch_size }}"
+                height="{{ swatch_size }}"
+                loading="lazy"
+              >
+            {%- else -%}
+              <span class="color-siblings__fallback">{{ swatch_label | truncate: 1, '' }}</span>
+            {%- endif -%}
+          </span>
+        {%- else -%}
+          <a
+            href="{{ sibling.url }}"
+            class="label-radio label-option-color color-siblings__swatch"
+            role="listitem"
+            title="{{ swatch_label | escape }}"
+            aria-label="{{ swatch_label | escape }}"
+            style="--color-siblings-size: {{ swatch_size }}px;"
+          >
+            {%- if swatch_image != blank -%}
+              <img
+                src="{{ swatch_image | image_url: width: 96 }}"
+                alt="{{ swatch_label | escape }}"
+                width="{{ swatch_size }}"
+                height="{{ swatch_size }}"
+                loading="lazy"
+              >
+            {%- else -%}
+              <span class="color-siblings__fallback">{{ swatch_label | truncate: 1, '' }}</span>
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+
+  <style>
+    #shopify-section-{{ section.id }} .color-siblings__list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      border: 0;
+      padding: 0;
+      margin: 0;
+    }
+    #shopify-section-{{ section.id }} .color-siblings__swatch {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--color-siblings-size, 36px);
+      height: var(--color-siblings-size, 36px);
+      min-width: var(--color-siblings-size, 36px);
+      padding: 0;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid #cdd8e1;
+      box-sizing: border-box;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    #shopify-section-{{ section.id }} a.color-siblings__swatch:hover {
+      border-color: #000;
+    }
+    #shopify-section-{{ section.id }} .color-siblings__swatch.swatch-active {
+      border-color: #000;
+      box-shadow: 0 0 0 1px #000;
+      cursor: default;
+      pointer-events: none;
+    }
+    #shopify-section-{{ section.id }} .color-siblings__swatch img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    #shopify-section-{{ section.id }} .color-siblings__fallback {
+      font-size: 11px;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+  </style>
+{%- endif -%}
