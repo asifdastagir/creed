@@ -4,11 +4,13 @@
 {% endcomment %}
 
 {%- liquid
-  assign metafield_namespace = metafield_namespace | default: 'custom'
-  assign metafield_key = metafield_key | default: 'related_colors'
-  assign siblings = product.metafields[metafield_namespace][metafield_key].value
   assign heading = heading | default: 'Color'
   assign swatch_size = swatch_size | default: 36
+  assign siblings = product.metafields.custom.related_colors.value
+
+  if siblings == blank and metafield_namespace != blank and metafield_key != blank
+    assign siblings = product.metafields[metafield_namespace][metafield_key].value
+  endif
 -%}
 
 {%- if siblings != blank -%}
@@ -21,62 +23,67 @@
 
     <div class="prd-option-list has-option-color color-siblings__list" role="list">
       {%- for sibling in siblings -%}
-        {%- if sibling == blank -%}
-          {%- continue -%}
-        {%- endif -%}
+        {%- unless sibling == blank -%}
+          {%- liquid
+            assign is_current = false
+            if sibling.id == product.id
+              assign is_current = true
+            endif
 
-        {%- liquid
-          assign is_current = false
-          if sibling.id == product.id
-            assign is_current = true
-          endif
+            assign swatch_label = sibling.title
+            if sibling.metafields.custom.color_name.value != blank
+              assign swatch_label = sibling.metafields.custom.color_name.value
+            endif
 
-          assign swatch_label = sibling.metafields.custom.color_name.value | default: sibling.title
-          assign swatch_image = sibling.featured_media | default: sibling.featured_image
-        -%}
+            assign swatch_image = sibling.featured_image
+            if swatch_image == blank and sibling.featured_media
+              assign swatch_image = sibling.featured_media.preview_image
+            endif
+          -%}
 
-        {%- if is_current -%}
-          <span
-            class="label-radio label-option-color swatch-active color-siblings__swatch"
-            role="listitem"
-            aria-current="true"
-            title="{{ swatch_label | escape }}"
-            style="--color-siblings-size: {{ swatch_size }}px;"
-          >
-            {%- if swatch_image != blank -%}
-              <img
-                src="{{ swatch_image | image_url: width: 96 }}"
-                alt="{{ swatch_label | escape }}"
-                width="{{ swatch_size }}"
-                height="{{ swatch_size }}"
-                loading="lazy"
-              >
-            {%- else -%}
-              <span class="color-siblings__fallback">{{ swatch_label | truncate: 1, '' }}</span>
-            {%- endif -%}
-          </span>
-        {%- else -%}
-          <a
-            href="{{ sibling.url }}"
-            class="label-radio label-option-color color-siblings__swatch"
-            role="listitem"
-            title="{{ swatch_label | escape }}"
-            aria-label="{{ swatch_label | escape }}"
-            style="--color-siblings-size: {{ swatch_size }}px;"
-          >
-            {%- if swatch_image != blank -%}
-              <img
-                src="{{ swatch_image | image_url: width: 96 }}"
-                alt="{{ swatch_label | escape }}"
-                width="{{ swatch_size }}"
-                height="{{ swatch_size }}"
-                loading="lazy"
-              >
-            {%- else -%}
-              <span class="color-siblings__fallback">{{ swatch_label | truncate: 1, '' }}</span>
-            {%- endif -%}
-          </a>
-        {%- endif -%}
+          {%- if is_current -%}
+            <span
+              class="label-radio label-option-color swatch-active color-siblings__swatch"
+              role="listitem"
+              aria-current="true"
+              title="{{ swatch_label | escape }}"
+              style="--color-siblings-size: {{ swatch_size }}px;"
+            >
+              {%- if swatch_image != blank -%}
+                <img
+                  src="{{ swatch_image | image_url: width: 96 }}"
+                  alt="{{ swatch_label | escape }}"
+                  width="{{ swatch_size }}"
+                  height="{{ swatch_size }}"
+                  loading="lazy"
+                >
+              {%- else -%}
+                <span class="color-siblings__fallback">{{ swatch_label | slice: 0 }}</span>
+              {%- endif -%}
+            </span>
+          {%- else -%}
+            <a
+              href="{{ sibling.url }}"
+              class="label-radio label-option-color color-siblings__swatch"
+              role="listitem"
+              title="{{ swatch_label | escape }}"
+              aria-label="{{ swatch_label | escape }}"
+              style="--color-siblings-size: {{ swatch_size }}px;"
+            >
+              {%- if swatch_image != blank -%}
+                <img
+                  src="{{ swatch_image | image_url: width: 96 }}"
+                  alt="{{ swatch_label | escape }}"
+                  width="{{ swatch_size }}"
+                  height="{{ swatch_size }}"
+                  loading="lazy"
+                >
+              {%- else -%}
+                <span class="color-siblings__fallback">{{ swatch_label | slice: 0 }}</span>
+              {%- endif -%}
+            </a>
+          {%- endif -%}
+        {%- endunless -%}
       {%- endfor -%}
     </div>
   </div>
