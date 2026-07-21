@@ -7,7 +7,6 @@
 {%- liquid
   assign collection = collections[section.settings.collection]
   assign product_limit = section.settings.limit
-  assign color_options_name = settings.product_card_color_options_name | default: 'Color,Colour' | downcase | split: ','
 -%}
 
 <section
@@ -43,17 +42,10 @@
             {%- if collection != blank and collection.products_count > 0 -%}
               {%- for product in collection.products limit: product_limit -%}
                 {%- liquid
-                  assign color_option = blank
-                  assign color_option_index = 0
-
-                  for option in product.options_with_values
-                    assign option_name_downcase = option.name | downcase | strip
-                    if color_options_name contains option_name_downcase
-                      assign color_option = option
-                      assign color_option_index = forloop.index0
-                      break
-                    endif
-                  endfor
+                  assign related_colors = product.metafields.custom.related_colors.value
+                  if related_colors != blank
+                    assign related_colors = related_colors | sort: 'handle'
+                  endif
 
                   assign default_variant = product.selected_or_first_available_variant | default: product.variants.first
                   assign default_image = default_variant.featured_media | default: product.featured_media
@@ -96,7 +88,7 @@
                           </p>
                         {% endif %}
 
-                        <h3 class="product-carousel__title text-[15px] lg:text-[16px] text-black leading-snug mb-1">
+                        <h3 class="product-carousel__title text-[15px] lg:text-[16px] text-black leading-snug mb-1" data-product-title>
                           {{ product.title | escape }}
                         </h3>
 
@@ -109,78 +101,22 @@
                       </div>
                     </a>
 
-                    {% if color_option != blank %}
+                    {% if related_colors != blank %}
                       <div class="product-carousel__swatches swiper-no-swiping flex items-center gap-3 mt-auto pt-1" aria-label="Available colors" data-product-swatches>
-                        {% for value in color_option.values limit: 8 %}
-                          {%- liquid
-                            assign swatch_style = ''
-                            assign variant_for_color = blank
-
-                            for variant in product.variants
-                              if variant.options[color_option_index] == value
-                                assign variant_for_color = variant
-                                break
+                        {% for sibling in related_colors limit: 8 %}
+                          {% unless sibling == blank %}
+                            {%- liquid
+                              assign is_active = false
+                              if sibling.id == product.id
+                                assign is_active = true
                               endif
-                            endfor
-
-                            if variant_for_color == blank
-                              for variant in product.variants
-                                if variant.options[color_option_index] contains value
-                                  assign variant_for_color = variant
-                                  break
-                                endif
-                              endfor
-                            endif
-
-                            assign variant_image = blank
-                            if variant_for_color.featured_media != blank
-                              assign variant_image = variant_for_color.featured_media
-                            elsif variant_for_color.image != blank
-                              assign variant_image = variant_for_color.image
-                            else
-                              assign variant_image = product.featured_media
-                            endif
-
-                            assign is_active = false
-                            if variant_for_color != blank and default_variant != blank and variant_for_color.id == default_variant.id
-                              assign is_active = true
-                            elsif forloop.first
-                              assign is_active = true
-                            endif
-
-                            if value.swatch.image != blank
-                              assign swatch_img = value.swatch.image | image_url: width: 50
-                              assign swatch_style = 'background-image: url(' | append: swatch_img | append: '); background-size: cover; background-position: center;'
-                            elsif value.swatch.color != blank
-                              assign swatch_style = 'background-color: ' | append: value.swatch.color | append: ';'
-                            elsif variant_image != blank
-                              assign swatch_img = variant_image | image_url: width: 50
-                              assign swatch_style = 'background-image: url(' | append: swatch_img | append: '); background-size: cover; background-position: center;'
-                            else
-                              assign named_color = value | handle | replace: '-', ''
-                              assign swatch_style = 'background-color: ' | append: named_color | append: ';'
-                            endif
-                          -%}
-                          {% if variant_for_color != blank %}
-                            <button
-                              type="button"
-                              class="product-carousel__swatch{% if is_active %} is-active{% endif %}"
-                              style="{{ swatch_style }}"
-                              title="{{ value | escape }}"
-                              aria-label="{{ value | escape }}"
-                              data-carousel-swatch
-                              data-variant-id="{{ variant_for_color.id }}"
-                              {% if variant_image != blank %}
-                                data-image="{{ variant_image | image_url: width: 800 }}"
-                                data-image-alt="{{ variant_image.alt | default: product.title | escape }}"
-                              {% endif %}
-                              data-price="{{ variant_for_color.price | money }}"
-                              {% if variant_for_color.compare_at_price > variant_for_color.price %}
-                                data-compare-price="{{ variant_for_color.compare_at_price | money }}"
-                              {% endif %}
-                              data-url="{{ product.url }}?variant={{ variant_for_color.id }}"
-                            ></button>
-                          {% endif %}
+                            -%}
+                            {% render 'product-carousel-color-swatch',
+                              sibling: sibling,
+                              current_product: product,
+                              is_active: is_active
+                            %}
+                          {% endunless %}
                         {% endfor %}
                       </div>
                     {% endif %}
@@ -322,6 +258,14 @@
     transform: scale(1.08);
   }
 
+  #productCarousel-{{ section.id }} .product-carousel__swatch.is-light {
+    border-color: #cdd8e1;
+  }
+
+  #productCarousel-{{ section.id }} .product-carousel__swatch.is-light.is-active {
+    border-color: #000;
+  }
+
   #productCarousel-{{ section.id }} .product-carousel__media img {
     transition: opacity 0.2s ease, transform 0.5s ease;
   }
@@ -342,11 +286,13 @@
       var image = card.querySelector('[data-product-image]');
       var link = card.querySelector('[data-product-link]');
       var price = card.querySelector('[data-product-price]');
+      var title = card.querySelector('[data-product-title]');
       var imageUrl = swatch.getAttribute('data-image');
       var imageAlt = swatch.getAttribute('data-image-alt');
       var productUrl = swatch.getAttribute('data-url');
       var priceText = swatch.getAttribute('data-price');
       var comparePrice = swatch.getAttribute('data-compare-price');
+      var titleText = swatch.getAttribute('data-title');
 
       card.querySelectorAll('[data-carousel-swatch]').forEach(function (item) {
         item.classList.toggle('is-active', item === swatch);
@@ -369,6 +315,10 @@
 
       if (link && productUrl) {
         link.setAttribute('href', productUrl);
+      }
+
+      if (title && titleText) {
+        title.textContent = titleText;
       }
 
       if (price && priceText) {

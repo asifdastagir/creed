@@ -1,0 +1,142 @@
+{% comment %}
+  One product-carousel color swatch from a related_colors sibling product.
+  Params: sibling, current_product, is_active
+{% endcomment %}
+
+{%- liquid
+  assign swatch_label = sibling.title
+  assign swatch_style = 'background-color: #d1d5db;'
+  assign color_name = blank
+  assign found_option_swatch = false
+  assign is_light_swatch = false
+  assign color_options_name = settings.product_card_color_options_name | default: 'Color,Colour' | downcase | split: ','
+
+  if sibling.metafields.custom.color_name.value != blank
+    assign color_name = sibling.metafields.custom.color_name.value
+    assign swatch_label = color_name
+  endif
+
+  if sibling.metafields.custom.swatch_color.value != blank
+    assign swatch_hex = sibling.metafields.custom.swatch_color.value
+    assign swatch_style = 'background-color: ' | append: swatch_hex | append: ';'
+    if color_name == blank
+      assign swatch_label = swatch_hex
+    endif
+    assign swatch_hex_down = swatch_hex | downcase
+    if swatch_hex_down == '#fff' or swatch_hex_down == '#ffffff' or swatch_hex_down == 'white'
+      assign is_light_swatch = true
+    endif
+  else
+    for option in sibling.options_with_values
+      assign option_name_downcase = option.name | downcase | strip
+      if color_options_name contains option_name_downcase
+        assign option_value = option.values.first
+        if option_value.swatch.color != blank
+          assign swatch_style = 'background-color: ' | append: option_value.swatch.color | append: ';'
+          assign swatch_label = option_value
+          assign found_option_swatch = true
+          assign opt_color_down = option_value.swatch.color | downcase
+          if opt_color_down == '#fff' or opt_color_down == '#ffffff' or opt_color_down contains '255, 255, 255'
+            assign is_light_swatch = true
+          endif
+        elsif option_value.swatch.image != blank
+          assign swatch_img = option_value.swatch.image | image_url: width: 96
+          assign swatch_style = 'background-image: url(' | append: swatch_img | append: '); background-size: cover; background-position: center;'
+          assign swatch_label = option_value
+          assign found_option_swatch = true
+        elsif option_value != blank
+          assign color_name = option_value
+          assign swatch_label = option_value
+        endif
+        break
+      endif
+    endfor
+
+    if found_option_swatch == false
+      if color_name == blank
+        assign handle_l = sibling.handle | downcase
+        assign title_l = sibling.title | downcase
+        if handle_l contains 'white' or title_l contains 'white'
+          assign color_name = 'white'
+        elsif handle_l contains 'black' or title_l contains 'black'
+          assign color_name = 'black'
+        elsif handle_l contains 'navy' or title_l contains 'navy'
+          assign color_name = 'navy'
+        elsif handle_l contains 'grey' or handle_l contains 'gray' or title_l contains 'grey' or title_l contains 'gray'
+          assign color_name = 'gray'
+        elsif handle_l contains 'beige' or title_l contains 'beige'
+          assign color_name = 'beige'
+        elsif handle_l contains 'olive' or title_l contains 'olive'
+          assign color_name = 'olive'
+        elsif handle_l contains 'red' or title_l contains 'red'
+          assign color_name = 'red'
+        elsif handle_l contains 'blue' or title_l contains 'blue'
+          assign color_name = 'blue'
+        elsif handle_l contains 'green' or title_l contains 'green'
+          assign color_name = 'green'
+        elsif handle_l contains 'brown' or title_l contains 'brown'
+          assign color_name = 'brown'
+        elsif handle_l contains 'cream' or title_l contains 'cream'
+          assign color_name = 'cream'
+        elsif handle_l contains 'khaki' or title_l contains 'khaki'
+          assign color_name = 'khaki'
+        endif
+      endif
+
+      if color_name != blank
+        assign named = color_name | strip | downcase
+        case named
+          when 'white'
+            assign swatch_style = 'background-color: #ffffff;'
+            assign is_light_swatch = true
+          when 'black'
+            assign swatch_style = 'background-color: #111111;'
+          when 'navy'
+            assign swatch_style = 'background-color: #1a2a4a;'
+          when 'grey'
+            assign swatch_style = 'background-color: #9ca3af;'
+          when 'gray'
+            assign swatch_style = 'background-color: #9ca3af;'
+          when 'beige'
+            assign swatch_style = 'background-color: #e8dcc8;'
+            assign is_light_swatch = true
+          when 'olive'
+            assign swatch_style = 'background-color: #6b6e3f;'
+          when 'cream'
+            assign swatch_style = 'background-color: #f5f0e6;'
+            assign is_light_swatch = true
+          when 'khaki'
+            assign swatch_style = 'background-color: #c3b091;'
+          else
+            assign css_color = color_name | handle | replace: '-', ''
+            assign swatch_style = 'background-color: ' | append: css_color | append: ';'
+        endcase
+        assign swatch_label = color_name
+      endif
+    endif
+  endif
+
+  assign sibling_variant = sibling.selected_or_first_available_variant | default: sibling.variants.first
+  assign sibling_image = sibling_variant.featured_media | default: sibling.featured_media | default: sibling.featured_image
+-%}
+
+<button
+  type="button"
+  class="product-carousel__swatch{% if is_active %} is-active{% endif %}{% if is_light_swatch %} is-light{% endif %}"
+  style="{{ swatch_style }}"
+  title="{{ swatch_label | escape }}"
+  aria-label="{{ swatch_label | escape }}"
+  data-carousel-swatch
+  data-url="{{ sibling.url }}"
+  data-title="{{ sibling.title | escape }}"
+  {% if sibling_image != blank %}
+    data-image="{{ sibling_image | image_url: width: 800 }}"
+    data-image-alt="{{ sibling_image.alt | default: sibling.title | escape }}"
+  {% endif %}
+  {% if sibling_variant != blank %}
+    data-price="{{ sibling_variant.price | money }}"
+    {% if sibling_variant.compare_at_price > sibling_variant.price %}
+      data-compare-price="{{ sibling_variant.compare_at_price | money }}"
+    {% endif %}
+  {% endif %}
+></button>
