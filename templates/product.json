@@ -87,7 +87,7 @@
         "5cc92dbb-1d55-4545-bf33-0e414cc5c4b8": {
           "type": "buy_buttons",
           "settings": {
-            "spacing_blocks": 0,
+            "spacing_blocks": 80,
             "use_global_blocks_desktop_space": true,
             "show_dynamic_checkout": true,
             "show_cart_note": false,
