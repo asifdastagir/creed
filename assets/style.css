@@ -25651,7 +25651,7 @@ body.safari_version_below_14 .hdr-second-nav .menu-label {
 
 @media (max-width:767px) {
   .recommended-product .prd.prd--style1 .prd-top {
-    backdrop-filter: blur(31.462953567504883px);
+    /* backdrop-filter: blur(31.462953567504883px); */
     background     : #ffffff5c;
     flex-direction : column;
     gap            : 10px;
