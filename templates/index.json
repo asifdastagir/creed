@@ -15,21 +15,21 @@
         "slide_Uy9r9Y": {
           "type": "slide",
           "settings": {
-            "image_desktop": "shopify://shop_images/carousel-1.jpg",
+            "image_desktop": "shopify://shop_images/01_jpg.jpg",
             "image_mobile": "shopify://shop_images/carousel-1.jpg"
           }
         },
         "slide_DQKWEz": {
           "type": "slide",
           "settings": {
-            "image_desktop": "shopify://shop_images/carousel-2.jpg",
+            "image_desktop": "shopify://shop_images/02_jpg.jpg",
             "image_mobile": "shopify://shop_images/carousel-2.jpg"
           }
         },
         "slide_dBMJJf": {
           "type": "slide",
           "settings": {
-            "image_desktop": "shopify://shop_images/carousel-3.jpg",
+            "image_desktop": "shopify://shop_images/03_jpg.jpg",
             "image_mobile": "shopify://shop_images/carousel-3.jpg"
           }
         }
@@ -39,15 +39,14 @@
         "slide_DQKWEz",
         "slide_dBMJJf"
       ],
-      "disabled": true,
       "name": "Hero Carousel",
       "settings": {
-        "heading_line_1": "Built for",
-        "heading_line_2": "the Everyday",
+        "heading_line_1": "WINNER '26",
+        "heading_line_2": "NOCTURN",
         "volume_label": "VOL. 02",
-        "description": "Performance wear designed to move with you through every hour of the day",
-        "button_label": "Explore",
-        "button_url": "",
+        "description": "Join the Awakening.",
+        "button_label": "Shop now",
+        "button_url": "shopify://collections",
         "enable_autoplay": true,
         "autoplay_delay": 5000,
         "transition_speed": 800,
@@ -56,6 +55,7 @@
     },
     "hero_video_A3zCNf": {
       "type": "hero-video",
+      "disabled": true,
       "name": "Hero Video",
       "settings": {
         "heading_line_1": "Active for",
