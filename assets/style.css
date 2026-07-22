@@ -9537,7 +9537,7 @@ ul.prd-option-list {
 .prd.prd--style1 {
   height          : 100%;
   padding         : 30px;
-  border-radius   : var(--radius-md, 16px);
+  border-radius   : 3px;
   background-color: var(--product-card-bg);
   box-shadow      : 10px 6px 40px 0px #00000017;
   transition      : box-shadow .2s
