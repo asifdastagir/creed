@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     var swiper = new Swiper('.product-swiper', {
-        slidesPerView: 1.4,
+        slidesPerView: 1.3,
         spaceBetween: 16,
         breakpoints: {
             768: { slidesPerView: 2 },
