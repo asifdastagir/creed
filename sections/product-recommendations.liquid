@@ -15,7 +15,7 @@
     <div class="holder mt-global" {% render 'section-style', section: section %}>
       <div class="container">
         <div class="title-wrap text-center">
-          <h2 class="h1-style">{{ section.settings.heading | escape }}</h2>
+          <h2 class="section-title">{{ section.settings.heading | escape }}</h2>
           {%- if section.settings.subtitle != blank -%}
         <div class="h-sub w-800">{{ section.settings.subtitle }}</div>
       {%- endif -%}
