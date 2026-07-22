@@ -240,6 +240,7 @@
     },
     "product-related": {
       "type": "product-related",
+      "disabled": true,
       "settings": {
         "section_width": "global",
         "container_max_width": 1178,
