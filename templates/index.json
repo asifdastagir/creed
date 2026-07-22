@@ -214,7 +214,7 @@
         "image_mobile": "shopify://shop_images/Use_this_image_for_panel_1_28bdd414-163f-4f62-a9ad-edb4327d412e.jpg",
         "link": "",
         "link_label": "Discover the Science",
-        "margin_top": 100,
+        "margin_top": 0,
         "margin_bottom": 0
       }
     },
@@ -223,19 +223,20 @@
       "name": "Snap Card Component",
       "settings": {
         "style": "style1",
-        "heading_line1": "Aesthetically",
-        "heading_line2": "Engineered Coverage",
-        "text": "High performance coverage waistband and integrated knee length liner built for the active without compromise.",
-        "image": "shopify://shop_images/Aesthetic_engineered_coverage_desktop_-min.jpg",
-        "image_mobile": "shopify://shop_images/Aesthetic_engineered_coverage_desktop_-min.jpg",
+        "heading_line1": "Nomad X Active™ Liner Short",
+        "heading_line2": "",
+        "text": "A performance shell over a built-in compression liner, 2-in-1, no compromise. Higher rise waistband, built to move with you.",
+        "image": "shopify://shop_images/Use_this_image_for_panel_2.jpg",
+        "image_mobile": "shopify://shop_images/Use_this_image_for_panel_2.jpg",
         "link": "",
         "link_label": "Discover the Science",
-        "margin_top": 100,
+        "margin_top": 0,
         "margin_bottom": 0
       }
     },
     "snap_card_component_MjieJ7": {
       "type": "snap-card-component",
+      "disabled": true,
       "name": "Snap Card Component",
       "settings": {
         "style": "style1",
@@ -311,7 +312,6 @@
         "parallax_image_BTcQB7",
         "parallax_image_qeeAm4"
       ],
-      "disabled": true,
       "name": "Text + Parallax Component",
       "settings": {
         "subtitle": "ABOUT US",
