@@ -131,7 +131,7 @@
     "show_cart_note": false,
     "use_bundles": false,
     "use_ajax_scroll": true,
-    "collection_products_per_page": 8,
+    "collection_products_per_page": 9,
     "payment_image_1": "shopify://shop_images/visa.png",
     "payment_image_2": "shopify://shop_images/mastercard.png",
     "payment_image_3": "shopify://shop_images/american-express.png",
