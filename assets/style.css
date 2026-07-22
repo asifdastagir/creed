@@ -17535,9 +17535,9 @@ h4.prd-block-desc-title+p {
   margin-top: 40px
 }
 
-.mt-product-global>.prd-block-actions {
+/* .mt-product-global>.prd-block-actions {
   margin-top: 0
-}
+} */
 
 .prd-block-actions>.mt-product-global>.row .col-auto,
 .prd-block-actions>.row .col-auto {
