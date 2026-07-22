@@ -41,7 +41,7 @@
       ],
       "name": "Hero Carousel",
       "settings": {
-        "heading_line_1": "WINNTER '26",
+        "heading_line_1": "WINTER '26",
         "heading_line_2": "NOCTURN",
         "volume_label": "VOL. 01",
         "description": "Join the Awakening.",
@@ -76,7 +76,7 @@
         "eyebrow": "NEW ARRIVALS",
         "heading": "SHOP NOCTURN",
         "swipe_label": "SWIPE TO BROWSE →",
-        "collection": "new-collection",
+        "collection": "all",
         "limit": 12,
         "margin_top": 0,
         "margin_bottom": 40
