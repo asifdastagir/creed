@@ -506,30 +506,6 @@
     "sections": {
       "announcement-bar": {
         "type": "announcement-bar",
-        "blocks": {
-          "announcement-bar-0": {
-            "type": "link",
-            "settings": {
-              "title": "",
-              "text_2": "",
-              "url": "",
-              "button_target_blank": true
-            }
-          },
-          "link_3Np8NQ": {
-            "type": "link",
-            "settings": {
-              "title": "",
-              "text_2": "",
-              "url": "",
-              "button_target_blank": true
-            }
-          }
-        },
-        "block_order": [
-          "announcement-bar-0",
-          "link_3Np8NQ"
-        ],
         "settings": {
           "enable": true,
           "height_desktop": 39,
