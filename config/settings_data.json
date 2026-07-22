@@ -506,6 +506,20 @@
     "sections": {
       "announcement-bar": {
         "type": "announcement-bar",
+        "blocks": {
+          "link_hRpmye": {
+            "type": "link",
+            "settings": {
+              "title": "NOCTURN VOL. 01. WINTER ’26. SHOP NOW",
+              "text_2": "",
+              "url": "shopify://collections/new-collection",
+              "button_target_blank": false
+            }
+          }
+        },
+        "block_order": [
+          "link_hRpmye"
+        ],
         "settings": {
           "enable": true,
           "height_desktop": 39,
