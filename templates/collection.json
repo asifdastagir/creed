@@ -62,7 +62,7 @@
       "settings": {
         "section_width": "global",
         "container_max_width": 1178,
-        "spacing_sections": 0,
+        "spacing_sections": 50,
         "spacing_padding_sections": 100
       }
     },
