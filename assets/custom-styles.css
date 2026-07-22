@@ -5450,6 +5450,6 @@ html {
 .recommended-product .prd.prd--style1,
 .related-asif .prd.prd--style1,
 .product-recommendations .prd.prd--style1 {
-    border: 1px solid #000;
+    border: solid 1px rgb(216, 216, 216) !important;
     box-sizing: border-box;
 }
