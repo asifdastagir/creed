@@ -11,6 +11,7 @@
   "sections": {
     "page_heading_JpxLXU": {
       "type": "page-heading",
+      "disabled": true,
       "name": "Page Heading",
       "settings": {
         "style": "style2",
