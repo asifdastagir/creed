@@ -40,7 +40,8 @@
         <div class="swiper-container product-carousel-swiper">
           <div class="swiper-wrapper">
             {%- if collection != blank and collection.products_count > 0 -%}
-              {%- for product in collection.products limit: product_limit -%}
+              {%- assign carousel_products = collection.products | sort: 'created_at' | reverse -%}
+              {%- for product in carousel_products limit: product_limit -%}
                 {%- liquid
                   assign related_colors = product.metafields.custom.related_colors.value
                   if related_colors != blank

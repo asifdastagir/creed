@@ -5436,3 +5436,12 @@ html {
         height: min(72vh, 580px);
     }
 }
+
+/* Product card description — 3-line clamp (recommendations, collection, etc.) */
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

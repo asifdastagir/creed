@@ -23,7 +23,8 @@
         <swiper-carousel data-center-arrows>
           <div class="swiper-container swiper-container-prd-carousel">
             <div class="swiper-wrapper">
-              {% for recommendation in recommendations.products %}
+              {%- assign recommended_products = recommendations.products | sort: 'created_at' | reverse -%}
+              {% for recommendation in recommended_products %}
                 <div class="swiper-slide">
                   {% render 'product-card',
                     product: recommendation
