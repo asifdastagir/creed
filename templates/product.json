@@ -231,6 +231,7 @@
     },
     "product_snap_card_RymQEU": {
       "type": "product-snap-card",
+      "disabled": true,
       "name": "Product Snap Card",
       "settings": {
         "margin_top": 0,
