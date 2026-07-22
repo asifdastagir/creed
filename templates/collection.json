@@ -11,6 +11,7 @@
   "sections": {
     "page_heading_JpxLXU": {
       "type": "page-heading",
+      "disabled": true,
       "name": "Page Heading",
       "settings": {
         "style": "style2",
@@ -49,6 +50,7 @@
         "feature_cV7nKX",
         "feature_MTf9gm"
       ],
+      "disabled": true,
       "name": "Dynamic Feature Section",
       "settings": {
         "margin_top": 0,
@@ -60,7 +62,7 @@
       "settings": {
         "section_width": "global",
         "container_max_width": 1178,
-        "spacing_sections": 0,
+        "spacing_sections": 50,
         "spacing_padding_sections": 100
       }
     },
