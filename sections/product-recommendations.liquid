@@ -25,7 +25,7 @@
             <div class="swiper-wrapper">
               {%- assign recommended_products = recommendations.products | sort: 'created_at' | reverse -%}
               {% for recommendation in recommended_products %}
-                <div class="swiper-slide">
+                <div class="swiper-slide recommended-product">
                   {% render 'product-card',
                     product: recommendation
                   %}

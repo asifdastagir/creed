@@ -25627,6 +25627,11 @@ body.safari_version_below_14 .hdr-second-nav .menu-label {
   overflow        : hidden;
 }
 
+.recommended-product .prd-image-wrap {
+  border: solid 1px rgb(216, 216, 216) !important;
+  box-sizing: border-box;
+}
+
 .recommended-product .prd.prd--style1 .prd-des,
 .recommended-product .prd.prd--style1 .promo-ticker {
   display: none !important;

@@ -5445,3 +5445,11 @@ html {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+/* Related / recommended — black image border like product carousel */
+.recommended-product .prd-image-wrap,
+.related-asif .prd-image-wrap,
+.product-recommendations .prd-image-wrap {
+    border: 1px solid #000;
+    box-sizing: border-box;
+}
