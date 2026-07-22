@@ -25625,10 +25625,7 @@ body.safari_version_below_14 .hdr-second-nav .menu-label {
   padding         : 0;
   /* border-radius: 13px; */
   overflow        : hidden;
-}
-
-.recommended-product .prd-image-wrap {
-  border: solid 1px rgb(216, 216, 216) !important;
+  border: 1px solid #000;
   box-sizing: border-box;
 }
 
