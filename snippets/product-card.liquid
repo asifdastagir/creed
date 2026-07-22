@@ -154,7 +154,7 @@
       {%- render 'price', product: product, use_variant: true, render: true, product_card_style_1: true, product_form_id: product_form_id, product_card: true -%}
     </div>
     
-     <p class="prd-des mb-1">
+     <p class="prd-des mb-1 line-clamp-3">
       {{ product.description | strip_html | truncate: 100 }}
     </p>
 
