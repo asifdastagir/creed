@@ -71,13 +71,12 @@
     },
     "product_carousel_LVc7kB": {
       "type": "product-carousel",
-      "disabled": true,
       "name": "Product Carousel",
       "settings": {
         "eyebrow": "NEW ARRIVALS",
         "heading": "SHOP NOCTURN",
         "swipe_label": "SWIPE TO BROWSE →",
-        "collection": "form-one",
+        "collection": "new-collection",
         "limit": 12,
         "margin_top": 0,
         "margin_bottom": 40
@@ -85,6 +84,7 @@
     },
     "index_product_carousel_Mnqkxp": {
       "type": "index-product-carousel",
+      "disabled": true,
       "name": "Products carousel / preset 1 Default",
       "settings": {
         "section_animation": true,
@@ -144,6 +144,7 @@
     },
     "index_product_carousel_LmqA6z": {
       "type": "index-product-carousel",
+      "disabled": true,
       "name": "Products carousel / preset 1 Default",
       "settings": {
         "section_animation": true,
