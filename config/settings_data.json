@@ -721,6 +721,11 @@
         "type": "shopify://apps/amazon-reviews-by-appio/blocks/integration/569167b3-e5d6-4314-9866-f51281b506d7",
         "disabled": false,
         "settings": {}
+      },
+      "6544682535036668446": {
+        "type": "shopify://apps/pumper-bundles/blocks/app-embed/0856870d-2aca-4b1e-a662-cf1797f61270",
+        "disabled": false,
+        "settings": {}
       }
     }
   },
