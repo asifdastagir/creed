@@ -25743,7 +25743,7 @@ body.safari_version_below_14 .hdr-second-nav .menu-label {
     padding: 4px 6px;
     line-height: 1;
     position: absolute;
-    top: 0;
+    top: 50%;
     margin-left: 5px;
     content: "New";
     transform: translateY(-50%);
