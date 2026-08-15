@@ -157,7 +157,10 @@
       assign show_link_actions = true
     endif
 
+    assign unique_menu_class = title | handleize | prepend: 'menu-item-'
+
     assign link_url_qv = link_url
+    assign unique_menu_class = title | handleize | prepend: 'menu-'
 
     if template.suffix contains 'store-width-'
       unless link_url contains '?'
@@ -166,6 +169,8 @@
 
       assign link_url = link_url | append: '&view=' | append: template.suffix
     endif
+
+    assign menu_item_handle = title | handleize
 -%}
 
 {%- if show -%}
@@ -192,7 +197,7 @@
       <{{ tag_name }} {% unless link_url == '#' %}href="{{ link_url }}"{% endunless %}
           {% if target != blank %}target="{{ target }}" {% endif %}
           {% if preview != blank %}data-preview="{{ preview }}"{% endif %}
-          class="{{ class }} {% if has_image_icon %}link-with-image{% endif %} {% if link.current %}active{% endif %} {% if level == 1 or popup %}top-level-link{% endif %}
+          class="{{ class }} {{ unique_menu_class }} {% if has_image_icon %}link-with-image{% endif %} {% if link.current %}active{% endif %} {% if level == 1 or popup %}top-level-link{% endif %}
           {% if show_class_has_badge == 1 and badge != blank and badge_show != false %}has-label{% endif %}"
           {% if link.current %} aria-current="page"{% endif %}
           {% if index %}data-number="{{ index }}"{% endif %}

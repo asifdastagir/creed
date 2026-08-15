@@ -25727,3 +25727,24 @@ body.safari_version_below_14 .hdr-second-nav .menu-label {
   background: gray !important;
 
 }
+
+
+.menu-summer-39-26-collection{
+  color: red !important;
+  position: relative !important;
+}
+
+
+.menu-summer-39-26-collection::after{
+  color: white;
+    background:red;
+    font-size: 9px;
+    font-weight: 700;
+    padding: 4px 6px;
+    line-height: 1;
+    position: absolute;
+    top: 0;
+    margin-left: 5px;
+    content: "New";
+    transform: translateY(-50%);
+}
