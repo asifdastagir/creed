@@ -51,16 +51,7 @@
         <div class="container">
           <div class="row">
             <div class="col-auto hdr-logo">
-              {% render 'logo',
-                logo: section.settings.logo_sticky | default: section.settings.logo,
-                svg_logo: section.settings.svg_logo,
-                svg_logo_name: section.settings.svg_logo_name,
-                logo_width: section.settings.logo_sticky_width,
-                logo_width_mobile: section.settings.logo_width_mobile,
-                prefix: 'Sticky',
-                id: section.id,
-                class: 'logo'
-              %}
+              {% render 'logo', logo: section.settings.logo_sticky, default: section.settings.logo, svg_logo: section.settings.svg_logo, svg_logo_name: section.settings.svg_logo_name, logo_width: section.settings.logo_sticky_width, logo_width_mobile: section.settings.logo_width_mobile, prefix: 'Sticky', id: section.id, class: 'logo' %}
             </div>
             <div class="hdr-nav hide-mobile nav-holder-s col"></div>
             <div class="hdr-links-wrap col-auto ms-auto">
@@ -85,3 +76,26 @@
     {%- endif -%}
   </header-sticky>
 {%- endif -%}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'logo',
+                    logo: section.settings.logo_sticky | default: section.settings.logo,
+                    svg_logo: section.settings.svg_logo,
+                    svg_logo_name: section.settings.svg_logo_name,
+                    logo_width: section.settings.logo_sticky_width,
+                    logo_width_mobile: section.settings.logo_width_mobile,
+                    prefix: 'Sticky',
+                    id: section.id,
+                    class: 'logo'
+                  %}
+  to: "{% render 'logo', logo: section.settings.logo_sticky, default: section.settings.logo,
+    svg_logo: section.settings.svg_logo, svg_logo_name: section.settings.svg_logo_name,
+    logo_width: section.settings.logo_sticky_width, logo_width_mobile: section.settings.logo_width_mobile,
+    prefix: 'Sticky', id: section.id, class: 'logo' %}"
+  position: 2423..2746
+{% endcomment %}

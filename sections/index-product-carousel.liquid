@@ -411,14 +411,7 @@
                 <flow-type>
                   <a href="{{ section.settings.button_url }}" class="bnr-wrap">
                     <div class="bnr to-center to-middle text-center image-hover-scale" data-fontratio="2.7">
-                      {% render 'image-container',
-                        image: section.settings.image,
-                        padding_no_bg: section.settings.banner_padding | default: 158,
-                        padding: section.settings.banner_padding | default: 158,
-                        sizes: '264px',
-                        class_ic: 'bnr-img',
-                        style: ic_style
-                      %}
+                      {% render 'image-container', image: section.settings.image, padding_no_bg: section.settings.banner_padding, default: 158, padding: section.settings.banner_padding, sizes: '264px', class_ic: 'bnr-img', style: ic_style %}
                       <div class="bnr-caption bottom-0 {% if section.settings.invert_color %}colorize-invert{% endif %}" style="--padding: 4% 0; --padding-mobile:  4% 0; --caption-width: 92%; --caption-width-mobile: 92%;">
                         <div class="bnr-text text-white text-uppercase text-left mb-2"  style="font-size: .3em; line-height: 1.2em; font-weight: {{ settings.font_weight_500 }};">{{ section.settings.banner_title }}</div>
                         {%- if section.settings.button -%}
@@ -1543,3 +1536,23 @@
   ]
 }
 {% endschema %}
+{% comment %}
+
+This file has been rewritten to preserve the original behavior.
+
+---
+Changes:
+- from: |-
+    {% render 'image-container',
+                            image: section.settings.image,
+                            padding_no_bg: section.settings.banner_padding | default: 158,
+                            padding: section.settings.banner_padding | default: 158,
+                            sizes: '264px',
+                            class_ic: 'bnr-img',
+                            style: ic_style
+                          %}
+  to: "{% render 'image-container', image: section.settings.image, padding_no_bg:
+    section.settings.banner_padding, default: 158, padding: section.settings.banner_padding,
+    sizes: '264px', class_ic: 'bnr-img', style: ic_style %}"
+  position: 20532..20751
+{% endcomment %}
