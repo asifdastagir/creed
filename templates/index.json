@@ -349,6 +349,67 @@
         "button_label": "About Us",
         "button_url": "shopify://pages/about"
       }
+    },
+    "17933576516e2a1396": {
+      "type": "apps",
+      "blocks": {
+        "trustpilot_trustpilot_flex_widget_hWKWaB": {
+          "type": "shopify://apps/trustpilot/blocks/trustpilot_flex_widget/af628f2e-96c9-437f-bc0a-e8f7ff3fa8b4",
+          "settings": {
+            "trustscore_size": "XL",
+            "vertical_space": 10,
+            "locale": "en-US",
+            "reviews-language": true,
+            "trustscore_headline": "star",
+            "trustscore_star_support-text": "review-number",
+            "trustscore_review-number_support-text": "star",
+            "trustscore_word_support-text": "review-number",
+            "trustscore_add-reviews": true,
+            "theme-color": "#B2F8D0",
+            "trustscore_category-icon": true,
+            "trustscore_category-name": true,
+            "background-color": "light",
+            "text-color": "dark",
+            "external-elements": "dark",
+            "border": "no-border"
+          }
+        }
+      },
+      "block_order": [
+        "trustpilot_trustpilot_flex_widget_hWKWaB"
+      ],
+      "settings": {
+        "spacing_sections": 100,
+        "use_global_desktop_space": true,
+        "spacing_sections_mobile": 70,
+        "use_global_mobile_space": true
+      }
+    },
+    "17933576872152731e": {
+      "type": "apps",
+      "blocks": {
+        "trustpilot_trustpilot_review_collector_widget_9iqN8N": {
+          "type": "shopify://apps/trustpilot/blocks/trustpilot_review_collector_widget/af628f2e-96c9-437f-bc0a-e8f7ff3fa8b4",
+          "settings": {
+            "locale": "en-US",
+            "width": 25,
+            "height": 67,
+            "vertical_space": 10,
+            "font_family": "Helvetica Neue",
+            "font_color": "#191919",
+            "border_color": "#00b67a"
+          }
+        }
+      },
+      "block_order": [
+        "trustpilot_trustpilot_review_collector_widget_9iqN8N"
+      ],
+      "settings": {
+        "spacing_sections": 100,
+        "use_global_desktop_space": true,
+        "spacing_sections_mobile": 70,
+        "use_global_mobile_space": true
+      }
     }
   },
   "order": [
@@ -364,6 +425,8 @@
     "snap_card_component_WkxQM4",
     "image_parallax_zamTdA",
     "text_promo_component_XMEgYD",
-    "media_compnent_FBQaXr"
+    "media_compnent_FBQaXr",
+    "17933576516e2a1396",
+    "17933576872152731e"
   ]
 }
