@@ -369,9 +369,9 @@
             "width": 16,
             "height": 57,
             "vertical_space": 6,
-            "font_family": "Helvetica Neue",
-            "font_color": "#191919",
-            "border_color": "#00b67a"
+            "font_family": "Lato",
+            "font_color": "#22292f",
+            "border_color": "#0067ff"
           }
         }
       },
